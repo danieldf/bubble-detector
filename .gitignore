@@ -27,3 +27,10 @@ htmlcov/
 # Logs
 logs/
 *.log
+
+# Sensitive Data & Documents
+CRC_18*.pdf
+Holdings_*.csv
+*.pdf
+Holdings_*.csv
+

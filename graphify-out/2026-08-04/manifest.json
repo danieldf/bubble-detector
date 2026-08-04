@@ -70,8 +70,8 @@
     "semantic_hash": ""
   },
   "bubble_detector/config.py": {
-    "mtime": 1785252469.4570642,
-    "ast_hash": "d90b221bef8c666546896942d838fcee",
+    "mtime": 1785865371.8320458,
+    "ast_hash": "e088c4707fa96857e99d07df32c6222a",
     "semantic_hash": ""
   },
   "bubble_detector/data/__init__.py": {
@@ -80,8 +80,8 @@
     "semantic_hash": ""
   },
   "bubble_detector/data/ingestor.py": {
-    "mtime": 1785252580.4405415,
-    "ast_hash": "4c5c3978a2e76a46cede89064b7b9007",
+    "mtime": 1785865377.604974,
+    "ast_hash": "d114eaa2d75b1644d3984c8334e16744",
     "semantic_hash": ""
   },
   "bubble_detector/features/__init__.py": {
@@ -140,8 +140,8 @@
     "semantic_hash": ""
   },
   "bubble_detector/ui/dashboard.py": {
-    "mtime": 1785360171.890374,
-    "ast_hash": "cce3183121a175443db6f1b613f72280",
+    "mtime": 1785865389.3960147,
+    "ast_hash": "ffc846c67d4f9fdabed92a8bf7d75930",
     "semantic_hash": ""
   },
   "bubble_detector/ui_theme.py": {
@@ -207,6 +207,11 @@
   "Walkthrough-BubbleDetectionPowerpointDeck.md": {
     "mtime": 1785453059.3319094,
     "ast_hash": "8870b2ab96952a2dfedb8c3a033c3034",
+    "semantic_hash": ""
+  },
+  "tests/test_date_horizons.py": {
+    "mtime": 1785865393.573805,
+    "ast_hash": "797255da353e5e16c9337ec1881ba1fd",
     "semantic_hash": ""
   }
 }
