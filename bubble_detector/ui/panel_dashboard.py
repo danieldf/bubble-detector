@@ -350,5 +350,7 @@ template = pn.template.FastListTemplate(
 
 template.servable()
 
-if __name__ == "__main__":
+import sys
+if __name__ == "__main__" and "pyodide" not in sys.modules and "panel.io.pyodide" not in sys.modules:
     pn.serve(template, port=5006, show=False)
+
