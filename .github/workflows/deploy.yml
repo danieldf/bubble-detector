@@ -35,8 +35,9 @@ jobs:
       - name: Convert Panel Dashboard to WebAssembly (Pyodide Worker)
         run: |
           mkdir -p dist
-          PYTHONPATH=. panel convert bubble_detector/ui/panel_dashboard.py --to pyodide-worker --out dist/
+          PYTHONPATH=. panel convert bubble_detector/ui/panel_dashboard.py --to pyodide-worker --requirements panel bokeh plotly polars scikit-learn numpy --out dist/
           mv dist/panel_dashboard.html dist/index.html
+
 
       - name: Upload GitHub Pages Artifact
         uses: actions/upload-pages-artifact@v3
