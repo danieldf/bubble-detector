@@ -32,11 +32,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install panel bokeh polars plotly scikit-learn numpy yfinance
 
-      - name: Convert Panel Dashboard to WebAssembly (Pyodide Worker)
+      - name: Convert Panel Dashboard to WebAssembly (Pyodide Direct)
         run: |
           mkdir -p dist
-          PYTHONPATH=. panel convert bubble_detector/ui/panel_dashboard.py --to pyodide-worker --requirements panel bokeh plotly polars scikit-learn numpy --out dist/
+          PYTHONPATH=. panel convert bubble_detector/ui/panel_dashboard.py --to pyodide --requirements panel bokeh plotly polars scikit-learn numpy --out dist/
           mv dist/panel_dashboard.html dist/index.html
+
 
 
       - name: Upload GitHub Pages Artifact

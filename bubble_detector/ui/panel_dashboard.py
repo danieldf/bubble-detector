@@ -12,56 +12,52 @@ import panel as pn
 from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.preprocessing import RobustScaler
 
-# Try importing local package when running locally; fallback to self-contained logic in WASM
-try:
-    from bubble_detector.config import (
-        HORIZON_METADATA, HORIZON_OPTION_1_ID, HORIZON_OPTION_1_LABEL,
-        HORIZON_OPTION_2_ID, HORIZON_OPTION_2_LABEL
-    )
-except ImportError:
-    HORIZON_OPTION_1_ID = "option_1"
-    HORIZON_OPTION_1_LABEL = "Option 1: Modern 5-Regime Horizon (2015–2026)"
-    HORIZON_OPTION_2_ID = "option_2"
-    HORIZON_OPTION_2_LABEL = "Option 2: Expanded 7-Regime Horizon (1998–2026)"
+# Self-contained horizon definitions for WebAssembly / Pyodide
+HORIZON_OPTION_1_ID = "option_1"
+HORIZON_OPTION_1_LABEL = "Option 1: Modern 5-Regime Horizon (2015–2026)"
+HORIZON_OPTION_2_ID = "option_2"
+HORIZON_OPTION_2_LABEL = "Option 2: Expanded 7-Regime Horizon (1998–2026)"
 
-    HORIZON_METADATA = {
-        HORIZON_OPTION_1_ID: {
-            "label": HORIZON_OPTION_1_LABEL,
-            "start_date": "2015-01-01",
-            "end_date": "2026-07-28",
-            "regimes_count": 5,
-            "native_fidelity": "100%",
-            "fidelity_status": "Native High-Fidelity Coverage",
-            "badge_color": "green",
-            "included_crashes": [
-                "2018 Volmageddon & Q4 QT Compression",
-                "2020 COVID-19 Flash Crash (VIX 82.7 Spike)",
-                "2020-2021 Post-COVID Liquidity Exuberance",
-                "2022 Fed Rate Tightening & Tech Drawdown",
-                "2024-2026 AI CapEx Mega-Cap Rally (CAPE 41.37)"
-            ],
-            "description": "Provides 100% native data integrity across all 12 model features with zero back-filling or proxy interpolation required."
-        },
-        HORIZON_OPTION_2_ID: {
-            "label": HORIZON_OPTION_2_LABEL,
-            "start_date": "1998-01-01",
-            "end_date": "2026-07-28",
-            "regimes_count": 7,
-            "native_fidelity": "~92%",
-            "fidelity_status": "Extended Historical Spectrum (Proxy Imputed Pre-2007)",
-            "badge_color": "amber",
-            "included_crashes": [
-                "1999-2000 Dot-Com Tech Bubble & Crash (CAPE 44.19 Peak)",
-                "2007-2009 Subprime Housing Crisis & GFC Crash (Housing PTI ~7.0x)",
-                "2018 Volmageddon & Q4 QT Compression",
-                "2020 COVID-19 Flash Crash (VIX 82.7 Spike)",
-                "2020-2021 Post-COVID Liquidity Exuberance",
-                "2022 Fed Rate Tightening & Tech Drawdown",
-                "2024-2026 AI CapEx Mega-Cap Rally (CAPE 41.37)"
-            ],
-            "description": "Extends coverage across 28.5 years to encompass all 7 major market bubbles/crashes. Options metrics prior to 2007 utilize synthetic proxy modeling."
-        }
+
+HORIZON_METADATA = {
+    HORIZON_OPTION_1_ID: {
+        "label": HORIZON_OPTION_1_LABEL,
+        "start_date": "2015-01-01",
+        "end_date": "2026-07-28",
+        "regimes_count": 5,
+        "native_fidelity": "100%",
+        "fidelity_status": "Native High-Fidelity Coverage",
+        "badge_color": "green",
+        "included_crashes": [
+            "2018 Volmageddon & Q4 QT Compression",
+            "2020 COVID-19 Flash Crash (VIX 82.7 Spike)",
+            "2020-2021 Post-COVID Liquidity Exuberance",
+            "2022 Fed Rate Tightening & Tech Drawdown",
+            "2024-2026 AI CapEx Mega-Cap Rally (CAPE 41.37)"
+        ],
+        "description": "Provides 100% native data integrity across all 12 model features with zero back-filling or proxy interpolation required."
+    },
+    HORIZON_OPTION_2_ID: {
+        "label": HORIZON_OPTION_2_LABEL,
+        "start_date": "1998-01-01",
+        "end_date": "2026-07-28",
+        "regimes_count": 7,
+        "native_fidelity": "~92%",
+        "fidelity_status": "Extended Historical Spectrum (Proxy Imputed Pre-2007)",
+        "badge_color": "amber",
+        "included_crashes": [
+            "1999-2000 Dot-Com Tech Bubble & Crash (CAPE 44.19 Peak)",
+            "2007-2009 Subprime Housing Crisis & GFC Crash (Housing PTI ~7.0x)",
+            "2018 Volmageddon & Q4 QT Compression",
+            "2020 COVID-19 Flash Crash (VIX 82.7 Spike)",
+            "2020-2021 Post-COVID Liquidity Exuberance",
+            "2022 Fed Rate Tightening & Tech Drawdown",
+            "2024-2026 AI CapEx Mega-Cap Rally (CAPE 41.37)"
+        ],
+        "description": "Extends coverage across 28.5 years to encompass all 7 major market bubbles/crashes. Options metrics prior to 2007 utilize synthetic proxy modeling."
     }
+}
+
 
 # Initialize Panel extension with Plotly engine
 pn.extension('plotly', sizing_mode='stretch_width')
