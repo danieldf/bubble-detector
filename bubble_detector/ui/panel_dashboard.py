@@ -1,23 +1,23 @@
 """
 Panel (HoloViz) Enterprise WebAssembly Dashboard for Market Bubble Detection.
 
-Supports local serving via `panel serve` and static WebAssembly / Pyodide compilation
-via `panel convert` for 100% client-side GitHub Pages deployment.
+Optimized for ultra-fast client-side WebAssembly loading on GitHub Pages using
+native Pyodide NumPy and Plotly engines.
 """
 
+import datetime
 import numpy as np
 import plotly.graph_objects as go
-import polars as pl
 import panel as pn
-from sklearn.ensemble import HistGradientBoostingClassifier
-from sklearn.preprocessing import RobustScaler
+
+# Initialize Panel extension with Plotly engine
+pn.extension('plotly', sizing_mode='stretch_width')
 
 # Self-contained horizon definitions for WebAssembly / Pyodide
 HORIZON_OPTION_1_ID = "option_1"
 HORIZON_OPTION_1_LABEL = "Option 1: Modern 5-Regime Horizon (2015–2026)"
 HORIZON_OPTION_2_ID = "option_2"
 HORIZON_OPTION_2_LABEL = "Option 2: Expanded 7-Regime Horizon (1998–2026)"
-
 
 HORIZON_METADATA = {
     HORIZON_OPTION_1_ID: {
@@ -58,24 +58,16 @@ HORIZON_METADATA = {
     }
 }
 
-
-# Initialize Panel extension with Plotly engine
-pn.extension('plotly', sizing_mode='stretch_width')
-
-import datetime
-
-def generate_wasm_dataset(start_date: str, end_date: str) -> pl.DataFrame:
-    """Generate high-fidelity financial time series dataset for Pyodide WebAssembly."""
+def generate_wasm_dataset(start_date: str, end_date: str):
+    """Generate high-speed financial time series dataset for Pyodide WebAssembly."""
     start_dt = datetime.date(int(start_date[:4]), int(start_date[5:7]), int(start_date[8:10]))
     end_dt = datetime.date(2026, 7, 28)
-    date_range = list(pl.date_range(
-        start=start_dt,
-        end=end_dt,
-        interval="1d",
-        eager=True
-    ))
-
-    n = len(date_range)
+    
+    num_days = (end_dt - start_dt).days
+    date_list = [start_dt + datetime.timedelta(days=i) for i in range(num_days + 1)]
+    dates = [d.strftime("%Y-%m-%d") for d in date_list]
+    
+    n = len(dates)
     t = np.linspace(0, 1, n)
     np.random.seed(42)
 
@@ -112,23 +104,11 @@ def generate_wasm_dataset(start_date: str, end_date: str) -> pl.DataFrame:
     tech_xlk = (spy_prices * (1.2 + 0.3 * np.sin(np.linspace(0, 5, n)))).astype(np.float32)
     tda_l2 = (0.2 + 0.7 * (t ** 2) + 0.05 * np.sin(2 * np.pi * 12 * t)).astype(np.float32)
 
-    # Scikit-learn ML structural break drawdown prediction
-    X = np.column_stack([cape, margin_debt, gsadf, skew, ovx_vix, tda_l2])
-    scaler = RobustScaler()
-    X_scaled = scaler.fit_transform(X)
+    # Fast logistic drawdown probability calculation
+    drawdown_probs = (1.0 / (1.0 + np.exp(-3.5 * (gpt_adj - 1.1)))).astype(np.float32)
 
-    # Drawdown risk target (forward 20-day returns < -5%)
-    y = np.zeros(n, dtype=int)
-    for i in range(n - 20):
-        if (spy_prices[i + 20] - spy_prices[i]) / spy_prices[i] < -0.05:
-            y[i] = 1
-
-    clf = HistGradientBoostingClassifier(max_iter=30, max_depth=3, random_state=42)
-    clf.fit(X_scaled, y)
-    drawdown_probs = clf.predict_proba(X_scaled)[:, 1].astype(np.float32)
-
-    df = pl.DataFrame({
-        "Date": date_range,
+    return {
+        "Date": dates,
         "SPY": spy_prices,
         "Shiller_CAPE": cape,
         "P_CAPE": p_cape,
@@ -144,16 +124,14 @@ def generate_wasm_dataset(start_date: str, end_date: str) -> pl.DataFrame:
         "XLK": tech_xlk,
         "TDA_Persistence_L2_Norm": tda_l2,
         "Drawdown_Probability": drawdown_probs
-    })
-
-    return df
+    }
 
 class PanelDashboardState:
     """State manager for WASM Panel dashboard."""
 
     def __init__(self, horizon_id: str = HORIZON_OPTION_1_ID):
         self.selected_horizon_id: str = horizon_id
-        self.df: pl.DataFrame = pl.DataFrame()
+        self.data: dict = {}
         self.load_data()
 
     def load_data(self, horizon_id: str = None):
@@ -161,15 +139,15 @@ class PanelDashboardState:
             self.selected_horizon_id = horizon_id
 
         meta = HORIZON_METADATA[self.selected_horizon_id]
-        self.df = generate_wasm_dataset(meta["start_date"], meta["end_date"])
+        self.data = generate_wasm_dataset(meta["start_date"], meta["end_date"])
 
 state = PanelDashboardState()
 
-def build_macro_valuation_fig(df: pl.DataFrame) -> go.Figure:
-    dates = df["Date"].to_list()
-    cape = df["Shiller_CAPE"].to_numpy()
-    p_cape = df["P_CAPE"].to_numpy()
-    buffett = df["Buffett_Indicator"].to_numpy()
+def build_macro_valuation_fig(data: dict) -> go.Figure:
+    dates = data["Date"]
+    cape = data["Shiller_CAPE"]
+    p_cape = data["P_CAPE"]
+    buffett = data["Buffett_Indicator"]
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=dates, y=cape, mode="lines", name="Shiller CAPE (41.37 Peak)", line=dict(color="#0288D1", width=2.5)))
@@ -186,10 +164,10 @@ def build_macro_valuation_fig(df: pl.DataFrame) -> go.Figure:
     )
     return fig
 
-def build_leverage_fig(df: pl.DataFrame) -> go.Figure:
-    dates = df["Date"].to_list()
-    margin_debt = df["FINRA_Margin_Debt"].to_numpy()
-    exhaustion = df["Margin_Exhaustion_Score"].to_numpy()
+def build_leverage_fig(data: dict) -> go.Figure:
+    dates = data["Date"]
+    margin_debt = data["FINRA_Margin_Debt"]
+    exhaustion = data["Margin_Exhaustion_Score"]
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=dates, y=margin_debt, mode="lines", name="FINRA Margin Debt ($B)", line=dict(color="#D32F2F", width=2.5)))
@@ -202,11 +180,11 @@ def build_leverage_fig(df: pl.DataFrame) -> go.Figure:
     )
     return fig
 
-def build_econometric_fig(df: pl.DataFrame) -> go.Figure:
-    dates = df["Date"].to_list()
-    gsadf = df["GSADF_Stat"].to_numpy()
-    gpt_adj = df["GSADF_GPT_Adjusted"].to_numpy()
-    drawdown_prob = df["Drawdown_Probability"].to_numpy()
+def build_econometric_fig(data: dict) -> go.Figure:
+    dates = data["Date"]
+    gsadf = data["GSADF_Stat"]
+    gpt_adj = data["GSADF_GPT_Adjusted"]
+    drawdown_prob = data["Drawdown_Probability"]
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=dates, y=gsadf, mode="lines", name="Standard GSADF Stat", line=dict(color="#757575", width=1.5, dash="dot")))
@@ -222,11 +200,11 @@ def build_econometric_fig(df: pl.DataFrame) -> go.Figure:
     )
     return fig
 
-def build_sentiment_vol_fig(df: pl.DataFrame) -> go.Figure:
-    dates = df["Date"].to_list()
-    vix = df["^VIX"].to_numpy() if "^VIX" in df.columns else np.full(len(df), 16.0)
-    skew = df["^SKEW"].to_numpy() if "^SKEW" in df.columns else np.full(len(df), 145.0)
-    ovx_vix = df["OVX_VIX_CrossAsset_Ratio"].to_numpy()
+def build_sentiment_vol_fig(data: dict) -> go.Figure:
+    dates = data["Date"]
+    vix = data["^VIX"]
+    skew = data["^SKEW"]
+    ovx_vix = data["OVX_VIX_CrossAsset_Ratio"]
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=dates, y=vix, mode="lines", name="Spot VIX (Complacency)", line=dict(color="#388E3C", width=2.0)))
@@ -240,11 +218,11 @@ def build_sentiment_vol_fig(df: pl.DataFrame) -> go.Figure:
     )
     return fig
 
-def build_sector_health_fig(df: pl.DataFrame) -> go.Figure:
-    dates = df["Date"].to_list()
-    housing_pti = df["Housing_Price_to_Income"].to_numpy()
-    tech = df["XLK"].to_numpy() if "XLK" in df.columns else df["SPY"].to_numpy() * 1.2
-    tda_norm = df["TDA_Persistence_L2_Norm"].to_numpy()
+def build_sector_health_fig(data: dict) -> go.Figure:
+    dates = data["Date"]
+    housing_pti = data["Housing_Price_to_Income"]
+    tech = data["XLK"]
+    tda_norm = data["TDA_Persistence_L2_Norm"]
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=dates, y=housing_pti, mode="lines", name="Housing Price-to-Income (7.11x Peak)", line=dict(color="#F57C00", width=2.5)))
@@ -311,22 +289,22 @@ note_pane = pn.pane.Markdown(
     sizing_mode="stretch_width"
 )
 
-macro_pane = pn.pane.Plotly(build_macro_valuation_fig(state.df), sizing_mode="stretch_both", min_height=480)
-leverage_pane = pn.pane.Plotly(build_leverage_fig(state.df), sizing_mode="stretch_both", min_height=480)
-econometric_pane = pn.pane.Plotly(build_econometric_fig(state.df), sizing_mode="stretch_both", min_height=480)
-sentiment_pane = pn.pane.Plotly(build_sentiment_vol_fig(state.df), sizing_mode="stretch_both", min_height=480)
-sector_pane = pn.pane.Plotly(build_sector_health_fig(state.df), sizing_mode="stretch_both", min_height=480)
+macro_pane = pn.pane.Plotly(build_macro_valuation_fig(state.data), sizing_mode="stretch_both", min_height=480)
+leverage_pane = pn.pane.Plotly(build_leverage_fig(state.data), sizing_mode="stretch_both", min_height=480)
+econometric_pane = pn.pane.Plotly(build_econometric_fig(state.data), sizing_mode="stretch_both", min_height=480)
+sentiment_pane = pn.pane.Plotly(build_sentiment_vol_fig(state.data), sizing_mode="stretch_both", min_height=480)
+sector_pane = pn.pane.Plotly(build_sector_health_fig(state.data), sizing_mode="stretch_both", min_height=480)
 
 def update_dashboard(event=None):
     selected_id = horizon_selector.value
     state.load_data(horizon_id=selected_id)
 
     note_pane.object = generate_explanatory_markdown(selected_id)
-    macro_pane.object = build_macro_valuation_fig(state.df)
-    leverage_pane.object = build_leverage_fig(state.df)
-    econometric_pane.object = build_econometric_fig(state.df)
-    sentiment_pane.object = build_sentiment_vol_fig(state.df)
-    sector_pane.object = build_sector_health_fig(state.df)
+    macro_pane.object = build_macro_valuation_fig(state.data)
+    leverage_pane.object = build_leverage_fig(state.data)
+    econometric_pane.object = build_econometric_fig(state.data)
+    sentiment_pane.object = build_sentiment_vol_fig(state.data)
+    sector_pane.object = build_sector_health_fig(state.data)
 
 horizon_selector.param.watch(update_dashboard, 'value')
 run_button.on_click(update_dashboard)
@@ -359,7 +337,7 @@ template = pn.template.FastListTemplate(
         horizon_selector,
         run_button,
         pn.pane.Markdown("---"),
-        pn.pane.Markdown("**Framework**: Panel (HoloViz) WASM / Pyodide\n**Engine**: Polars & Scikit-Learn")
+        pn.pane.Markdown("**Framework**: Panel (HoloViz) WASM / Pyodide\n**Engine**: NumPy & Plotly")
     ],
     main=[
         header_banner,
