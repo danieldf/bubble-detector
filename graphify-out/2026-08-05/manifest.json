@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "bubble_detector/ui/panel_dashboard.py": {
-    "mtime": 1785968659.9502714,
-    "ast_hash": "8cb13a88fdbb256c2be0cb2a2822709d",
+    "mtime": 1785969631.9136004,
+    "ast_hash": "4101c382ff6a43fae0349fba19d838ad",
     "semantic_hash": ""
   },
   ".github/workflows/deploy.yml": {
