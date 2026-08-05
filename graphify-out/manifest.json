@@ -135,8 +135,8 @@
     "semantic_hash": ""
   },
   "tests/test_features.py": {
-    "mtime": 1785966355.1808424,
-    "ast_hash": "4054fa6bf702950d3ca0a8efabc31c15",
+    "mtime": 1785967696.8355258,
+    "ast_hash": "982547d1cf983914658b52715cc6aea8",
     "semantic_hash": ""
   },
   "tests/test_ingestor.py": {
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "bubble_detector/ui/panel_dashboard.py": {
-    "mtime": 1785966348.553316,
-    "ast_hash": "583470066fa1e169dc01833493abe1dd",
+    "mtime": 1785967692.3248086,
+    "ast_hash": "c5bedae35e6ede6db15bd0c72fb0d516",
     "semantic_hash": ""
   },
   ".github/workflows/deploy.yml": {

@@ -1,16 +1,16 @@
 # Graph Report - Merrill  (2026-08-05)
 
 ## Corpus Check
-- 38 files · ~57,662 words
+- 38 files · ~57,731 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 272 nodes · 447 edges · 17 communities (16 shown, 1 thin omitted)
+- 274 nodes · 452 edges · 17 communities (16 shown, 1 thin omitted)
 - Extraction: 93% EXTRACTED · 7% INFERRED · 0% AMBIGUOUS · INFERRED: 30 edges (avg confidence: 0.79)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `05f7967c`
+- Built from commit: `e7156bd2`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -33,7 +33,7 @@
 1. `DashboardState` - 22 edges
 2. `DataIngestor` - 21 edges
 3. `StructuralBreakPredictor` - 15 edges
-4. `compute_tda_wavelet_complexity()` - 12 edges
+4. `compute_tda_wavelet_complexity()` - 13 edges
 5. `Market Bubble Structural Analysis Report` - 12 edges
 6. `compute_gsadf_gpt_decomposition()` - 11 edges
 7. `compute_margin_leverage_metrics()` - 10 edges
@@ -75,7 +75,7 @@ Nodes (19): Graphify Rules Document, Graphify Query Rule, Graphify Workflow Docu
 
 ### Community 2 - "Econometric Bubble Detection Models"
 Cohesion: 0.06
-Nodes (42): _calculate_adf_stat(), compute_gsadf_gpt_decomposition(), DataFrame, ndarray, Econometric Bubble Detection Module.  Implements the PSY procedure (GSADF test s, Calculate Augmented Dickey-Fuller t-statistic for explosive root testing., Computes rolling GSADF explosive test statistics and GPT-adjusted fundamental de, Feature Engineering Module (+34 more)
+Nodes (44): _calculate_adf_stat(), compute_gsadf_gpt_decomposition(), DataFrame, ndarray, Econometric Bubble Detection Module.  Implements the PSY procedure (GSADF test s, Calculate Augmented Dickey-Fuller t-statistic for explosive root testing., Computes rolling GSADF explosive test statistics and GPT-adjusted fundamental de, Feature Engineering Module (+36 more)
 
 ### Community 3 - "Implied Volatility Term Structure Metrics"
 Cohesion: 0.60
@@ -122,11 +122,11 @@ Nodes (17): build_econometric_fig(), build_leverage_fig(), build_macro_valuation
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `DataIngestor` connect `Graphify Settings and Rules` to `Econometric Bubble Detection Models`, `Valuation and Feature Engineering`, `FINRA Margin Debt Metrics`?**
-  _High betweenness centrality (0.076) - this node is a cross-community bridge._
+  _High betweenness centrality (0.099) - this node is a cross-community bridge._
+- **Why does `generate_wasm_dataset()` connect `panel_dashboard.py` to `Econometric Bubble Detection Models`?**
+  _High betweenness centrality (0.077) - this node is a cross-community bridge._
 - **Why does `DashboardState` connect `Valuation and Feature Engineering` to `Econometric Bubble Detection Models`, `Graphify Settings and Rules`, `FINRA Margin Debt Metrics`, `Systemic Leverage Analysis`?**
-  _High betweenness centrality (0.060) - this node is a cross-community bridge._
-- **Why does `StructuralBreakPredictor` connect `FINRA Margin Debt Metrics` to `Econometric Bubble Detection Models`, `Valuation and Feature Engineering`?**
-  _High betweenness centrality (0.055) - this node is a cross-community bridge._
+  _High betweenness centrality (0.067) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `DashboardState` (e.g. with `DataIngestor` and `StructuralBreakPredictor`) actually correct?**
   _`DashboardState` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 3 inferred relationships involving `DataIngestor` (e.g. with `DataFetchError` and `ValidationError`) actually correct?**
