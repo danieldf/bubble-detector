@@ -141,8 +141,10 @@ def generate_wasm_dataset(start_date: str, end_date: str):
         buffett = (spy_prices * 85.0 / gdp * 100.0).astype(np.float32)
 
         margin_exhaustion = (0.3 + 0.6 * (t ** 2) + 0.05 * np.random.randn(n)).astype(np.float32)
-        skew = (125.0 + 35.0 * t + 4.0 * np.random.randn(n)).clip(115.0, 165.0).astype(np.float32)
-        ovx_vix = (1.4 + 1.5 * (t ** 1.5) + 0.15 * np.random.randn(n)).astype(np.float32)
+        skew = np.clip(125.0 + 35.0 * t + 4.0 * np.random.randn(n), 115.0, 165.0).astype(np.float32)
+        ovx = np.clip(25.0 + 10.0 * np.random.randn(n), 10.0, 80.0).astype(np.float32)
+        ovx_vix = (ovx / (vix + 1e-8)).astype(np.float32)
+
         tech_xlk = (spy_prices * (1.2 + 0.3 * np.sin(np.linspace(0, 5, n)))).astype(np.float32)
 
         # Authoritative GSADF & GPT Fundamental Decomposition algorithm from econometric.py

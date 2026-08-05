@@ -174,14 +174,23 @@ class DataIngestor:
         df_dict[SECTOR_TICKERS["Defense"]] = df_dict[SP500_TICKER] * (0.6 + 0.2 * np.linspace(0, 1, n))
 
         # Volatility Indices
-        df_dict[VOLATILITY_TICKERS["VIX"]] = 16.0 + 4.0 * np.random.randn(n)
-        df_dict[VOLATILITY_TICKERS["VIX"]] = np.clip(df_dict[VOLATILITY_TICKERS["VIX"]], 9.0, 65.0)
+        t = np.linspace(0, 1, n)
+        vix_base = 15.0 + 3.0 * np.random.randn(n)
+        if "1998" in start_date:
+            gfc_vix = 65.0 * np.exp(-((t - 0.38)**2) / 0.0008)
+            covid_vix = 67.7 * np.exp(-((t - 0.78)**2) / 0.0005)
+            vix = np.clip(vix_base + gfc_vix + covid_vix, 9.0, 82.7).astype(np.float32)
+        else:
+            covid_vix = 67.7 * np.exp(-((t - 0.45)**2) / 0.001)
+            vix = np.clip(vix_base + covid_vix, 9.0, 82.7).astype(np.float32)
 
-        df_dict[VOLATILITY_TICKERS["VIX1D"]] = df_dict[VOLATILITY_TICKERS["VIX"]] * 0.85
-        df_dict[VOLATILITY_TICKERS["VIX3M"]] = df_dict[VOLATILITY_TICKERS["VIX"]] * 1.2
-        df_dict[VOLATILITY_TICKERS["SKEW"]] = 120.0 + 25.0 * np.linspace(0, 1, n) + 5.0 * np.random.randn(n)
-        df_dict[VOLATILITY_TICKERS["VXN"]] = df_dict[VOLATILITY_TICKERS["VIX"]] * 1.4
-        df_dict[VOLATILITY_TICKERS["OVX"]] = 25.0 + 10.0 * np.random.randn(n)
+        df_dict[VOLATILITY_TICKERS["VIX"]] = vix
+        df_dict[VOLATILITY_TICKERS["VIX1D"]] = vix * 0.85
+        df_dict[VOLATILITY_TICKERS["VIX3M"]] = vix * 1.2
+        df_dict[VOLATILITY_TICKERS["SKEW"]] = np.clip(125.0 + 35.0 * t + 4.0 * np.random.randn(n), 115.0, 165.0).astype(np.float32)
+        df_dict[VOLATILITY_TICKERS["VXN"]] = vix * 1.4
+        df_dict[VOLATILITY_TICKERS["OVX"]] = np.clip(25.0 + 10.0 * np.random.randn(n), 10.0, 80.0).astype(np.float32)
 
         return pd.DataFrame(df_dict).set_index("Date")
+
 
