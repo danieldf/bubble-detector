@@ -1,16 +1,16 @@
 # Graph Report - Merrill  (2026-08-05)
 
 ## Corpus Check
-- 38 files · ~57,731 words
+- 39 files · ~58,015 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 274 nodes · 452 edges · 17 communities (16 shown, 1 thin omitted)
-- Extraction: 93% EXTRACTED · 7% INFERRED · 0% AMBIGUOUS · INFERRED: 30 edges (avg confidence: 0.79)
+- 278 nodes · 477 edges · 17 communities (16 shown, 1 thin omitted)
+- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 30 edges (avg confidence: 0.79)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e7156bd2`
+- Built from commit: `62a04309`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -30,16 +30,16 @@
 - panel_dashboard.py
 
 ## God Nodes (most connected - your core abstractions)
-1. `DashboardState` - 22 edges
-2. `DataIngestor` - 21 edges
-3. `StructuralBreakPredictor` - 15 edges
-4. `compute_tda_wavelet_complexity()` - 13 edges
-5. `Market Bubble Structural Analysis Report` - 12 edges
-6. `compute_gsadf_gpt_decomposition()` - 11 edges
-7. `compute_margin_leverage_metrics()` - 10 edges
-8. `compute_macro_valuations()` - 10 edges
-9. `compute_options_volatility_metrics()` - 10 edges
-10. `compute_technical_indicators()` - 9 edges
+1. `DashboardState` - 24 edges
+2. `DataIngestor` - 23 edges
+3. `StructuralBreakPredictor` - 17 edges
+4. `compute_tda_wavelet_complexity()` - 15 edges
+5. `generate_wasm_dataset()` - 15 edges
+6. `compute_gsadf_gpt_decomposition()` - 13 edges
+7. `compute_margin_leverage_metrics()` - 12 edges
+8. `compute_macro_valuations()` - 12 edges
+9. `compute_options_volatility_metrics()` - 12 edges
+10. `Market Bubble Structural Analysis Report` - 12 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Joint ETF Strategy Portfolio (March 2026)` --conceptually_related_to--> `Real Estate Valuation Metrics`  [INFERRED]
@@ -86,8 +86,8 @@ Cohesion: 0.08
 Nodes (25): BubbleDetectorError, DataFetchError, IndicatorComputationError, Configuration and Logging Module for Bubble Detector., Base exception for Bubble Detector package., Raised when data fetching fails., Raised when indicator computation fails., Raised when data validation fails. (+17 more)
 
 ### Community 5 - "Valuation and Feature Engineering"
-Cohesion: 0.11
-Nodes (27): create_cta_banner(), create_ios_card(), UI Components Module.  Provides iOS 13+ card containers, segmented control tab w, Renders a Call-To-Action (CTA) section with powerful typography (600-800 weight), Creates an iOS 13+ inset card container with subtle shadow, rounded corners,, build_econometric_chart(), build_leverage_chart(), build_macro_valuation_chart() (+19 more)
+Cohesion: 0.10
+Nodes (30): create_cta_banner(), create_ios_card(), UI Components Module.  Provides iOS 13+ card containers, segmented control tab w, Renders a Call-To-Action (CTA) section with powerful typography (600-800 weight), Creates an iOS 13+ inset card container with subtle shadow, rounded corners,, build_econometric_chart(), build_leverage_chart(), build_macro_valuation_chart() (+22 more)
 
 ### Community 6 - "FINRA Margin Debt Metrics"
 Cohesion: 0.15
@@ -121,12 +121,12 @@ Nodes (17): build_econometric_fig(), build_leverage_fig(), build_macro_valuation
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `DataIngestor` connect `Graphify Settings and Rules` to `Econometric Bubble Detection Models`, `Valuation and Feature Engineering`, `FINRA Margin Debt Metrics`?**
-  _High betweenness centrality (0.099) - this node is a cross-community bridge._
-- **Why does `generate_wasm_dataset()` connect `panel_dashboard.py` to `Econometric Bubble Detection Models`?**
-  _High betweenness centrality (0.077) - this node is a cross-community bridge._
+- **Why does `DataIngestor` connect `Graphify Settings and Rules` to `panel_dashboard.py`, `Econometric Bubble Detection Models`, `Valuation and Feature Engineering`, `FINRA Margin Debt Metrics`?**
+  _High betweenness centrality (0.098) - this node is a cross-community bridge._
 - **Why does `DashboardState` connect `Valuation and Feature Engineering` to `Econometric Bubble Detection Models`, `Graphify Settings and Rules`, `FINRA Margin Debt Metrics`, `Systemic Leverage Analysis`?**
-  _High betweenness centrality (0.067) - this node is a cross-community bridge._
+  _High betweenness centrality (0.072) - this node is a cross-community bridge._
+- **Why does `StructuralBreakPredictor` connect `FINRA Margin Debt Metrics` to `panel_dashboard.py`, `Econometric Bubble Detection Models`, `Valuation and Feature Engineering`?**
+  _High betweenness centrality (0.071) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `DashboardState` (e.g. with `DataIngestor` and `StructuralBreakPredictor`) actually correct?**
   _`DashboardState` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 3 inferred relationships involving `DataIngestor` (e.g. with `DataFetchError` and `ValidationError`) actually correct?**

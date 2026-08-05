@@ -118,6 +118,7 @@ def generate_wasm_dataset(start_date: str, end_date: str):
             ai_peak = 24.0 * (t ** 1.6)
             cape = (20.0 + dotcom_peak + gfc_trough + ai_peak + 1.2 * np.cos(2 * np.pi * 6 * t)).astype(np.float32)
             margin_debt = (150 + 400 * (t**1.5) + 866 * (t ** 2.8) + 25 * np.sin(2 * np.pi * 8 * t)).astype(np.float32)
+            gdp = (9000 + 20000 * t + 300 * np.sin(2 * np.pi * 5 * t)).astype(np.float32)
             housing_2006 = 3.5 * np.exp(-((t - 0.28)**2) / 0.003)
             housing_2026 = 3.2 * (t ** 1.8)
             housing_pti = (3.5 + housing_2006 + housing_2026 + 0.1 * np.sin(2 * np.pi * 4 * t)).astype(np.float32)
@@ -128,38 +129,79 @@ def generate_wasm_dataset(start_date: str, end_date: str):
         else:
             cape = (25.0 + 16.37 * (t ** 1.8) + 1.5 * np.cos(2 * np.pi * 5 * t)).astype(np.float32)
             margin_debt = (500 + 400 * t + 500 * (t ** 2.5) + 30 * np.sin(2 * np.pi * 10 * t)).astype(np.float32)
+            gdp = (18000 + 11000 * t + 200 * np.sin(2 * np.pi * 4 * t)).astype(np.float32)
             housing_pti = (5.2 + 1.91 * (t ** 1.5) + 0.1 * np.sin(2 * np.pi * 3 * t)).astype(np.float32)
             vix_base = 15.0 + 3.0 * np.random.randn(n)
             covid_vix = 67.7 * np.exp(-((t - 0.45)**2) / 0.001)
             vix = np.clip(vix_base + covid_vix, 9.0, 82.7).astype(np.float32)
 
         p_cape = (cape * 0.88).astype(np.float32)
-        buffett = (cape * 5.2).astype(np.float32)
+
+        # Authoritative Buffett Indicator formula from macro_valuation.py: (SPY * 85.0 / GDP) * 100
+        buffett = (spy_prices * 85.0 / gdp * 100.0).astype(np.float32)
+
         margin_exhaustion = (0.3 + 0.6 * (t ** 2) + 0.05 * np.random.randn(n)).astype(np.float32)
-        gsadf = (0.8 + 0.95 * (t ** 2.2) + 0.2 * np.sin(2 * np.pi * 7 * t)).astype(np.float32)
-        gpt_adj = (gsadf * 0.65).astype(np.float32)
         skew = (125.0 + 35.0 * t + 4.0 * np.random.randn(n)).clip(115.0, 165.0).astype(np.float32)
         ovx_vix = (1.4 + 1.5 * (t ** 1.5) + 0.15 * np.random.randn(n)).astype(np.float32)
         tech_xlk = (spy_prices * (1.2 + 0.3 * np.sin(np.linspace(0, 5, n)))).astype(np.float32)
 
-        returns = np.diff(np.log(np.maximum(spy_prices, 1e-4)), prepend=np.log(spy_prices[0]))
-        window_size = 30
-        delay = 2
-        dimension = 3
-        tda_l2 = np.zeros(n, dtype=np.float32)
+        # Authoritative GSADF & GPT Fundamental Decomposition algorithm from econometric.py
+        def _calc_adf(prices_arr):
+            if len(prices_arr) < 15:
+                return 0.0
+            y_arr = np.log(np.maximum(prices_arr, 1e-4))
+            dy_arr = np.diff(y_arr)
+            y_lag_arr = y_arr[:-1]
+            X_mat = np.column_stack([np.ones(len(y_lag_arr)), y_lag_arr])
+            try:
+                b_vec, _, _, _ = np.linalg.lstsq(X_mat, dy_arr, rcond=None)
+                g_val = b_vec[1]
+                df_deg = len(dy_arr) - 2
+                if df_deg <= 0:
+                    return 0.0
+                s_sq = np.sum((dy_arr - X_mat @ b_vec) ** 2) / df_deg
+                cov_m = s_sq * np.linalg.pinv(X_mat.T @ X_mat)
+                se_g = np.sqrt(np.maximum(cov_m[1, 1], 1e-8))
+                return float(g_val / se_g)
+            except Exception:
+                return 0.0
+
+        gsadf = np.zeros(n, dtype=np.float32)
+        gpt_adj = np.zeros(n, dtype=np.float32)
+        window_size = 40
         for i in range(window_size, n):
-            win_returns = returns[i - window_size : i + 1]
-            if len(win_returns) > (dimension - 1) * delay:
+            w_p = spy_prices[i - window_size : i + 1]
+            gsadf[i] = _calc_adf(w_p)
+            w_tech = tech_xlk[i - window_size : i + 1]
+            if np.std(w_tech) > 1e-5:
+                slp, intc = np.polyfit(w_tech, w_p, 1)
+                fund_p = intc + slp * w_tech
+                spec_res = w_p - fund_p + np.mean(w_p)
+            else:
+                spec_res = w_p
+            gpt_adj[i] = _calc_adf(spec_res)
+
+        # Authoritative Takens TDA Persistence Landscape L2 Norm from topology.py
+        returns = np.diff(np.log(np.maximum(spy_prices, 1e-4)), prepend=np.log(spy_prices[0]))
+        tda_l2 = np.zeros(n, dtype=np.float32)
+        for i in range(30, n):
+            win_returns = returns[i - 30 : i + 1]
+            if len(win_returns) > 4:
                 point_cloud = np.column_stack([
-                    win_returns[: len(win_returns) - (dimension - 1) * delay],
-                    win_returns[delay : len(win_returns) - (dimension - 2) * delay],
-                    win_returns[2 * delay :]
+                    win_returns[: len(win_returns) - 4],
+                    win_returns[2 : len(win_returns) - 2],
+                    win_returns[4 :]
                 ])
                 centroid = np.mean(point_cloud, axis=0)
                 distances = np.linalg.norm(point_cloud - centroid, axis=1)
                 tda_l2[i] = float(np.std(distances) * np.sqrt(len(distances)))
         tda_l2 = np.nan_to_num(tda_l2, nan=0.0).astype(np.float32)
-        drawdown_probs = (1.0 / (1.0 + np.exp(-3.5 * (gpt_adj - 1.1)))).astype(np.float32)
+
+        # Authoritative Structural Break Probability from structural_breaks.py
+        cape_z = (cape - 17.0) / 6.5
+        buff_z = (buffett - 100.0) / 35.0
+        drawdown_logits = -1.8 + 0.8 * gpt_adj + 0.4 * buff_z + 0.3 * cape_z + 2.5 * tda_l2
+        drawdown_probs = (1.0 / (1.0 + np.exp(-drawdown_logits))).clip(0.0, 1.0).astype(np.float32)
 
         return {
             "Date": dates,
@@ -179,6 +221,7 @@ def generate_wasm_dataset(start_date: str, end_date: str):
             "TDA_Persistence_L2_Norm": tda_l2,
             "Drawdown_Probability": drawdown_probs
         }
+
 
 
 
