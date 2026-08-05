@@ -108,9 +108,17 @@ def generate_wasm_dataset(start_date: str, end_date: str):
 
 
         is_expanded = n > 4000
-        start_spy = 100.0 if is_expanded else 200.0
-        spy_returns = np.random.normal(0.00035, 0.011, n)
-        spy_prices = (start_spy * np.exp(np.cumsum(spy_returns))).astype(np.float32)
+        if is_expanded:
+            dotcom_spike = 50.0 * np.exp(-((t - 0.07)**2) / 0.001)
+            gfc_drop = -65.0 * np.exp(-((t - 0.38)**2) / 0.003)
+            covid_drop = -70.0 * np.exp(-((t - 0.78)**2) / 0.0006)
+            ai_growth = 380.0 * (t ** 1.9)
+            spy_prices = (100.0 + dotcom_spike + gfc_drop + covid_drop + ai_growth + 5.0 * np.sin(2 * np.pi * 6 * t)).astype(np.float32)
+        else:
+            covid_drop = -70.0 * np.exp(-((t - 0.45)**2) / 0.001)
+            ai_growth = 320.0 * (t ** 1.5)
+            spy_prices = (200.0 + covid_drop + ai_growth + 4.0 * np.sin(2 * np.pi * 4 * t)).astype(np.float32)
+
 
         if is_expanded:
             dotcom_peak = 44.19 * np.exp(-((t - 0.07)**2) / 0.002)
@@ -202,8 +210,10 @@ def generate_wasm_dataset(start_date: str, end_date: str):
         # Authoritative Structural Break Probability from structural_breaks.py
         cape_z = (cape - 17.0) / 6.5
         buff_z = (buffett - 100.0) / 35.0
-        drawdown_logits = -1.8 + 0.8 * gpt_adj + 0.4 * buff_z + 0.3 * cape_z + 2.5 * tda_l2
+        drawdown_logits = np.clip(-1.8 + 0.8 * gpt_adj + 0.4 * buff_z + 0.3 * cape_z + 2.5 * tda_l2, -30.0, 30.0)
         drawdown_probs = (1.0 / (1.0 + np.exp(-drawdown_logits))).clip(0.0, 1.0).astype(np.float32)
+
+
 
         return {
             "Date": dates,

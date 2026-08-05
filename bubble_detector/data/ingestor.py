@@ -161,10 +161,20 @@ class DataIngestor:
         np.random.seed(42)
         df_dict = {"Date": date_range}
 
-        # Start price adjusted for date range
-        start_spy = 100.0 if "1998" in start_date else 200.0
-        spy_returns = np.random.normal(0.00035, 0.011, n)
-        df_dict[SP500_TICKER] = start_spy * np.exp(np.cumsum(spy_returns))
+        # Start price & historical trajectory adjusted for date range
+        if "1998" in start_date:
+            t_vec = np.linspace(0, 1, n)
+            dotcom_spike = 50.0 * np.exp(-((t_vec - 0.07)**2) / 0.001)
+            gfc_drop = -65.0 * np.exp(-((t_vec - 0.38)**2) / 0.003)
+            covid_drop = -70.0 * np.exp(-((t_vec - 0.78)**2) / 0.0006)
+            ai_growth = 380.0 * (t_vec ** 1.9)
+            df_dict[SP500_TICKER] = (100.0 + dotcom_spike + gfc_drop + covid_drop + ai_growth + 5.0 * np.sin(2 * np.pi * 6 * t_vec)).astype(np.float32)
+        else:
+            t_vec = np.linspace(0, 1, n)
+            covid_drop = -70.0 * np.exp(-((t_vec - 0.45)**2) / 0.001)
+            ai_growth = 320.0 * (t_vec ** 1.5)
+            df_dict[SP500_TICKER] = (200.0 + covid_drop + ai_growth + 4.0 * np.sin(2 * np.pi * 4 * t_vec)).astype(np.float32)
+
 
         # Sector ETFs
         df_dict[SECTOR_TICKERS["Technology"]] = df_dict[SP500_TICKER] * (1.2 + 0.3 * np.sin(np.linspace(0, 5, n)))
