@@ -1,16 +1,16 @@
 # Graph Report - Merrill  (2026-08-05)
 
 ## Corpus Check
-- 38 files · ~57,362 words
+- 38 files · ~57,482 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 267 nodes · 437 edges · 18 communities (17 shown, 1 thin omitted)
-- Extraction: 92% EXTRACTED · 8% INFERRED · 0% AMBIGUOUS · INFERRED: 35 edges (avg confidence: 0.75)
+- 267 nodes · 442 edges · 17 communities (16 shown, 1 thin omitted)
+- Extraction: 93% EXTRACTED · 7% INFERRED · 0% AMBIGUOUS · INFERRED: 30 edges (avg confidence: 0.79)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3c922e4b`
+- Built from commit: `ef494839`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -23,7 +23,6 @@
 - Valuation and Feature Engineering
 - FINRA Margin Debt Metrics
 - Systemic Leverage Analysis
-- Volatility Term Structure Plots
 - __init__.py
 - Overview of Completed Implementation
 - Detailed Slide Breakdown by Section & Group
@@ -64,7 +63,7 @@
 - **FINRA Margin Debt Metrics** — finra_margin_debt_tracker, finra_may_2026_nominal_value, finra_may_2026_mom_change, finra_may_2026_yoy_change [INFERRED 0.85]
 - **Implied Volatility Term Structure Components** — impliedvolatilitymetric_vix1d, impliedvolatilitymetric_vix_spot, impliedvolatilitymetric_vix3m, impliedvolatilitymetric_vix1y [EXTRACTED 1.00]
 
-## Communities (18 total, 1 thin omitted)
+## Communities (17 total, 1 thin omitted)
 
 ### Community 0 - "Merrill ETF Portfolio Reviews"
 Cohesion: 0.12
@@ -75,8 +74,8 @@ Cohesion: 0.12
 Nodes (19): Graphify Rules Document, Graphify Query Rule, Graphify Workflow Document, NiceGUI Layout & Plotly Dashboard, Data Ingestion (DataIngestor), AGVI Implementation Plan Document, XGBoost Model Training & Walk-Forward CV, AGVI Technical Specification Document (+11 more)
 
 ### Community 2 - "Econometric Bubble Detection Models"
-Cohesion: 0.08
-Nodes (32): _calculate_adf_stat(), compute_gsadf_gpt_decomposition(), DataFrame, ndarray, Econometric Bubble Detection Module.  Implements the PSY procedure (GSADF test s, Calculate Augmented Dickey-Fuller t-statistic for explosive root testing., Computes rolling GSADF explosive test statistics and GPT-adjusted fundamental de, Feature Engineering Module (+24 more)
+Cohesion: 0.06
+Nodes (42): _calculate_adf_stat(), compute_gsadf_gpt_decomposition(), DataFrame, ndarray, Econometric Bubble Detection Module.  Implements the PSY procedure (GSADF test s, Calculate Augmented Dickey-Fuller t-statistic for explosive root testing., Computes rolling GSADF explosive test statistics and GPT-adjusted fundamental de, Feature Engineering Module (+34 more)
 
 ### Community 3 - "Implied Volatility Term Structure Metrics"
 Cohesion: 0.60
@@ -98,10 +97,6 @@ Nodes (11): Machine Learning Models Module, DataFrame, ndarray, Predict structur
 Cohesion: 0.16
 Nodes (16): calculate_contrast_ratio(), get_theme_css(), is_wcag_aa_compliant(), parse_hex_color(), UI Theme and Accessibility Design System for Bubble Detector.  Enforces: - WCAG, Generate dynamic CSS variables and global stylesheet enforcing UI/UX & accessibi, Parse hex color string (e.g., '#007AFF' or '#000') into RGB floats [0..1]., Calculate WCAG 2.2 relative luminance for RGB floats [0..1]. (+8 more)
 
-### Community 8 - "Volatility Term Structure Plots"
-Cohesion: 0.24
-Nodes (10): compute_tda_wavelet_complexity(), _persistence_landscape_norm(), DataFrame, ndarray, Topological Data Analysis (TDA) & Wavelet Complexity Module.  Computes point-clo, Transform 1D time series into Takens' delay-coordinate high-dimensional point cl, Calculate point cloud dispersion / L2 persistence landscape norm proxy., Compute sliding window TDA Persistence Landscape L_p norm and Morlet Wavelet sca (+2 more)
-
 ### Community 11 - "Overview of Completed Implementation"
 Cohesion: 0.25
 Nodes (7): 1. System & Logging Setup (`config.py`):, 2. UI & Accessibility Engine (`ui_theme.py`):, 3. Data Ingestion & Storage (`ingestor.py`):, 4. Quantitative Indicator Modules (`features/`):, 5. Machine Learning Model (`structural_breaks.py`):, 6. Interactive Dashboard & Components (`dashboard.py` & `components.py`):, Overview of Completed Implementation
@@ -115,8 +110,8 @@ Cohesion: 0.17
 Nodes (11): 1. Installation, 2. Run Local NiceGUI App, 3. Run Local Panel (HoloViz) App, 4. Build WebAssembly Bundle Locally, 📊 5 Interactive Dashboard Modules, 📜 License, 🌟 Live Interactive WebAssembly Dashboard, 💻 Local Setup & Execution (+3 more)
 
 ### Community 17 - "panel_dashboard.py"
-Cohesion: 0.29
-Nodes (10): fetch_current_dataset(), generate_wasm_dataset(), get_plotly_template(), Panel (HoloViz) Enterprise WebAssembly Dashboard for Market Bubble Detection.  O, Generate high-speed financial time series dataset for Pyodide WebAssembly., render_econometric_chart(), render_leverage_chart(), render_macro_valuation_chart() (+2 more)
+Cohesion: 0.36
+Nodes (12): build_econometric_fig(), build_leverage_fig(), build_macro_valuation_fig(), build_sector_health_fig(), build_sentiment_vol_fig(), fetch_dataset(), generate_explanatory_markdown(), generate_wasm_dataset() (+4 more)
 
 ## Knowledge Gaps
 - **39 isolated node(s):** `1. System & Logging Setup (`config.py`):`, `2. UI & Accessibility Engine (`ui_theme.py`):`, `3. Data Ingestion & Storage (`ingestor.py`):`, `4. Quantitative Indicator Modules (`features/`):`, `5. Machine Learning Model (`structural_breaks.py`):` (+34 more)
