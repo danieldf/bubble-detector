@@ -159,8 +159,8 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "bubble_detector_config_modeltrainingerror",
-      "community": 6,
-      "community_name": "FINRA Margin Debt Metrics",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "modeltrainingerror"
     },
     {
@@ -225,8 +225,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "bubble_detector_config_rationale_51",
-      "community": 6,
-      "community_name": "FINRA Margin Debt Metrics",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "raised when ml model training fails."
     },
     {
@@ -786,8 +786,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "bubble_detector_features_topology_compute_tda_wavelet_complexity",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 8,
+      "community_name": "Volatility Term Structure Plots",
       "norm_label": "compute_tda_wavelet_complexity()"
     },
     {
@@ -797,8 +797,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "bubble_detector_features_topology_py_dataframe",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 8,
+      "community_name": "Volatility Term Structure Plots",
       "norm_label": "dataframe"
     },
     {
@@ -841,8 +841,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "bubble_detector_features_topology_rationale_39",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 8,
+      "community_name": "Volatility Term Structure Plots",
       "norm_label": "compute sliding window tda persistence landscape l_p norm and morlet wavelet sca"
     },
     {
@@ -874,8 +874,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_models_structural_breaks",
-      "community": 6,
-      "community_name": "FINRA Margin Debt Metrics",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "structural_breaks.py"
     },
     {
@@ -973,8 +973,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_models_structural_breaks_rationale_1",
-      "community": 6,
-      "community_name": "FINRA Margin Debt Metrics",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "structural break machine learning classifier.  utilizes xgboost with robustscale"
     },
     {
@@ -1203,7 +1203,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "id": "bubble_detector_ui_dashboard_py_figure",
+      "id": "figure",
       "community": 5,
       "community_name": "Valuation and Feature Engineering",
       "norm_label": "figure"
@@ -1407,139 +1407,117 @@
       "norm_label": "panel_dashboard.py"
     },
     {
-      "label": "PanelDashboardState",
+      "label": "generate_wasm_dataset()",
       "file_type": "code",
       "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L37",
+      "source_location": "L61",
       "_origin": "ast",
-      "id": "bubble_detector_ui_panel_dashboard_paneldashboardstate",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
-      "norm_label": "paneldashboardstate"
-    },
-    {
-      "label": ".__init__()",
-      "file_type": "code",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L40",
-      "_origin": "ast",
-      "id": "bubble_detector_ui_panel_dashboard_paneldashboardstate_init",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
-      "norm_label": ".__init__()"
-    },
-    {
-      "label": ".load_data()",
-      "file_type": "code",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L47",
-      "_origin": "ast",
-      "id": "bubble_detector_ui_panel_dashboard_paneldashboardstate_load_data",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
-      "norm_label": ".load_data()"
-    },
-    {
-      "label": "build_macro_valuation_fig()",
-      "file_type": "code",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L72",
-      "_origin": "ast",
-      "id": "bubble_detector_ui_panel_dashboard_build_macro_valuation_fig",
+      "id": "bubble_detector_ui_panel_dashboard_generate_wasm_dataset",
       "community": 17,
       "community_name": "panel_dashboard.py",
-      "norm_label": "build_macro_valuation_fig()"
+      "norm_label": "generate_wasm_dataset()"
     },
     {
-      "label": "DataFrame",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "bubble_detector_ui_panel_dashboard_py_dataframe",
-      "community": 17,
-      "community_name": "panel_dashboard.py",
-      "norm_label": "dataframe"
-    },
-    {
-      "label": "Figure",
-      "file_type": "code",
-      "source_file": "",
-      "source_location": "",
-      "_origin": "ast",
-      "id": "bubble_detector_ui_panel_dashboard_py_figure",
-      "community": 17,
-      "community_name": "panel_dashboard.py",
-      "norm_label": "figure"
-    },
-    {
-      "label": "build_leverage_fig()",
+      "label": "get_plotly_template()",
       "file_type": "code",
       "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L93",
+      "source_location": "L150",
       "_origin": "ast",
-      "id": "bubble_detector_ui_panel_dashboard_build_leverage_fig",
+      "id": "bubble_detector_ui_panel_dashboard_get_plotly_template",
       "community": 17,
       "community_name": "panel_dashboard.py",
-      "norm_label": "build_leverage_fig()"
+      "norm_label": "get_plotly_template()"
     },
     {
-      "label": "build_econometric_fig()",
+      "label": "fetch_current_dataset()",
       "file_type": "code",
       "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L109",
+      "source_location": "L153",
       "_origin": "ast",
-      "id": "bubble_detector_ui_panel_dashboard_build_econometric_fig",
+      "id": "bubble_detector_ui_panel_dashboard_fetch_current_dataset",
       "community": 17,
       "community_name": "panel_dashboard.py",
-      "norm_label": "build_econometric_fig()"
+      "norm_label": "fetch_current_dataset()"
     },
     {
-      "label": "build_sentiment_vol_fig()",
+      "label": "render_macro_valuation_chart()",
       "file_type": "code",
       "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L129",
+      "source_location": "L159",
       "_origin": "ast",
-      "id": "bubble_detector_ui_panel_dashboard_build_sentiment_vol_fig",
+      "id": "bubble_detector_ui_panel_dashboard_render_macro_valuation_chart",
       "community": 17,
       "community_name": "panel_dashboard.py",
-      "norm_label": "build_sentiment_vol_fig()"
+      "norm_label": "render_macro_valuation_chart()"
     },
     {
-      "label": "build_sector_health_fig()",
+      "label": "render_leverage_chart()",
       "file_type": "code",
       "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L147",
+      "source_location": "L185",
       "_origin": "ast",
-      "id": "bubble_detector_ui_panel_dashboard_build_sector_health_fig",
+      "id": "bubble_detector_ui_panel_dashboard_render_leverage_chart",
       "community": 17,
       "community_name": "panel_dashboard.py",
-      "norm_label": "build_sector_health_fig()"
+      "norm_label": "render_leverage_chart()"
     },
     {
-      "label": "generate_explanatory_markdown()",
+      "label": "render_econometric_chart()",
       "file_type": "code",
       "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L165",
+      "source_location": "L205",
       "_origin": "ast",
-      "id": "bubble_detector_ui_panel_dashboard_generate_explanatory_markdown",
+      "id": "bubble_detector_ui_panel_dashboard_render_econometric_chart",
       "community": 17,
       "community_name": "panel_dashboard.py",
-      "norm_label": "generate_explanatory_markdown()"
+      "norm_label": "render_econometric_chart()"
     },
     {
-      "label": "update_dashboard()",
+      "label": "render_sentiment_vol_chart()",
       "file_type": "code",
       "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L224",
+      "source_location": "L230",
       "_origin": "ast",
-      "id": "bubble_detector_ui_panel_dashboard_update_dashboard",
+      "id": "bubble_detector_ui_panel_dashboard_render_sentiment_vol_chart",
       "community": 17,
       "community_name": "panel_dashboard.py",
-      "norm_label": "update_dashboard()"
+      "norm_label": "render_sentiment_vol_chart()"
     },
     {
-      "label": "Panel (HoloViz) Enterprise WebAssembly Dashboard for Market Bubble Detection.  S",
+      "label": "render_sector_health_chart()",
+      "file_type": "code",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L252",
+      "_origin": "ast",
+      "id": "bubble_detector_ui_panel_dashboard_render_sector_health_chart",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
+      "norm_label": "render_sector_health_chart()"
+    },
+    {
+      "label": "render_explanatory_note()",
+      "file_type": "code",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L275",
+      "_origin": "ast",
+      "id": "bubble_detector_ui_panel_dashboard_render_explanatory_note",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
+      "norm_label": "render_explanatory_note()"
+    },
+    {
+      "label": "update_template_theme()",
+      "file_type": "code",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L352",
+      "_origin": "ast",
+      "id": "bubble_detector_ui_panel_dashboard_update_template_theme",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
+      "norm_label": "update_template_theme()"
+    },
+    {
+      "label": "Panel (HoloViz) Enterprise WebAssembly Dashboard for Market Bubble Detection.  O",
       "file_type": "rationale",
       "source_file": "bubble_detector/ui/panel_dashboard.py",
       "source_location": "L1",
@@ -1547,29 +1525,18 @@
       "id": "bubble_detector_ui_panel_dashboard_rationale_1",
       "community": 17,
       "community_name": "panel_dashboard.py",
-      "norm_label": "panel (holoviz) enterprise webassembly dashboard for market bubble detection.  s"
+      "norm_label": "panel (holoviz) enterprise webassembly dashboard for market bubble detection.  o"
     },
     {
-      "label": "Central state manager for Panel dashboard data pipeline and ML model.",
+      "label": "Generate high-speed financial time series dataset for Pyodide WebAssembly.",
       "file_type": "rationale",
       "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L38",
+      "source_location": "L62",
       "_origin": "ast",
-      "id": "bubble_detector_ui_panel_dashboard_rationale_38",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
-      "norm_label": "central state manager for panel dashboard data pipeline and ml model."
-    },
-    {
-      "label": "Fetch and process market features for selected date range horizon.",
-      "file_type": "rationale",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L48",
-      "_origin": "ast",
-      "id": "bubble_detector_ui_panel_dashboard_rationale_48",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
-      "norm_label": "fetch and process market features for selected date range horizon."
+      "id": "bubble_detector_ui_panel_dashboard_rationale_62",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
+      "norm_label": "generate high-speed financial time series dataset for pyodide webassembly."
     },
     {
       "label": "ui_theme.py",
@@ -1886,8 +1853,8 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "tests_test_features_test_compute_tda_wavelet_complexity",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 8,
+      "community_name": "Volatility Term Structure Plots",
       "norm_label": "test_compute_tda_wavelet_complexity()"
     },
     {
@@ -3392,18 +3359,6 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L29",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard",
-      "target": "bubble_detector_config",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "tests/test_date_horizons.py",
       "source_location": "L7",
       "weight": 1.0,
@@ -3700,18 +3655,6 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L21",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard",
-      "target": "bubble_detector_data_ingestor",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "tests/test_date_horizons.py",
       "source_location": "L10",
       "weight": 1.0,
@@ -3844,41 +3787,6 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_ui_dashboard_dashboardstate_init",
-      "target": "bubble_detector_data_ingestor_dataingestor"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L21",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard",
-      "target": "bubble_detector_data_ingestor_dataingestor",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "uses",
-      "confidence": "INFERRED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L21",
-      "weight": 0.8,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_paneldashboardstate",
-      "target": "bubble_detector_data_ingestor_dataingestor",
-      "confidence_score": 0.5
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L42",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_paneldashboardstate_init",
       "target": "bubble_detector_data_ingestor_dataingestor"
     },
     {
@@ -4368,30 +4276,6 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L23",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard",
-      "target": "bubble_detector_features_econometric_compute_gsadf_gpt_decomposition",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L61",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_paneldashboardstate_load_data",
-      "target": "bubble_detector_features_econometric_compute_gsadf_gpt_decomposition"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "tests/test_features.py",
       "source_location": "L9",
       "weight": 1.0,
@@ -4503,30 +4387,6 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_ui_dashboard_dashboardstate_load_data",
-      "target": "bubble_detector_features_leverage_compute_margin_leverage_metrics"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L23",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard",
-      "target": "bubble_detector_features_leverage_compute_margin_leverage_metrics",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L60",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_paneldashboardstate_load_data",
       "target": "bubble_detector_features_leverage_compute_margin_leverage_metrics"
     },
     {
@@ -4650,30 +4510,6 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L23",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard",
-      "target": "bubble_detector_features_macro_valuation_compute_macro_valuations",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L59",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_paneldashboardstate_load_data",
-      "target": "bubble_detector_features_macro_valuation_compute_macro_valuations"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "tests/test_features.py",
       "source_location": "L9",
       "weight": 1.0,
@@ -4791,30 +4627,6 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L23",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard",
-      "target": "bubble_detector_features_options_vol_compute_options_volatility_metrics",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L63",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_paneldashboardstate_load_data",
-      "target": "bubble_detector_features_options_vol_compute_options_volatility_metrics"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "tests/test_features.py",
       "source_location": "L9",
       "weight": 1.0,
@@ -4926,30 +4738,6 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_ui_dashboard_dashboardstate_load_data",
-      "target": "bubble_detector_features_technicals_compute_technical_indicators"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L23",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard",
-      "target": "bubble_detector_features_technicals_compute_technical_indicators",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L58",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_paneldashboardstate_load_data",
       "target": "bubble_detector_features_technicals_compute_technical_indicators"
     },
     {
@@ -5141,30 +4929,6 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L23",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard",
-      "target": "bubble_detector_features_topology_compute_tda_wavelet_complexity",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L62",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_paneldashboardstate_load_data",
-      "target": "bubble_detector_features_topology_compute_tda_wavelet_complexity"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "tests/test_features.py",
       "source_location": "L9",
       "weight": 1.0,
@@ -5282,18 +5046,6 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L28",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard",
-      "target": "bubble_detector_models_structural_breaks",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "tests/test_models.py",
       "source_location": "L14",
       "weight": 1.0,
@@ -5401,41 +5153,6 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_ui_dashboard_dashboardstate_init",
-      "target": "bubble_detector_models_structural_breaks_structuralbreakpredictor"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L28",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard",
-      "target": "bubble_detector_models_structural_breaks_structuralbreakpredictor",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "uses",
-      "confidence": "INFERRED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L28",
-      "weight": 0.8,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_paneldashboardstate",
-      "target": "bubble_detector_models_structural_breaks_structuralbreakpredictor",
-      "confidence_score": 0.5
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L43",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_paneldashboardstate_init",
       "target": "bubble_detector_models_structural_breaks_structuralbreakpredictor"
     },
     {
@@ -6345,7 +6062,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_ui_dashboard_build_macro_valuation_chart",
-      "target": "bubble_detector_ui_dashboard_py_figure",
+      "target": "figure",
       "confidence_score": 1.0
     },
     {
@@ -6368,7 +6085,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_ui_dashboard_build_econometric_chart",
-      "target": "bubble_detector_ui_dashboard_py_figure",
+      "target": "figure",
       "confidence_score": 1.0
     },
     {
@@ -6380,7 +6097,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_ui_dashboard_build_leverage_chart",
-      "target": "bubble_detector_ui_dashboard_py_figure",
+      "target": "figure",
       "confidence_score": 1.0
     },
     {
@@ -6392,7 +6109,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_ui_dashboard_build_sector_health_chart",
-      "target": "bubble_detector_ui_dashboard_py_figure",
+      "target": "figure",
       "confidence_score": 1.0
     },
     {
@@ -6404,7 +6121,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_ui_dashboard_build_sentiment_vol_chart",
-      "target": "bubble_detector_ui_dashboard_py_figure",
+      "target": "figure",
       "confidence_score": 1.0
     },
     {
@@ -6489,88 +6206,115 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L109",
+      "source_location": "L153",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_ui_panel_dashboard",
-      "target": "bubble_detector_ui_panel_dashboard_build_econometric_fig",
+      "target": "bubble_detector_ui_panel_dashboard_fetch_current_dataset",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L93",
+      "source_location": "L61",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_ui_panel_dashboard",
-      "target": "bubble_detector_ui_panel_dashboard_build_leverage_fig",
+      "target": "bubble_detector_ui_panel_dashboard_generate_wasm_dataset",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L72",
+      "source_location": "L150",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_ui_panel_dashboard",
-      "target": "bubble_detector_ui_panel_dashboard_build_macro_valuation_fig",
+      "target": "bubble_detector_ui_panel_dashboard_get_plotly_template",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L324",
+      "weight": 1.0,
+      "_origin": "ast",
+      "context": "collection",
+      "source": "bubble_detector_ui_panel_dashboard",
+      "target": "bubble_detector_ui_panel_dashboard_render_econometric_chart",
+      "confidence_score": 0.5
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L147",
+      "source_location": "L275",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_ui_panel_dashboard",
-      "target": "bubble_detector_ui_panel_dashboard_build_sector_health_fig",
+      "target": "bubble_detector_ui_panel_dashboard_render_explanatory_note",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L323",
+      "weight": 1.0,
+      "_origin": "ast",
+      "context": "collection",
+      "source": "bubble_detector_ui_panel_dashboard",
+      "target": "bubble_detector_ui_panel_dashboard_render_leverage_chart",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L322",
+      "weight": 1.0,
+      "_origin": "ast",
+      "context": "collection",
+      "source": "bubble_detector_ui_panel_dashboard",
+      "target": "bubble_detector_ui_panel_dashboard_render_macro_valuation_chart",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L326",
+      "weight": 1.0,
+      "_origin": "ast",
+      "context": "collection",
+      "source": "bubble_detector_ui_panel_dashboard",
+      "target": "bubble_detector_ui_panel_dashboard_render_sector_health_chart",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L325",
+      "weight": 1.0,
+      "_origin": "ast",
+      "context": "collection",
+      "source": "bubble_detector_ui_panel_dashboard",
+      "target": "bubble_detector_ui_panel_dashboard_render_sentiment_vol_chart",
+      "confidence_score": 0.5
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L129",
+      "source_location": "L352",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_ui_panel_dashboard",
-      "target": "bubble_detector_ui_panel_dashboard_build_sentiment_vol_fig",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L165",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard",
-      "target": "bubble_detector_ui_panel_dashboard_generate_explanatory_markdown",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L37",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard",
-      "target": "bubble_detector_ui_panel_dashboard_paneldashboardstate",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L224",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard",
-      "target": "bubble_detector_ui_panel_dashboard_update_dashboard",
+      "target": "bubble_detector_ui_panel_dashboard_update_template_theme",
       "confidence_score": 1.0
     },
     {
@@ -6585,36 +6329,26 @@
       "confidence_score": 1.0
     },
     {
-      "relation": "method",
+      "relation": "calls",
+      "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L40",
+      "source_location": "L155",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_paneldashboardstate",
-      "target": "bubble_detector_ui_panel_dashboard_paneldashboardstate_init",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L47",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_paneldashboardstate",
-      "target": "bubble_detector_ui_panel_dashboard_paneldashboardstate_load_data",
+      "source": "bubble_detector_ui_panel_dashboard_fetch_current_dataset",
+      "target": "bubble_detector_ui_panel_dashboard_generate_wasm_dataset",
       "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L38",
+      "source_location": "L62",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_rationale_38",
-      "target": "bubble_detector_ui_panel_dashboard_paneldashboardstate",
+      "source": "bubble_detector_ui_panel_dashboard_rationale_62",
+      "target": "bubble_detector_ui_panel_dashboard_generate_wasm_dataset",
       "confidence_score": 1.0
     },
     {
@@ -6622,11 +6356,11 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L45",
+      "source_location": "L212",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_paneldashboardstate_init",
-      "target": "bubble_detector_ui_panel_dashboard_paneldashboardstate_load_data",
+      "source": "bubble_detector_ui_panel_dashboard_render_econometric_chart",
+      "target": "bubble_detector_ui_panel_dashboard_get_plotly_template",
       "confidence_score": 1.0
     },
     {
@@ -6634,22 +6368,11 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L44",
+      "source_location": "L191",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_paneldashboardstate_init",
-      "target": "bubble_detector_ui_panel_dashboard_py_dataframe",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L48",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_rationale_48",
-      "target": "bubble_detector_ui_panel_dashboard_paneldashboardstate_load_data",
+      "source": "bubble_detector_ui_panel_dashboard_render_leverage_chart",
+      "target": "bubble_detector_ui_panel_dashboard_get_plotly_template",
       "confidence_score": 1.0
     },
     {
@@ -6657,35 +6380,11 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L226",
+      "source_location": "L166",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_update_dashboard",
-      "target": "bubble_detector_ui_panel_dashboard_paneldashboardstate_load_data",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L72",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_build_macro_valuation_fig",
-      "target": "bubble_detector_ui_panel_dashboard_py_dataframe",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "return_type",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L72",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_build_macro_valuation_fig",
-      "target": "bubble_detector_ui_panel_dashboard_py_figure",
+      "source": "bubble_detector_ui_panel_dashboard_render_macro_valuation_chart",
+      "target": "bubble_detector_ui_panel_dashboard_get_plotly_template",
       "confidence_score": 1.0
     },
     {
@@ -6693,107 +6392,11 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L229",
+      "source_location": "L259",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_update_dashboard",
-      "target": "bubble_detector_ui_panel_dashboard_build_macro_valuation_fig",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L109",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_build_econometric_fig",
-      "target": "bubble_detector_ui_panel_dashboard_py_dataframe",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L93",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_build_leverage_fig",
-      "target": "bubble_detector_ui_panel_dashboard_py_dataframe",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L147",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_build_sector_health_fig",
-      "target": "bubble_detector_ui_panel_dashboard_py_dataframe",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L129",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_build_sentiment_vol_fig",
-      "target": "bubble_detector_ui_panel_dashboard_py_dataframe",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "return_type",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L109",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_build_econometric_fig",
-      "target": "bubble_detector_ui_panel_dashboard_py_figure",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "return_type",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L93",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_build_leverage_fig",
-      "target": "bubble_detector_ui_panel_dashboard_py_figure",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "return_type",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L147",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_build_sector_health_fig",
-      "target": "bubble_detector_ui_panel_dashboard_py_figure",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "return_type",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L129",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_build_sentiment_vol_fig",
-      "target": "bubble_detector_ui_panel_dashboard_py_figure",
+      "source": "bubble_detector_ui_panel_dashboard_render_sector_health_chart",
+      "target": "bubble_detector_ui_panel_dashboard_get_plotly_template",
       "confidence_score": 1.0
     },
     {
@@ -6801,11 +6404,59 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L230",
+      "source_location": "L237",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_update_dashboard",
-      "target": "bubble_detector_ui_panel_dashboard_build_leverage_fig",
+      "source": "bubble_detector_ui_panel_dashboard_render_sentiment_vol_chart",
+      "target": "bubble_detector_ui_panel_dashboard_get_plotly_template",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L206",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_ui_panel_dashboard_render_econometric_chart",
+      "target": "bubble_detector_ui_panel_dashboard_fetch_current_dataset",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L186",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_ui_panel_dashboard_render_leverage_chart",
+      "target": "bubble_detector_ui_panel_dashboard_fetch_current_dataset",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L160",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_ui_panel_dashboard_render_macro_valuation_chart",
+      "target": "bubble_detector_ui_panel_dashboard_fetch_current_dataset",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L253",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_ui_panel_dashboard_render_sector_health_chart",
+      "target": "bubble_detector_ui_panel_dashboard_fetch_current_dataset",
       "confidence_score": 1.0
     },
     {
@@ -6816,44 +6467,8 @@
       "source_location": "L231",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_update_dashboard",
-      "target": "bubble_detector_ui_panel_dashboard_build_econometric_fig",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L232",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_update_dashboard",
-      "target": "bubble_detector_ui_panel_dashboard_build_sentiment_vol_fig",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L233",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_update_dashboard",
-      "target": "bubble_detector_ui_panel_dashboard_build_sector_health_fig",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L228",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_panel_dashboard_update_dashboard",
-      "target": "bubble_detector_ui_panel_dashboard_generate_explanatory_markdown",
+      "source": "bubble_detector_ui_panel_dashboard_render_sentiment_vol_chart",
+      "target": "bubble_detector_ui_panel_dashboard_fetch_current_dataset",
       "confidence_score": 1.0
     },
     {
@@ -8546,5 +8161,5 @@
       "source_file": "impliedvolatilitymetric.png"
     }
   ],
-  "built_at_commit": "29e71e7a4d99a29ad7413575e1bc2355d8230294"
+  "built_at_commit": "3c922e4b60cae0bbfdc6ed46e47725f8ff020bf2"
 }
