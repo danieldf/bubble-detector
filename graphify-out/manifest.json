@@ -95,8 +95,8 @@
     "semantic_hash": ""
   },
   "bubble_detector/features/topology.py": {
-    "mtime": 1785252491.579142,
-    "ast_hash": "eff5f44a8a5423ab4bceb7092119edf3",
+    "mtime": 1785966345.030203,
+    "ast_hash": "83097bef649a5a51b7dc11e8710de313",
     "semantic_hash": ""
   },
   "bubble_detector/models/__init__.py": {
@@ -135,8 +135,8 @@
     "semantic_hash": ""
   },
   "tests/test_features.py": {
-    "mtime": 1785252514.8966475,
-    "ast_hash": "aa9c69a0adff55cf9cf3717e4e0259ad",
+    "mtime": 1785966355.1808424,
+    "ast_hash": "4054fa6bf702950d3ca0a8efabc31c15",
     "semantic_hash": ""
   },
   "tests/test_ingestor.py": {
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "bubble_detector/ui/panel_dashboard.py": {
-    "mtime": 1785963451.3545277,
-    "ast_hash": "342a6a933924b66f9b2d41e27d57b0ba",
+    "mtime": 1785966348.553316,
+    "ast_hash": "583470066fa1e169dc01833493abe1dd",
     "semantic_hash": ""
   },
   ".github/workflows/deploy.yml": {

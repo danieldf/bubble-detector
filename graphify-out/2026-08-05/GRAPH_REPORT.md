@@ -1,16 +1,16 @@
 # Graph Report - Merrill  (2026-08-05)
 
 ## Corpus Check
-- 38 files · ~57,361 words
+- 38 files · ~57,550 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 267 nodes · 442 edges · 17 communities (16 shown, 1 thin omitted)
+- 272 nodes · 447 edges · 17 communities (16 shown, 1 thin omitted)
 - Extraction: 93% EXTRACTED · 7% INFERRED · 0% AMBIGUOUS · INFERRED: 30 edges (avg confidence: 0.79)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b2f77ea2`
+- Built from commit: `e4c6ca55`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -82,16 +82,16 @@ Cohesion: 0.60
 Nodes (6): Implied Volatility Metrics Table (July 2026), Implied Volatility Term Structure (Upward Sloping), VIX1D (8.73 - 11.61): Extreme near-term calm, VIX1Y (~23.00): Elevated long-term risk premium, VIX3M (~19.00): Anticipation of future turbulence, VIX Spot (15.57 - 17.16): Low baseline fear
 
 ### Community 4 - "Graphify Settings and Rules"
-Cohesion: 0.07
-Nodes (28): BubbleDetectorError, DataFetchError, IndicatorComputationError, ModelTrainingError, Configuration and Logging Module for Bubble Detector., Base exception for Bubble Detector package., Raised when data fetching fails., Raised when indicator computation fails. (+20 more)
+Cohesion: 0.08
+Nodes (25): BubbleDetectorError, DataFetchError, IndicatorComputationError, Configuration and Logging Module for Bubble Detector., Base exception for Bubble Detector package., Raised when data fetching fails., Raised when indicator computation fails., Raised when data validation fails. (+17 more)
 
 ### Community 5 - "Valuation and Feature Engineering"
 Cohesion: 0.11
 Nodes (27): create_cta_banner(), create_ios_card(), UI Components Module.  Provides iOS 13+ card containers, segmented control tab w, Renders a Call-To-Action (CTA) section with powerful typography (600-800 weight), Creates an iOS 13+ inset card container with subtle shadow, rounded corners,, build_econometric_chart(), build_leverage_chart(), build_macro_valuation_chart() (+19 more)
 
 ### Community 6 - "FINRA Margin Debt Metrics"
-Cohesion: 0.18
-Nodes (11): Machine Learning Models Module, DataFrame, ndarray, Predict structural break drawdown probabilities for input dataframe., Predicts market structural break and drawdown probabilities using Gradient Boost, Extract features and construct forward drawdown target variable., Train ML model using expanding window TimeSeriesSplit cross-validation., StructuralBreakPredictor (+3 more)
+Cohesion: 0.15
+Nodes (14): ModelTrainingError, Raised when ML model training fails., Machine Learning Models Module, DataFrame, ndarray, Structural Break Machine Learning Classifier.  Utilizes XGBoost with RobustScale, Predict structural break drawdown probabilities for input dataframe., Predicts market structural break and drawdown probabilities using Gradient Boost (+6 more)
 
 ### Community 7 - "Systemic Leverage Analysis"
 Cohesion: 0.16
@@ -110,8 +110,8 @@ Cohesion: 0.17
 Nodes (11): 1. Installation, 2. Run Local NiceGUI App, 3. Run Local Panel (HoloViz) App, 4. Build WebAssembly Bundle Locally, 📊 5 Interactive Dashboard Modules, 📜 License, 🌟 Live Interactive WebAssembly Dashboard, 💻 Local Setup & Execution (+3 more)
 
 ### Community 17 - "panel_dashboard.py"
-Cohesion: 0.36
-Nodes (12): build_econometric_fig(), build_leverage_fig(), build_macro_valuation_fig(), build_sector_health_fig(), build_sentiment_vol_fig(), fetch_dataset(), generate_explanatory_markdown(), generate_wasm_dataset() (+4 more)
+Cohesion: 0.22
+Nodes (17): build_econometric_fig(), build_leverage_fig(), build_macro_valuation_fig(), build_sector_health_fig(), build_sentiment_vol_fig(), fetch_dataset(), generate_explanatory_markdown(), generate_wasm_dataset() (+9 more)
 
 ## Knowledge Gaps
 - **39 isolated node(s):** `1. System & Logging Setup (`config.py`):`, `2. UI & Accessibility Engine (`ui_theme.py`):`, `3. Data Ingestion & Storage (`ingestor.py`):`, `4. Quantitative Indicator Modules (`features/`):`, `5. Machine Learning Model (`structural_breaks.py`):` (+34 more)
@@ -122,11 +122,11 @@ Nodes (12): build_econometric_fig(), build_leverage_fig(), build_macro_valuation
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `DataIngestor` connect `Graphify Settings and Rules` to `Econometric Bubble Detection Models`, `Valuation and Feature Engineering`, `FINRA Margin Debt Metrics`?**
-  _High betweenness centrality (0.079) - this node is a cross-community bridge._
+  _High betweenness centrality (0.076) - this node is a cross-community bridge._
 - **Why does `DashboardState` connect `Valuation and Feature Engineering` to `Econometric Bubble Detection Models`, `Graphify Settings and Rules`, `FINRA Margin Debt Metrics`, `Systemic Leverage Analysis`?**
-  _High betweenness centrality (0.063) - this node is a cross-community bridge._
-- **Why does `StructuralBreakPredictor` connect `FINRA Margin Debt Metrics` to `Econometric Bubble Detection Models`, `Graphify Settings and Rules`, `Valuation and Feature Engineering`?**
-  _High betweenness centrality (0.057) - this node is a cross-community bridge._
+  _High betweenness centrality (0.060) - this node is a cross-community bridge._
+- **Why does `StructuralBreakPredictor` connect `FINRA Margin Debt Metrics` to `Econometric Bubble Detection Models`, `Valuation and Feature Engineering`?**
+  _High betweenness centrality (0.055) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `DashboardState` (e.g. with `DataIngestor` and `StructuralBreakPredictor`) actually correct?**
   _`DashboardState` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 3 inferred relationships involving `DataIngestor` (e.g. with `DataFetchError` and `ValidationError`) actually correct?**

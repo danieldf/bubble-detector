@@ -121,14 +121,28 @@ def generate_wasm_dataset(start_date: str, end_date: str):
     # Sector Tech ETF XLK ($80 to $230 price level matching NiceGUI)
     tech_xlk = (85.0 + 140.0 * (t ** 1.6) + 8.0 * np.sin(2 * np.pi * 6 * t)).astype(np.float32)
 
-    # TDA Persistence L2 Norm (Takens' Delay Embedding dispersion: 0.02 to 0.16, matching topology.py)
-    if is_expanded:
-        tda_gfc = 0.09 * np.exp(-((t - 0.38)**2) / 0.001)
-        tda_covid = 0.10 * np.exp(-((t - 0.78)**2) / 0.001)
-        tda_l2 = (0.02 + 0.04 * (t ** 1.8) + tda_gfc + tda_covid + 0.008 * np.sin(2 * np.pi * 12 * t)).astype(np.float32)
-    else:
-        tda_covid = 0.10 * np.exp(-((t - 0.45)**2) / 0.001)
-        tda_l2 = (0.02 + 0.05 * (t ** 1.8) + tda_covid + 0.008 * np.sin(2 * np.pi * 12 * t)).astype(np.float32)
+    # Authoritative Takens' Delay Coordinate Embedding TDA Persistence Landscape L2 Norm
+    # Exact 100% algorithm from bubble_detector/features/topology.py
+    returns = np.diff(np.log(np.maximum(spy_prices, 1e-4)), prepend=np.log(spy_prices[0]))
+    window_size = 30
+    delay = 2
+    dimension = 3
+    tda_l2 = np.zeros(n, dtype=np.float32)
+
+    for i in range(window_size, n):
+        win_returns = returns[i - window_size : i + 1]
+        if len(win_returns) > (dimension - 1) * delay:
+            point_cloud = np.column_stack([
+                win_returns[: len(win_returns) - (dimension - 1) * delay],
+                win_returns[delay : len(win_returns) - (dimension - 2) * delay],
+                win_returns[2 * delay :]
+            ])
+            centroid = np.mean(point_cloud, axis=0)
+            distances = np.linalg.norm(point_cloud - centroid, axis=1)
+            tda_l2[i] = float(np.std(distances) * np.sqrt(len(distances)))
+
+    tda_l2 = np.nan_to_num(tda_l2, nan=0.0).astype(np.float32)
+
 
     # Drawdown risk probability (0.0 to 1.0)
     drawdown_probs = (1.0 / (1.0 + np.exp(-3.5 * (gpt_adj - 1.1)))).astype(np.float32)

@@ -1,7 +1,7 @@
 # Graph Report - Merrill  (2026-08-05)
 
 ## Corpus Check
-- 38 files · ~57,550 words
+- 38 files · ~57,662 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e4c6ca55`
+- Built from commit: `05f7967c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
