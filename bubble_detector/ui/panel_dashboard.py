@@ -120,10 +120,19 @@ def generate_wasm_dataset(start_date: str, end_date: str):
 
     # Sector Tech ETF XLK ($80 to $230 price level matching NiceGUI)
     tech_xlk = (85.0 + 140.0 * (t ** 1.6) + 8.0 * np.sin(2 * np.pi * 6 * t)).astype(np.float32)
-    tda_l2 = (0.2 + 0.65 * (t ** 2) + 0.05 * np.sin(2 * np.pi * 12 * t)).astype(np.float32)
+
+    # TDA Persistence L2 Norm (Takens' Delay Embedding dispersion: 0.02 to 0.16, matching topology.py)
+    if is_expanded:
+        tda_gfc = 0.09 * np.exp(-((t - 0.38)**2) / 0.001)
+        tda_covid = 0.10 * np.exp(-((t - 0.78)**2) / 0.001)
+        tda_l2 = (0.02 + 0.04 * (t ** 1.8) + tda_gfc + tda_covid + 0.008 * np.sin(2 * np.pi * 12 * t)).astype(np.float32)
+    else:
+        tda_covid = 0.10 * np.exp(-((t - 0.45)**2) / 0.001)
+        tda_l2 = (0.02 + 0.05 * (t ** 1.8) + tda_covid + 0.008 * np.sin(2 * np.pi * 12 * t)).astype(np.float32)
 
     # Drawdown risk probability (0.0 to 1.0)
     drawdown_probs = (1.0 / (1.0 + np.exp(-3.5 * (gpt_adj - 1.1)))).astype(np.float32)
+
 
     return {
         "Date": dates,

@@ -49,6 +49,12 @@ def test_compute_tda_wavelet_complexity(sample_df):
     df_out = compute_tda_wavelet_complexity(sample_df, target_col="SPY", window_size=20)
     assert "TDA_Persistence_L2_Norm" in df_out.columns
     assert "Wavelet_Complexity_Score" in df_out.columns
+    
+    tda = df_out["TDA_Persistence_L2_Norm"].to_numpy()
+    assert not np.isnan(tda).any(), "TDA_Persistence_L2_Norm contains NaN values"
+    assert (tda >= 0.0).all(), "TDA_Persistence_L2_Norm values must be non-negative"
+    assert (tda <= 0.25).all(), "TDA_Persistence_L2_Norm values must not exceed 0.25 threshold"
+
 
 def test_compute_options_volatility_metrics(sample_df):
     df_out = compute_options_volatility_metrics(sample_df)

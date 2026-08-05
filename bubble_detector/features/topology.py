@@ -67,9 +67,14 @@ def compute_tda_wavelet_complexity(
         except Exception:
             wavelet_complexity[i] = float(np.std(win_returns))
 
+    # Ensure 100% NaN-free outputs
+    tda_l2_norms = np.nan_to_num(tda_l2_norms, nan=0.0).astype(np.float32)
+    wavelet_complexity = np.nan_to_num(wavelet_complexity, nan=0.0).astype(np.float32)
+
     df = df.with_columns([
         pl.Series("TDA_Persistence_L2_Norm", tda_l2_norms),
         pl.Series("Wavelet_Complexity_Score", wavelet_complexity),
     ])
 
     return df
+
