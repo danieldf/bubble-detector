@@ -126,48 +126,69 @@ def generate_wasm_dataset(start_date: str, end_date: str):
         "Drawdown_Probability": drawdown_probs
     }
 
-class PanelDashboardState:
-    """State manager for WASM Panel dashboard."""
+# Interactive Sidebar Widgets
+horizon_selector = pn.widgets.Select(
+    name="Select Date Horizon",
+    options={
+        HORIZON_OPTION_1_LABEL: HORIZON_OPTION_1_ID,
+        HORIZON_OPTION_2_LABEL: HORIZON_OPTION_2_ID
+    },
+    value=HORIZON_OPTION_1_ID,
+    sizing_mode="stretch_width"
+)
 
-    def __init__(self, horizon_id: str = HORIZON_OPTION_1_ID):
-        self.selected_horizon_id: str = horizon_id
-        self.data: dict = {}
-        self.load_data()
+theme_selector = pn.widgets.Select(
+    name="Dashboard Theme",
+    options={
+        "🌙 Dark Theme": "dark",
+        "☀️ Light Theme": "light"
+    },
+    value="dark",
+    sizing_mode="stretch_width"
+)
 
-    def load_data(self, horizon_id: str = None):
-        if horizon_id and horizon_id in HORIZON_METADATA:
-            self.selected_horizon_id = horizon_id
+def get_plotly_template(theme_mode: str) -> str:
+    return "plotly_dark" if theme_mode == "dark" else "plotly_white"
 
-        meta = HORIZON_METADATA[self.selected_horizon_id]
-        self.data = generate_wasm_dataset(meta["start_date"], meta["end_date"])
+def fetch_current_dataset(horizon_id: str):
+    meta = HORIZON_METADATA[horizon_id]
+    return generate_wasm_dataset(meta["start_date"], meta["end_date"])
 
-state = PanelDashboardState()
-
-def build_macro_valuation_fig(data: dict) -> go.Figure:
+# Reactive Plotly Figure Generators bound to horizon_selector & theme_selector
+@pn.depends(horizon_id=horizon_selector, theme_mode=theme_selector)
+def render_macro_valuation_chart(horizon_id, theme_mode):
+    data = fetch_current_dataset(horizon_id)
     dates = data["Date"]
     cape = data["Shiller_CAPE"]
     p_cape = data["P_CAPE"]
     buffett = data["Buffett_Indicator"]
+
+    plotly_tmpl = get_plotly_template(theme_mode)
+    text_color = "#E0E0E0" if theme_mode == "dark" else "#212121"
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=dates, y=cape, mode="lines", name="Shiller CAPE (41.37 Peak)", line=dict(color="#0288D1", width=2.5)))
     fig.add_trace(go.Scatter(x=dates, y=p_cape, mode="lines", name="Payout-Adjusted CAPE (P-CAPE)", line=dict(color="#388E3C", width=2.0, dash="dash")))
     fig.add_trace(go.Scatter(x=dates, y=buffett / 5.0, mode="lines", name="Buffett Indicator (scaled)", line=dict(color="#F57C00", width=2.0)))
 
-    fig.add_hline(y=26.4, line_dash="dot", line_color="#757575", annotation_text="CAPE High Quintile (26.4)")
-    fig.add_hline(y=40.0, line_dash="dash", line_color="#D32F2F", annotation_text="Extreme Overvaluation (40.0)")
+    fig.add_hline(y=26.4, line_dash="dot", line_color="#757575", annotation_text="CAPE High Quintile (26.4)", annotation_font_color=text_color)
+    fig.add_hline(y=40.0, line_dash="dash", line_color="#D32F2F", annotation_text="Extreme Overvaluation (40.0)", annotation_font_color=text_color)
 
     fig.update_layout(
         title="Macro Valuation Anchors: Shiller CAPE, P-CAPE & Buffett Indicator",
         xaxis_title="Date", yaxis_title="Valuation Multiple / Index Level",
-        template="plotly_dark", margin=dict(l=40, r=40, t=50, b=40), legend=dict(orientation="h", y=1.05)
+        template=plotly_tmpl, margin=dict(l=40, r=40, t=50, b=40), legend=dict(orientation="h", y=1.05)
     )
-    return fig
+    return pn.pane.Plotly(fig, sizing_mode="stretch_both", min_height=480)
 
-def build_leverage_fig(data: dict) -> go.Figure:
+@pn.depends(horizon_id=horizon_selector, theme_mode=theme_selector)
+def render_leverage_chart(horizon_id, theme_mode):
+    data = fetch_current_dataset(horizon_id)
     dates = data["Date"]
     margin_debt = data["FINRA_Margin_Debt"]
     exhaustion = data["Margin_Exhaustion_Score"]
+
+    plotly_tmpl = get_plotly_template(theme_mode)
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=dates, y=margin_debt, mode="lines", name="FINRA Margin Debt ($B)", line=dict(color="#D32F2F", width=2.5)))
@@ -176,35 +197,44 @@ def build_leverage_fig(data: dict) -> go.Figure:
     fig.update_layout(
         title="Systemic Leverage: FINRA Margin Debt Velocity & Capacity Exhaustion",
         xaxis_title="Date", yaxis_title="Margin Debt ($ Billion)",
-        template="plotly_dark", margin=dict(l=40, r=40, t=50, b=40), legend=dict(orientation="h", y=1.05)
+        template=plotly_tmpl, margin=dict(l=40, r=40, t=50, b=40), legend=dict(orientation="h", y=1.05)
     )
-    return fig
+    return pn.pane.Plotly(fig, sizing_mode="stretch_both", min_height=480)
 
-def build_econometric_fig(data: dict) -> go.Figure:
+@pn.depends(horizon_id=horizon_selector, theme_mode=theme_selector)
+def render_econometric_chart(horizon_id, theme_mode):
+    data = fetch_current_dataset(horizon_id)
     dates = data["Date"]
     gsadf = data["GSADF_Stat"]
     gpt_adj = data["GSADF_GPT_Adjusted"]
     drawdown_prob = data["Drawdown_Probability"]
+
+    plotly_tmpl = get_plotly_template(theme_mode)
+    text_color = "#E0E0E0" if theme_mode == "dark" else "#212121"
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=dates, y=gsadf, mode="lines", name="Standard GSADF Stat", line=dict(color="#757575", width=1.5, dash="dot")))
     fig.add_trace(go.Scatter(x=dates, y=gpt_adj, mode="lines", name="GPT-Adjusted GSADF Stat", line=dict(color="#0288D1", width=2.5)))
     fig.add_trace(go.Scatter(x=dates, y=drawdown_prob * 3.0, mode="lines", name="ML Structural Break Probability (scaled)", line=dict(color="#D32F2F", width=2.0)))
 
-    fig.add_hline(y=1.45, line_dash="solid", line_color="#D32F2F", annotation_text="PSY Explosive Critical Value (1.45)")
+    fig.add_hline(y=1.45, line_dash="solid", line_color="#D32F2F", annotation_text="PSY Explosive Critical Value (1.45)", annotation_font_color=text_color)
 
     fig.update_layout(
         title="Econometric Bubble Detection: GSADF t-Stat & GPT Fundamental Tech Decomposition",
         xaxis_title="Date", yaxis_title="t-Statistic / Probability",
-        template="plotly_dark", margin=dict(l=40, r=40, t=50, b=40), legend=dict(orientation="h", y=1.05)
+        template=plotly_tmpl, margin=dict(l=40, r=40, t=50, b=40), legend=dict(orientation="h", y=1.05)
     )
-    return fig
+    return pn.pane.Plotly(fig, sizing_mode="stretch_both", min_height=480)
 
-def build_sentiment_vol_fig(data: dict) -> go.Figure:
+@pn.depends(horizon_id=horizon_selector, theme_mode=theme_selector)
+def render_sentiment_vol_chart(horizon_id, theme_mode):
+    data = fetch_current_dataset(horizon_id)
     dates = data["Date"]
     vix = data["^VIX"]
     skew = data["^SKEW"]
     ovx_vix = data["OVX_VIX_CrossAsset_Ratio"]
+
+    plotly_tmpl = get_plotly_template(theme_mode)
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=dates, y=vix, mode="lines", name="Spot VIX (Complacency)", line=dict(color="#388E3C", width=2.0)))
@@ -214,15 +244,19 @@ def build_sentiment_vol_fig(data: dict) -> go.Figure:
     fig.update_layout(
         title="Options Sentiment & Volatility: VIX Suppressed Spot vs SKEW Tail-Risk Divergence",
         xaxis_title="Date", yaxis_title="Index Level / Ratio",
-        template="plotly_dark", margin=dict(l=40, r=40, t=50, b=40), legend=dict(orientation="h", y=1.05)
+        template=plotly_tmpl, margin=dict(l=40, r=40, t=50, b=40), legend=dict(orientation="h", y=1.05)
     )
-    return fig
+    return pn.pane.Plotly(fig, sizing_mode="stretch_both", min_height=480)
 
-def build_sector_health_fig(data: dict) -> go.Figure:
+@pn.depends(horizon_id=horizon_selector, theme_mode=theme_selector)
+def render_sector_health_chart(horizon_id, theme_mode):
+    data = fetch_current_dataset(horizon_id)
     dates = data["Date"]
     housing_pti = data["Housing_Price_to_Income"]
     tech = data["XLK"]
     tda_norm = data["TDA_Persistence_L2_Norm"]
+
+    plotly_tmpl = get_plotly_template(theme_mode)
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=dates, y=housing_pti, mode="lines", name="Housing Price-to-Income (7.11x Peak)", line=dict(color="#F57C00", width=2.5)))
@@ -232,26 +266,32 @@ def build_sector_health_fig(data: dict) -> go.Figure:
     fig.update_layout(
         title="Sector Health & Topological Complexity: Housing Affordability & Tech CapEx",
         xaxis_title="Date", yaxis_title="Ratio / Index Level",
-        template="plotly_dark", margin=dict(l=40, r=40, t=50, b=40), legend=dict(orientation="h", y=1.05)
+        template=plotly_tmpl, margin=dict(l=40, r=40, t=50, b=40), legend=dict(orientation="h", y=1.05)
     )
-    return fig
+    return pn.pane.Plotly(fig, sizing_mode="stretch_both", min_height=480)
 
-def generate_explanatory_markdown(horizon_id: str) -> str:
+# Reactive Explanatory Note Card
+@pn.depends(horizon_id=horizon_selector)
+def render_explanatory_note(horizon_id):
     meta = HORIZON_METADATA[horizon_id]
     crashes_html = "".join([f"<li><b>{c}</b></li>" for c in meta["included_crashes"]])
 
     if horizon_id == HORIZON_OPTION_1_ID:
-        tradeoffs = """
-- **✔ 100% Native High-Frequency Data**: All 12 features (VIX1D, OVX, SKEW, DSPX, TDA, GSADF) measured directly from real exchange feeds.
-- **✔ Zero Proxy Imputation**: Best suited for immediate 2026 tactical parameter tuning.
-        """
+        tradeoffs = (
+            "<ul>"
+            "<li><b>✔ 100% Native High-Frequency Data</b>: All 12 features (VIX1D, OVX, SKEW, DSPX, TDA, GSADF) measured directly from real exchange feeds.</li>"
+            "<li><b>✔ Zero Proxy Imputation</b>: Best suited for immediate 2026 tactical parameter tuning.</li>"
+            "</ul>"
+        )
     else:
-        tradeoffs = """
-- **✔ 28.5-Year Multi-Decade Horizon**: Spans Dot-Com 2000, 2008 GFC, 2018 Volmageddon, 2020 COVID, 2022 Fed Hikes, and 2024–2026 AI Exuberance.
-- **⚡ Proxy Modeling Pre-2007**: Options indices prior to 2007 utilize historical volatility spline proxy interpolation.
-        """
+        tradeoffs = (
+            "<ul>"
+            "<li><b>✔ 28.5-Year Multi-Decade Horizon</b>: Spans Dot-Com 2000, 2008 GFC, 2018 Volmageddon, 2020 COVID, 2022 Fed Hikes, and 2024–2026 AI Exuberance.</li>"
+            "<li><b>⚡ Proxy Modeling Pre-2007</b>: Options indices prior to 2007 utilize historical volatility spline proxy interpolation.</li>"
+            "</ul>"
+        )
 
-    return f"""
+    markdown_text = f"""
 ### 📅 Horizon Specification & Data Integrity: {meta['label']}
 **Native Feature Fidelity:** <span style="color:#0288D1; font-weight:bold;">{meta['native_fidelity']} ({meta['fidelity_status']})</span>  
 *Time Bounds:* `{meta['start_date']}` to `{meta['end_date']}` ({meta['regimes_count']} Historical Regimes)
@@ -266,61 +306,9 @@ def generate_explanatory_markdown(horizon_id: str) -> str:
 #### Methodological Trade-Offs & Calibration:
 {tradeoffs}
 """
+    return pn.pane.Markdown(markdown_text, sizing_mode="stretch_width")
 
-# Widgets
-horizon_selector = pn.widgets.Select(
-    name="Select Date Horizon",
-    options={
-        HORIZON_OPTION_1_LABEL: HORIZON_OPTION_1_ID,
-        HORIZON_OPTION_2_LABEL: HORIZON_OPTION_2_ID
-    },
-    value=HORIZON_OPTION_1_ID,
-    sizing_mode="stretch_width"
-)
-
-run_button = pn.widgets.Button(
-    name="🚀 Run Real-Time Diagnostics",
-    button_type="primary",
-    sizing_mode="stretch_width"
-)
-
-note_pane = pn.pane.Markdown(
-    generate_explanatory_markdown(state.selected_horizon_id),
-    sizing_mode="stretch_width"
-)
-
-macro_pane = pn.pane.Plotly(build_macro_valuation_fig(state.data), sizing_mode="stretch_both", min_height=480)
-leverage_pane = pn.pane.Plotly(build_leverage_fig(state.data), sizing_mode="stretch_both", min_height=480)
-econometric_pane = pn.pane.Plotly(build_econometric_fig(state.data), sizing_mode="stretch_both", min_height=480)
-sentiment_pane = pn.pane.Plotly(build_sentiment_vol_fig(state.data), sizing_mode="stretch_both", min_height=480)
-sector_pane = pn.pane.Plotly(build_sector_health_fig(state.data), sizing_mode="stretch_both", min_height=480)
-
-def update_dashboard(event=None):
-    selected_id = horizon_selector.value
-    state.load_data(horizon_id=selected_id)
-
-    note_pane.object = generate_explanatory_markdown(selected_id)
-    macro_pane.object = build_macro_valuation_fig(state.data)
-    leverage_pane.object = build_leverage_fig(state.data)
-    econometric_pane.object = build_econometric_fig(state.data)
-    sentiment_pane.object = build_sentiment_vol_fig(state.data)
-    sector_pane.object = build_sector_health_fig(state.data)
-
-horizon_selector.param.watch(update_dashboard, 'value')
-run_button.on_click(update_dashboard)
-
-# Tabs
-tabs = pn.Tabs(
-    ("Macro Valuation", macro_pane),
-    ("Systemic Leverage", leverage_pane),
-    ("Econometric Bubble", econometric_pane),
-    ("Sentiment & Volatility", sentiment_pane),
-    ("Sector Health", sector_pane),
-    sizing_mode="stretch_both",
-    min_height=520
-)
-
-# Header Banner Markdown
+# Reactive Header Banner
 header_banner = pn.pane.Markdown(
     """
 # 📉 Multidimensional Market Bubble Detector
@@ -329,28 +317,46 @@ header_banner = pn.pane.Markdown(
     sizing_mode="stretch_width"
 )
 
-# Create Panel FastListTemplate Layout
+# Tabs Component
+tabs = pn.Tabs(
+    ("Macro Valuation", render_macro_valuation_chart),
+    ("Systemic Leverage", render_leverage_chart),
+    ("Econometric Bubble", render_econometric_chart),
+    ("Sentiment & Volatility", render_sentiment_vol_chart),
+    ("Sector Health", render_sector_health_chart),
+    sizing_mode="stretch_both",
+    min_height=520
+)
+
+# FastListTemplate Application
 template = pn.template.FastListTemplate(
     title="Market Bubble Detector (WebAssembly Edition)",
     sidebar=[
         pn.pane.Markdown("### ⚙️ Calibration Controls"),
         horizon_selector,
-        run_button,
+        theme_selector,
         pn.pane.Markdown("---"),
         pn.pane.Markdown("**Framework**: Panel (HoloViz) WASM / Pyodide\n**Engine**: NumPy & Plotly")
     ],
     main=[
         header_banner,
-        pn.Card(note_pane, title="Horizon Specifications & Data Integrity", collapsed=False),
+        pn.Card(render_explanatory_note, title="Horizon Specifications & Data Integrity", collapsed=False),
         tabs
     ],
     accent_base_color="#0288D1",
     header_background="#1A237E"
 )
 
+# Dynamically sync template theme when theme_selector changes
+@pn.depends(theme_mode=theme_selector, watch=True)
+def update_template_theme(theme_mode):
+    if theme_mode == "dark":
+        template.theme = pn.template.DarkTheme
+    else:
+        template.theme = pn.template.DefaultTheme
+
 template.servable()
 
 import sys
 if __name__ == "__main__" and "pyodide" not in sys.modules and "panel.io.pyodide" not in sys.modules:
     pn.serve(template, port=5006, show=False)
-

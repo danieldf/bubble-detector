@@ -38,14 +38,16 @@ jobs:
           PYTHONPATH=. panel convert bubble_detector/ui/panel_dashboard.py --to pyodide --requirements panel bokeh plotly numpy --out dist/
           mv dist/panel_dashboard.html dist/index.html
           python -c "
-          with open('dist/index.html', 'r') as f:
+          with open('dist/index.html', 'r', encoding='utf-8') as f:
               content = f.read()
           import re
           content = re.sub(r'\'https://cdn\.holoviz\.org/panel/wheels/bokeh-[^\']+\.whl\'', '\'bokeh\'', content)
           content = re.sub(r'\'https://cdn\.holoviz\.org/panel/[^\']+/panel-[^\']+\.whl\'', '\'panel\'', content)
-          with open('dist/index.html', 'w') as f:
+          content = content.replace('U0001f4c9', '📉').replace('U0001f4c5', '📅').replace('U0001f680', '🚀').replace('U0001f319', '🌙').replace('U0001f917', '🤗')
+          with open('dist/index.html', 'w', encoding='utf-8') as f:
               f.write(content)
           "
+
 
 
       - name: Upload GitHub Pages Artifact
