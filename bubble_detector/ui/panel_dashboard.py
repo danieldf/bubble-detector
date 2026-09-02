@@ -129,6 +129,10 @@ def generate_wasm_dataset(start_date: str, end_date: str):
         probs = predictor.predict_drawdown_probability(df_raw)
         df_raw = df_raw.with_columns(pl.Series("Drawdown_Probability", probs))
 
+        from bubble_detector.models.regime_mahalanobis import MacroMahalanobisDetector
+        detector = MacroMahalanobisDetector()
+        df_raw = detector.process(df_raw)
+
         # Convert Polars columns to dict of lists/numpy arrays for Plotly rendering
         out_dict = {}
         for col in df_raw.columns:
@@ -253,6 +257,56 @@ def generate_wasm_dataset(start_date: str, end_date: str):
         drawdown_logits = np.clip(-1.8 + 0.8 * gpt_adj + 0.4 * buff_z + 0.3 * cape_z + 2.5 * tda_l2, -30.0, 30.0)
         drawdown_probs = (1.0 / (1.0 + np.exp(-drawdown_logits))).clip(0.0, 1.0).astype(np.float32)
 
+        # Authoritative Macro Mahalanobis Distance & Regime Signals (Method 1)
+        indicators_15_arrays = [
+            spy_prices, cape, p_cape, buffett, margin_debt,
+            margin_exhaustion, gsadf, gpt_adj, drawdown_probs,
+            vix, skew, ovx_vix, housing_pti, tech_xlk, tda_l2
+        ]
+        k_feat = len(indicators_15_arrays)
+        Z_mat = np.zeros((n, k_feat), dtype=np.float32)
+        window_md = 252
+        for j, arr_j in enumerate(indicators_15_arrays):
+            s_j = pd.Series(arr_j)
+            min_p = max(15, window_md // 6)
+            r_mean = s_j.rolling(window_md, min_periods=min_p).mean().to_numpy()
+            r_std = s_j.rolling(window_md, min_periods=min_p).std().to_numpy()
+            r_std = np.where(r_std < 1e-6, 1.0, r_std)
+            r_mean = np.nan_to_num(r_mean, nan=np.nanmean(arr_j) if len(arr_j) > 0 else 0.0)
+            Z_mat[:, j] = np.nan_to_num((arr_j - r_mean) / r_std, nan=0.0).astype(np.float32)
+
+        m_dist = np.zeros(n, dtype=np.float32)
+        eye_k = 1e-4 * np.eye(k_feat, dtype=np.float64)
+        for i in range(15, n):
+            start_i = max(0, i - window_md)
+            w_z = Z_mat[start_i:i]
+            if len(w_z) < 15:
+                continue
+            mu_z = np.mean(w_z, axis=0)
+            diff_z = Z_mat[i] - mu_z
+            cov_z = np.cov(w_z, rowvar=False) + eye_k
+            try:
+                v_z = np.linalg.solve(cov_z, diff_z)
+                m_dist[i] = np.sqrt(max(0.0, float(np.dot(diff_z, v_z))))
+            except Exception:
+                pinv_z = np.linalg.pinv(cov_z)
+                m_dist[i] = np.sqrt(max(0.0, float(np.dot(diff_z, np.dot(pinv_z, diff_z)))))
+
+        if n > 15:
+            m_dist[:15] = m_dist[15]
+
+        # Empirical percentile rank
+        bubble_regime_probs = np.zeros(n, dtype=np.float32)
+        for i in range(n):
+            start_i = max(0, i - window_md)
+            w_d = m_dist[start_i : i + 1]
+            if len(w_d) == 0:
+                bubble_regime_probs[i] = 0.5
+            else:
+                bubble_regime_probs[i] = float(np.clip(np.sum(w_d <= m_dist[i]) / len(w_d), 0.0, 1.0))
+
+        dynamic_exposure = np.clip(1.0 - 0.8 * bubble_regime_probs, 0.20, 1.0).astype(np.float32)
+
         return {
             "Date": dates,
             "SPY": spy_prices,
@@ -269,7 +323,10 @@ def generate_wasm_dataset(start_date: str, end_date: str):
             "Housing_Price_to_Income": housing_pti,
             "XLK": tech_xlk,
             "TDA_Persistence_L2_Norm": tda_l2,
-            "Drawdown_Probability": drawdown_probs
+            "Drawdown_Probability": drawdown_probs,
+            "Mahalanobis_Distance": m_dist,
+            "Bubble_Regime_Probability": bubble_regime_probs,
+            "Dynamic_Equity_Exposure": dynamic_exposure
         }
 
 # Horizon Selector Widget
@@ -405,6 +462,64 @@ def build_sector_health_fig(horizon_id: str) -> go.Figure:
     )
     return fig
 
+def build_mahalanobis_fig(horizon_id: str) -> go.Figure:
+    """Build Plotly figure for Macro Mahalanobis Distance Dashboard (matching NiceGUI 100%)."""
+    data = fetch_dataset(horizon_id)
+    dates = data["Date"]
+    m_dist = data["Mahalanobis_Distance"]
+    probs = data["Bubble_Regime_Probability"]
+    cape = data["Shiller_CAPE"]
+    p_cape = data["P_CAPE"]
+    buffett = data["Buffett_Indicator"]
+    tda_norm = data["TDA_Persistence_L2_Norm"]
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
+        x=dates, y=m_dist, mode="lines",
+        name="Macro Mahalanobis Distance (DM)",
+        line=dict(color="#D32F2F", width=3.0)
+    ))
+    fig.add_trace(go.Scatter(
+        x=dates, y=probs * 10.0, mode="lines",
+        name="Bubble Regime Probability (scaled x10)",
+        line=dict(color="#FF9800", width=2.2, dash="dash")
+    ))
+    fig.add_trace(go.Scatter(
+        x=dates, y=cape / 5.0, mode="lines",
+        name="Shiller CAPE (scaled / 5)",
+        line=dict(color="#00E676", width=1.6)
+    ))
+    fig.add_trace(go.Scatter(
+        x=dates, y=p_cape / 5.0, mode="lines",
+        name="P-CAPE (scaled / 5)",
+        line=dict(color="#00B0FF", width=1.6)
+    ))
+    fig.add_trace(go.Scatter(
+        x=dates, y=buffett / 25.0, mode="lines",
+        name="Buffett Indicator (scaled / 25)",
+        line=dict(color="#AB47BC", width=1.6)
+    ))
+    fig.add_trace(go.Scatter(
+        x=dates, y=tda_norm * 5.0, mode="lines",
+        name="TDA Geometric Complexity (scaled x5)",
+        line=dict(color="#FF4081", width=1.6, dash="dot")
+    ))
+
+    # Critical Regime Threshold References
+    fig.add_hline(y=3.8, line_dash="dot", line_color="#4CAF50", annotation_text="Historical Norm Baseline (3.8σ)", annotation_position="top left")
+    fig.add_hline(y=5.0, line_dash="dashdot", line_color="#FF9800", annotation_text="Warning Threshold (5.0σ)", annotation_position="top left")
+    fig.add_hline(y=6.2, line_dash="dash", line_color="#D32F2F", annotation_text="Extreme Crisis Regime (6.2σ)", annotation_position="top left")
+
+    fig.update_layout(
+        template="plotly_dark",
+        title="Macro Mahalanobis Distance & Multi-Dimensional Regime Signals vs. Key Valuation Benchmarks",
+        xaxis_title="Date",
+        yaxis_title="Statistical Distance (σ) / Scaled Index Level",
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        margin=dict(l=40, r=40, t=60, b=40),
+    )
+    return fig
+
 def generate_explanatory_markdown(horizon_id: str) -> str:
     meta = HORIZON_METADATA[horizon_id]
     crashes_html = "".join([f"<li><b>{c}</b></li>" for c in meta["included_crashes"]])
@@ -477,6 +592,12 @@ sector_pane = pn.pane.Plotly(
     min_height=480
 )
 
+mahalanobis_pane = pn.pane.Plotly(
+    build_mahalanobis_fig(HORIZON_OPTION_1_ID),
+    sizing_mode="stretch_both",
+    min_height=480
+)
+
 # Header Banner Markdown
 header_banner = pn.pane.Markdown(
     """
@@ -493,6 +614,7 @@ tabs = pn.Tabs(
     ("Econometric Bubble", econometric_pane),
     ("Sentiment & Volatility", sentiment_pane),
     ("Sector Health", sector_pane),
+    ("Macro Mahalanobis Distance", mahalanobis_pane),
     sizing_mode="stretch_both",
     min_height=520
 )
@@ -523,12 +645,13 @@ def update_horizon(event=None):
     # 1. Update Markdown Card text
     note_pane.object = generate_explanatory_markdown(h_id)
 
-    # 2. Update all 5 Plotly Chart panes with newly built Plotly Figures
+    # 2. Update all 6 Plotly Chart panes with newly built Plotly Figures
     macro_pane.object = build_macro_valuation_fig(h_id)
     leverage_pane.object = build_leverage_fig(h_id)
     econometric_pane.object = build_econometric_fig(h_id)
     sentiment_pane.object = build_sentiment_vol_fig(h_id)
     sector_pane.object = build_sector_health_fig(h_id)
+    mahalanobis_pane.object = build_mahalanobis_fig(h_id)
 
 # Register explicit param.watch listener on horizon_selector
 horizon_selector.param.watch(update_horizon, 'value')

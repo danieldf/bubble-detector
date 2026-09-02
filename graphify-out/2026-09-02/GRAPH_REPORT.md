@@ -1,11 +1,11 @@
-# Graph Report - Merrill  (2026-08-05)
+# Graph Report - Merrill  (2026-09-02)
 
 ## Corpus Check
-- 39 files · ~58,441 words
+- 39 files · ~59,102 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 278 nodes · 477 edges · 17 communities (16 shown, 1 thin omitted)
+- 299 nodes · 512 edges · 17 communities (16 shown, 1 thin omitted)
 - Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 30 edges (avg confidence: 0.79)
 - Token cost: 0 input · 0 output
 
@@ -82,8 +82,8 @@ Cohesion: 0.60
 Nodes (6): Implied Volatility Metrics Table (July 2026), Implied Volatility Term Structure (Upward Sloping), VIX1D (8.73 - 11.61): Extreme near-term calm, VIX1Y (~23.00): Elevated long-term risk premium, VIX3M (~19.00): Anticipation of future turbulence, VIX Spot (15.57 - 17.16): Low baseline fear
 
 ### Community 4 - "Graphify Settings and Rules"
-Cohesion: 0.08
-Nodes (25): BubbleDetectorError, DataFetchError, IndicatorComputationError, Configuration and Logging Module for Bubble Detector., Base exception for Bubble Detector package., Raised when data fetching fails., Raised when indicator computation fails., Raised when data validation fails. (+17 more)
+Cohesion: 0.06
+Nodes (40): BubbleDetectorError, DataFetchError, get_current_date(), get_dynamic_50yr_date_range(), get_dynamic_horizon_metadata(), IndicatorComputationError, Any, date (+32 more)
 
 ### Community 5 - "Valuation and Feature Engineering"
 Cohesion: 0.10
@@ -110,8 +110,8 @@ Cohesion: 0.17
 Nodes (11): 1. Installation, 2. Run Local NiceGUI App, 3. Run Local Panel (HoloViz) App, 4. Build WebAssembly Bundle Locally, 📊 5 Interactive Dashboard Modules, 📜 License, 🌟 Live Interactive WebAssembly Dashboard, 💻 Local Setup & Execution (+3 more)
 
 ### Community 17 - "panel_dashboard.py"
-Cohesion: 0.22
-Nodes (17): build_econometric_fig(), build_leverage_fig(), build_macro_valuation_fig(), build_sector_health_fig(), build_sentiment_vol_fig(), fetch_dataset(), generate_explanatory_markdown(), generate_wasm_dataset() (+9 more)
+Cohesion: 0.14
+Nodes (25): build_econometric_fig(), build_leverage_fig(), build_macro_valuation_fig(), build_sector_health_fig(), build_sentiment_vol_fig(), fetch_dataset(), generate_explanatory_markdown(), generate_wasm_dataset() (+17 more)
 
 ## Knowledge Gaps
 - **39 isolated node(s):** `1. System & Logging Setup (`config.py`):`, `2. UI & Accessibility Engine (`ui_theme.py`):`, `3. Data Ingestion & Storage (`ingestor.py`):`, `4. Quantitative Indicator Modules (`features/`):`, `5. Machine Learning Model (`structural_breaks.py`):` (+34 more)
@@ -122,11 +122,11 @@ Nodes (17): build_econometric_fig(), build_leverage_fig(), build_macro_valuation
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `DataIngestor` connect `Graphify Settings and Rules` to `panel_dashboard.py`, `Econometric Bubble Detection Models`, `Valuation and Feature Engineering`, `FINRA Margin Debt Metrics`?**
-  _High betweenness centrality (0.098) - this node is a cross-community bridge._
+  _High betweenness centrality (0.105) - this node is a cross-community bridge._
 - **Why does `DashboardState` connect `Valuation and Feature Engineering` to `Econometric Bubble Detection Models`, `Graphify Settings and Rules`, `FINRA Margin Debt Metrics`, `Systemic Leverage Analysis`?**
-  _High betweenness centrality (0.072) - this node is a cross-community bridge._
+  _High betweenness centrality (0.074) - this node is a cross-community bridge._
 - **Why does `StructuralBreakPredictor` connect `FINRA Margin Debt Metrics` to `panel_dashboard.py`, `Econometric Bubble Detection Models`, `Valuation and Feature Engineering`?**
-  _High betweenness centrality (0.071) - this node is a cross-community bridge._
+  _High betweenness centrality (0.070) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `DashboardState` (e.g. with `DataIngestor` and `StructuralBreakPredictor`) actually correct?**
   _`DashboardState` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 3 inferred relationships involving `DataIngestor` (e.g. with `DataFetchError` and `ValidationError`) actually correct?**

@@ -18,6 +18,7 @@ from bubble_detector.features import (
     compute_tda_wavelet_complexity, compute_options_volatility_metrics
 )
 from bubble_detector.models.structural_breaks import StructuralBreakPredictor
+from bubble_detector.models.regime_mahalanobis import MacroMahalanobisDetector
 from bubble_detector.ui.components import create_cta_banner, create_ios_card
 from bubble_detector.config import (
     HORIZON_METADATA, HORIZON_OPTION_1_ID, HORIZON_OPTION_1_LABEL,
@@ -33,6 +34,7 @@ class DashboardState:
         self.selected_horizon_id: str = HORIZON_OPTION_1_ID
         self.ingestor = DataIngestor()
         self.predictor = StructuralBreakPredictor()
+        self.mahalanobis_detector = MacroMahalanobisDetector()
         self.df: pl.DataFrame = pl.DataFrame()
         if load_data:
             self.load_data()
@@ -57,8 +59,11 @@ class DashboardState:
 
         # Predict drawdown probabilities
         probs = self.predictor.predict_drawdown_probability(df_raw)
-        self.df = df_raw.with_columns(pl.Series("Drawdown_Probability", probs))
-        logger.info("Dataset and features loaded successfully.")
+        df_with_probs = df_raw.with_columns(pl.Series("Drawdown_Probability", probs))
+
+        # Compute Method 1: Macro Mahalanobis Distance & Regime Signal
+        self.df = self.mahalanobis_detector.process(df_with_probs)
+        logger.info("Dataset, features, and Macro Mahalanobis regime signals loaded successfully.")
 
 
     def toggle_theme(self) -> str:
@@ -202,6 +207,69 @@ def build_sector_health_chart(state: DashboardState) -> go.Figure:
     )
     return fig
 
+def build_mahalanobis_chart(state: DashboardState) -> go.Figure:
+    """Build Plotly figure for Macro Mahalanobis Distance Dashboard (Method 1)."""
+    df = state.df
+    dates = df["Date"].to_list()
+    m_dist = df["Mahalanobis_Distance"].to_numpy()
+    probs = df["Bubble_Regime_Probability"].to_numpy()
+    cape = df["Shiller_CAPE"].to_numpy()
+    p_cape = df["P_CAPE"].to_numpy()
+    buffett = df["Buffett_Indicator"].to_numpy()
+    tda_norm = df["TDA_Persistence_L2_Norm"].to_numpy()
+
+    palette = state.get_palette()
+    fig = go.Figure()
+
+    # Primary Multi-Dimensional Statistical Distance & Regime Probability
+    fig.add_trace(go.Scatter(
+        x=dates, y=m_dist, mode="lines",
+        name="Macro Mahalanobis Distance (DM)",
+        line=dict(color="#D32F2F", width=3.0)
+    ))
+    fig.add_trace(go.Scatter(
+        x=dates, y=probs * 10.0, mode="lines",
+        name="Bubble Regime Probability (scaled x10)",
+        line=dict(color="#FF9800", width=2.2, dash="dash")
+    ))
+
+    # Benchmark Comparative Overlays (Shiller CAPE, P-CAPE, Buffett, TDA)
+    fig.add_trace(go.Scatter(
+        x=dates, y=cape / 5.0, mode="lines",
+        name="Shiller CAPE (scaled / 5)",
+        line=dict(color="#00E676", width=1.6)
+    ))
+    fig.add_trace(go.Scatter(
+        x=dates, y=p_cape / 5.0, mode="lines",
+        name="P-CAPE (scaled / 5)",
+        line=dict(color="#00B0FF", width=1.6)
+    ))
+    fig.add_trace(go.Scatter(
+        x=dates, y=buffett / 25.0, mode="lines",
+        name="Buffett Indicator (scaled / 25)",
+        line=dict(color="#AB47BC", width=1.6)
+    ))
+    fig.add_trace(go.Scatter(
+        x=dates, y=tda_norm * 5.0, mode="lines",
+        name="TDA Geometric Complexity (scaled x5)",
+        line=dict(color="#FF4081", width=1.6, dash="dot")
+    ))
+
+    # Critical Regime Threshold References
+    fig.add_hline(y=3.8, line_dash="dot", line_color="#4CAF50", annotation_text="Historical Norm Baseline (3.8σ)", annotation_position="top left")
+    fig.add_hline(y=5.0, line_dash="dashdot", line_color="#FF9800", annotation_text="Warning Threshold (5.0σ)", annotation_position="top left")
+    fig.add_hline(y=6.2, line_dash="dash", line_color="#D32F2F", annotation_text="Extreme Crisis Regime (6.2σ)", annotation_position="top left")
+
+    fig.update_layout(
+        template=state.get_plotly_template(),
+        title="Macro Mahalanobis Distance & Multi-Dimensional Regime Signals vs. Key Valuation Benchmarks",
+        xaxis_title="Date",
+        yaxis_title="Statistical Distance (σ) / Scaled Index Level",
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        margin=dict(l=40, r=40, t=60, b=40),
+    )
+    return fig
+
 def render_horizon_explanatory_note(state: DashboardState):
     """Render iOS-style card explaining selected horizon's date range, regimes, and native feature fidelity."""
     meta = HORIZON_METADATA[state.selected_horizon_id]
@@ -319,6 +387,7 @@ def create_app():
                     t3 = ui.tab('Econometric Bubble')
                     t4 = ui.tab('Sentiment & Volatility')
                     t5 = ui.tab('Sector Health')
+                    t6 = ui.tab('Macro Mahalanobis Distance')
 
                 with ui.tab_panels(tabs, value=t1).classes('w-full bg-transparent p-0'):
                     with ui.tab_panel(t1):
@@ -340,6 +409,39 @@ def create_app():
                     with ui.tab_panel(t5):
                         with create_ios_card("Sector-Specific Vulnerability Metrics", "Housing Affordability (Price-to-Income 7.11x) & TDA Persistence L2 Norm Complexity"):
                             ui.plotly(build_sector_health_chart(state)).classes('w-full h-96')
+
+                    with ui.tab_panel(t6):
+                        df_tab = state.df
+                        latest_dm = float(df_tab["Mahalanobis_Distance"][-1]) if "Mahalanobis_Distance" in df_tab.columns else 0.0
+                        latest_prob = float(df_tab["Bubble_Regime_Probability"][-1] * 100.0) if "Bubble_Regime_Probability" in df_tab.columns else 0.0
+                        latest_exp = float(df_tab["Dynamic_Equity_Exposure"][-1] * 100.0) if "Dynamic_Equity_Exposure" in df_tab.columns else 100.0
+                        top_driver = str(df_tab["Primary_Anomaly_Driver"][-1]) if "Primary_Anomaly_Driver" in df_tab.columns else "N/A"
+                        summary = str(df_tab["Anomaly_Summary"][-1]) if "Anomaly_Summary" in df_tab.columns else ""
+
+                        with ui.row().classes('w-full gap-4 mb-4 flex-wrap'):
+                            with ui.column().classes('p-4 flex-1 min-w-[220px] rounded-xl').style('background-color: var(--bg-card); border: 1px solid var(--border-color);'):
+                                ui.label("Current Mahalanobis Distance").style('font-size: 0.82rem; font-weight: 600; color: var(--text-secondary);')
+                                ui.label(f"{latest_dm:.2f} σ").style('font-size: 1.6rem; font-weight: 800; color: #D32F2F;')
+                                ui.label("Statistical abnormality vs. baseline norm").style('font-size: 0.75rem; color: var(--text-secondary);')
+
+                            with ui.column().classes('p-4 flex-1 min-w-[220px] rounded-xl').style('background-color: var(--bg-card); border: 1px solid var(--border-color);'):
+                                ui.label("Bubble Regime Probability").style('font-size: 0.82rem; font-weight: 600; color: var(--text-secondary);')
+                                ui.label(f"{latest_prob:.1f}%").style('font-size: 1.6rem; font-weight: 800; color: #FF9800;')
+                                regime_text = "Extreme Bubble Regime (>75%)" if latest_prob >= 75 else ("Elevated Warning State (50-75%)" if latest_prob >= 50 else "Normal / Low Risk (<50%)")
+                                ui.label(regime_text).style('font-size: 0.75rem; font-weight: 600; color: var(--text-secondary);')
+
+                            with ui.column().classes('p-4 flex-1 min-w-[220px] rounded-xl').style('background-color: var(--bg-card); border: 1px solid var(--border-color);'):
+                                ui.label("Dynamic Equity Allocation").style('font-size: 0.82rem; font-weight: 600; color: var(--text-secondary);')
+                                ui.label(f"{latest_exp:.1f}%").style('font-size: 1.6rem; font-weight: 800; color: #00E676;')
+                                ui.label("De-risking portfolio sizing (min 20% floor)").style('font-size: 0.75rem; color: var(--text-secondary);')
+
+                            with ui.column().classes('p-4 flex-1 min-w-[220px] rounded-xl').style('background-color: var(--bg-card); border: 1px solid var(--border-color);'):
+                                ui.label("Primary Anomaly Driver").style('font-size: 0.82rem; font-weight: 600; color: var(--text-secondary);')
+                                ui.label(top_driver).style('font-size: 1.25rem; font-weight: 800; color: var(--text-primary);')
+                                ui.label(summary).style('font-size: 0.75rem; color: var(--text-secondary);')
+
+                        with create_ios_card("Macro Mahalanobis Distance & Multi-Dimensional Regime Signals", "Statistical Distance vs. Shiller CAPE, P-CAPE, Buffett Indicator & TDA Geometric Complexity"):
+                            ui.plotly(build_mahalanobis_chart(state)).classes('w-full h-96')
 
         refresh_dashboard()
 

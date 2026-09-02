@@ -24,7 +24,10 @@ INDICATORS_TO_CHECK = [
     "OVX_VIX_CrossAsset_Ratio",
     "Housing_Price_to_Income",
     "XLK",
-    "TDA_Persistence_L2_Norm"
+    "TDA_Persistence_L2_Norm",
+    "Mahalanobis_Distance",
+    "Bubble_Regime_Probability",
+    "Dynamic_Equity_Exposure"
 ]
 
 @pytest.mark.parametrize("horizon_id", ["option_1", "option_2"])

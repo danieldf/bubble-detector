@@ -50,8 +50,8 @@
     "semantic_hash": ""
   },
   "bubble_detector/config.py": {
-    "mtime": 1785865371.8320458,
-    "ast_hash": "e088c4707fa96857e99d07df32c6222a",
+    "mtime": 1788383371.0076087,
+    "ast_hash": "ea26f18ad6e261c463a0fc3d1b34d76a",
     "semantic_hash": ""
   },
   "bubble_detector/data/__init__.py": {
@@ -60,8 +60,8 @@
     "semantic_hash": ""
   },
   "bubble_detector/data/ingestor.py": {
-    "mtime": 1785971060.5891376,
-    "ast_hash": "15bca0eed801df4769a9a7b723fe2046",
+    "mtime": 1788383515.8465698,
+    "ast_hash": "43bdab66917d0742ef67b7111c68a20c",
     "semantic_hash": ""
   },
   "bubble_detector/features/__init__.py": {
@@ -120,8 +120,8 @@
     "semantic_hash": ""
   },
   "bubble_detector/ui/dashboard.py": {
-    "mtime": 1785865389.3960147,
-    "ast_hash": "ffc846c67d4f9fdabed92a8bf7d75930",
+    "mtime": 1788383605.888741,
+    "ast_hash": "3cecb801fe3e9fbdd2e51b340662922e",
     "semantic_hash": ""
   },
   "bubble_detector/ui_theme.py": {
@@ -190,13 +190,13 @@
     "semantic_hash": ""
   },
   "tests/test_date_horizons.py": {
-    "mtime": 1785865393.573805,
-    "ast_hash": "797255da353e5e16c9337ec1881ba1fd",
+    "mtime": 1788383614.8968813,
+    "ast_hash": "602c2cd6685ca62c2dc5f03eeff27676",
     "semantic_hash": ""
   },
   "bubble_detector/ui/panel_dashboard.py": {
-    "mtime": 1785971108.3484457,
-    "ast_hash": "040a86250402f67dd133cd8144e46d5a",
+    "mtime": 1788383667.321002,
+    "ast_hash": "ab2f96658ca3bd17c95219f91b567353",
     "semantic_hash": ""
   },
   ".github/workflows/deploy.yml": {

@@ -100,8 +100,8 @@
     "semantic_hash": ""
   },
   "bubble_detector/models/__init__.py": {
-    "mtime": 1785252496.1118474,
-    "ast_hash": "17527c47bf2e981ec156e6bfdf425cea",
+    "mtime": 1788387078.1946595,
+    "ast_hash": "c8173fdda906b12da51ffcdde8bd1f9e",
     "semantic_hash": ""
   },
   "bubble_detector/models/structural_breaks.py": {
@@ -120,8 +120,8 @@
     "semantic_hash": ""
   },
   "bubble_detector/ui/dashboard.py": {
-    "mtime": 1788383605.888741,
-    "ast_hash": "3cecb801fe3e9fbdd2e51b340662922e",
+    "mtime": 1788387160.0597253,
+    "ast_hash": "976d3ede8292035ba82b1909930cfc6c",
     "semantic_hash": ""
   },
   "bubble_detector/ui_theme.py": {
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "bubble_detector/ui/panel_dashboard.py": {
-    "mtime": 1788383667.321002,
-    "ast_hash": "ab2f96658ca3bd17c95219f91b567353",
+    "mtime": 1788387246.5523314,
+    "ast_hash": "79b2bea88d107525703ec8bb15328c68",
     "semantic_hash": ""
   },
   ".github/workflows/deploy.yml": {
@@ -210,8 +210,18 @@
     "semantic_hash": ""
   },
   "tests/test_full_indicator_parity.py": {
-    "mtime": 1785968572.6095552,
-    "ast_hash": "8576137a0d23921e4d26d6c9f2504b6b",
+    "mtime": 1788387272.2255812,
+    "ast_hash": "72246479bbb90e5bb2673a80ceed2bda",
+    "semantic_hash": ""
+  },
+  "bubble_detector/models/regime_mahalanobis.py": {
+    "mtime": 1788387074.0797982,
+    "ast_hash": "98fbc941d7f465c1fd4035b800a13b01",
+    "semantic_hash": ""
+  },
+  "tests/test_mahalanobis.py": {
+    "mtime": 1788387110.2841866,
+    "ast_hash": "29c0a4471a4d5fd08a9b9bb4e95e8f11",
     "semantic_hash": ""
   }
 }
