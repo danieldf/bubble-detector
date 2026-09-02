@@ -67,6 +67,11 @@ def compute_tda_wavelet_complexity(
         except Exception:
             wavelet_complexity[i] = float(np.std(win_returns))
 
+    # Warm-up backfill for initial window rows
+    if n > window_size:
+        tda_l2_norms[:window_size] = tda_l2_norms[window_size]
+        wavelet_complexity[:window_size] = wavelet_complexity[window_size]
+
     # Ensure 100% NaN-free outputs
     tda_l2_norms = np.nan_to_num(tda_l2_norms, nan=0.0).astype(np.float32)
     wavelet_complexity = np.nan_to_num(wavelet_complexity, nan=0.0).astype(np.float32)

@@ -129,7 +129,7 @@ def test_tab6_figure_traces_and_right_flushed_legend():
         "Buffett Indicator (scaled / 25)",
         "Housing Price-to-Income (7.11x Peak)",
         "Tech ETF XLK (scaled / 100)",
-        "TDA Geometric Complexity (scaled x5)"
+        "TDA Geometric Complexity (scaled x30)"
     ]
 
     for fig, name in [(fig_nice, "NiceGUI"), (fig_panel, "Panel WASM")]:
@@ -157,4 +157,36 @@ def test_tab6_all_traces_finite_and_bounded():
             assert not np.isinf(y_arr).any(), f"Trace '{trace.name}' has Infs in {horizon_id}"
             assert np.min(y_arr) >= 0.0, f"Trace '{trace.name}' has negative values in {horizon_id}: {np.min(y_arr)}"
             assert np.max(y_arr) <= 13.0, f"Trace '{trace.name}' exceeds 13.0 threshold in {horizon_id}: {np.max(y_arr)}"
+
+
+def test_tda_normalization_tabs_5_and_6():
+    """Verify that TDA Geometric Complexity on BOTH Tab 5 and Tab 6 is properly normalized and NOT valued below 0.2."""
+    from bubble_detector.ui.dashboard import DashboardState, build_sector_health_chart, build_mahalanobis_chart
+    from bubble_detector.ui.panel_dashboard import build_sector_health_fig, build_mahalanobis_fig
+
+    state = DashboardState(load_data=False)
+    for horizon_id in ["option_1", "option_2"]:
+        state.load_data(horizon_id)
+        
+        figs = [
+            (build_sector_health_chart(state), f"NiceGUI Tab 5 ({horizon_id})"),
+            (build_mahalanobis_chart(state), f"NiceGUI Tab 6 ({horizon_id})"),
+            (build_sector_health_fig(horizon_id), f"WASM Tab 5 ({horizon_id})"),
+            (build_mahalanobis_fig(horizon_id), f"WASM Tab 6 ({horizon_id})"),
+        ]
+
+        for fig, label in figs:
+            tda_traces = [t for t in fig.data if "TDA Geometric Complexity" in t.name]
+            assert len(tda_traces) == 1, f"Expected 1 TDA trace in {label}, found {len(tda_traces)}"
+            y_arr = np.array(tda_traces[0].y, dtype=np.float64)
+            
+            assert not np.isnan(y_arr).any(), f"TDA contains NaNs in {label}"
+            assert np.min(y_arr) >= 0.0, f"TDA has negative values in {label}"
+            assert np.max(y_arr) <= 13.0, f"TDA exceeds 13.0 in {label}"
+            # Assert that TDA is properly normalized and not valued well below 0.2:
+            # The median must be comfortably above 1.0 (matching macroeconomic indicator scale ~3.5-5.0)
+            assert np.median(y_arr) >= 1.0, f"TDA median {np.median(y_arr)} is too low in {label}"
+            # 5th percentile must be >= 0.20 (no points lingering well below 0.2)
+            assert np.percentile(y_arr, 5) >= 0.20, f"TDA 5th percentile {np.percentile(y_arr, 5)} is below 0.20 in {label}"
+
 

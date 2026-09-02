@@ -195,7 +195,7 @@ def build_sector_health_chart(state: DashboardState) -> go.Figure:
 
     fig.add_trace(go.Scatter(x=dates, y=housing_pti, mode="lines", name="Housing Price-to-Income (7.11x Peak)", line=dict(color=palette["accent_amber"], width=2.5)))
     fig.add_trace(go.Scatter(x=dates, y=tech / 50.0, mode="lines", name="Tech ETF XLK (scaled)", line=dict(color=palette["accent_blue"], width=2.0)))
-    fig.add_trace(go.Scatter(x=dates, y=tda_norm * 5.0, mode="lines", name="TDA Geometric Complexity L2 Norm", line=dict(color=palette["accent_red"], width=2.0, dash="dot")))
+    fig.add_trace(go.Scatter(x=dates, y=np.clip(tda_norm * 30.0, 0.0, 12.0), mode="lines", name="TDA Geometric Complexity (scaled x30)", line=dict(color=palette["accent_red"], width=2.0, dash="dot")))
 
     fig.update_layout(
         template=state.get_plotly_template(),
@@ -262,8 +262,8 @@ def build_mahalanobis_chart(state: DashboardState) -> go.Figure:
         line=dict(color="#29B6F6", width=1.6)
     ))
     fig.add_trace(go.Scatter(
-        x=dates, y=tda_norm * 5.0, mode="lines",
-        name="TDA Geometric Complexity (scaled x5)",
+        x=dates, y=np.clip(tda_norm * 30.0, 0.0, 12.0), mode="lines",
+        name="TDA Geometric Complexity (scaled x30)",
         line=dict(color="#FF4081", width=1.6, dash="dot")
     ))
 

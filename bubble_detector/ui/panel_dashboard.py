@@ -250,6 +250,8 @@ def generate_wasm_dataset(start_date: str, end_date: str):
                 distances = np.linalg.norm(point_cloud - centroid, axis=1)
                 tda_l2[i] = float(np.std(distances) * np.sqrt(len(distances)))
         tda_l2 = np.nan_to_num(tda_l2, nan=0.0).astype(np.float32)
+        if n > 30:
+            tda_l2[:30] = tda_l2[30]
 
         # Authoritative Structural Break Probability from structural_breaks.py
         cape_z = (cape - 17.0) / 6.5
@@ -451,7 +453,7 @@ def build_sector_health_fig(horizon_id: str) -> go.Figure:
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=dates, y=housing_pti, mode="lines", name="Housing Price-to-Income (7.11x Peak)", line=dict(color="#F57C00", width=2.5)))
     fig.add_trace(go.Scatter(x=dates, y=tech / 50.0, mode="lines", name="Tech ETF XLK (scaled)", line=dict(color="#0288D1", width=2.0)))
-    fig.add_trace(go.Scatter(x=dates, y=tda_norm * 5.0, mode="lines", name="TDA Geometric Complexity L2 Norm", line=dict(color="#D32F2F", width=2.0, dash="dot")))
+    fig.add_trace(go.Scatter(x=dates, y=np.clip(tda_norm * 30.0, 0.0, 12.0), mode="lines", name="TDA Geometric Complexity (scaled x30)", line=dict(color="#D32F2F", width=2.0, dash="dot")))
 
     fig.update_layout(
         template="plotly_dark",
@@ -513,8 +515,8 @@ def build_mahalanobis_fig(horizon_id: str) -> go.Figure:
         line=dict(color="#29B6F6", width=1.6)
     ))
     fig.add_trace(go.Scatter(
-        x=dates, y=tda_norm * 5.0, mode="lines",
-        name="TDA Geometric Complexity (scaled x5)",
+        x=dates, y=np.clip(tda_norm * 30.0, 0.0, 12.0), mode="lines",
+        name="TDA Geometric Complexity (scaled x30)",
         line=dict(color="#FF4081", width=1.6, dash="dot")
     ))
 
