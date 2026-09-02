@@ -109,3 +109,52 @@ def test_full_pipeline_polars_integration(tmp_path):
     for col in expected_cols:
         assert col in res_df.columns
         assert res_df[col].null_count() == 0
+
+def test_tab6_figure_traces_and_right_flushed_legend():
+    """Verify that Tab 6 contains all 8 traces with right-flushed legend in both NiceGUI and Panel."""
+    from bubble_detector.ui.dashboard import DashboardState, build_mahalanobis_chart
+    from bubble_detector.ui.panel_dashboard import build_mahalanobis_fig, HORIZON_OPTION_1_ID
+
+    state = DashboardState(load_data=False)
+    state.load_data("option_1")
+
+    fig_nice = build_mahalanobis_chart(state)
+    fig_panel = build_mahalanobis_fig(HORIZON_OPTION_1_ID)
+
+    expected_traces = [
+        "Macro Mahalanobis Distance (DM)",
+        "Bubble Regime Probability (scaled x10)",
+        "Shiller CAPE (scaled / 5)",
+        "P-CAPE (scaled / 5)",
+        "Buffett Indicator (scaled / 25)",
+        "Housing Price-to-Income (7.11x Peak)",
+        "Tech ETF XLK (scaled / 100)",
+        "TDA Geometric Complexity (scaled x5)"
+    ]
+
+    for fig, name in [(fig_nice, "NiceGUI"), (fig_panel, "Panel WASM")]:
+        assert len(fig.data) == 8, f"{name} should have exactly 8 traces, got {len(fig.data)}"
+        trace_names = [t.name for t in fig.data]
+        for exp in expected_traces:
+            assert exp in trace_names, f"Missing trace '{exp}' in {name}"
+        
+        # Verify right-flushed vertical legend
+        assert fig.layout.legend.orientation == "v", f"{name} legend orientation should be 'v'"
+        assert fig.layout.legend.x >= 1.0, f"{name} legend x should be right-flushed (>= 1.0), got {fig.layout.legend.x}"
+        assert fig.layout.yaxis.rangemode == "tozero", f"{name} yaxis rangemode should be 'tozero'"
+
+def test_tab6_all_traces_finite_and_bounded():
+    """Verify that all 8 traces plotted on Tab 6 have 0 NaNs and fall cleanly within [0, 13.0]."""
+    from bubble_detector.ui.dashboard import DashboardState, build_mahalanobis_chart
+
+    state = DashboardState(load_data=False)
+    for horizon_id in ["option_1", "option_2"]:
+        state.load_data(horizon_id)
+        fig = build_mahalanobis_chart(state)
+        for trace in fig.data:
+            y_arr = np.array(trace.y, dtype=np.float64)
+            assert not np.isnan(y_arr).any(), f"Trace '{trace.name}' has NaNs in {horizon_id}"
+            assert not np.isinf(y_arr).any(), f"Trace '{trace.name}' has Infs in {horizon_id}"
+            assert np.min(y_arr) >= 0.0, f"Trace '{trace.name}' has negative values in {horizon_id}: {np.min(y_arr)}"
+            assert np.max(y_arr) <= 13.0, f"Trace '{trace.name}' exceeds 13.0 threshold in {horizon_id}: {np.max(y_arr)}"
+

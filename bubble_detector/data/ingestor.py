@@ -66,7 +66,7 @@ class DataIngestor:
             # Reindex to full business days range from start_date to end_date
             df_raw = df_raw.reindex(df_synth.index)
             # Combine exchange data with calibrated historical data for pre-availability periods (e.g. pre-1993 for SPY)
-            df_raw = df_raw.combine_first(df_synth)
+            df_raw = df_raw.combine_first(df_synth).ffill().bfill()
 
         # Clean and convert to Polars
         df_raw = df_raw.reset_index()
@@ -92,8 +92,8 @@ class DataIngestor:
 
         pl_df = pl_df.cast(schema_updates)
 
-        # Handle missing values: Forward-fill for price series
-        pl_df = pl_df.fill_null(strategy="forward")
+        # Handle missing values: Forward-fill and backward-fill for price series
+        pl_df = pl_df.fill_null(strategy="forward").fill_null(strategy="backward")
 
         # Append Macro Indicators (GDP, FINRA Margin Debt, Housing Metrics)
         pl_df = self._append_macro_indicators(pl_df)

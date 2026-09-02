@@ -60,8 +60,8 @@
     "semantic_hash": ""
   },
   "bubble_detector/data/ingestor.py": {
-    "mtime": 1788383515.8465698,
-    "ast_hash": "43bdab66917d0742ef67b7111c68a20c",
+    "mtime": 1788388784.447376,
+    "ast_hash": "d5d390b7bdaaa8bd0c04b8c36e0e7ebd",
     "semantic_hash": ""
   },
   "bubble_detector/features/__init__.py": {
@@ -120,8 +120,8 @@
     "semantic_hash": ""
   },
   "bubble_detector/ui/dashboard.py": {
-    "mtime": 1788387160.0597253,
-    "ast_hash": "976d3ede8292035ba82b1909930cfc6c",
+    "mtime": 1788388817.692986,
+    "ast_hash": "8377d79f14e124e8ccb4139c1fc2c7f1",
     "semantic_hash": ""
   },
   "bubble_detector/ui_theme.py": {
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "bubble_detector/ui/panel_dashboard.py": {
-    "mtime": 1788387246.5523314,
-    "ast_hash": "79b2bea88d107525703ec8bb15328c68",
+    "mtime": 1788388825.4780402,
+    "ast_hash": "b19fa0cbc090b4d54879cd1ccef32483",
     "semantic_hash": ""
   },
   ".github/workflows/deploy.yml": {
@@ -215,13 +215,13 @@
     "semantic_hash": ""
   },
   "bubble_detector/models/regime_mahalanobis.py": {
-    "mtime": 1788387074.0797982,
-    "ast_hash": "98fbc941d7f465c1fd4035b800a13b01",
+    "mtime": 1788388663.0686631,
+    "ast_hash": "c191f6e2890d88bab0cf27f865e74452",
     "semantic_hash": ""
   },
   "tests/test_mahalanobis.py": {
-    "mtime": 1788387110.2841866,
-    "ast_hash": "29c0a4471a4d5fd08a9b9bb4e95e8f11",
+    "mtime": 1788388881.516446,
+    "ast_hash": "25ffd732f186fb17d6949f3f75134cff",
     "semantic_hash": ""
   }
 }

@@ -216,6 +216,8 @@ def build_mahalanobis_chart(state: DashboardState) -> go.Figure:
     cape = df["Shiller_CAPE"].to_numpy()
     p_cape = df["P_CAPE"].to_numpy()
     buffett = df["Buffett_Indicator"].to_numpy()
+    housing_pti = df["Housing_Price_to_Income"].to_numpy()
+    tech = df["XLK"].to_numpy() if "XLK" in df.columns else df["SPY"].to_numpy() * 1.2
     tda_norm = df["TDA_Persistence_L2_Norm"].to_numpy()
 
     palette = state.get_palette()
@@ -233,7 +235,7 @@ def build_mahalanobis_chart(state: DashboardState) -> go.Figure:
         line=dict(color="#FF9800", width=2.2, dash="dash")
     ))
 
-    # Benchmark Comparative Overlays (Shiller CAPE, P-CAPE, Buffett, TDA)
+    # Benchmark Comparative Overlays (Valuation, Sector Health, Topology)
     fig.add_trace(go.Scatter(
         x=dates, y=cape / 5.0, mode="lines",
         name="Shiller CAPE (scaled / 5)",
@@ -248,6 +250,16 @@ def build_mahalanobis_chart(state: DashboardState) -> go.Figure:
         x=dates, y=buffett / 25.0, mode="lines",
         name="Buffett Indicator (scaled / 25)",
         line=dict(color="#AB47BC", width=1.6)
+    ))
+    fig.add_trace(go.Scatter(
+        x=dates, y=housing_pti, mode="lines",
+        name="Housing Price-to-Income (7.11x Peak)",
+        line=dict(color="#FFB300", width=1.6)
+    ))
+    fig.add_trace(go.Scatter(
+        x=dates, y=tech / 100.0, mode="lines",
+        name="Tech ETF XLK (scaled / 100)",
+        line=dict(color="#29B6F6", width=1.6)
     ))
     fig.add_trace(go.Scatter(
         x=dates, y=tda_norm * 5.0, mode="lines",
@@ -265,8 +277,19 @@ def build_mahalanobis_chart(state: DashboardState) -> go.Figure:
         title="Macro Mahalanobis Distance & Multi-Dimensional Regime Signals vs. Key Valuation Benchmarks",
         xaxis_title="Date",
         yaxis_title="Statistical Distance (σ) / Scaled Index Level",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        margin=dict(l=40, r=40, t=60, b=40),
+        yaxis=dict(rangemode="tozero"),
+        legend=dict(
+            orientation="v",
+            yanchor="top",
+            y=1.0,
+            xanchor="left",
+            x=1.01,
+            bgcolor="rgba(15, 23, 42, 0.85)" if state.theme_mode == "dark" else "rgba(255, 255, 255, 0.90)",
+            bordercolor="rgba(100, 116, 139, 0.4)",
+            borderwidth=1,
+            font=dict(size=10)
+        ),
+        margin=dict(l=40, r=230, t=60, b=40),
     )
     return fig
 

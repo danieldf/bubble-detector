@@ -46,7 +46,7 @@ class MacroMahalanobisDetector:
         self,
         indicators: Optional[List[str]] = None,
         rolling_window: int = 252,
-        ridge_alpha: float = 1e-4,
+        ridge_alpha: float = 1e-2,
         min_equity_exposure: float = 0.20
     ):
         self.indicators = indicators or INDICATORS_15
@@ -133,7 +133,7 @@ class MacroMahalanobisDetector:
         if n > first_valid:
             m_distances[:first_valid] = m_distances[first_valid]
 
-        return m_distances
+        return np.clip(m_distances, 0.0, 12.0).astype(np.float32)
 
     def compute_regime_probability(
         self,

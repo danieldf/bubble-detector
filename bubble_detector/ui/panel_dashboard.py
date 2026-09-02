@@ -276,7 +276,7 @@ def generate_wasm_dataset(start_date: str, end_date: str):
             Z_mat[:, j] = np.nan_to_num((arr_j - r_mean) / r_std, nan=0.0).astype(np.float32)
 
         m_dist = np.zeros(n, dtype=np.float32)
-        eye_k = 1e-4 * np.eye(k_feat, dtype=np.float64)
+        eye_k = 1e-2 * np.eye(k_feat, dtype=np.float64)
         for i in range(15, n):
             start_i = max(0, i - window_md)
             w_z = Z_mat[start_i:i]
@@ -294,6 +294,7 @@ def generate_wasm_dataset(start_date: str, end_date: str):
 
         if n > 15:
             m_dist[:15] = m_dist[15]
+        m_dist = np.clip(m_dist, 0.0, 12.0).astype(np.float32)
 
         # Empirical percentile rank
         bubble_regime_probs = np.zeros(n, dtype=np.float32)
@@ -471,6 +472,8 @@ def build_mahalanobis_fig(horizon_id: str) -> go.Figure:
     cape = data["Shiller_CAPE"]
     p_cape = data["P_CAPE"]
     buffett = data["Buffett_Indicator"]
+    housing_pti = data["Housing_Price_to_Income"]
+    tech = data["XLK"]
     tda_norm = data["TDA_Persistence_L2_Norm"]
 
     fig = go.Figure()
@@ -500,6 +503,16 @@ def build_mahalanobis_fig(horizon_id: str) -> go.Figure:
         line=dict(color="#AB47BC", width=1.6)
     ))
     fig.add_trace(go.Scatter(
+        x=dates, y=housing_pti, mode="lines",
+        name="Housing Price-to-Income (7.11x Peak)",
+        line=dict(color="#FFB300", width=1.6)
+    ))
+    fig.add_trace(go.Scatter(
+        x=dates, y=tech / 100.0, mode="lines",
+        name="Tech ETF XLK (scaled / 100)",
+        line=dict(color="#29B6F6", width=1.6)
+    ))
+    fig.add_trace(go.Scatter(
         x=dates, y=tda_norm * 5.0, mode="lines",
         name="TDA Geometric Complexity (scaled x5)",
         line=dict(color="#FF4081", width=1.6, dash="dot")
@@ -515,8 +528,19 @@ def build_mahalanobis_fig(horizon_id: str) -> go.Figure:
         title="Macro Mahalanobis Distance & Multi-Dimensional Regime Signals vs. Key Valuation Benchmarks",
         xaxis_title="Date",
         yaxis_title="Statistical Distance (σ) / Scaled Index Level",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        margin=dict(l=40, r=40, t=60, b=40),
+        yaxis=dict(rangemode="tozero"),
+        legend=dict(
+            orientation="v",
+            yanchor="top",
+            y=1.0,
+            xanchor="left",
+            x=1.01,
+            bgcolor="rgba(15, 23, 42, 0.85)",
+            bordercolor="rgba(100, 116, 139, 0.4)",
+            borderwidth=1,
+            font=dict(size=10)
+        ),
+        margin=dict(l=40, r=230, t=60, b=40),
     )
     return fig
 
