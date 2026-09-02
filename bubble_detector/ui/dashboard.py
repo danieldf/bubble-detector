@@ -234,11 +234,12 @@ def render_horizon_explanatory_note(state: DashboardState):
             with ui.column().classes('gap-1 flex-1 min-w-[280px]'):
                 ui.label("Methodological Trade-Offs & Calibration:").style('font-size: 0.85rem; font-weight: 700; color: var(--text-primary);')
                 if state.selected_horizon_id == HORIZON_OPTION_1_ID:
+                    ui.label("✔ 50-Year Multi-Decade Horizon: Spans 9 major historical regimes (1970s Stagflation & 1980–82 Volcker, 1987 Black Monday, 1990 S&L, 2000 Dot-Com, 2008 GFC, 2018 Volmageddon, 2020 COVID, 2022 Fed Hikes, 2026 AI Exuberance).").style('font-size: 0.83rem; color: var(--text-secondary);')
+                    ui.label("⚡ Macro Spline & Historical Proxies: Pre-1993 series anchored to S&P index levels, nominal GDP, and historical Shiller CAPE.").style('font-size: 0.83rem; color: var(--text-secondary);')
+                else:
                     ui.label("✔ 100% Native High-Frequency Data: All 12 features (VIX1D, OVX, SKEW, DSPX, TDA, GSADF) strictly measured from real market feeds.").style('font-size: 0.83rem; color: var(--text-secondary);')
                     ui.label("✔ Zero Proxy Imputation: Best suited for immediate 2026 tactical parameter tuning.").style('font-size: 0.83rem; color: var(--text-secondary);')
-                else:
-                    ui.label("✔ 28.5-Year Multi-Decade Horizon: Spans Dot-Com 2000, 2008 GFC, 2018 Volmageddon, 2020 COVID, 2022 Fed Hikes, and 2026 AI Exuberance.").style('font-size: 0.83rem; color: var(--text-secondary);')
-                    ui.label("⚡ Proxy Modeling Pre-2007: Pre-2007 options indices (OVX, VIX1D) utilize historical volatility spline proxy interpolation.").style('font-size: 0.83rem; color: var(--text-secondary);')
+
 
 def create_app():
     """Create and initialize full NiceGUI application."""

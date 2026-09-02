@@ -14,50 +14,91 @@ import panel as pn
 # Initialize Panel extension with Plotly engine
 pn.extension('plotly', sizing_mode='stretch_width')
 
+import datetime
+from typing import Dict, Any, Tuple, Optional, Union
+
+def get_current_date(override: Optional[Union[datetime.date, str]] = None) -> datetime.date:
+    """Return current execution date, or parse override date string/object."""
+    if override is not None:
+        if isinstance(override, str):
+            return datetime.date.fromisoformat(override)
+        return override
+    return datetime.date.today()
+
+def get_dynamic_50yr_date_range(today: Optional[Union[datetime.date, str]] = None) -> Tuple[str, str]:
+    """
+    Compute rolling 50-year date range from current execution date.
+    Safely handles leap-year edge cases (e.g. Feb 29 -> Feb 28 50 years prior).
+    """
+    curr = get_current_date(today)
+    end_date_str = curr.strftime("%Y-%m-%d")
+    try:
+        start_date = curr.replace(year=curr.year - 50)
+    except ValueError:
+        start_date = curr.replace(year=curr.year - 50, day=28)
+    start_date_str = start_date.strftime("%Y-%m-%d")
+    return start_date_str, end_date_str
+
 # Self-contained horizon definitions for WebAssembly / Pyodide
 HORIZON_OPTION_1_ID = "option_1"
-HORIZON_OPTION_1_LABEL = "Option 1: Modern 5-Regime Horizon (2015–2026)"
 HORIZON_OPTION_2_ID = "option_2"
-HORIZON_OPTION_2_LABEL = "Option 2: Expanded 7-Regime Horizon (1998–2026)"
 
-HORIZON_METADATA = {
-    HORIZON_OPTION_1_ID: {
-        "label": HORIZON_OPTION_1_LABEL,
-        "start_date": "2015-01-01",
-        "end_date": "2026-07-28",
-        "regimes_count": 5,
-        "native_fidelity": "100%",
-        "fidelity_status": "Native High-Fidelity Coverage",
-        "badge_color": "green",
-        "included_crashes": [
-            "2018 Volmageddon & Q4 QT Compression",
-            "2020 COVID-19 Flash Crash (VIX 82.7 Spike)",
-            "2020-2021 Post-COVID Liquidity Exuberance",
-            "2022 Fed Rate Tightening & Tech Drawdown",
-            "2024-2026 AI CapEx Mega-Cap Rally (CAPE 41.37)"
-        ],
-        "description": "Provides 100% native data integrity across all 12 model features with zero back-filling or proxy interpolation required."
-    },
-    HORIZON_OPTION_2_ID: {
-        "label": HORIZON_OPTION_2_LABEL,
-        "start_date": "1998-01-01",
-        "end_date": "2026-07-28",
-        "regimes_count": 7,
-        "native_fidelity": "~92%",
-        "fidelity_status": "Extended Historical Spectrum (Proxy Imputed Pre-2007)",
-        "badge_color": "amber",
-        "included_crashes": [
-            "1999-2000 Dot-Com Tech Bubble & Crash (CAPE 44.19 Peak)",
-            "2007-2009 Subprime Housing Crisis & GFC Crash (Housing PTI ~7.0x)",
-            "2018 Volmageddon & Q4 QT Compression",
-            "2020 COVID-19 Flash Crash (VIX 82.7 Spike)",
-            "2020-2021 Post-COVID Liquidity Exuberance",
-            "2022 Fed Rate Tightening & Tech Drawdown",
-            "2024-2026 AI CapEx Mega-Cap Rally (CAPE 41.37)"
-        ],
-        "description": "Extends coverage across 28.5 years to encompass all 7 major market bubbles/crashes. Options metrics prior to 2007 utilize synthetic proxy modeling."
+def get_dynamic_horizon_metadata(today: Optional[Union[datetime.date, str]] = None) -> Dict[str, Dict[str, Any]]:
+    """
+    Construct dynamic horizon metadata dictionary anchored to current execution date.
+    Option 1: 50-Year Multi-Decade Horizon (e.g. 1976–2026, 9 historical regimes).
+    Option 2: Modern 5-Regime Horizon (2015–present, 5 regimes, 100% native fidelity).
+    """
+    curr = get_current_date(today)
+    start_50yr, end_today = get_dynamic_50yr_date_range(curr)
+    start_year_50 = start_50yr[:4]
+    curr_year = end_today[:4]
+
+    return {
+        HORIZON_OPTION_1_ID: {
+            "label": f"Option 1: 50-Year Multi-Decade Horizon ({start_year_50}–{curr_year})",
+            "start_date": start_50yr,
+            "end_date": end_today,
+            "regimes_count": 9,
+            "native_fidelity": "~85%",
+            "fidelity_status": "50-Year Multi-Decade Historical Spectrum",
+            "badge_color": "green",
+            "included_crashes": [
+                "1970s Stagflation & 1980–1982 Volcker Rate Shock (20% Fed Funds Rate)",
+                "1987 Black Monday Crash (-20.5% single-day drawdown)",
+                "1990–1991 Early 1990s Recession & S&L Crisis",
+                "1999–2000 Dot-Com Tech Bubble & Crash (CAPE 44.19 Peak)",
+                "2007–2009 Subprime Housing Crisis & GFC Crash (Housing PTI ~7.0x)",
+                "2018 Volmageddon & Q4 QT Compression",
+                "2020 COVID-19 Flash Crash (VIX 82.7 Spike)",
+                "2022 Fed Rate Tightening & Tech Drawdown",
+                "2024–2026 AI CapEx Mega-Cap Rally (CAPE 41.37)"
+            ],
+            "description": f"Encompasses a rolling 50-year range ({start_50yr} to {end_today}) spanning 9 historical regimes from 1970s stagflation through 2026 AI exuberance. Earlier eras utilize historical S&P index anchors and proxy modeling."
+        },
+        HORIZON_OPTION_2_ID: {
+            "label": f"Option 2: Modern 5-Regime Horizon (2015–{curr_year})",
+            "start_date": "2015-01-01",
+            "end_date": end_today,
+            "regimes_count": 5,
+            "native_fidelity": "100%",
+            "fidelity_status": "Native High-Fidelity Coverage",
+            "badge_color": "blue",
+            "included_crashes": [
+                "2018 Volmageddon & Q4 QT Compression",
+                "2020 COVID-19 Flash Crash (VIX 82.7 Spike)",
+                "2020-2021 Post-COVID Liquidity Exuberance",
+                "2022 Fed Rate Tightening & Tech Drawdown",
+                "2024–2026 AI CapEx Mega-Cap Rally (CAPE 41.37)"
+            ],
+            "description": "Provides 100% native data integrity across all 12 model features with zero back-filling or proxy interpolation required."
+        }
     }
-}
+
+_dyn_start_50, _dyn_end = get_dynamic_50yr_date_range()
+HORIZON_OPTION_1_LABEL = f"Option 1: 50-Year Multi-Decade Horizon ({_dyn_start_50[:4]}–{_dyn_end[:4]})"
+HORIZON_OPTION_2_LABEL = f"Option 2: Modern 5-Regime Horizon (2015–{_dyn_end[:4]})"
+HORIZON_METADATA = get_dynamic_horizon_metadata()
 
 def generate_wasm_dataset(start_date: str, end_date: str):
     """
@@ -88,7 +129,6 @@ def generate_wasm_dataset(start_date: str, end_date: str):
         probs = predictor.predict_drawdown_probability(df_raw)
         df_raw = df_raw.with_columns(pl.Series("Drawdown_Probability", probs))
 
-
         # Convert Polars columns to dict of lists/numpy arrays for Plotly rendering
         out_dict = {}
         for col in df_raw.columns:
@@ -103,57 +143,57 @@ def generate_wasm_dataset(start_date: str, end_date: str):
         date_range = pd.date_range(start=start_date, end=end_date, freq="B")
         dates = [d.strftime("%Y-%m-%d") for d in date_range]
         n = len(dates)
-        t = np.linspace(0, 1, n)
+        year_vec = date_range.year.to_numpy() + (date_range.dayofyear.to_numpy() - 1.0) / 365.25
         np.random.seed(42)
 
+        # 1. SPY Price trajectory across physical calendar years
+        base_trend = 20.0 * np.exp(0.066 * (year_vec - 1976.0))
+        volcker_cons = -5.0 * np.exp(-((year_vec - 1981.5)**2) / 1.5)
+        crash_1987 = -18.0 * np.exp(-((year_vec - 1987.80)**2) / 0.015)
+        dotcom_surge = 52.0 * np.exp(-((year_vec - 2000.22)**2) / 1.2)
+        dotcom_bust = -40.0 * np.exp(-((year_vec - 2002.8)**2) / 1.0)
+        gfc_runup = 35.0 * np.exp(-((year_vec - 2007.75)**2) / 0.8)
+        gfc_crash = -65.0 * np.exp(-((year_vec - 2009.18)**2) / 0.6)
+        covid_dip = -70.0 * np.exp(-((year_vec - 2020.22)**2) / 0.03)
+        hikes_2022 = -45.0 * np.exp(-((year_vec - 2022.5)**2) / 0.4)
+        ai_boost = 110.0 * np.clip((year_vec - 2023.2) / 3.47, 0.0, 1.0) ** 1.8
+        noise = 2.0 * np.sin(2 * np.pi * 4 * (year_vec - 1976.0))
 
-        is_expanded = n > 4000
-        if is_expanded:
-            dotcom_spike = 50.0 * np.exp(-((t - 0.07)**2) / 0.001)
-            gfc_drop = -65.0 * np.exp(-((t - 0.38)**2) / 0.003)
-            covid_drop = -70.0 * np.exp(-((t - 0.78)**2) / 0.0006)
-            ai_growth = 380.0 * (t ** 1.9)
-            spy_prices = (100.0 + dotcom_spike + gfc_drop + covid_drop + ai_growth + 5.0 * np.sin(2 * np.pi * 6 * t)).astype(np.float32)
-        else:
-            covid_drop = -70.0 * np.exp(-((t - 0.45)**2) / 0.001)
-            ai_growth = 320.0 * (t ** 1.5)
-            spy_prices = (200.0 + covid_drop + ai_growth + 4.0 * np.sin(2 * np.pi * 4 * t)).astype(np.float32)
+        spy_prices = (base_trend + volcker_cons + crash_1987 + dotcom_surge + dotcom_bust + gfc_runup + gfc_crash + covid_dip + hikes_2022 + ai_boost + noise).astype(np.float32)
 
+        # 2. Macro Indicators
+        cape_base = 16.0 + 9.0 * np.clip((year_vec - 1976.0) / 50.0, 0.0, 1.0)
+        cape_volcker = -8.0 * np.exp(-((year_vec - 1981.5)**2) / 1.8)
+        cape_1987 = 3.0 * np.exp(-((year_vec - 1987.5)**2) / 0.1)
+        cape_dotcom = 21.0 * np.exp(-((year_vec - 2000.22)**2) / 1.5)
+        cape_gfc = -11.0 * np.exp(-((year_vec - 2009.18)**2) / 0.8)
+        cape_ai = 16.37 * np.clip((year_vec - 2020.0) / 6.67, 0.0, 1.0) ** 1.5
+        cape = (cape_base + cape_volcker + cape_1987 + cape_dotcom + cape_gfc + cape_ai + 0.8 * np.cos(2 * np.pi * 5 * (year_vec - 1976.0))).astype(np.float32)
 
-        if is_expanded:
-            dotcom_peak = 44.19 * np.exp(-((t - 0.07)**2) / 0.002)
-            gfc_trough = -12.0 * np.exp(-((t - 0.38)**2) / 0.004)
-            ai_peak = 24.0 * (t ** 1.6)
-            cape = (20.0 + dotcom_peak + gfc_trough + ai_peak + 1.2 * np.cos(2 * np.pi * 6 * t)).astype(np.float32)
-            margin_debt = (150 + 400 * (t**1.5) + 866 * (t ** 2.8) + 25 * np.sin(2 * np.pi * 8 * t)).astype(np.float32)
-            gdp = (9000 + 20000 * t + 300 * np.sin(2 * np.pi * 5 * t)).astype(np.float32)
-            housing_2006 = 3.5 * np.exp(-((t - 0.28)**2) / 0.003)
-            housing_2026 = 3.2 * (t ** 1.8)
-            housing_pti = (3.5 + housing_2006 + housing_2026 + 0.1 * np.sin(2 * np.pi * 4 * t)).astype(np.float32)
-            vix_base = 15.0 + 3.0 * np.random.randn(n)
-            gfc_vix = 65.0 * np.exp(-((t - 0.38)**2) / 0.0008)
-            covid_vix = 67.7 * np.exp(-((t - 0.78)**2) / 0.0005)
-            vix = np.clip(vix_base + gfc_vix + covid_vix, 9.0, 82.7).astype(np.float32)
-        else:
-            cape = (25.0 + 16.37 * (t ** 1.8) + 1.5 * np.cos(2 * np.pi * 5 * t)).astype(np.float32)
-            margin_debt = (500 + 400 * t + 500 * (t ** 2.5) + 30 * np.sin(2 * np.pi * 10 * t)).astype(np.float32)
-            gdp = (18000 + 11000 * t + 200 * np.sin(2 * np.pi * 4 * t)).astype(np.float32)
-            housing_pti = (5.2 + 1.91 * (t ** 1.5) + 0.1 * np.sin(2 * np.pi * 3 * t)).astype(np.float32)
-            vix_base = 15.0 + 3.0 * np.random.randn(n)
-            covid_vix = 67.7 * np.exp(-((t - 0.45)**2) / 0.001)
-            vix = np.clip(vix_base + covid_vix, 9.0, 82.7).astype(np.float32)
+        margin_debt = (10.0 + 1406.0 * np.clip((year_vec - 1976.0) / 50.0, 0.0, 1.0) ** 2.4 + 20.0 * np.sin(2 * np.pi * 6 * (year_vec - 1976.0) / 50.0)).astype(np.float32)
+        gdp = (1800.0 * np.exp(0.0558 * (year_vec - 1976.0)) + 150.0 * np.sin(2 * np.pi * (year_vec - 1976.0) / 4.0)).astype(np.float32)
+
+        housing_2006 = 3.2 * np.exp(-((year_vec - 2006.5)**2) / 4.0)
+        housing_2026 = 3.5 * np.clip((year_vec - 2012.0) / 14.67, 0.0, 1.0) ** 1.6
+        housing_pti = (3.2 + housing_2006 + housing_2026 + 0.1 * np.sin(2 * np.pi * 8 * (year_vec - 1976.0) / 50.0)).astype(np.float32)
+
+        vix_base = 15.0 + 3.0 * np.random.randn(n)
+        vix_1987 = 65.0 * np.exp(-((year_vec - 1987.80)**2) / 0.005)
+        vix_gfc = 65.0 * np.exp(-((year_vec - 2008.8)**2) / 0.08)
+        vix_covid = 67.7 * np.exp(-((year_vec - 2020.22)**2) / 0.02)
+        vix = np.clip(vix_base + vix_1987 + vix_gfc + vix_covid, 9.0, 82.7).astype(np.float32)
 
         p_cape = (cape * 0.88).astype(np.float32)
-
-        # Authoritative Buffett Indicator formula from macro_valuation.py: (SPY * 85.0 / GDP) * 100
         buffett = (spy_prices * 85.0 / gdp * 100.0).astype(np.float32)
 
-        margin_exhaustion = (0.3 + 0.6 * (t ** 2) + 0.05 * np.random.randn(n)).astype(np.float32)
-        skew = np.clip(125.0 + 35.0 * t + 4.0 * np.random.randn(n), 115.0, 165.0).astype(np.float32)
+        t_rel = np.linspace(0, 1, n)
+        margin_exhaustion = (0.3 + 0.6 * (t_rel ** 2) + 0.05 * np.random.randn(n)).astype(np.float32)
+        t_skew = np.clip((year_vec - 1976.0) / 50.0, 0.0, 1.0)
+        skew = np.clip(125.0 + 35.0 * t_skew + 4.0 * np.random.randn(n), 115.0, 165.0).astype(np.float32)
         ovx = np.clip(25.0 + 10.0 * np.random.randn(n), 10.0, 80.0).astype(np.float32)
         ovx_vix = (ovx / (vix + 1e-8)).astype(np.float32)
 
-        tech_xlk = (spy_prices * (1.2 + 0.3 * np.sin(np.linspace(0, 5, n)))).astype(np.float32)
+        tech_xlk = (spy_prices * (1.1 + 0.4 * np.clip((year_vec - 1995.0) / 31.67, 0.0, 1.0) ** 1.5 + 0.15 * np.sin(2 * np.pi * 5 * (year_vec - 1976.0) / 50.0))).astype(np.float32)
 
         # Authoritative GSADF & GPT Fundamental Decomposition algorithm from econometric.py
         def _calc_adf(prices_arr):
@@ -213,8 +253,6 @@ def generate_wasm_dataset(start_date: str, end_date: str):
         drawdown_logits = np.clip(-1.8 + 0.8 * gpt_adj + 0.4 * buff_z + 0.3 * cape_z + 2.5 * tda_l2, -30.0, 30.0)
         drawdown_probs = (1.0 / (1.0 + np.exp(-drawdown_logits))).clip(0.0, 1.0).astype(np.float32)
 
-
-
         return {
             "Date": dates,
             "SPY": spy_prices,
@@ -234,35 +272,9 @@ def generate_wasm_dataset(start_date: str, end_date: str):
             "Drawdown_Probability": drawdown_probs
         }
 
-
-
-
-    # Drawdown risk probability (0.0 to 1.0)
-    drawdown_probs = (1.0 / (1.0 + np.exp(-3.5 * (gpt_adj - 1.1)))).astype(np.float32)
-
-
-    return {
-        "Date": dates,
-        "SPY": spy_prices,
-        "Shiller_CAPE": cape,
-        "P_CAPE": p_cape,
-        "Buffett_Indicator": buffett,
-        "FINRA_Margin_Debt": margin_debt,
-        "Margin_Exhaustion_Score": margin_exhaustion,
-        "GSADF_Stat": gsadf,
-        "GSADF_GPT_Adjusted": gpt_adj,
-        "^VIX": vix,
-        "^SKEW": skew,
-        "OVX_VIX_CrossAsset_Ratio": ovx_vix,
-        "Housing_Price_to_Income": housing_pti,
-        "XLK": tech_xlk,
-        "TDA_Persistence_L2_Norm": tda_l2,
-        "Drawdown_Probability": drawdown_probs
-    }
-
 # Horizon Selector Widget
 horizon_selector = pn.widgets.Select(
-    name="Select Date Horizon",
+    label="Select Date Horizon",
     options={
         HORIZON_OPTION_1_LABEL: HORIZON_OPTION_1_ID,
         HORIZON_OPTION_2_LABEL: HORIZON_OPTION_2_ID
@@ -400,17 +412,18 @@ def generate_explanatory_markdown(horizon_id: str) -> str:
     if horizon_id == HORIZON_OPTION_1_ID:
         tradeoffs = (
             "<ul>"
-            "<li><b>✔ 100% Native High-Frequency Data</b>: All 12 features (VIX1D, OVX, SKEW, DSPX, TDA, GSADF) measured directly from real exchange feeds.</li>"
-            "<li><b>✔ Zero Proxy Imputation</b>: Best suited for immediate 2026 tactical parameter tuning.</li>"
+            "<li><b>✔ 50-Year Multi-Decade Horizon</b>: Spans 9 major historical regimes (1970s Stagflation & 1980–82 Volcker, 1987 Black Monday, 1990 S&L, 2000 Dot-Com, 2008 GFC, 2018 Volmageddon, 2020 COVID, 2022 Fed Hikes, 2026 AI Exuberance).</li>"
+            "<li><b>⚡ Macro Spline & Historical Proxies</b>: Pre-1993 series anchored to S&P index levels, nominal GDP, and historical Shiller CAPE.</li>"
             "</ul>"
         )
     else:
         tradeoffs = (
             "<ul>"
-            "<li><b>✔ 28.5-Year Multi-Decade Horizon</b>: Spans Dot-Com 2000, 2008 GFC, 2018 Volmageddon, 2020 COVID, 2022 Fed Hikes, and 2024–2026 AI Exuberance.</li>"
-            "<li><b>⚡ Proxy Modeling Pre-2007</b>: Options indices prior to 2007 utilize historical volatility spline proxy interpolation.</li>"
+            "<li><b>✔ 100% Native High-Frequency Data</b>: All 12 features (VIX1D, OVX, SKEW, DSPX, TDA, GSADF) measured directly from real exchange feeds.</li>"
+            "<li><b>✔ Zero Proxy Imputation</b>: Best suited for immediate 2026 tactical parameter tuning.</li>"
             "</ul>"
         )
+
 
     return f"""
 ### 📅 Horizon Specification & Data Integrity: {meta['label']}
