@@ -1,0 +1,89 @@
+# =============================================================================
+# Multidimensional Market Bubble Detector & Structural Break System
+# Production & Development Requirements Specification
+# Compatible with `uv pip install -r requirements.txt` and standard pip
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# 1. High-Speed Vectorized Data Processing & Parquet Storage
+# -----------------------------------------------------------------------------
+# Polars: Apache Arrow columnar DataFrame engine; multithreaded query execution
+polars>=1.0.0
+
+# PyArrow: Columnar memory format and high-throughput Parquet read/write backend
+pyarrow>=15.0.0
+
+# Pandas: Interoperability layer for financial time series and business-day logic
+pandas>=2.1.0
+
+# YFinance: Ingestion interface for real-time and historical exchange market data
+yfinance>=0.2.35
+
+# -----------------------------------------------------------------------------
+# 2. Numerical Computing, Scientific Algorithms & Quantitative Machine Learning
+# -----------------------------------------------------------------------------
+# NumPy: Foundational N-dimensional array mathematics and vectorized calculations
+numpy>=1.26.0
+
+# SciPy: Regularized matrix solvers, optimization routines, and eigenvalue decomposition
+scipy>=1.12.0
+
+# Scikit-Learn: Robust covariance estimators, Ridge regularization, and TimeSeriesSplit
+scikit-learn>=1.4.0
+
+# XGBoost: Scalable, distributed gradient-boosted decision trees for regime prediction
+xgboost>=2.0.0
+
+# TA: Specialized technical analysis library for financial indicators and momentum
+ta>=0.11.0
+
+# -----------------------------------------------------------------------------
+# 3. Interactive Web Dashboards & UI Visualization Runtimes
+# -----------------------------------------------------------------------------
+# NiceGUI: High-performance Python UI framework built on FastAPI and Vue/Quasar
+nicegui>=1.4.0
+
+# FastAPI: Modern, asynchronous ASGI web framework powering NiceGUI endpoints
+fastapi>=0.110.0
+
+# Uvicorn: Lightning-fast ASGI web server implementation
+uvicorn>=0.28.0
+
+# HoloViz Panel: High-level reactive visualization framework supporting Pyodide WASM
+panel>=1.3.0
+
+# Bokeh: Native plotting library powering Panel interactive layout widgets
+bokeh>=3.3.0
+
+# Param: Declarative Python programming framework for reactive parameters
+param>=2.0.0
+
+# Plotly: Publication-quality interactive graphing library with WebGL acceleration
+plotly>=5.18.0
+
+# -----------------------------------------------------------------------------
+# 4. Networking, Serialization, Validation & Utilities
+# -----------------------------------------------------------------------------
+# Pydantic: Data validation and settings management using Python type annotations
+pydantic>=2.6.0
+
+# Requests: Battle-tested HTTP client for external macroeconomic API data ingestion
+requests>=2.31.0
+
+# Python-Dateutil: Extended date and time handling for multi-decade financial horizons
+python-dateutil>=2.8.2
+
+# PyYAML: Robust YAML parser for configuration files and horizon metadata
+pyyaml>=6.0.1
+
+# -----------------------------------------------------------------------------
+# 5. Quality Assurance, Testing & Validation
+# -----------------------------------------------------------------------------
+# Pytest: Enterprise-grade automated test runner and fixture architecture
+pytest>=8.0.0
+
+# AnyIO: Asynchronous concurrency library supporting async test execution
+anyio>=4.0.0
+
+# Tqdm: Fast, extensible progress bars for walk-forward cross-validation loops
+tqdm>=4.66.0

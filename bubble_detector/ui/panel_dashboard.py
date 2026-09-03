@@ -347,6 +347,20 @@ def fetch_dataset(horizon_id: str):
     meta = HORIZON_METADATA[horizon_id]
     return generate_wasm_dataset(meta["start_date"], meta["end_date"])
 
+def get_right_flushed_legend() -> dict:
+    """Return standard right-flushed vertical legend configuration for Panel WASM."""
+    return dict(
+        orientation="v",
+        yanchor="top",
+        y=1.0,
+        xanchor="left",
+        x=1.01,
+        bgcolor="rgba(15, 23, 42, 0.85)",
+        bordercolor="rgba(100, 116, 139, 0.4)",
+        borderwidth=1,
+        font=dict(size=10)
+    )
+
 def build_macro_valuation_fig(horizon_id: str) -> go.Figure:
     """Build Plotly figure for Macro Valuation Dashboard (matching NiceGUI 100%)."""
     data = fetch_dataset(horizon_id)
@@ -368,8 +382,8 @@ def build_macro_valuation_fig(horizon_id: str) -> go.Figure:
         title="Macro Valuation Anchors: Shiller CAPE, P-CAPE & Buffett Indicator",
         xaxis_title="Date",
         yaxis_title="Valuation Multiple / Indicator Score",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        margin=dict(l=40, r=40, t=60, b=40)
+        legend=get_right_flushed_legend(),
+        margin=dict(l=40, r=230, t=60, b=40)
     )
     return fig
 
@@ -389,8 +403,8 @@ def build_leverage_fig(horizon_id: str) -> go.Figure:
         title="Systemic Leverage: FINRA Margin Debt Velocity & Capacity Exhaustion",
         xaxis_title="Date",
         yaxis_title="Margin Debt ($ Billion)",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        margin=dict(l=40, r=40, t=60, b=40)
+        legend=get_right_flushed_legend(),
+        margin=dict(l=40, r=230, t=60, b=40)
     )
     return fig
 
@@ -414,8 +428,8 @@ def build_econometric_fig(horizon_id: str) -> go.Figure:
         title="Econometric Bubble Detection: GSADF t-Stat & GPT Fundamental Decomposition",
         xaxis_title="Date",
         yaxis_title="t-Statistic / Explosive Signal",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        margin=dict(l=40, r=40, t=60, b=40)
+        legend=get_right_flushed_legend(),
+        margin=dict(l=40, r=230, t=60, b=40)
     )
     return fig
 
@@ -437,8 +451,8 @@ def build_sentiment_vol_fig(horizon_id: str) -> go.Figure:
         title="Options Market Sentiment: VIX Suppressed Spot vs SKEW Tail-Risk Divergence",
         xaxis_title="Date",
         yaxis_title="Index Level / Ratio",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        margin=dict(l=40, r=40, t=60, b=40)
+        legend=get_right_flushed_legend(),
+        margin=dict(l=40, r=230, t=60, b=40)
     )
     return fig
 
@@ -469,8 +483,8 @@ def build_sector_health_fig(horizon_id: str) -> go.Figure:
         title="Sector Health & Topological Complexity: Housing Affordability & Tech CapEx",
         xaxis_title="Date",
         yaxis_title="Ratio / Valuation Level",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        margin=dict(l=40, r=40, t=60, b=40)
+        legend=get_right_flushed_legend(),
+        margin=dict(l=40, r=230, t=60, b=40)
     )
     return fig
 
@@ -540,17 +554,7 @@ def build_mahalanobis_fig(horizon_id: str) -> go.Figure:
         xaxis_title="Date",
         yaxis_title="Statistical Distance (σ) / Scaled Index Level",
         yaxis=dict(rangemode="tozero"),
-        legend=dict(
-            orientation="v",
-            yanchor="top",
-            y=1.0,
-            xanchor="left",
-            x=1.01,
-            bgcolor="rgba(15, 23, 42, 0.85)",
-            bordercolor="rgba(100, 116, 139, 0.4)",
-            borderwidth=1,
-            font=dict(size=10)
-        ),
+        legend=get_right_flushed_legend(),
         margin=dict(l=40, r=230, t=60, b=40),
     )
     return fig
@@ -590,6 +594,25 @@ def generate_explanatory_markdown(horizon_id: str) -> str:
 #### Methodological Trade-Offs & Calibration:
 {tradeoffs}
 """
+
+# Executive Summary Markdown Pane
+executive_summary_pane = pn.pane.Markdown(
+    """
+### 🏛️ Executive Summary: Macro Landscape & Multidimensional Framework
+The mid-2026 macroeconomic environment presents an acute structural challenge: the S&P 500 tests record peaks near 7,500 amid the second-highest valuation epoch in U.S. history (Shiller CAPE 41.37, Buffett Indicator 218.1% of GDP). Simultaneously, systemic leverage has expanded to a record $1.416T in FINRA margin debt (+53.7% YoY), exhausting institutional margin credit and creating severe vulnerability to leverage-induced fire-sale cascades.
+
+While the massive $754B hyperscaler AI CapEx supercycle justifies fundamental repricing under General-Purpose Technology (GPT) econometric decomposition, derivatives markets reveal a dangerous structural divergence: institutional capital is aggressively bidding for catastrophic tail-risk protection (SKEW > 145) even as front-month volatility remains artificially suppressed (VIX1D < 10) and index-level implied correlation collapses (< 8.0).
+
+#### 🎯 Unified Multi-Regime Quantitative Architecture
+- **6 Integrated Modules**: Macro Valuation, Systemic Leverage, Econometric Bubble, Sentiment & Volatility, Sector Health & TDA, and Macro Mahalanobis Distance.
+- **Method 1 Mahalanobis Distance ($D_M$)**: 15-dimensional regularized covariance distance ($\\\\mathbf{\\\\Sigma} + 10^{-2}\\\\mathbf{I}$) eliminating collinearity distortions.
+- **Dynamic Equity Exposure**: Continuous risk-scaled sizing ($w_{\\\\text{equity}} \\\\in [0.20, 1.00]$) with a strict 20% defensive liquidity floor.
+- **Calendar-Aware 50-Year Engine**: Dynamically anchors 50 physical years (13,045 trading days) across 7 historical crash regimes.
+- **TDA Dynamic Normalization**: Maps Takens persistent homology $L_2$ norm to $[0.80, 7.00]$, spanning the full chart canvas.
+- **100% Quality Gate**: Every retained analytical methodology meets or exceeds Confidence Score cutoff $\\\\ge 0.87$.
+    """,
+    sizing_mode="stretch_width"
+)
 
 # Create static Panes initialized with Option 1
 note_pane = pn.pane.Markdown(
@@ -662,11 +685,20 @@ template = pn.template.FastListTemplate(
         pn.pane.Markdown("### ⚙️ Calibration Controls"),
         horizon_selector,
         pn.pane.Markdown("---"),
-        pn.pane.Markdown("**Framework**: Panel (HoloViz) WASM / Pyodide\n**Engine**: NumPy & Plotly\n**Theme**: Sleek Enterprise Dark")
+        pn.pane.Markdown(
+            "**Core Architecture & Engines**:\n\n"
+            "• **WebAssembly Runtime**: Pyodide & Panel (HoloViz)\n"
+            "• **High-Speed Vectorization**: Polars & Apache Parquet\n"
+            "• **Numerical Computation**: NumPy & SciPy\n"
+            "• **Statistical ML**: Scikit-Learn (Ridge Regularization & Walk-Forward CV)\n"
+            "• **Visualization**: Interactive Plotly & Bokeh\n"
+            "• **Design**: Sleek Enterprise Dark (WCAG AA Compliant)"
+        )
     ],
     main=[
         header_banner,
-        pn.Card(note_pane, title="Horizon Specifications & Data Integrity", collapsed=False),
+        pn.Card(executive_summary_pane, title="🏛️ Executive Summary & Quantitative Architecture", collapsed=True),
+        pn.Card(note_pane, title="📅 Horizon Specifications & Data Integrity", collapsed=False),
         tabs
     ],
     accent_base_color="#0288D1",

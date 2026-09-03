@@ -20,8 +20,8 @@
     "semantic_hash": "82efb97a359f5c7290bf2513d14686be"
   },
   "MarketBubble_DDFv100.md": {
-    "mtime": 1788397373.2725694,
-    "ast_hash": "54f0c5b29aa894e9cd6270a599be08a6",
+    "mtime": 1788398716.0255132,
+    "ast_hash": "e36a5b8428ba1892970b30f5d7bbcc93",
     "semantic_hash": ""
   },
   "agvi_ImplementationPlan_DDFv100.md": {
@@ -120,8 +120,8 @@
     "semantic_hash": ""
   },
   "bubble_detector/ui/dashboard.py": {
-    "mtime": 1788396536.7568562,
-    "ast_hash": "6200ab308b8fdeabc117bcb99625caad",
+    "mtime": 1788398529.8380458,
+    "ast_hash": "816a2fc6ed1842e85cb0fdd99ea703cd",
     "semantic_hash": ""
   },
   "bubble_detector/ui_theme.py": {
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "bubble_detector/ui/panel_dashboard.py": {
-    "mtime": 1788396552.930982,
-    "ast_hash": "4dc75debedebe436e85414cf78ddfefa",
+    "mtime": 1788398573.9009812,
+    "ast_hash": "556ac47fbca937534b5893498a9b3743",
     "semantic_hash": ""
   },
   ".github/workflows/deploy.yml": {
@@ -205,8 +205,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1788397340.2190597,
-    "ast_hash": "86e412ace027e4d22a882e864cfa2833",
+    "mtime": 1788398705.9071774,
+    "ast_hash": "18932945b655aad0062f6e61a3f0bfb5",
     "semantic_hash": ""
   },
   "tests/test_full_indicator_parity.py": {
@@ -220,8 +220,18 @@
     "semantic_hash": ""
   },
   "tests/test_mahalanobis.py": {
-    "mtime": 1788396563.0725298,
-    "ast_hash": "6f99268d2acd3bd222cf15fa3e024c0a",
+    "mtime": 1788398591.8076847,
+    "ast_hash": "8a4ee82df7019b3f58a91f89a226d880",
+    "semantic_hash": ""
+  },
+  "pyproject.toml": {
+    "mtime": 1788398688.4208362,
+    "ast_hash": "dff0cad548503133370ab0897d6ddf14",
+    "semantic_hash": ""
+  },
+  "requirements.txt": {
+    "mtime": 1788398678.063657,
+    "ast_hash": "83a8280905595bcee6b3d7be347f57f7",
     "semantic_hash": ""
   }
 }

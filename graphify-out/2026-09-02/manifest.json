@@ -20,8 +20,8 @@
     "semantic_hash": "82efb97a359f5c7290bf2513d14686be"
   },
   "MarketBubble_DDFv100.md": {
-    "mtime": 1784593973.2313015,
-    "ast_hash": "bdb175fff9063d6990c10f21f18d1de9",
+    "mtime": 1788397373.2725694,
+    "ast_hash": "54f0c5b29aa894e9cd6270a599be08a6",
     "semantic_hash": ""
   },
   "agvi_ImplementationPlan_DDFv100.md": {
@@ -205,8 +205,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1785867184.6808414,
-    "ast_hash": "5f048fe2d2f70b301a089aeef5f51e07",
+    "mtime": 1788397340.2190597,
+    "ast_hash": "86e412ace027e4d22a882e864cfa2833",
     "semantic_hash": ""
   },
   "tests/test_full_indicator_parity.py": {

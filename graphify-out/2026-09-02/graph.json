@@ -159,8 +159,8 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "bubble_detector_config_modeltrainingerror",
-      "community": 6,
-      "community_name": "FINRA Margin Debt Metrics",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "modeltrainingerror"
     },
     {
@@ -280,8 +280,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "bubble_detector_config_rationale_51",
-      "community": 6,
-      "community_name": "FINRA Margin Debt Metrics",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "raised when ml model training fails."
     },
     {
@@ -940,8 +940,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_models_init",
-      "community": 6,
-      "community_name": "FINRA Margin Debt Metrics",
+      "community": 1,
+      "community_name": "AGVI System Pipeline and Dashboard",
       "norm_label": "__init__.py"
     },
     {
@@ -951,8 +951,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_models_init_rationale_1",
-      "community": 6,
-      "community_name": "FINRA Margin Debt Metrics",
+      "community": 1,
+      "community_name": "AGVI System Pipeline and Dashboard",
       "norm_label": "machine learning models module"
     },
     {
@@ -1171,8 +1171,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_models_structural_breaks",
-      "community": 6,
-      "community_name": "FINRA Margin Debt Metrics",
+      "community": 1,
+      "community_name": "AGVI System Pipeline and Dashboard",
       "norm_label": "structural_breaks.py"
     },
     {
@@ -1270,8 +1270,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_models_structural_breaks_rationale_1",
-      "community": 6,
-      "community_name": "FINRA Margin Debt Metrics",
+      "community": 1,
+      "community_name": "AGVI System Pipeline and Dashboard",
       "norm_label": "structural break machine learning classifier.  utilizes xgboost with robustscale"
     },
     {
@@ -2403,8 +2403,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "tests_test_features_sample_df",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "sample_df()"
     },
     {
@@ -2755,8 +2755,8 @@
       "source_location": "L162",
       "_origin": "ast",
       "id": "tests_test_mahalanobis_test_tda_normalization_tabs_5_and_6",
-      "community": 17,
-      "community_name": "panel_dashboard.py",
+      "community": 5,
+      "community_name": "Valuation and Feature Engineering",
       "norm_label": "test_tda_normalization_tabs_5_and_6()"
     },
     {
@@ -2821,8 +2821,8 @@
       "source_location": "L163",
       "_origin": "ast",
       "id": "tests_test_mahalanobis_rationale_163",
-      "community": 17,
-      "community_name": "panel_dashboard.py",
+      "community": 5,
+      "community_name": "Valuation and Feature Engineering",
       "norm_label": "verify that tda geometric complexity on both tab 5 and tab 6 spans the 0 to 7 y-"
     },
     {
@@ -2832,8 +2832,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_models",
-      "community": 6,
-      "community_name": "FINRA Margin Debt Metrics",
+      "community": 2,
+      "community_name": "Econometric Bubble Detection Models",
       "norm_label": "test_models.py"
     },
     {
@@ -2854,8 +2854,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "tests_test_models_test_structural_break_predictor_walk_forward",
-      "community": 6,
-      "community_name": "FINRA Margin Debt Metrics",
+      "community": 2,
+      "community_name": "Econometric Bubble Detection Models",
       "norm_label": "test_structural_break_predictor_walk_forward()"
     },
     {
@@ -2865,8 +2865,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "tests_test_models_test_predict_drawdown_probability",
-      "community": 6,
-      "community_name": "FINRA Margin Debt Metrics",
+      "community": 2,
+      "community_name": "Econometric Bubble Detection Models",
       "norm_label": "test_predict_drawdown_probability()"
     },
     {
@@ -2876,8 +2876,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_models_rationale_1",
-      "community": 6,
-      "community_name": "FINRA Margin Debt Metrics",
+      "community": 2,
+      "community_name": "Econometric Bubble Detection Models",
       "norm_label": "unit tests for structuralbreakpredictor machine learning module."
     },
     {
@@ -3082,7 +3082,7 @@
       "label": "\ud83c\udf1f Live Interactive WebAssembly Dashboard",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L10",
+      "source_location": "L15",
       "_origin": "ast",
       "id": "readme_live_interactive_webassembly_dashboard",
       "community": 16,
@@ -3090,98 +3090,274 @@
       "norm_label": "\ud83c\udf1f live interactive webassembly dashboard"
     },
     {
-      "label": "\ud83d\udcc5 Multi-Horizon Date Range Selector",
+      "label": "\ud83d\udcc5 Dynamic 50-Year Multi-Horizon Date Engine",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L18",
+      "source_location": "L23",
       "_origin": "ast",
-      "id": "readme_multi_horizon_date_range_selector",
+      "id": "readme_dynamic_50_year_multi_horizon_date_engine",
       "community": 16,
       "community_name": ".fetch_market_data",
-      "norm_label": "\ud83d\udcc5 multi-horizon date range selector"
+      "norm_label": "\ud83d\udcc5 dynamic 50-year multi-horizon date engine"
     },
     {
-      "label": "\ud83d\udcca 5 Interactive Dashboard Modules",
+      "label": "\ud83d\udcca 6 Interactive Dashboard Modules",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L29",
+      "source_location": "L36",
       "_origin": "ast",
-      "id": "readme_5_interactive_dashboard_modules",
+      "id": "readme_6_interactive_dashboard_modules",
       "community": 16,
       "community_name": ".fetch_market_data",
-      "norm_label": "\ud83d\udcca 5 interactive dashboard modules"
+      "norm_label": "\ud83d\udcca 6 interactive dashboard modules"
     },
     {
-      "label": "\ud83d\udcbb Local Setup & Execution",
+      "label": "1. Macro Valuation Anchors",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L39",
+      "source_location": "L38",
       "_origin": "ast",
-      "id": "readme_local_setup_execution",
+      "id": "readme_1_macro_valuation_anchors",
       "community": 16,
       "community_name": ".fetch_market_data",
-      "norm_label": "\ud83d\udcbb local setup & execution"
+      "norm_label": "1. macro valuation anchors"
     },
     {
-      "label": "1. Installation",
+      "label": "2. Systemic Liquidity & Leverage",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L41",
+      "source_location": "L43",
       "_origin": "ast",
-      "id": "readme_1_installation",
+      "id": "readme_2_systemic_liquidity_leverage",
       "community": 16,
       "community_name": ".fetch_market_data",
-      "norm_label": "1. installation"
+      "norm_label": "2. systemic liquidity & leverage"
     },
     {
-      "label": "2. Run Local NiceGUI App",
+      "label": "3. Econometric Explosive Bubble Diagnostics",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L50",
+      "source_location": "L47",
       "_origin": "ast",
-      "id": "readme_2_run_local_nicegui_app",
+      "id": "readme_3_econometric_explosive_bubble_diagnostics",
       "community": 16,
       "community_name": ".fetch_market_data",
-      "norm_label": "2. run local nicegui app"
+      "norm_label": "3. econometric explosive bubble diagnostics"
     },
     {
-      "label": "3. Run Local Panel (HoloViz) App",
+      "label": "4. Options Sentiment & Behavioral Tracking",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L56",
+      "source_location": "L51",
       "_origin": "ast",
-      "id": "readme_3_run_local_panel_holoviz_app",
+      "id": "readme_4_options_sentiment_behavioral_tracking",
       "community": 16,
       "community_name": ".fetch_market_data",
-      "norm_label": "3. run local panel (holoviz) app"
+      "norm_label": "4. options sentiment & behavioral tracking"
     },
     {
-      "label": "4. Build WebAssembly Bundle Locally",
+      "label": "5. Sector Vulnerability & Topological Dynamics",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L62",
+      "source_location": "L57",
       "_origin": "ast",
-      "id": "readme_4_build_webassembly_bundle_locally",
+      "id": "readme_5_sector_vulnerability_topological_dynamics",
       "community": 16,
       "community_name": ".fetch_market_data",
-      "norm_label": "4. build webassembly bundle locally"
+      "norm_label": "5. sector vulnerability & topological dynamics"
     },
     {
-      "label": "\ud83e\uddea Running Unit & Integration Tests",
+      "label": "6. Macro Mahalanobis Distance & Multi-Dimensional Regime Signals (NEW)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L70",
+      "source_location": "L63",
       "_origin": "ast",
-      "id": "readme_running_unit_integration_tests",
+      "id": "readme_6_macro_mahalanobis_distance_multi_dimensional_regime_signals_new",
       "community": 16,
       "community_name": ".fetch_market_data",
-      "norm_label": "\ud83e\uddea running unit & integration tests"
+      "norm_label": "6. macro mahalanobis distance & multi-dimensional regime signals (new)"
+    },
+    {
+      "label": "\ud83d\udd2c Mathematical Formulations",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L72",
+      "_origin": "ast",
+      "id": "readme_mathematical_formulations",
+      "community": 16,
+      "community_name": ".fetch_market_data",
+      "norm_label": "\ud83d\udd2c mathematical formulations"
+    },
+    {
+      "label": "1. Macro Mahalanobis Distance & Dynamic Exposure Sizing",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L74",
+      "_origin": "ast",
+      "id": "readme_1_macro_mahalanobis_distance_dynamic_exposure_sizing",
+      "community": 16,
+      "community_name": ".fetch_market_data",
+      "norm_label": "1. macro mahalanobis distance & dynamic exposure sizing"
+    },
+    {
+      "label": "2. TDA Geometric Complexity Full-Range Dynamic Normalization",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L88",
+      "_origin": "ast",
+      "id": "readme_2_tda_geometric_complexity_full_range_dynamic_normalization",
+      "community": 16,
+      "community_name": ".fetch_market_data",
+      "norm_label": "2. tda geometric complexity full-range dynamic normalization"
+    },
+    {
+      "label": "\ud83d\udcbb Local Setup & Execution Guide",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L109",
+      "_origin": "ast",
+      "id": "readme_local_setup_execution_guide",
+      "community": 16,
+      "community_name": ".fetch_market_data",
+      "norm_label": "\ud83d\udcbb local setup & execution guide"
+    },
+    {
+      "label": "1. Prerequisites & Installation",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L111",
+      "_origin": "ast",
+      "id": "readme_1_prerequisites_installation",
+      "community": 16,
+      "community_name": ".fetch_market_data",
+      "norm_label": "1. prerequisites & installation"
+    },
+    {
+      "label": "2. Run the High-Performance NiceGUI Application",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L126",
+      "_origin": "ast",
+      "id": "readme_2_run_the_high_performance_nicegui_application",
+      "community": 16,
+      "community_name": ".fetch_market_data",
+      "norm_label": "2. run the high-performance nicegui application"
+    },
+    {
+      "label": "3. Run the Local HoloViz Panel Dashboard",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L135",
+      "_origin": "ast",
+      "id": "readme_3_run_the_local_holoviz_panel_dashboard",
+      "community": 16,
+      "community_name": ".fetch_market_data",
+      "norm_label": "3. run the local holoviz panel dashboard"
+    },
+    {
+      "label": "4. Build and Run Client-Side WebAssembly (Pyodide)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L144",
+      "_origin": "ast",
+      "id": "readme_4_build_and_run_client_side_webassembly_pyodide",
+      "community": 16,
+      "community_name": ".fetch_market_data",
+      "norm_label": "4. build and run client-side webassembly (pyodide)"
+    },
+    {
+      "label": "5. Run the Automated Test Suite",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L160",
+      "_origin": "ast",
+      "id": "readme_5_run_the_automated_test_suite",
+      "community": 16,
+      "community_name": ".fetch_market_data",
+      "norm_label": "5. run the automated test suite"
+    },
+    {
+      "label": "6. Update Knowledge Graph",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L175",
+      "_origin": "ast",
+      "id": "readme_6_update_knowledge_graph",
+      "community": 16,
+      "community_name": ".fetch_market_data",
+      "norm_label": "6. update knowledge graph"
+    },
+    {
+      "label": "\ud83d\udccb Changelog",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L185",
+      "_origin": "ast",
+      "id": "readme_changelog",
+      "community": 16,
+      "community_name": ".fetch_market_data",
+      "norm_label": "\ud83d\udccb changelog"
+    },
+    {
+      "label": "[v2.1.0] - 2026-09-02",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L189",
+      "_origin": "ast",
+      "id": "readme_v2_1_0_2026_09_02",
+      "community": 16,
+      "community_name": ".fetch_market_data",
+      "norm_label": "[v2.1.0] - 2026-09-02"
+    },
+    {
+      "label": "Added",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L191",
+      "_origin": "ast",
+      "id": "readme_added",
+      "community": 16,
+      "community_name": ".fetch_market_data",
+      "norm_label": "added"
+    },
+    {
+      "label": "Fixed",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L211",
+      "_origin": "ast",
+      "id": "readme_fixed",
+      "community": 16,
+      "community_name": ".fetch_market_data",
+      "norm_label": "fixed"
+    },
+    {
+      "label": "[v1.0.0] - 2026-08-05",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L218",
+      "_origin": "ast",
+      "id": "readme_v1_0_0_2026_08_05",
+      "community": 16,
+      "community_name": ".fetch_market_data",
+      "norm_label": "[v1.0.0] - 2026-08-05"
+    },
+    {
+      "label": "Added",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L220",
+      "_origin": "ast",
+      "id": "readme_added_220",
+      "community": 16,
+      "community_name": ".fetch_market_data",
+      "norm_label": "added"
     },
     {
       "label": "\ud83d\udcdc License",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L78",
+      "source_location": "L229",
       "_origin": "ast",
       "id": "readme_license",
       "community": 16,
@@ -10200,18 +10376,40 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L29",
+      "source_location": "L36",
       "weight": 1.0,
       "_origin": "ast",
       "source": "readme_multidimensional_market_bubble_detector_structural_break_system",
-      "target": "readme_5_interactive_dashboard_modules",
+      "target": "readme_6_interactive_dashboard_modules",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L78",
+      "source_location": "L185",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "readme_multidimensional_market_bubble_detector_structural_break_system",
+      "target": "readme_changelog",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L23",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "readme_multidimensional_market_bubble_detector_structural_break_system",
+      "target": "readme_dynamic_50_year_multi_horizon_date_engine",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L229",
       "weight": 1.0,
       "_origin": "ast",
       "source": "readme_multidimensional_market_bubble_detector_structural_break_system",
@@ -10222,7 +10420,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L10",
+      "source_location": "L15",
       "weight": 1.0,
       "_origin": "ast",
       "source": "readme_multidimensional_market_bubble_detector_structural_break_system",
@@ -10233,77 +10431,231 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L39",
+      "source_location": "L109",
       "weight": 1.0,
       "_origin": "ast",
       "source": "readme_multidimensional_market_bubble_detector_structural_break_system",
-      "target": "readme_local_setup_execution",
+      "target": "readme_local_setup_execution_guide",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L18",
+      "source_location": "L72",
       "weight": 1.0,
       "_origin": "ast",
       "source": "readme_multidimensional_market_bubble_detector_structural_break_system",
-      "target": "readme_multi_horizon_date_range_selector",
+      "target": "readme_mathematical_formulations",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L70",
+      "source_location": "L38",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_multidimensional_market_bubble_detector_structural_break_system",
-      "target": "readme_running_unit_integration_tests",
+      "source": "readme_6_interactive_dashboard_modules",
+      "target": "readme_1_macro_valuation_anchors",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L41",
+      "source_location": "L43",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_local_setup_execution",
-      "target": "readme_1_installation",
+      "source": "readme_6_interactive_dashboard_modules",
+      "target": "readme_2_systemic_liquidity_leverage",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L50",
+      "source_location": "L47",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_local_setup_execution",
-      "target": "readme_2_run_local_nicegui_app",
+      "source": "readme_6_interactive_dashboard_modules",
+      "target": "readme_3_econometric_explosive_bubble_diagnostics",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L56",
+      "source_location": "L51",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_local_setup_execution",
-      "target": "readme_3_run_local_panel_holoviz_app",
+      "source": "readme_6_interactive_dashboard_modules",
+      "target": "readme_4_options_sentiment_behavioral_tracking",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L62",
+      "source_location": "L57",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_local_setup_execution",
-      "target": "readme_4_build_webassembly_bundle_locally",
+      "source": "readme_6_interactive_dashboard_modules",
+      "target": "readme_5_sector_vulnerability_topological_dynamics",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L63",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "readme_6_interactive_dashboard_modules",
+      "target": "readme_6_macro_mahalanobis_distance_multi_dimensional_regime_signals_new",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L74",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "readme_mathematical_formulations",
+      "target": "readme_1_macro_mahalanobis_distance_dynamic_exposure_sizing",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L88",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "readme_mathematical_formulations",
+      "target": "readme_2_tda_geometric_complexity_full_range_dynamic_normalization",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L111",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "readme_local_setup_execution_guide",
+      "target": "readme_1_prerequisites_installation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L126",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "readme_local_setup_execution_guide",
+      "target": "readme_2_run_the_high_performance_nicegui_application",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L135",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "readme_local_setup_execution_guide",
+      "target": "readme_3_run_the_local_holoviz_panel_dashboard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L144",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "readme_local_setup_execution_guide",
+      "target": "readme_4_build_and_run_client_side_webassembly_pyodide",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L160",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "readme_local_setup_execution_guide",
+      "target": "readme_5_run_the_automated_test_suite",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L175",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "readme_local_setup_execution_guide",
+      "target": "readme_6_update_knowledge_graph",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L218",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "readme_changelog",
+      "target": "readme_v1_0_0_2026_08_05",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L189",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "readme_changelog",
+      "target": "readme_v2_1_0_2026_09_02",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L191",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "readme_v2_1_0_2026_09_02",
+      "target": "readme_added",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L211",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "readme_v2_1_0_2026_09_02",
+      "target": "readme_fixed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L220",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "readme_v1_0_0_2026_08_05",
+      "target": "readme_added_220",
       "confidence_score": 1.0
     },
     {
@@ -11227,5 +11579,5 @@
       "source_file": "impliedvolatilitymetric.png"
     }
   ],
-  "built_at_commit": "2325e3cb804707c00aa8103a04df322e03005289"
+  "built_at_commit": "9d9e8ff7c5cade61ae918ebf4f0ba931e8d5f536"
 }

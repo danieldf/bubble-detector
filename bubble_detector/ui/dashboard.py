@@ -77,6 +77,20 @@ class DashboardState:
     def get_palette(self) -> Dict[str, str]:
         return LIGHT_THEME if self.theme_mode == "light" else DARK_THEME
 
+def get_right_flushed_legend(theme_mode: str) -> dict:
+    """Return standard right-flushed vertical legend configuration."""
+    return dict(
+        orientation="v",
+        yanchor="top",
+        y=1.0,
+        xanchor="left",
+        x=1.01,
+        bgcolor="rgba(15, 23, 42, 0.85)" if theme_mode == "dark" else "rgba(255, 255, 255, 0.90)",
+        bordercolor="rgba(100, 116, 139, 0.4)",
+        borderwidth=1,
+        font=dict(size=10)
+    )
+
 def build_macro_valuation_chart(state: DashboardState) -> go.Figure:
     """Build Plotly figure for Macro Valuation Dashboard (CAPE, P-CAPE, Buffett Indicator)."""
     df = state.df
@@ -101,8 +115,8 @@ def build_macro_valuation_chart(state: DashboardState) -> go.Figure:
         title="Macro Valuation Anchors: Shiller CAPE, P-CAPE & Buffett Indicator",
         xaxis_title="Date",
         yaxis_title="Valuation Multiple / Indicator Score",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        margin=dict(l=40, r=40, t=60, b=40),
+        legend=get_right_flushed_legend(state.theme_mode),
+        margin=dict(l=40, r=230, t=60, b=40),
     )
     return fig
 
@@ -124,8 +138,8 @@ def build_leverage_chart(state: DashboardState) -> go.Figure:
         title="Systemic Leverage: FINRA Margin Debt Velocity & Capacity Exhaustion",
         xaxis_title="Date",
         yaxis_title="Margin Debt ($ Billion)",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        margin=dict(l=40, r=40, t=60, b=40),
+        legend=get_right_flushed_legend(state.theme_mode),
+        margin=dict(l=40, r=230, t=60, b=40),
     )
     return fig
 
@@ -152,8 +166,8 @@ def build_econometric_chart(state: DashboardState) -> go.Figure:
         title="Econometric Bubble Detection: GSADF t-Stat & GPT Fundamental Decomposition",
         xaxis_title="Date",
         yaxis_title="t-Statistic / Explosive Signal",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        margin=dict(l=40, r=40, t=60, b=40),
+        legend=get_right_flushed_legend(state.theme_mode),
+        margin=dict(l=40, r=230, t=60, b=40),
     )
     return fig
 
@@ -177,8 +191,8 @@ def build_sentiment_vol_chart(state: DashboardState) -> go.Figure:
         title="Options Market Sentiment: VIX Suppressed Spot vs SKEW Tail-Risk Divergence",
         xaxis_title="Date",
         yaxis_title="Index Level / Ratio",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        margin=dict(l=40, r=40, t=60, b=40),
+        legend=get_right_flushed_legend(state.theme_mode),
+        margin=dict(l=40, r=230, t=60, b=40),
     )
     return fig
 
@@ -211,8 +225,8 @@ def build_sector_health_chart(state: DashboardState) -> go.Figure:
         title="Sector Health & Topological Complexity: Housing Affordability & Tech CapEx",
         xaxis_title="Date",
         yaxis_title="Ratio / Valuation Level",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        margin=dict(l=40, r=40, t=60, b=40),
+        legend=get_right_flushed_legend(state.theme_mode),
+        margin=dict(l=40, r=230, t=60, b=40),
     )
     return fig
 
@@ -232,33 +246,33 @@ def build_mahalanobis_chart(state: DashboardState) -> go.Figure:
     palette = state.get_palette()
     fig = go.Figure()
 
-    # Primary Multi-Dimensional Statistical Distance & Regime Probability
+    # Primary Mahalanobis Signal & Probability Traces
     fig.add_trace(go.Scatter(
         x=dates, y=m_dist, mode="lines",
         name="Macro Mahalanobis Distance (DM)",
-        line=dict(color="#D32F2F", width=3.0)
+        line=dict(color="#00E5FF", width=2.8)
     ))
     fig.add_trace(go.Scatter(
         x=dates, y=probs * 10.0, mode="lines",
         name="Bubble Regime Probability (scaled x10)",
-        line=dict(color="#FF9800", width=2.2, dash="dash")
+        line=dict(color="#FF1744", width=2.2, dash="dash")
     ))
 
-    # Benchmark Comparative Overlays (Valuation, Sector Health, Topology)
+    # Benchmark Structural Overlays
     fig.add_trace(go.Scatter(
         x=dates, y=cape / 5.0, mode="lines",
         name="Shiller CAPE (scaled / 5)",
-        line=dict(color="#00E676", width=1.6)
+        line=dict(color="#2979FF", width=1.6)
     ))
     fig.add_trace(go.Scatter(
         x=dates, y=p_cape / 5.0, mode="lines",
         name="P-CAPE (scaled / 5)",
-        line=dict(color="#00B0FF", width=1.6)
+        line=dict(color="#00E676", width=1.6, dash="dot")
     ))
     fig.add_trace(go.Scatter(
         x=dates, y=buffett / 25.0, mode="lines",
         name="Buffett Indicator (scaled / 25)",
-        line=dict(color="#AB47BC", width=1.6)
+        line=dict(color="#FFD600", width=1.6)
     ))
     fig.add_trace(go.Scatter(
         x=dates, y=housing_pti, mode="lines",
@@ -287,20 +301,37 @@ def build_mahalanobis_chart(state: DashboardState) -> go.Figure:
         xaxis_title="Date",
         yaxis_title="Statistical Distance (σ) / Scaled Index Level",
         yaxis=dict(rangemode="tozero"),
-        legend=dict(
-            orientation="v",
-            yanchor="top",
-            y=1.0,
-            xanchor="left",
-            x=1.01,
-            bgcolor="rgba(15, 23, 42, 0.85)" if state.theme_mode == "dark" else "rgba(255, 255, 255, 0.90)",
-            bordercolor="rgba(100, 116, 139, 0.4)",
-            borderwidth=1,
-            font=dict(size=10)
-        ),
+        legend=get_right_flushed_legend(state.theme_mode),
         margin=dict(l=40, r=230, t=60, b=40),
     )
     return fig
+
+def render_executive_summary_card(state: DashboardState):
+    """Render high-impact Executive Summary card giving macroeconomic context and quantitative scope."""
+    with ui.expansion("🏛️ Executive Summary: Macro Landscape & Multidimensional Framework", icon="analytics").classes('w-full mb-4 rounded-xl').style(
+        'background-color: var(--bg-card); border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.04);'
+    ):
+        with ui.column().classes('p-4 gap-3'):
+            ui.label(
+                "The mid-2026 macroeconomic landscape presents an unprecedented structural challenge: the S&P 500 tests historical highs near 7,500 amid the second-highest valuation epoch in U.S. history (Shiller CAPE 41.37, Buffett Indicator 218.1% of GDP). Simultaneously, systemic leverage has expanded to a record $1.416T in FINRA margin debt (+53.7% YoY), exhausting institutional margin credit and creating acute vulnerability to leverage-induced fire-sale cascades."
+            ).style('font-size: 0.92rem; color: var(--text-secondary); line-height: 1.5;')
+
+            ui.label(
+                "While the massive $754B hyperscaler AI CapEx supercycle justifies fundamental repricing under General-Purpose Technology (GPT) econometric decomposition, derivatives markets reveal a dangerous structural divergence: institutional capital is aggressively bidding for catastrophic tail-risk protection (SKEW > 145) even as front-month volatility remains artificially suppressed (VIX1D < 10) and index-level implied correlation collapses (< 8.0)."
+            ).style('font-size: 0.92rem; color: var(--text-secondary); line-height: 1.5;')
+
+            with ui.row().classes('w-full gap-4 mt-2 flex-wrap'):
+                with ui.column().classes('flex-1 min-w-[280px] p-3 rounded-lg').style('background-color: rgba(2, 136, 209, 0.08); border: 1px solid rgba(2, 136, 209, 0.2);'):
+                    ui.label("🎯 Unified Multi-Regime Architecture").style('font-size: 0.90rem; font-weight: 700; color: var(--text-primary);')
+                    ui.label("• 6 Integrated Modules: Macro Valuation, Systemic Leverage, Econometric Bubble, Sentiment & Volatility, Sector Health & TDA, and Macro Mahalanobis Distance.").style('font-size: 0.83rem; color: var(--text-secondary);')
+                    ui.label("• Method 1 Mahalanobis Distance: 15-dimensional regularized covariance distance (DM) eliminating collinearity distortions.").style('font-size: 0.83rem; color: var(--text-secondary);')
+                    ui.label("• Dynamic Equity Exposure: Continuous risk-scaled sizing (w_equity ∈ [0.20, 1.00]) with strict 20% defensive liquidity floor.").style('font-size: 0.83rem; color: var(--text-secondary);')
+
+                with ui.column().classes('flex-1 min-w-[280px] p-3 rounded-lg').style('background-color: rgba(76, 175, 80, 0.08); border: 1px solid rgba(76, 175, 80, 0.2);'):
+                    ui.label("🔬 Mathematical Rigor & Scale Invariance").style('font-size: 0.90rem; font-weight: 700; color: var(--text-primary);')
+                    ui.label("• Calendar-Aware 50-Year Engine: Dynamically anchors 50 physical years (13,045 trading days) across 7 historical crash regimes.").style('font-size: 0.83rem; color: var(--text-secondary);')
+                    ui.label("• TDA Dynamic Normalization: Maps Takens persistent homology L2 norm to [0.80, 7.00], spanning full chart canvas.").style('font-size: 0.83rem; color: var(--text-secondary);')
+                    ui.label("• 100% Quality Gate: Every retained analytical methodology meets or exceeds Confidence Score cutoff ≥ 0.87.").style('font-size: 0.83rem; color: var(--text-secondary);')
 
 def render_horizon_explanatory_note(state: DashboardState):
     """Render iOS-style card explaining selected horizon's date range, regimes, and native feature fidelity."""
@@ -409,6 +440,7 @@ def create_app():
         def refresh_dashboard():
             note_container.clear()
             with note_container:
+                render_executive_summary_card(state)
                 render_horizon_explanatory_note(state)
 
             chart_container.clear()

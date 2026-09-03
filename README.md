@@ -2,9 +2,9 @@
 
 [![Deploy WebAssembly Dashboard](https://github.com/danieldf/bubble-detector/actions/workflows/deploy.yml/badge.svg)](https://github.com/danieldf/bubble-detector/actions/workflows/deploy.yml)
 [![Live WebAssembly Dashboard](https://img.shields.io/badge/Live_Dashboard-GitHub_Pages-0288D1?style=flat&logo=github)](https://danieldf.github.io/bubble-detector/)
-[![Version](https://img.shields.io/badge/Version-v2.1.0-4CAF50?style=flat)](https://github.com/danieldf/bubble-detector/releases/tag/v2.1.0)
+[![Version](https://img.shields.io/badge/Version-v2.1.1-4CAF50?style=flat)](https://github.com/danieldf/bubble-detector/releases/tag/v2.1.1)
 [![Python Version](https://img.shields.io/badge/Python-3.11%2B%20%7C%203.14-blue?style=flat&logo=python)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/Tests-32%20Passed%20(100%25)-success?style=flat)](https://github.com/danieldf/bubble-detector/actions)
+[![Tests](https://img.shields.io/badge/Tests-33%20Passed%20(100%25)-success?style=flat)](https://github.com/danieldf/bubble-detector/actions)
 
 An enterprise-grade quantitative econometric system and machine learning framework engineered to detect financial asset bubbles, diagnose non-linear macroeconomic regime shifts, quantify systemic distance from historical equilibrium, and dynamically adjust portfolio equity exposure.
 
@@ -186,6 +186,26 @@ graphify update .
 
 All notable changes to this project are documented in this section adhering to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and [Semantic Versioning (SemVer)](https://semver.org/).
 
+### [v2.1.1] - 2026-09-02
+
+#### Added
+- **Right-Flushed Legends Across All Tabs (1 through 6)**:
+  - Standardized all Plotly visualization figure layouts across Tabs 1–6 in both **NiceGUI** (`dashboard.py`) and **WebAssembly** (`panel_dashboard.py`) to right-flushed vertical orientation (`orientation="v", x=1.01, y=1.0, margin.r=230`).
+  - Added automated test `test_all_tabs_legends_right_flushed` verifying legend formatting across all 12 figures.
+- **Executive Summary UI Components**:
+  - Integrated high-impact Executive Summary cards in both NiceGUI and Panel WebAssembly editions, providing users with immediate macroeconomic context (CAPE 41.37, Margin Debt $1.416T, AI CapEx supercycle) and architectural breadth.
+- **Enhanced Framework & Architecture Specifications**:
+  - Updated WASM application sidebar note to comprehensively detail the complete technology stack: Polars, Apache Parquet, Pyodide, NumPy, SciPy, Scikit-Learn, Plotly, and Bokeh.
+- **Modern `uv` Packaging Infrastructure**:
+  - Authored deeply documented `pyproject.toml` adhering to PEP 621, setuptools build backend, and modern `[dependency-groups]`.
+  - Authored deeply documented `requirements.txt` with architectural role annotations for every dependency.
+- **Official Licensing**:
+  - Added official `LICENSE` file for Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International Public License (CC BY-NC-ND 4.0).
+- **Test Suite Expansion**:
+  - Automated test suite expanded to **33 tests passed (100% pass rate)**.
+
+---
+
 ### [v2.1.0] - 2026-09-02
 
 #### Added
@@ -227,4 +247,4 @@ All notable changes to this project are documented in this section adhering to [
 ---
 
 ## 📜 License
-MIT License. Developed for quantitative systemic risk assessment, econometric research, and non-linear macroeconomic regime analysis.
+Licensed under the **Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International Public License (CC BY-NC-ND 4.0)**. Developed for quantitative systemic risk assessment, econometric research, and non-linear macroeconomic regime analysis. See the [`LICENSE`](LICENSE) file for complete legal terms.

@@ -320,6 +320,15 @@ graphify update .
 
 All notable technical updates to this research specification and software implementation are versioned in accordance with [Semantic Versioning (SemVer v2.0.0)](https://semver.org/):
 
+### [v2.1.1] - 2026-09-02
+
+- **Right-Flushed Legends Across All Tabs (1 through 6)**: Standardized all Plotly visualization layouts to right-flushed vertical orientation (`orientation="v", x=1.01, y=1.0, margin.r=230`) across NiceGUI and WebAssembly, eliminating curve and threshold line overlap.
+- **Executive Summary UI Components**: Integrated prominent Executive Summary modules into both NiceGUI and Panel WebAssembly editions, conveying macroeconomic context and quantitative scope.
+- **Enhanced Framework & Engine Specifications**: Documented complete multi-library computational architecture (Polars, Apache Parquet, Pyodide, NumPy, SciPy, Scikit-Learn, Plotly, Bokeh) in the WASM interface.
+- **Modern Packaging Infrastructure**: Standardized environment management with deeply documented `pyproject.toml` (PEP 621 / `dependency-groups`) and `requirements.txt` natively supporting `uv`.
+- **Creative Commons License**: Established official licensing under Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International Public License (CC BY-NC-ND 4.0).
+- **Automated Verification**: Added `test_all_tabs_legends_right_flushed`, expanding the test suite to 33 tests with 100% pass rate.
+
 ### [v2.1.0] - 2026-09-02
 
 - **Method 1 Macro Mahalanobis Distance Engine**: Implemented $D_M(t)$ with Tikhonov ridge regularization $\lambda = 10^{-2}\mathbf{I}$ and $12.0\sigma$ numerical ceiling in `regime_mahalanobis.py`.
@@ -335,6 +344,19 @@ All notable technical updates to this research specification and software implem
 - **Initial Quantitative Release**: Deployed 15 core econometric indicators across 5 primary modules (Macro Valuation, Systemic Leverage, Econometric Bubble, Sentiment & Volatility, and Sector Health).
 - **Dual-Runtime Architecture**: Established 100% numerical parity between NiceGUI (Polars) and HoloViz Panel WebAssembly (Pyodide).
 - **Interactive Visualization**: Complete dark/light theme engine adhering to WCAG AA contrast standards.
+
+
+---
+
+## 10. Intellectual Property and Licensing
+
+This research publication, econometric architecture, and associated quantitative codebase are licensed under the **Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International Public License (CC BY-NC-ND 4.0)**. 
+
+Under the terms of this license:
+- **Attribution**: Appropriate credit must be given to the authors and the original research publication.
+- **NonCommercial**: The material may not be used for commercial advantage or monetary compensation without express written authorization.
+- **NoDerivatives**: If you remix, transform, or build upon the material, you may not distribute the modified material.
+- See the full legal text in the [`LICENSE`](LICENSE) file.
 
 <!-- ### -->
 <!-- # eNd MarketBubble_DDFv100.md -->

@@ -1,0 +1,145 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "market-bubble-detector"
+version = "2.1.1"
+description = "Multidimensional Market Bubble Detector, Structural Break Analysis & Regime-Switching System"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)" }
+authors = [
+    { name = "Quantitative Research & Systemic Risk Group", email = "research@market-bubble-detector.org" }
+]
+keywords = [
+    "quantitative-finance",
+    "bubble-detection",
+    "mahalanobis-distance",
+    "topological-data-analysis",
+    "gsadf",
+    "regime-switching",
+    "systemic-risk",
+    "webassembly",
+    "pyodide",
+    "nicegui",
+    "panel"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Intended Audience :: Science/Research",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "License :: Other/Proprietary License",
+    "Operating System :: OS Independent"
+]
+
+dependencies = [
+    # =========================================================================
+    # 1. High-Speed Vectorized Data Engine & Parquet Storage
+    # =========================================================================
+    # Polars: Apache Arrow-native, multithreaded DataFrame library delivering
+    # sub-millisecond query execution and zero-copy transformations.
+    "polars>=1.0.0",
+
+    # PyArrow: Columnar in-memory data layer and Parquet serialization backend.
+    "pyarrow>=15.0.0",
+
+    # Pandas: Tabular interoperability and legacy datetime/business-day indexing.
+    "pandas>=2.1.0",
+
+    # YFinance: Market data ingestion interface for historical exchange prices.
+    "yfinance>=0.2.35",
+
+    # =========================================================================
+    # 2. Numerical Computing, Scientific Algorithms & Machine Learning
+    # =========================================================================
+    # NumPy: Fundamental N-dimensional vectorized array mathematics.
+    "numpy>=1.26.0",
+
+    # SciPy: Regularized linear solvers, eigenvalue routines, and optimization.
+    "scipy>=1.12.0",
+
+    # Scikit-Learn: Covariance estimation, ridge regularization, and walk-forward CV.
+    "scikit-learn>=1.4.0",
+
+    # XGBoost: Gradient boosted decision trees for non-linear drawdown classification.
+    "xgboost>=2.0.0",
+
+    # TA (Technical Analysis): Specialized financial indicators and momentum metrics.
+    "ta>=0.11.0",
+
+    # =========================================================================
+    # 3. Interactive Analytical Dashboards & UI Runtimes
+    # =========================================================================
+    # NiceGUI: High-performance, FastAPI-backed server-side UI framework.
+    "nicegui>=1.4.0",
+
+    # FastAPI: Enterprise ASGI web framework driving NiceGUI reactive endpoints.
+    "fastapi>=0.110.0",
+
+    # Uvicorn: Ultra-fast ASGI web server implementation.
+    "uvicorn>=0.28.0",
+
+    # HoloViz Panel: Interactive data exploration dashboard supporting Pyodide WASM.
+    "panel>=1.3.0",
+
+    # Bokeh: Interactive web plotting engine powering Panel visualization widgets.
+    "bokeh>=3.3.0",
+
+    # Param: Declarative Python programming framework governing reactive parameters.
+    "param>=2.0.0",
+
+    # Plotly: Publication-grade interactive charting engine with WebGL acceleration.
+    "plotly>=5.18.0",
+
+    # =========================================================================
+    # 4. Networking, Serialization & Validation Utilities
+    # =========================================================================
+    # Pydantic: Robust runtime data validation and settings management.
+    "pydantic>=2.6.0",
+
+    # Requests: Resilient HTTP client for macroeconomic API data fetching.
+    "requests>=2.31.0",
+
+    # Python-Dateutil: Extensions to standard Python datetime for financial calendars.
+    "python-dateutil>=2.8.2",
+
+    # PyYAML: Strict YAML parser for horizon metadata and pipeline configurations.
+    "pyyaml>=6.0.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    # Pytest: Enterprise-grade automated testing framework.
+    "pytest>=8.0.0",
+
+    # AnyIO: Asynchronous networking and event loop test runner.
+    "anyio>=4.0.0",
+
+    # Tqdm: Extensible progress bars for walk-forward CV validation loops.
+    "tqdm>=4.66.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["bubble_detector*"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "anyio>=4.0.0",
+    "tqdm>=4.66.0",
+]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --strict-markers"
