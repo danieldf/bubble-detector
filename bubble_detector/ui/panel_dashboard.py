@@ -14,6 +14,14 @@ import panel as pn
 # Initialize Panel extension with Plotly engine
 pn.extension('plotly', sizing_mode='stretch_width')
 
+# Unicode Emoji Constants for Flawless WebAssembly Rendering
+ICON_BUILDING = chr(0x1F3DB) + chr(0xFE0F)  # 🏛️
+ICON_TARGET = chr(0x1F3AF)                  # 🎯
+ICON_CALENDAR = chr(0x1F4C5)                # 📅
+ICON_CHART_DOWN = chr(0x1F4C9)              # 📉
+ICON_GEAR = chr(0x2699) + chr(0xFE0F)       # ⚙️
+ICON_WARNING = chr(0x26A0) + chr(0xFE0F)    # ⚠️
+
 import datetime
 from typing import Dict, Any, Tuple, Optional, Union
 
@@ -588,7 +596,7 @@ def generate_explanatory_markdown(horizon_id: str) -> str:
 
 
     return f"""
-### 📅 Horizon Specification & Data Integrity: {meta['label']}
+### {ICON_CALENDAR} Horizon Specification & Data Integrity: {meta['label']}
 **Native Feature Fidelity:** <span style="color:#0288D1; font-weight:bold;">{meta['native_fidelity']} ({meta['fidelity_status']})</span>  
 *Time Bounds:* `{meta['start_date']}` to `{meta['end_date']}` ({meta['regimes_count']} Historical Regimes)
 
@@ -605,20 +613,16 @@ def generate_explanatory_markdown(horizon_id: str) -> str:
 
 # Executive Summary Markdown Pane
 executive_summary_pane = pn.pane.Markdown(
-    """
-### 🏛️ Executive Summary: Macro Landscape & Multidimensional Framework
-The mid-2026 macroeconomic environment presents an acute structural challenge: the S&P 500 tests record peaks near 7,500 amid the second-highest valuation epoch in U.S. history (Shiller CAPE 41.37, Buffett Indicator 218.1% of GDP). Simultaneously, systemic leverage has expanded to a record $1.416T in FINRA margin debt (+53.7% YoY), exhausting institutional margin credit and creating severe vulnerability to leverage-induced fire-sale cascades.
-
-While the massive $754B hyperscaler AI CapEx supercycle justifies fundamental repricing under General-Purpose Technology (GPT) econometric decomposition, derivatives markets reveal a dangerous structural divergence: institutional capital is aggressively bidding for catastrophic tail-risk protection (SKEW > 145) even as front-month volatility remains artificially suppressed (VIX1D < 10) and index-level implied correlation collapses (< 8.0).
-
-#### 🎯 Unified Multi-Regime Quantitative Architecture
-- **6 Integrated Modules**: Macro Valuation, Systemic Leverage, Econometric Bubble, Sentiment & Volatility, Sector Health & TDA, and Macro Mahalanobis Distance.
-- **Method 1 Mahalanobis Distance ($D_M$)**: 15-dimensional regularized covariance distance ($\\\\mathbf{\\\\Sigma} + 10^{-2}\\\\mathbf{I}$) eliminating collinearity distortions.
-- **Dynamic Equity Exposure**: Continuous risk-scaled sizing ($w_{\\\\text{equity}} \\\\in [0.20, 1.00]$) with a strict 20% defensive liquidity floor.
-- **Calendar-Aware 50-Year Engine**: Dynamically anchors 50 physical years (13,045 trading days) across 7 historical crash regimes.
-- **TDA Dynamic Normalization**: Maps Takens persistent homology $L_2$ norm to $[0.80, 7.00]$, spanning the full chart canvas.
-- **100% Quality Gate**: Every retained analytical methodology meets or exceeds Confidence Score cutoff $\\\\ge 0.87$.
-    """,
+    f"### {ICON_BUILDING} Executive Summary: Macro Landscape & Multidimensional Framework\n"
+    "The mid-2026 macroeconomic environment presents an acute structural challenge: the S&P 500 tests record peaks near 7,500 amid the second-highest valuation epoch in U.S. history (Shiller CAPE 41.37, Buffett Indicator 218.1% of GDP). Simultaneously, systemic leverage has expanded to a record $1.416T in FINRA margin debt (+53.7% YoY), exhausting institutional margin credit and creating severe vulnerability to leverage-induced fire-sale cascades.\n\n"
+    "While the massive $754B hyperscaler AI CapEx supercycle justifies fundamental repricing under General-Purpose Technology (GPT) econometric decomposition, derivatives markets reveal a dangerous structural divergence: institutional capital is aggressively bidding for catastrophic tail-risk protection (SKEW > 145) even as front-month volatility remains artificially suppressed (VIX1D < 10) and index-level implied correlation collapses (< 8.0).\n\n"
+    f"#### {ICON_TARGET} Unified Multi-Regime Quantitative Architecture\n"
+    "- **6 Integrated Modules**: Macro Valuation, Systemic Leverage, Econometric Bubble, Sentiment & Volatility, Sector Health & TDA, and Macro Mahalanobis Distance.\n"
+    r"- **Method 1 Mahalanobis Distance ($D_M$)**: 15-dimensional regularized covariance distance ($\mathbf{\Sigma} + 10^{-2}\mathbf{I}$) eliminating collinearity distortions." + "\n"
+    r"- **Dynamic Equity Exposure**: Continuous risk-scaled sizing ($w_{\text{equity}} \in [0.20, 1.00]$) with a strict 20% defensive liquidity floor." + "\n"
+    "- **Calendar-Aware 50-Year Engine**: Dynamically anchors 50 physical years (13,045 trading days) across 7 historical crash regimes.\n"
+    "- **TDA Dynamic Normalization**: Maps Takens persistent homology $L_2$ norm to $[0.80, 7.00]$, spanning the full chart canvas.\n"
+    r"- **100% Quality Gate**: Every retained analytical methodology meets or exceeds Confidence Score cutoff $\ge 0.87$." + "\n",
     sizing_mode="stretch_width"
 )
 
@@ -666,8 +670,8 @@ mahalanobis_pane = pn.pane.Plotly(
 
 # Header Banner Markdown
 header_banner = pn.pane.Markdown(
-    """
-# 📉 Multidimensional Market Bubble Detector
+    f"""
+# {ICON_CHART_DOWN} Multidimensional Market Bubble Detector
 #### Structural Break Analysis & Crash Probability Engine • 2026 Macroeconomic Environment
     """,
     sizing_mode="stretch_width"
@@ -690,7 +694,7 @@ template = pn.template.FastListTemplate(
     title="Market Bubble Detector (WebAssembly Edition)",
     theme="dark",
     sidebar=[
-        pn.pane.Markdown("### ⚙️ Calibration Controls"),
+        pn.pane.Markdown(f"### {ICON_GEAR} Calibration Controls"),
         horizon_selector,
         pn.pane.Markdown("---"),
         pn.pane.Markdown(
@@ -705,8 +709,8 @@ template = pn.template.FastListTemplate(
     ],
     main=[
         header_banner,
-        pn.Card(executive_summary_pane, title="🏛️ Executive Summary & Quantitative Architecture", collapsed=True),
-        pn.Card(note_pane, title="📅 Horizon Specifications & Data Integrity", collapsed=False),
+        pn.Card(executive_summary_pane, title=f"{ICON_BUILDING} Executive Summary & Quantitative Architecture", collapsed=True),
+        pn.Card(note_pane, title=f"{ICON_CALENDAR} Horizon Specifications & Data Integrity", collapsed=False),
         tabs
     ],
     accent_base_color="#0288D1",
@@ -730,7 +734,7 @@ def update_horizon(event=None):
         mahalanobis_pane.object = build_mahalanobis_fig(h_id)
     except Exception as err:
         print(f"Error updating horizon: {err}")
-        note_pane.object = f"⚠️ **Error updating horizon data**: {err}"
+        note_pane.object = f"{ICON_WARNING} **Error updating horizon data**: {err}"
 
 # Register explicit param.watch listener on horizon_selector
 horizon_selector.param.watch(update_horizon, 'value')

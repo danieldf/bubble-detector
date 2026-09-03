@@ -16,5 +16,6 @@
   "14": "build_marp_deck.py",
   "15": "MarketBubble_Detection_Presentation_2026.marp.md",
   "16": ".fetch_market_data",
-  "17": "panel_dashboard.py"
+  "17": "panel_dashboard.py",
+  "18": "get_dynamic_horizon_metadata"
 }

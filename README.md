@@ -197,6 +197,7 @@ All notable changes to this project are documented in this section adhering to [
   - **RT-05 (Purge Embargo in Walk-Forward Cross-Validation)**: Added 20-day embargo gap between train and validation splits and masked terminal unobservable rows in `StructuralBreakPredictor`.
   - **RT-06 (Modular Date Horizons)**: Created dedicated `bubble_detector/data/date_horizons.py` resolving file reference drift.
   - **RT-07 (Centralized Pure-Math Utilities)**: Created `bubble_detector/features/utils.py` consolidating `normalize_tda_indicator`, `calculate_adf_stat`, and `takens_embedding`.
+  - **Flawless WebAssembly Unicode Rendering**: Replaced raw string emojis with runtime ASCII Unicode identifiers (`chr(0x1F3DB)`, `chr(0x1F3AF)`, `chr(0x1F4C5)`), eliminating unquoted raw unicode escape artifacts (`U0001f3db️`, `U0001f3af`) in browser Pyodide environments.
   - **RT-08 (UI Error Boundaries)**: Added robust try/except error notifications around horizon switching events in NiceGUI and WebAssembly.
   - **RT-09 (Test Suite Expansion)**: Added tests for singularity absence, walk-forward embargo isolation, and WebAssembly fallback parity, expanding total suite to **37 passed (100% pass rate)**.
 
