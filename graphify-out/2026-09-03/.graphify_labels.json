@@ -23,5 +23,18 @@
   "21": "etl_vxo.py",
   "22": "ingestor.py",
   "23": "etl_finra.py",
-  "24": "etl_fred.py"
+  "24": "etl_fred.py",
+  "25": "generate_wasm_dataset",
+  "26": "compute_margin_leverage_metrics",
+  "27": "test_splicing_continuity.py",
+  "28": "__init__.py",
+  "29": "compute_macro_valuations",
+  "30": "compute_gsadf_gpt_decomposition",
+  "31": "test_no_synthetic_gaussian_bumps_in_data_code",
+  "32": "create_app",
+  "33": "BubbleDetectorError",
+  "34": "get_current_date",
+  "35": "test_full_indicator_parity.py",
+  "36": "test_wasm_parquet_parity.py",
+  "37": "test_tab6_figure_traces_and_right_flushed_legend"
 }

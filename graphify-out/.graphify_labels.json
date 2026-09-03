@@ -28,7 +28,7 @@
   "26": "compute_margin_leverage_metrics",
   "27": "test_splicing_continuity.py",
   "28": "__init__.py",
-  "29": "compute_macro_valuations",
   "30": "compute_gsadf_gpt_decomposition",
-  "31": "test_no_synthetic_gaussian_bumps_in_data_code"
+  "31": "test_no_synthetic_gaussian_bumps_in_data_code",
+  "33": "BubbleDetectorError"
 }
