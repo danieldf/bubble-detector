@@ -442,6 +442,15 @@ def build_sentiment_vol_fig(horizon_id: str) -> go.Figure:
     )
     return fig
 
+def normalize_tda_indicator(tda_array: np.ndarray, target_min: float = 0.8, target_max: float = 7.0) -> np.ndarray:
+    """Dynamically normalize TDA Persistence L2 Norm to target display y-range [target_min, target_max]."""
+    t_min = float(np.nanmin(tda_array))
+    t_max = float(np.nanmax(tda_array))
+    denom = t_max - t_min
+    if denom < 1e-8:
+        return np.full_like(tda_array, (target_min + target_max) / 2.0)
+    return target_min + (target_max - target_min) * (tda_array - t_min) / denom
+
 def build_sector_health_fig(horizon_id: str) -> go.Figure:
     """Build Plotly figure for Sector Health Dashboard (matching NiceGUI 100%)."""
     data = fetch_dataset(horizon_id)
@@ -453,7 +462,7 @@ def build_sector_health_fig(horizon_id: str) -> go.Figure:
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=dates, y=housing_pti, mode="lines", name="Housing Price-to-Income (7.11x Peak)", line=dict(color="#F57C00", width=2.5)))
     fig.add_trace(go.Scatter(x=dates, y=tech / 50.0, mode="lines", name="Tech ETF XLK (scaled)", line=dict(color="#0288D1", width=2.0)))
-    fig.add_trace(go.Scatter(x=dates, y=np.clip(tda_norm * 30.0, 0.0, 12.0), mode="lines", name="TDA Geometric Complexity (scaled x30)", line=dict(color="#D32F2F", width=2.0, dash="dot")))
+    fig.add_trace(go.Scatter(x=dates, y=normalize_tda_indicator(tda_norm), mode="lines", name="TDA Geometric Complexity (Normalized)", line=dict(color="#D32F2F", width=2.0, dash="dot")))
 
     fig.update_layout(
         template="plotly_dark",
@@ -515,8 +524,8 @@ def build_mahalanobis_fig(horizon_id: str) -> go.Figure:
         line=dict(color="#29B6F6", width=1.6)
     ))
     fig.add_trace(go.Scatter(
-        x=dates, y=np.clip(tda_norm * 30.0, 0.0, 12.0), mode="lines",
-        name="TDA Geometric Complexity (scaled x30)",
+        x=dates, y=normalize_tda_indicator(tda_norm), mode="lines",
+        name="TDA Geometric Complexity (Normalized)",
         line=dict(color="#FF4081", width=1.6, dash="dot")
     ))
 

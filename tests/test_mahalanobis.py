@@ -129,7 +129,7 @@ def test_tab6_figure_traces_and_right_flushed_legend():
         "Buffett Indicator (scaled / 25)",
         "Housing Price-to-Income (7.11x Peak)",
         "Tech ETF XLK (scaled / 100)",
-        "TDA Geometric Complexity (scaled x30)"
+        "TDA Geometric Complexity (Normalized)"
     ]
 
     for fig, name in [(fig_nice, "NiceGUI"), (fig_panel, "Panel WASM")]:
@@ -160,7 +160,7 @@ def test_tab6_all_traces_finite_and_bounded():
 
 
 def test_tda_normalization_tabs_5_and_6():
-    """Verify that TDA Geometric Complexity on BOTH Tab 5 and Tab 6 is properly normalized and NOT valued below 0.2."""
+    """Verify that TDA Geometric Complexity on BOTH Tab 5 and Tab 6 spans the 0 to 7 y-range and max achieves ~7.0."""
     from bubble_detector.ui.dashboard import DashboardState, build_sector_health_chart, build_mahalanobis_chart
     from bubble_detector.ui.panel_dashboard import build_sector_health_fig, build_mahalanobis_fig
 
@@ -181,12 +181,17 @@ def test_tda_normalization_tabs_5_and_6():
             y_arr = np.array(tda_traces[0].y, dtype=np.float64)
             
             assert not np.isnan(y_arr).any(), f"TDA contains NaNs in {label}"
-            assert np.min(y_arr) >= 0.0, f"TDA has negative values in {label}"
-            assert np.max(y_arr) <= 13.0, f"TDA exceeds 13.0 in {label}"
-            # Assert that TDA is properly normalized and not valued well below 0.2:
-            # The median must be comfortably above 1.0 (matching macroeconomic indicator scale ~3.5-5.0)
-            assert np.median(y_arr) >= 1.0, f"TDA median {np.median(y_arr)} is too low in {label}"
-            # 5th percentile must be >= 0.20 (no points lingering well below 0.2)
-            assert np.percentile(y_arr, 5) >= 0.20, f"TDA 5th percentile {np.percentile(y_arr, 5)} is below 0.20 in {label}"
+            assert not np.isinf(y_arr).any(), f"TDA contains Infs in {label}"
+            
+            # 1. Max must achieve ~7.0 (spanning the 0 to 7 y-range, NOT stalling at ~0.9)
+            assert np.max(y_arr) >= 6.8, f"TDA max {np.max(y_arr)} is too low in {label} (expected ~7.0)"
+            assert np.max(y_arr) <= 7.1, f"TDA max {np.max(y_arr)} exceeds 7.1 in {label}"
+            
+            # 2. Min must be strictly >= 0.20 (baseline at 0.80, never squishing into zero)
+            assert np.min(y_arr) >= 0.20, f"TDA min {np.min(y_arr)} is below 0.20 in {label}"
+            assert np.min(y_arr) <= 1.0, f"TDA min {np.min(y_arr)} is unexpectedly high in {label}"
+            
+            # 3. Median must sit comfortably in the lower/middle band (1.0 to 4.5)
+            assert 1.0 <= np.median(y_arr) <= 4.5, f"TDA median {np.median(y_arr)} out of expected range in {label}"
 
 
