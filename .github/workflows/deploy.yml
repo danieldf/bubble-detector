@@ -43,64 +43,8 @@ jobs:
           mv dist/panel_dashboard.html dist/index.html
           cp data/provenance/*.parquet dist/ 2>/dev/null || true
           cp data/provenance/*.json dist/ 2>/dev/null || true
-          python -c "
-          with open('dist/index.html', 'r', encoding='utf-8') as f:
-              content = f.read()
-          import re
-          content = re.sub(r'\'https://cdn\.holoviz\.org/panel/wheels/bokeh-[^\']+\.whl\'', '\'bokeh\'', content)
-          content = re.sub(r'\'https://cdn\.holoviz\.org/panel/[^\']+/panel-[^\']+\.whl\'', '\'panel\'', content)
-          # Generic regex decoding for any \\U0001xxxx or U0001xxxx escape sequences
-          content = re.sub(r'\\+U0001([0-9a-fA-F]{4})', lambda m: chr(int('0001' + m.group(1), 16)), content)
-          content = re.sub(r'U0001([0-9a-fA-F]{4})', lambda m: chr(int('0001' + m.group(1), 16)), content)
-          # Explicit literal replacements for all application emojis
-          replacements = {
-              'U0001f3db': '🏛️',
-              '\\U0001f3db': '🏛️',
-              'U0001f3af': '🎯',
-              '\\U0001f3af': '🎯',
-              'U0001f52c': '🔬',
-              '\\U0001f52c': '🔬',
-              'U0001f4c5': '📅',
-              '\\U0001f4c5': '📅',
-              'U0001f4c9': '📉',
-              '\\U0001f4c9': '📉',
-              'U0001f680': '🚀',
-              '\\U0001f680': '🚀',
-              'U0001f319': '🌙',
-              '\\U0001f319': '🌙',
-              'U0001f917': '🤗',
-              '\\U0001f917': '🤗',
-          }
-          for k, v in replacements.items():
-              content = content.replace(k, v)
+          python bubble_detector/ui/postprocess_wasm.py
 
-          preloader_and_error_boundary = '''
-      for (const ds of ['market_data_50yr.json', 'market_data_modern.json']) {
-        try {
-          let r = await fetch(ds);
-          if (r.ok) {
-            let t = await r.text();
-            pyodide.FS.writeFile(ds, t);
-            console.log('Pre-loaded MEMFS dataset: ' + ds);
-          }
-        } catch(e) { console.warn('Could not pre-load ' + ds, e); }
-      }
-      try {
-        await pyodide.runPythonAsync(code);
-      } catch (err) {
-        document.body.classList.remove('pn-loading');
-        let el = document.createElement('div');
-        el.style.cssText = 'margin: 2rem; padding: 1.5rem; background: #2A1515; border: 1px solid #FF5252; color: #FFF; border-radius: 8px; font-family: monospace; white-space: pre-wrap;';
-        el.innerHTML = '<h3>⚠️ WebAssembly Initialization Error</h3><p>' + err + '</p>';
-        document.body.prepend(el);
-      }'''
-
-          if 'WebAssembly Initialization Error' not in content:
-              content = re.sub(r'await\s+pyodide\.runPythonAsync\(code\);?', preloader_and_error_boundary, content)
-
-          with open('dist/index.html', 'w', encoding='utf-8') as f:
-              f.write(content)
-          "
 
 
 

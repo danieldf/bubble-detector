@@ -1,12 +1,12 @@
 # Graph Report - Merrill  (2026-09-03)
 
 ## Corpus Check
-- 64 files · ~1,282,367 words
+- 64 files · ~419,966 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 582 nodes · 1103 edges · 38 communities (35 shown, 3 thin omitted)
-- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 39 edges (avg confidence: 0.77)
+- 592 nodes · 1115 edges · 32 communities (30 shown, 2 thin omitted)
+- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 39 edges (avg confidence: 0.77)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
@@ -40,22 +40,16 @@
 - compute_margin_leverage_metrics
 - test_splicing_continuity.py
 - __init__.py
-- compute_macro_valuations
 - compute_gsadf_gpt_decomposition
 - test_no_synthetic_gaussian_bumps_in_data_code
-- create_app
 - BubbleDetectorError
-- get_current_date
-- test_full_indicator_parity.py
-- test_wasm_parquet_parity.py
-- test_tab6_figure_traces_and_right_flushed_legend
 
 ## God Nodes (most connected - your core abstractions)
 1. `DashboardState` - 37 edges
 2. `MacroMahalanobisDetector` - 33 edges
 3. `DataIngestor` - 28 edges
 4. `StructuralBreakPredictor` - 24 edges
-5. `generate_wasm_dataset()` - 23 edges
+5. `generate_wasm_dataset()` - 24 edges
 6. `compute_tda_wavelet_complexity()` - 21 edges
 7. `compute_gsadf_gpt_decomposition()` - 18 edges
 8. `compute_margin_leverage_metrics()` - 15 edges
@@ -84,7 +78,7 @@
 - **FINRA Margin Debt Metrics** — finra_margin_debt_tracker, finra_may_2026_nominal_value, finra_may_2026_mom_change, finra_may_2026_yoy_change [INFERRED 0.85]
 - **Implied Volatility Term Structure Components** — impliedvolatilitymetric_vix1d, impliedvolatilitymetric_vix_spot, impliedvolatilitymetric_vix3m, impliedvolatilitymetric_vix1y [EXTRACTED 1.00]
 
-## Communities (38 total, 3 thin omitted)
+## Communities (32 total, 2 thin omitted)
 
 ### Community 0 - "Merrill ETF Portfolio Reviews"
 Cohesion: 0.06
@@ -95,20 +89,20 @@ Cohesion: 0.06
 Nodes (37): MacroMahalanobisDetector, DataFrame, ndarray, Macro Mahalanobis Distance Regime-Switching Bubble Detector.  Implements Method, Transform indicators into stationary, standardized rolling z-scores         with, Compute:         1. Mahalanobis Distance (DM)         2. Signed Bubble Projectio, Calculate standard rolling Mahalanobis Distance for backward compatibility., Convert statistical distance into empirical 1-Year Distance Rank via rolling per (+29 more)
 
 ### Community 2 - "Econometric Bubble Detection Models"
-Cohesion: 0.18
-Nodes (14): _compute_rips_persistence_diagrams(), compute_tda_wavelet_complexity(), _persistence_landscape_l2_norm(), DataFrame, ndarray, Topological Data Analysis (TDA) & Wavelet Complexity Module.  Computes genuine V, Compute sliding window Vietoris-Rips persistent homology L2 norm and Morlet Wave, Transform 1D time series into Takens' delay-coordinate high-dimensional point cl (+6 more)
+Cohesion: 0.22
+Nodes (12): _compute_rips_persistence_diagrams(), compute_tda_wavelet_complexity(), _persistence_landscape_l2_norm(), DataFrame, ndarray, Topological Data Analysis (TDA) & Wavelet Complexity Module.  Computes genuine V, Compute sliding window Vietoris-Rips persistent homology L2 norm and Morlet Wave, Transform 1D time series into Takens' delay-coordinate high-dimensional point cl (+4 more)
 
 ### Community 3 - "Implied Volatility Term Structure Metrics"
 Cohesion: 0.60
 Nodes (6): Implied Volatility Metrics Table (July 2026), Implied Volatility Term Structure (Upward Sloping), VIX1D (8.73 - 11.61): Extreme near-term calm, VIX1Y (~23.00): Elevated long-term risk premium, VIX3M (~19.00): Anticipation of future turbulence, VIX Spot (15.57 - 17.16): Low baseline fear
 
 ### Community 4 - "Graphify Settings and Rules"
-Cohesion: 0.17
-Nodes (17): Configuration and Logging Module for Bubble Detector., get_current_date(), get_dynamic_50yr_date_range(), get_dynamic_horizon_metadata(), Any, date, Dynamic 50-Year Multi-Horizon Date Engine.  Provides calendar-aware date horizon, Return current execution date, or parse override date string/object. (+9 more)
+Cohesion: 0.16
+Nodes (18): Configuration and Logging Module for Bubble Detector., get_current_date(), get_dynamic_50yr_date_range(), get_dynamic_horizon_metadata(), Any, date, Dynamic 50-Year Multi-Horizon Date Engine.  Provides calendar-aware date horizon, Return current execution date, or parse override date string/object. (+10 more)
 
 ### Community 5 - "Valuation and Feature Engineering"
-Cohesion: 0.13
-Nodes (30): build_econometric_chart(), build_leverage_chart(), build_macro_valuation_chart(), build_mahalanobis_chart(), build_sector_health_chart(), build_sentiment_vol_chart(), DashboardState, get_right_flushed_legend() (+22 more)
+Cohesion: 0.07
+Nodes (45): create_cta_banner(), create_ios_card(), UI Components Module.  Provides iOS 13+ card containers, segmented control tab w, Renders a Call-To-Action (CTA) section with powerful typography (600-800 weight), Creates an iOS 13+ inset card container with subtle shadow, rounded corners,, build_econometric_chart(), build_leverage_chart(), build_macro_valuation_chart() (+37 more)
 
 ### Community 6 - "FINRA Margin Debt Metrics"
 Cohesion: 0.09
@@ -131,8 +125,8 @@ Cohesion: 0.06
 Nodes (35): 1. Macro Mahalanobis Distance & Dynamic Exposure Sizing, 1. Macro Valuation Anchors, 1. Prerequisites & Installation, 2. Run the High-Performance NiceGUI Application, 2. Systemic Liquidity & Leverage, 2. TDA Geometric Complexity Full-Range Dynamic Normalization, 3. Econometric Explosive Bubble Diagnostics, 3. Run the Local HoloViz Panel Dashboard (+27 more)
 
 ### Community 17 - "panel_dashboard.py"
-Cohesion: 0.17
-Nodes (26): normalize_tda_indicator(), Causally rescale raw TDA Persistence Landscape L2 Norm to span [target_min, targ, build_econometric_fig(), build_leverage_fig(), build_macro_valuation_fig(), build_mahalanobis_fig(), build_sector_health_fig(), build_sentiment_vol_fig() (+18 more)
+Cohesion: 0.06
+Nodes (57): calculate_adf_stat(), normalize_tda_indicator(), ndarray, Shared Mathematical & Topological Utilities.  Provides reusable numerical algori, Calculate Augmented Dickey-Fuller t-statistic for explosive root testing., Transform 1D time series into Takens delay-coordinate high-dimensional point clo, Causally rescale raw TDA Persistence Landscape L2 Norm to span [target_min, targ, takens_embedding() (+49 more)
 
 ### Community 18 - "get_dynamic_horizon_metadata"
 Cohesion: 0.13
@@ -140,31 +134,31 @@ Nodes (12): DataIngestor, DataFrame, Path, Construct seamless asset time series 
 
 ### Community 19 - "AGVI Technical Specification Document"
 Cohesion: 0.07
-Nodes (29): parse_authentic_vxo_series(), DataFrame, Path, ETL Pipeline for CBOE VXO volatility index., Stage authentic VXO dataset to parquet., Get daily VXO series reindexed to requested business dates., Parse authentic CBOE VXO daily history spanning 1976 to present.     Uses genuin, VxoETL (+21 more)
+Nodes (32): parse_shiller_excel(), DataFrame, Path, Fetch Shiller data, parse real workbook and cache to parquet., Interpolate monthly Shiller series to daily business days with strictly causal, Parse authentic Robert Shiller ie_data.xls spreadsheet directly into a clean mon, ETL Pipeline for Robert Shiller's monthly S&P Composite and CAPE dataset., ShillerETL (+24 more)
 
 ### Community 20 - "etl_shiller.py"
-Cohesion: 0.17
-Nodes (12): parse_shiller_excel(), DataFrame, Path, Fetch Shiller data, parse real workbook and cache to parquet., Interpolate monthly Shiller series to daily business days with strictly causal, Parse authentic Robert Shiller ie_data.xls spreadsheet directly into a clean mon, ETL Pipeline for Robert Shiller's monthly S&P Composite and CAPE dataset., ShillerETL (+4 more)
+Cohesion: 0.15
+Nodes (13): generate_wasm_dataset(), Generate high-speed financial time series dataset for Pyodide WebAssembly.     S, Exception, Verify 100% numerical parity for TDA Persistence L2 Norm between WASM app and to, test_tda_wasm_parity(), Rigorously test the Pyodide WebAssembly fallback branch by mocking out DataInges, test_wasm_fallback_numerical_parity(), Verify pure NumPy fallback operates with zero dependencies when     neither parq (+5 more)
 
 ### Community 21 - "etl_vxo.py"
-Cohesion: 0.20
-Nodes (11): get_finra_margin_debt(), FINRA & NYSE Margin Debt Point-in-Time ETL Module.  Ingests monthly margin debt, Public helper to obtain daily point-in-time FINRA margin debt data., get_shiller_data(), Robert Shiller Monthly ie_data ETL & Point-in-Time Real Data Ingestor (1871–Pres, Public helper to obtain daily point-in-time Shiller valuation metrics., get_vxo_data(), CBOE S&P 100 Volatility Index (^VXO) ETL & Historical Splicer (1986–Present).  P (+3 more)
+Cohesion: 0.24
+Nodes (7): get_fred_data(), FRED Macroeconomic Point-in-Time Data ETL Module.  Ingests and models genuine ma, Public helper to obtain daily point-in-time FRED macroeconomic indicators., get_shiller_data(), Robert Shiller Monthly ie_data ETL & Point-in-Time Real Data Ingestor (1871–Pres, Public helper to obtain daily point-in-time Shiller valuation metrics., Data Ingestor Module for Market Bubble Detection.  Fetches equity, macro, volati
 
 ### Community 22 - "ingestor.py"
 Cohesion: 0.16
 Nodes (16): calculate_contrast_ratio(), get_theme_css(), is_wcag_aa_compliant(), parse_hex_color(), UI Theme and Accessibility Design System for Bubble Detector.  Enforces: - WCAG, Generate dynamic CSS variables and global stylesheet enforcing UI/UX & accessibi, Parse hex color string (e.g., '#007AFF' or '#000') into RGB floats [0..1]., Calculate WCAG 2.2 relative luminance for RGB floats [0..1]. (+8 more)
 
 ### Community 23 - "etl_finra.py"
-Cohesion: 0.17
-Nodes (12): FinraETL, parse_finra_margin_debt_series(), DataFrame, Path, Stage FINRA margin debt dataset to parquet., Interpolate margin debt to daily business days, guaranteeing         the mandato, Parse authentic FINRA margin debt statistics workbook and combine with NYSE reco, ETL Pipeline for FINRA & NYSE margin debt with strict publication lag constraint (+4 more)
+Cohesion: 0.16
+Nodes (14): FinraETL, get_finra_margin_debt(), parse_finra_margin_debt_series(), DataFrame, Path, FINRA & NYSE Margin Debt Point-in-Time ETL Module.  Ingests monthly margin debt, Stage FINRA margin debt dataset to parquet., Interpolate margin debt to daily business days, guaranteeing         the mandato (+6 more)
 
 ### Community 24 - "etl_fred.py"
-Cohesion: 0.16
-Nodes (14): FredETL, get_fred_data(), parse_fred_macro_series(), DataFrame, Path, FRED Macroeconomic Point-in-Time Data ETL Module.  Ingests and models genuine ma, ETL Pipeline for FRED macroeconomic series with strict publication lag constrain, Stage FRED macro dataset to parquet. (+6 more)
+Cohesion: 0.17
+Nodes (12): FredETL, parse_fred_macro_series(), DataFrame, Path, ETL Pipeline for FRED macroeconomic series with strict publication lag constrain, Stage FRED macro dataset to parquet., Interpolate FRED macro indicators to daily business days, guaranteeing         a, Parse real historical FRED macroeconomic releases (GDP, Case-Shiller, Median Inc (+4 more)
 
 ### Community 25 - "generate_wasm_dataset"
-Cohesion: 0.14
-Nodes (17): compute_macro_valuations(), DataFrame, Compute Shiller CAPE, Payout-Adjusted CAPE (P-CAPE), and Buffett Indicator metri, compute_technical_indicators(), DataFrame, Appends technical indicators (RSI, Bollinger Bands, Moving Averages 20/50/200), generate_wasm_dataset(), Generate high-speed financial time series dataset for Pyodide WebAssembly.     S (+9 more)
+Cohesion: 0.18
+Nodes (11): compute_macro_valuations(), DataFrame, Compute Shiller CAPE, Payout-Adjusted CAPE (P-CAPE), and Buffett Indicator metri, compute_technical_indicators(), DataFrame, Appends technical indicators (RSI, Bollinger Bands, Moving Averages 20/50/200), Fetch and process full dataset pipeline for selected date horizon., Unit tests for Feature Engineering Modules (technicals, macro valuations, levera (+3 more)
 
 ### Community 26 - "compute_margin_leverage_metrics"
 Cohesion: 0.29
@@ -176,53 +170,33 @@ Nodes (8): multi_decade_df(), Unit tests for Continuous Backward Return Compound
 
 ### Community 28 - "__init__.py"
 Cohesion: 0.22
-Nodes (6): compute_options_volatility_metrics(), DataFrame, Options & Volatility Behavioral Tracking Module.  Tracks CBOE VIX term structure, Computes VIX contango slope, SKEW tail-risk alert, Dispersion divergence,     an, Fetch and process full dataset pipeline for selected date horizon., test_compute_options_volatility_metrics()
-
-### Community 29 - "compute_macro_valuations"
-Cohesion: 0.24
-Nodes (8): Feature Engineering Module, Macro Valuation Indicators Module.  Computes Shiller CAPE, Payout-Adjusted CAPE, calculate_adf_stat(), ndarray, Shared Mathematical & Topological Utilities.  Provides reusable numerical algori, Calculate Augmented Dickey-Fuller t-statistic for explosive root testing., Transform 1D time series into Takens delay-coordinate high-dimensional point clo, takens_embedding()
+Nodes (7): Feature Engineering Module, Macro Valuation Indicators Module.  Computes Shiller CAPE, Payout-Adjusted CAPE, compute_options_volatility_metrics(), DataFrame, Options & Volatility Behavioral Tracking Module.  Tracks CBOE VIX term structure, Computes VIX contango slope, SKEW tail-risk alert, Dispersion divergence,     an, test_compute_options_volatility_metrics()
 
 ### Community 30 - "compute_gsadf_gpt_decomposition"
 Cohesion: 0.18
-Nodes (13): calculate_adf_stat(), compute_gsadf_gpt_decomposition(), compute_wild_bootstrap_critical_values(), DataFrame, ndarray, Econometric Bubble Detection Module (Canonical PSY & GSADF).  Implements the Phi, Calculate Augmented Dickey-Fuller t-statistic for right-tailed explosive root te, Compute wild bootstrap critical values (95% and 99%) under the null hypothesis (+5 more)
+Nodes (12): calculate_adf_stat(), compute_gsadf_gpt_decomposition(), compute_wild_bootstrap_critical_values(), DataFrame, ndarray, Econometric Bubble Detection Module (Canonical PSY & GSADF).  Implements the Phi, Calculate Augmented Dickey-Fuller t-statistic for right-tailed explosive root te, Compute wild bootstrap critical values (95% and 99%) under the null hypothesis (+4 more)
 
 ### Community 31 - "test_no_synthetic_gaussian_bumps_in_data_code"
-Cohesion: 0.33
-Nodes (5): Institutional Data Provenance Certification & Anti-Synthetic Regression Suite., Certifies FRED nominal GDP and Case-Shiller index match official BEA/FRED public, Scans all source files in bubble_detector/data/ to certify that NO disguised, test_authentic_fred_gdp_and_housing(), test_no_synthetic_gaussian_bumps_in_data_code()
-
-### Community 32 - "create_app"
-Cohesion: 0.18
-Nodes (9): create_cta_banner(), create_ios_card(), UI Components Module.  Provides iOS 13+ card containers, segmented control tab w, Renders a Call-To-Action (CTA) section with powerful typography (600-800 weight), Creates an iOS 13+ inset card container with subtle shadow, rounded corners,, create_app(), Create and initialize full NiceGUI application., Toggle between light and dark theme modes. (+1 more)
+Cohesion: 0.20
+Nodes (8): get_vxo_data(), CBOE S&P 100 Volatility Index (^VXO) ETL & Historical Splicer (1986–Present).  P, Public helper to obtain daily CBOE VXO series., Institutional Data Provenance Certification & Anti-Synthetic Regression Suite., Scans all source files in bubble_detector/data/ to certify that NO disguised, Certifies FINRA margin debt reflects true regulatory figures exceeding $1.4 Tril, test_authentic_finra_margin_debt(), test_no_synthetic_gaussian_bumps_in_data_code()
 
 ### Community 33 - "BubbleDetectorError"
 Cohesion: 0.20
 Nodes (9): BubbleDetectorError, DataFetchError, IndicatorComputationError, Base exception for Bubble Detector package., Raised when data fetching fails., Raised when indicator computation fails., Raised when data validation fails., ValidationError (+1 more)
 
-### Community 34 - "get_current_date"
-Cohesion: 0.43
-Nodes (7): get_current_date(), get_dynamic_50yr_date_range(), get_dynamic_horizon_metadata(), Any, date, Return current execution date, or parse override date string/object., Compute rolling 50-year date range from current execution date.         Safely h
-
-### Community 35 - "test_full_indicator_parity.py"
-Cohesion: 0.50
-Nodes (3): Comprehensive Parity Test: Verifies 100% Numerical Parity across all 15 Indicato, Assert that every single indicator across all 5 tabs in the WebAssembly app, test_all_indicators_numerical_parity()
-
-### Community 36 - "test_wasm_parquet_parity.py"
-Cohesion: 0.50
-Nodes (3): Unit tests for WebAssembly Parquet Parity and Zero-Mathematical-Drift Loading., Asserts Pyodide WebAssembly dataset matches NiceGUI dataset with zero discrepanc, test_wasm_loads_exact_parquet_dataset()
-
 ## Knowledge Gaps
 - **58 isolated node(s):** `market-bubble-detector`, `1. System, Configuration & Date Horizons (`config.py` & `date_horizons.py`):`, `2. UI & Accessibility Engine (`ui_theme.py`):`, `3. Data Ingestion & Storage (`ingestor.py`):`, `4. Quantitative Indicator Modules (`features/` & `features/utils.py`):` (+53 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **3 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **2 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `MacroMahalanobisDetector` connect `AGVI System Pipeline and Dashboard` to `Valuation and Feature Engineering`, `FINRA Margin Debt Metrics`, `panel_dashboard.py`, `AGVI Technical Specification Document`, `generate_wasm_dataset`, `__init__.py`?**
-  _High betweenness centrality (0.094) - this node is a cross-community bridge._
-- **Why does `DashboardState` connect `Valuation and Feature Engineering` to `create_app`, `AGVI System Pipeline and Dashboard`, `test_full_indicator_parity.py`, `Graphify Settings and Rules`, `test_tab6_figure_traces_and_right_flushed_legend`, `FINRA Margin Debt Metrics`, `test_wasm_parquet_parity.py`, `test_ui_theme.py`, `get_dynamic_horizon_metadata`, `ingestor.py`, `__init__.py`?**
-  _High betweenness centrality (0.072) - this node is a cross-community bridge._
-- **Why does `DataIngestor` connect `get_dynamic_horizon_metadata` to `BubbleDetectorError`, `AGVI System Pipeline and Dashboard`, `Graphify Settings and Rules`, `Valuation and Feature Engineering`, `FINRA Margin Debt Metrics`, `panel_dashboard.py`, `AGVI Technical Specification Document`, `etl_vxo.py`, `generate_wasm_dataset`, `compute_margin_leverage_metrics`, `test_splicing_continuity.py`, `__init__.py`?**
+- **Why does `MacroMahalanobisDetector` connect `AGVI System Pipeline and Dashboard` to `Valuation and Feature Engineering`, `FINRA Margin Debt Metrics`, `panel_dashboard.py`, `AGVI Technical Specification Document`, `etl_shiller.py`, `generate_wasm_dataset`?**
+  _High betweenness centrality (0.093) - this node is a cross-community bridge._
+- **Why does `DashboardState` connect `Valuation and Feature Engineering` to `AGVI System Pipeline and Dashboard`, `Graphify Settings and Rules`, `FINRA Margin Debt Metrics`, `test_ui_theme.py`, `panel_dashboard.py`, `get_dynamic_horizon_metadata`, `ingestor.py`, `generate_wasm_dataset`?**
+  _High betweenness centrality (0.070) - this node is a cross-community bridge._
+- **Why does `DataIngestor` connect `get_dynamic_horizon_metadata` to `BubbleDetectorError`, `AGVI System Pipeline and Dashboard`, `Graphify Settings and Rules`, `Valuation and Feature Engineering`, `FINRA Margin Debt Metrics`, `panel_dashboard.py`, `AGVI Technical Specification Document`, `etl_shiller.py`, `etl_vxo.py`, `generate_wasm_dataset`, `compute_margin_leverage_metrics`, `test_splicing_continuity.py`?**
   _High betweenness centrality (0.065) - this node is a cross-community bridge._
 - **Are the 4 inferred relationships involving `DashboardState` (e.g. with `PortfolioBacktestEngine` and `DataIngestor`) actually correct?**
   _`DashboardState` has 4 INFERRED edges - model-reasoned connections that need verification._

@@ -195,13 +195,13 @@
     "semantic_hash": ""
   },
   "bubble_detector/ui/panel_dashboard.py": {
-    "mtime": 1788476998.138308,
-    "ast_hash": "f131e1ce91314fc828bb5a8fe23a79fc",
+    "mtime": 1788477829.4703722,
+    "ast_hash": "f23259304acf732827810f977dc49c98",
     "semantic_hash": ""
   },
   ".github/workflows/deploy.yml": {
-    "mtime": 1788477180.5995142,
-    "ast_hash": "41fd35d6afe77ed4522fe60f767d7dff",
+    "mtime": 1788477771.0935223,
+    "ast_hash": "af204425504b53a965bf6d7af71ceaeb",
     "semantic_hash": ""
   },
   "README.md": {
@@ -280,8 +280,8 @@
     "semantic_hash": ""
   },
   "stage_provenance.py": {
-    "mtime": 1788477006.2790492,
-    "ast_hash": "e961e315826f59c4e1115b7f6b105b0e",
+    "mtime": 1788477832.0302012,
+    "ast_hash": "42b2dd893b52e0e7e925e84b5c29ead0",
     "semantic_hash": ""
   },
   "tests/test_backtest_benchmarks.py": {
@@ -330,18 +330,18 @@
     "semantic_hash": ""
   },
   "data/provenance/market_data_50yr.json": {
-    "mtime": 1788477287.0822446,
-    "ast_hash": "032167c7b97ecab7c788b0ec5c85d2dd",
+    "mtime": 1788477974.7076778,
+    "ast_hash": "dde2ac3991d423e81313e58a30174f50",
     "semantic_hash": ""
   },
   "data/provenance/market_data_modern.json": {
-    "mtime": 1788477287.5577602,
-    "ast_hash": "fe180463416a94b1bb9a3eaf279da8d3",
+    "mtime": 1788477974.843111,
+    "ast_hash": "e6b299356f0bcf9e6967445cb36618db",
     "semantic_hash": ""
   },
   "tests/test_wasm_pyodide_sandbox.py": {
-    "mtime": 1788477190.251901,
-    "ast_hash": "43cbf78760b9ca5827cff606f1474ad9",
+    "mtime": 1788477836.852687,
+    "ast_hash": "7aece5d14631136cfbb581f3fb281f52",
     "semantic_hash": ""
   }
 }
