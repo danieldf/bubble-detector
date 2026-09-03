@@ -195,13 +195,13 @@
     "semantic_hash": ""
   },
   "bubble_detector/ui/panel_dashboard.py": {
-    "mtime": 1788458143.2639012,
-    "ast_hash": "4698f4bf8a62b3ead52498597decbd51",
+    "mtime": 1788459513.7810984,
+    "ast_hash": "05be2908b1f536720a90be1fc972a444",
     "semantic_hash": ""
   },
   ".github/workflows/deploy.yml": {
-    "mtime": 1785948632.1122754,
-    "ast_hash": "6931c5c965ef680b6680dd6e6aee3202",
+    "mtime": 1788459527.8228285,
+    "ast_hash": "ffd6ee771b1112ee9919519410115282",
     "semantic_hash": ""
   },
   "README.md": {

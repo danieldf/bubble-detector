@@ -1,16 +1,16 @@
 # Graph Report - Merrill  (2026-09-03)
 
 ## Corpus Check
-- 44 files · ~67,319 words
+- 44 files · ~68,900 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 386 nodes · 724 edges · 19 communities (17 shown, 2 thin omitted)
+- 390 nodes · 728 edges · 20 communities (18 shown, 2 thin omitted)
 - Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 32 edges (avg confidence: 0.78)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `4ac0bc51`
+- Built from commit: `01f2018c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -30,6 +30,7 @@
 - .fetch_market_data
 - panel_dashboard.py
 - get_dynamic_horizon_metadata
+- AGVI Technical Specification Document
 
 ## God Nodes (most connected - your core abstractions)
 1. `DashboardState` - 32 edges
@@ -65,19 +66,19 @@
 - **FINRA Margin Debt Metrics** — finra_margin_debt_tracker, finra_may_2026_nominal_value, finra_may_2026_mom_change, finra_may_2026_yoy_change [INFERRED 0.85]
 - **Implied Volatility Term Structure Components** — impliedvolatilitymetric_vix1d, impliedvolatilitymetric_vix_spot, impliedvolatilitymetric_vix3m, impliedvolatilitymetric_vix1y [EXTRACTED 1.00]
 
-## Communities (19 total, 2 thin omitted)
+## Communities (20 total, 2 thin omitted)
 
 ### Community 0 - "Merrill ETF Portfolio Reviews"
-Cohesion: 0.06
-Nodes (46): Graphify Rules Document, Graphify Query Rule, Graphify Workflow Document, NiceGUI Layout & Plotly Dashboard, Data Ingestion (DataIngestor), AGVI Implementation Plan Document, Feature Engineering Pipeline, XGBoost Model Training & Walk-Forward CV (+38 more)
+Cohesion: 0.12
+Nodes (27): Feature Engineering Pipeline, TA-Lib Technical Indicators, Merrill Quarterly Performance Review - April 2026, Joint ETF Strategy Portfolio (March 2026), Merrill Quarterly Performance Review - May 2026, Joint ETF Strategy Portfolio (May 2026), Merrill Quarterly Performance Review - June 2, 2026, Joint ETF Strategy Portfolio (June 2, 2026) (+19 more)
 
 ### Community 1 - "AGVI System Pipeline and Dashboard"
-Cohesion: 0.09
-Nodes (24): Machine Learning Models Module, MacroMahalanobisDetector, DataFrame, ndarray, Macro Mahalanobis Distance Regime-Switching Bubble Detector.  Implements Method, Compute rolling Mahalanobis Distance from historical normal macro regime., Convert Mahalanobis Distance into empirical [0.0, 1.0] Bubble Regime Probability, Compute continuous portfolio equity sizing from Bubble Regime Probability. (+16 more)
+Cohesion: 0.07
+Nodes (29): compute_macro_valuations(), DataFrame, Macro Valuation Indicators Module.  Computes Shiller CAPE, Payout-Adjusted CAPE, Compute Shiller CAPE, Payout-Adjusted CAPE (P-CAPE), and Buffett Indicator metri, Machine Learning Models Module, MacroMahalanobisDetector, DataFrame, ndarray (+21 more)
 
 ### Community 2 - "Econometric Bubble Detection Models"
 Cohesion: 0.06
-Nodes (45): _calculate_adf_stat(), compute_gsadf_gpt_decomposition(), DataFrame, ndarray, Econometric Bubble Detection Module.  Implements the PSY procedure (GSADF test s, Calculate Augmented Dickey-Fuller t-statistic for explosive root testing., Computes rolling GSADF explosive test statistics and GPT-adjusted fundamental de, Feature Engineering Module (+37 more)
+Nodes (40): _calculate_adf_stat(), compute_gsadf_gpt_decomposition(), DataFrame, ndarray, Econometric Bubble Detection Module.  Implements the PSY procedure (GSADF test s, Calculate Augmented Dickey-Fuller t-statistic for explosive root testing., Computes rolling GSADF explosive test statistics and GPT-adjusted fundamental de, Feature Engineering Module (+32 more)
 
 ### Community 3 - "Implied Volatility Term Structure Metrics"
 Cohesion: 0.60
@@ -85,42 +86,46 @@ Nodes (6): Implied Volatility Metrics Table (July 2026), Implied Volatility Term
 
 ### Community 4 - "Graphify Settings and Rules"
 Cohesion: 0.06
-Nodes (44): BubbleDetectorError, DataFetchError, IndicatorComputationError, Configuration and Logging Module for Bubble Detector., Base exception for Bubble Detector package., Raised when data fetching fails., Raised when indicator computation fails., Raised when data validation fails. (+36 more)
+Nodes (42): BubbleDetectorError, DataFetchError, IndicatorComputationError, ModelTrainingError, Configuration and Logging Module for Bubble Detector., Base exception for Bubble Detector package., Raised when data fetching fails., Raised when indicator computation fails. (+34 more)
 
 ### Community 5 - "Valuation and Feature Engineering"
 Cohesion: 0.09
-Nodes (38): create_cta_banner(), create_ios_card(), UI Components Module.  Provides iOS 13+ card containers, segmented control tab w, Renders a Call-To-Action (CTA) section with powerful typography (600-800 weight), Creates an iOS 13+ inset card container with subtle shadow, rounded corners,, build_econometric_chart(), build_leverage_chart(), build_macro_valuation_chart() (+30 more)
+Nodes (41): create_cta_banner(), create_ios_card(), UI Components Module.  Provides iOS 13+ card containers, segmented control tab w, Renders a Call-To-Action (CTA) section with powerful typography (600-800 weight), Creates an iOS 13+ inset card container with subtle shadow, rounded corners,, build_econometric_chart(), build_leverage_chart(), build_macro_valuation_chart() (+33 more)
 
 ### Community 6 - "FINRA Margin Debt Metrics"
-Cohesion: 0.15
-Nodes (15): ModelTrainingError, Raised when ML model training fails., DataFrame, ndarray, Structural Break Machine Learning Classifier.  Utilizes XGBoost with RobustScale, Predict structural break drawdown probabilities for input dataframe., Predicts market structural break and drawdown probabilities using Gradient Boost, Extract features and construct forward drawdown target variable. (+7 more)
+Cohesion: 0.18
+Nodes (12): DataFrame, ndarray, Predict structural break drawdown probabilities for input dataframe., Predicts market structural break and drawdown probabilities using Gradient Boost, Extract features and construct forward drawdown target variable., Train ML model using expanding window TimeSeriesSplit cross-validation         w, StructuralBreakPredictor, Unit tests for StructuralBreakPredictor machine learning module. (+4 more)
 
 ### Community 8 - "test_ui_theme.py"
 Cohesion: 0.16
 Nodes (16): calculate_contrast_ratio(), get_theme_css(), is_wcag_aa_compliant(), parse_hex_color(), UI Theme and Accessibility Design System for Bubble Detector.  Enforces: - WCAG, Generate dynamic CSS variables and global stylesheet enforcing UI/UX & accessibi, Parse hex color string (e.g., '#007AFF' or '#000') into RGB floats [0..1]., Calculate WCAG 2.2 relative luminance for RGB floats [0..1]. (+8 more)
 
 ### Community 11 - "Overview of Completed Implementation"
-Cohesion: 0.25
-Nodes (7): 1. System & Logging Setup (`config.py`):, 2. UI & Accessibility Engine (`ui_theme.py`):, 3. Data Ingestion & Storage (`ingestor.py`):, 4. Quantitative Indicator Modules (`features/`):, 5. Machine Learning Model (`structural_breaks.py`):, 6. Interactive Dashboard & Components (`dashboard.py` & `components.py`):, Overview of Completed Implementation
+Cohesion: 0.20
+Nodes (9): 1. System, Configuration & Date Horizons (`config.py` & `date_horizons.py`):, 2. UI & Accessibility Engine (`ui_theme.py`):, 3. Data Ingestion & Storage (`ingestor.py`):, 4. Quantitative Indicator Modules (`features/` & `features/utils.py`):, 5. Machine Learning Model (`structural_breaks.py`):, 6. Macro Mahalanobis Distance Engine (`regime_mahalanobis.py`):, 7. Interactive Dashboards & Dual-Runtime Architecture:, 8. Adversarial Red Team Hardening & Automated Verification: (+1 more)
 
 ### Community 13 - "Detailed Slide Breakdown by Section & Group"
 Cohesion: 0.20
 Nodes (9): Detailed Slide Breakdown by Section & Group, Executive Presentation Deck Overview, Group 1: Key Findings (Group Confidence Score: 0.94), Group 2: Supporting Evidence: Valuation, Econometrics & ML (Group Confidence Score: 0.93), Group 3: Sector Specific Application: Tech vs. Energy (Group Confidence Score: 0.91), Group 4: Implications for Systemic Stability (Group Confidence Score: 0.95), Group 5: Strategic Recommendations (Group Confidence Score: 0.96), Verification Results (+1 more)
 
 ### Community 16 - ".fetch_market_data"
-Cohesion: 0.07
-Nodes (29): 1. Macro Mahalanobis Distance & Dynamic Exposure Sizing, 1. Macro Valuation Anchors, 1. Prerequisites & Installation, 2. Run the High-Performance NiceGUI Application, 2. Systemic Liquidity & Leverage, 2. TDA Geometric Complexity Full-Range Dynamic Normalization, 3. Econometric Explosive Bubble Diagnostics, 3. Run the Local HoloViz Panel Dashboard (+21 more)
+Cohesion: 0.06
+Nodes (31): 1. Macro Mahalanobis Distance & Dynamic Exposure Sizing, 1. Macro Valuation Anchors, 1. Prerequisites & Installation, 2. Run the High-Performance NiceGUI Application, 2. Systemic Liquidity & Leverage, 2. TDA Geometric Complexity Full-Range Dynamic Normalization, 3. Econometric Explosive Bubble Diagnostics, 3. Run the Local HoloViz Panel Dashboard (+23 more)
 
 ### Community 17 - "panel_dashboard.py"
-Cohesion: 0.11
-Nodes (36): calculate_adf_stat(), normalize_tda_indicator(), ndarray, Shared Mathematical & Topological Utilities.  Provides reusable numerical algori, Calculate Augmented Dickey-Fuller t-statistic for explosive root testing., Transform 1D time series into Takens delay-coordinate high-dimensional point clo, Linearly rescale raw TDA Persistence Landscape L2 Norm to span [target_min, targ, takens_embedding() (+28 more)
+Cohesion: 0.09
+Nodes (38): calculate_adf_stat(), normalize_tda_indicator(), ndarray, Shared Mathematical & Topological Utilities.  Provides reusable numerical algori, Calculate Augmented Dickey-Fuller t-statistic for explosive root testing., Transform 1D time series into Takens delay-coordinate high-dimensional point clo, Linearly rescale raw TDA Persistence Landscape L2 Norm to span [target_min, targ, takens_embedding() (+30 more)
 
 ### Community 18 - "get_dynamic_horizon_metadata"
 Cohesion: 0.36
 Nodes (8): get_current_date(), get_dynamic_50yr_date_range(), get_dynamic_horizon_metadata(), Any, date, Return current execution date, or parse override date string/object., Compute rolling 50-year date range from current execution date.     Safely handl, Construct dynamic horizon metadata dictionary anchored to current execution date
 
+### Community 19 - "AGVI Technical Specification Document"
+Cohesion: 0.12
+Nodes (19): Graphify Rules Document, Graphify Query Rule, Graphify Workflow Document, NiceGUI Layout & Plotly Dashboard, Data Ingestion (DataIngestor), AGVI Implementation Plan Document, XGBoost Model Training & Walk-Forward CV, AGVI Technical Specification Document (+11 more)
+
 ## Knowledge Gaps
-- **52 isolated node(s):** `market-bubble-detector`, `1. System & Logging Setup (`config.py`):`, `2. UI & Accessibility Engine (`ui_theme.py`):`, `3. Data Ingestion & Storage (`ingestor.py`):`, `4. Quantitative Indicator Modules (`features/`):` (+47 more)
+- **55 isolated node(s):** `market-bubble-detector`, `1. System, Configuration & Date Horizons (`config.py` & `date_horizons.py`):`, `2. UI & Accessibility Engine (`ui_theme.py`):`, `3. Data Ingestion & Storage (`ingestor.py`):`, `4. Quantitative Indicator Modules (`features/` & `features/utils.py`):` (+50 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **2 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -128,16 +133,16 @@ Nodes (8): get_current_date(), get_dynamic_50yr_date_range(), get_dynamic_horizo
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `DataIngestor` connect `Graphify Settings and Rules` to `AGVI System Pipeline and Dashboard`, `Econometric Bubble Detection Models`, `Valuation and Feature Engineering`, `FINRA Margin Debt Metrics`, `panel_dashboard.py`?**
-  _High betweenness centrality (0.082) - this node is a cross-community bridge._
+  _High betweenness centrality (0.080) - this node is a cross-community bridge._
 - **Why does `DashboardState` connect `Valuation and Feature Engineering` to `AGVI System Pipeline and Dashboard`, `Econometric Bubble Detection Models`, `Graphify Settings and Rules`, `FINRA Margin Debt Metrics`, `test_ui_theme.py`, `panel_dashboard.py`?**
-  _High betweenness centrality (0.078) - this node is a cross-community bridge._
+  _High betweenness centrality (0.076) - this node is a cross-community bridge._
 - **Why does `MacroMahalanobisDetector` connect `AGVI System Pipeline and Dashboard` to `panel_dashboard.py`, `Econometric Bubble Detection Models`, `Valuation and Feature Engineering`?**
-  _High betweenness centrality (0.069) - this node is a cross-community bridge._
+  _High betweenness centrality (0.068) - this node is a cross-community bridge._
 - **Are the 3 inferred relationships involving `DashboardState` (e.g. with `DataIngestor` and `MacroMahalanobisDetector`) actually correct?**
   _`DashboardState` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 3 inferred relationships involving `DataIngestor` (e.g. with `DataFetchError` and `ValidationError`) actually correct?**
   _`DataIngestor` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 2 inferred relationships involving `StructuralBreakPredictor` (e.g. with `ModelTrainingError` and `DashboardState`) actually correct?**
   _`StructuralBreakPredictor` has 2 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `market-bubble-detector`, `1. System & Logging Setup (`config.py`):`, `2. UI & Accessibility Engine (`ui_theme.py`):` to the rest of the system?**
-  _52 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `market-bubble-detector`, `1. System, Configuration & Date Horizons (`config.py` & `date_horizons.py`):`, `2. UI & Accessibility Engine (`ui_theme.py`):` to the rest of the system?**
+  _55 weakly-connected nodes found - possible documentation gaps or missing edges._

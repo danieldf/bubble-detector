@@ -15,12 +15,13 @@ import panel as pn
 pn.extension('plotly', sizing_mode='stretch_width')
 
 # Unicode Emoji Constants for Flawless WebAssembly Rendering
-ICON_BUILDING = chr(0x1F3DB) + chr(0xFE0F)  # 🏛️
-ICON_TARGET = chr(0x1F3AF)                  # 🎯
-ICON_CALENDAR = chr(0x1F4C5)                # 📅
-ICON_CHART_DOWN = chr(0x1F4C9)              # 📉
-ICON_GEAR = chr(0x2699) + chr(0xFE0F)       # ⚙️
-ICON_WARNING = chr(0x26A0) + chr(0xFE0F)    # ⚠️
+ICON_BUILDING = chr(0x1F3DB) + chr(0xFE0F)  # Classical Building
+ICON_TARGET = chr(0x1F3AF)                  # Direct Hit Target
+ICON_MICROSCOPE = chr(0x1F52C)              # Microscope
+ICON_CALENDAR = chr(0x1F4C5)                # Calendar
+ICON_CHART_DOWN = chr(0x1F4C9)              # Chart Decreasing
+ICON_GEAR = chr(0x2699) + chr(0xFE0F)       # Gear
+ICON_WARNING = chr(0x26A0) + chr(0xFE0F)    # Warning
 
 import datetime
 from typing import Dict, Any, Tuple, Optional, Union
@@ -613,13 +614,14 @@ def generate_explanatory_markdown(horizon_id: str) -> str:
 
 # Executive Summary Markdown Pane
 executive_summary_pane = pn.pane.Markdown(
-    f"### {ICON_BUILDING} Executive Summary: Macro Landscape & Multidimensional Framework\n"
+    f"### {ICON_BUILDING} Executive Summary: Macro Landscape & Multidimensional Framework\n\n"
     "The mid-2026 macroeconomic environment presents an acute structural challenge: the S&P 500 tests record peaks near 7,500 amid the second-highest valuation epoch in U.S. history (Shiller CAPE 41.37, Buffett Indicator 218.1% of GDP). Simultaneously, systemic leverage has expanded to a record $1.416T in FINRA margin debt (+53.7% YoY), exhausting institutional margin credit and creating severe vulnerability to leverage-induced fire-sale cascades.\n\n"
     "While the massive $754B hyperscaler AI CapEx supercycle justifies fundamental repricing under General-Purpose Technology (GPT) econometric decomposition, derivatives markets reveal a dangerous structural divergence: institutional capital is aggressively bidding for catastrophic tail-risk protection (SKEW > 145) even as front-month volatility remains artificially suppressed (VIX1D < 10) and index-level implied correlation collapses (< 8.0).\n\n"
     f"#### {ICON_TARGET} Unified Multi-Regime Quantitative Architecture\n"
     "- **6 Integrated Modules**: Macro Valuation, Systemic Leverage, Econometric Bubble, Sentiment & Volatility, Sector Health & TDA, and Macro Mahalanobis Distance.\n"
     r"- **Method 1 Mahalanobis Distance ($D_M$)**: 15-dimensional regularized covariance distance ($\mathbf{\Sigma} + 10^{-2}\mathbf{I}$) eliminating collinearity distortions." + "\n"
-    r"- **Dynamic Equity Exposure**: Continuous risk-scaled sizing ($w_{\text{equity}} \in [0.20, 1.00]$) with a strict 20% defensive liquidity floor." + "\n"
+    r"- **Dynamic Equity Exposure**: Continuous risk-scaled sizing ($w_{\text{equity}} \in [0.20, 1.00]$) with a strict 20% defensive liquidity floor." + "\n\n"
+    f"#### {ICON_MICROSCOPE} Mathematical Rigor & Scale Invariance\n"
     "- **Calendar-Aware 50-Year Engine**: Dynamically anchors 50 physical years (13,045 trading days) across 7 historical crash regimes.\n"
     "- **TDA Dynamic Normalization**: Maps Takens persistent homology $L_2$ norm to $[0.80, 7.00]$, spanning the full chart canvas.\n"
     r"- **100% Quality Gate**: Every retained analytical methodology meets or exceeds Confidence Score cutoff $\ge 0.87$." + "\n",
@@ -709,7 +711,7 @@ template = pn.template.FastListTemplate(
     ],
     main=[
         header_banner,
-        pn.Card(executive_summary_pane, title=f"{ICON_BUILDING} Executive Summary & Quantitative Architecture", collapsed=True),
+        pn.Card(executive_summary_pane, title=f"{ICON_BUILDING} Executive Summary & Quantitative Architecture", collapsed=False),
         pn.Card(note_pane, title=f"{ICON_CALENDAR} Horizon Specifications & Data Integrity", collapsed=False),
         tabs
     ],
