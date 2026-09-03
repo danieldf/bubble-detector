@@ -2,9 +2,9 @@
 
 [![Deploy WebAssembly Dashboard](https://github.com/danieldf/bubble-detector/actions/workflows/deploy.yml/badge.svg)](https://github.com/danieldf/bubble-detector/actions/workflows/deploy.yml)
 [![Live WebAssembly Dashboard](https://img.shields.io/badge/Live_Dashboard-GitHub_Pages-0288D1?style=flat&logo=github)](https://danieldf.github.io/bubble-detector/)
-[![Version](https://img.shields.io/badge/Version-v2.1.1-4CAF50?style=flat)](https://github.com/danieldf/bubble-detector/releases/tag/v2.1.1)
+[![Version](https://img.shields.io/badge/Version-v2.2.0-4CAF50?style=flat)](https://github.com/danieldf/bubble-detector/releases/tag/v2.2.0)
 [![Python Version](https://img.shields.io/badge/Python-3.11%2B%20%7C%203.14-blue?style=flat&logo=python)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/Tests-33%20Passed%20(100%25)-success?style=flat)](https://github.com/danieldf/bubble-detector/actions)
+[![Tests](https://img.shields.io/badge/Tests-37%20Passed%20(100%25)-success?style=flat)](https://github.com/danieldf/bubble-detector/actions)
 
 An enterprise-grade quantitative econometric system and machine learning framework engineered to detect financial asset bubbles, diagnose non-linear macroeconomic regime shifts, quantify systemic distance from historical equilibrium, and dynamically adjust portfolio equity exposure.
 
@@ -185,6 +185,22 @@ graphify update .
 ## 📋 Changelog
 
 All notable changes to this project are documented in this section adhering to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and [Semantic Versioning (SemVer)](https://semver.org/).
+
+### [v2.2.0] - 2026-09-03
+
+#### Added
+- **Red Team Analysis & Architectural Hardening**:
+  - **RT-01 (Pyodide WebAssembly Parity & Robustness)**: Synchronized and validated 100% numerical parity across primary and fallback pipelines under mocked offline and browser environments (`max diff = 0.000000`).
+  - **RT-02 (Exchange Holiday Splicing Inversion)**: Forward-fill real market data within each ticker's active trading lifetime prior to `combine_first(df_synth)` in `DataIngestor`, eliminating holiday synthetic dips and spikes.
+  - **RT-03 (Elimination of Lookahead Leakage)**: Replaced full-sample mean lookahead (`np.nanmean`) with strictly causal expanding-window mean & std during warm-up in rolling Z-score generation.
+  - **RT-04 (Rank-Deficient Covariance Singularity Prevention)**: Enforced sample size $N \ge \max(30, 2k) = 30$ before inverting covariance, preventing artificial $12.0\sigma$ crisis spikes on early rolling windows.
+  - **RT-05 (Purge Embargo in Walk-Forward Cross-Validation)**: Added 20-day embargo gap between train and validation splits and masked terminal unobservable rows in `StructuralBreakPredictor`.
+  - **RT-06 (Modular Date Horizons)**: Created dedicated `bubble_detector/data/date_horizons.py` resolving file reference drift.
+  - **RT-07 (Centralized Pure-Math Utilities)**: Created `bubble_detector/features/utils.py` consolidating `normalize_tda_indicator`, `calculate_adf_stat`, and `takens_embedding`.
+  - **RT-08 (UI Error Boundaries)**: Added robust try/except error notifications around horizon switching events in NiceGUI and WebAssembly.
+  - **RT-09 (Test Suite Expansion)**: Added tests for singularity absence, walk-forward embargo isolation, and WebAssembly fallback parity, expanding total suite to **37 passed (100% pass rate)**.
+
+---
 
 ### [v2.1.1] - 2026-09-02
 

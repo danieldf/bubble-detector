@@ -50,23 +50,23 @@
     "semantic_hash": ""
   },
   "bubble_detector/config.py": {
-    "mtime": 1788456959.6259782,
-    "ast_hash": "73eff4fe87cd53b1603f1554a4806efb",
+    "mtime": 1788383371.0076087,
+    "ast_hash": "ea26f18ad6e261c463a0fc3d1b34d76a",
     "semantic_hash": ""
   },
   "bubble_detector/data/__init__.py": {
-    "mtime": 1788457007.405627,
-    "ast_hash": "8f520522a167b4731a8df396edbeff7d",
+    "mtime": 1785252475.400655,
+    "ast_hash": "95dbc2e5830429569eb422e6de9eb6a5",
     "semantic_hash": ""
   },
   "bubble_detector/data/ingestor.py": {
-    "mtime": 1788456996.2149122,
-    "ast_hash": "168f0778b5d71542d16a49a743464c07",
+    "mtime": 1788388784.447376,
+    "ast_hash": "d5d390b7bdaaa8bd0c04b8c36e0e7ebd",
     "semantic_hash": ""
   },
   "bubble_detector/features/__init__.py": {
-    "mtime": 1788457035.9118094,
-    "ast_hash": "63382d0d8ffcc4b335b4c40b1afadefc",
+    "mtime": 1785252480.392925,
+    "ast_hash": "f96b31fc0d18ef0aa4a6d093ca799434",
     "semantic_hash": ""
   },
   "bubble_detector/features/econometric.py": {
@@ -105,8 +105,8 @@
     "semantic_hash": ""
   },
   "bubble_detector/models/structural_breaks.py": {
-    "mtime": 1788457050.1444752,
-    "ast_hash": "846c9ce1caf956ac41439233769f4523",
+    "mtime": 1785252588.9081726,
+    "ast_hash": "ae58692a9d2a67244d24ebe91b4c81ce",
     "semantic_hash": ""
   },
   "bubble_detector/ui/__init__.py": {
@@ -120,8 +120,8 @@
     "semantic_hash": ""
   },
   "bubble_detector/ui/dashboard.py": {
-    "mtime": 1788457077.1666129,
-    "ast_hash": "34c4de287fba0264e05bb55da7bafe83",
+    "mtime": 1788398529.8380458,
+    "ast_hash": "816a2fc6ed1842e85cb0fdd99ea703cd",
     "semantic_hash": ""
   },
   "bubble_detector/ui_theme.py": {
@@ -150,8 +150,8 @@
     "semantic_hash": ""
   },
   "tests/test_models.py": {
-    "mtime": 1788457206.0318406,
-    "ast_hash": "ea96d9a695ef22cf7aed87dd2d3dce66",
+    "mtime": 1785252516.1737125,
+    "ast_hash": "1e5f1f8c575d1669a393ba9cd64c161e",
     "semantic_hash": ""
   },
   "tests/test_ui_theme.py": {
@@ -190,13 +190,13 @@
     "semantic_hash": ""
   },
   "tests/test_date_horizons.py": {
-    "mtime": 1788457219.723734,
-    "ast_hash": "621d194fca169c35c46e8f15c6d1e0ba",
+    "mtime": 1788383614.8968813,
+    "ast_hash": "602c2cd6685ca62c2dc5f03eeff27676",
     "semantic_hash": ""
   },
   "bubble_detector/ui/panel_dashboard.py": {
-    "mtime": 1788457195.2503731,
-    "ast_hash": "d759477d8cd11c8e103daa14334f95eb",
+    "mtime": 1788398573.9009812,
+    "ast_hash": "556ac47fbca937534b5893498a9b3743",
     "semantic_hash": ""
   },
   ".github/workflows/deploy.yml": {
@@ -210,18 +210,18 @@
     "semantic_hash": ""
   },
   "tests/test_full_indicator_parity.py": {
-    "mtime": 1788457212.1443975,
-    "ast_hash": "d6c9f26a47d3ce7edb479c120b2c143b",
+    "mtime": 1788387272.2255812,
+    "ast_hash": "72246479bbb90e5bb2673a80ceed2bda",
     "semantic_hash": ""
   },
   "bubble_detector/models/regime_mahalanobis.py": {
-    "mtime": 1788457269.4918575,
-    "ast_hash": "7885936666543b8eeb54e15b18573350",
+    "mtime": 1788388663.0686631,
+    "ast_hash": "c191f6e2890d88bab0cf27f865e74452",
     "semantic_hash": ""
   },
   "tests/test_mahalanobis.py": {
-    "mtime": 1788457201.6000345,
-    "ast_hash": "fd96ded0d27ab4204c5f4c7029110f8a",
+    "mtime": 1788398591.8076847,
+    "ast_hash": "8a4ee82df7019b3f58a91f89a226d880",
     "semantic_hash": ""
   },
   "pyproject.toml": {
@@ -232,16 +232,6 @@
   "requirements.txt": {
     "mtime": 1788398678.063657,
     "ast_hash": "83a8280905595bcee6b3d7be347f57f7",
-    "semantic_hash": ""
-  },
-  "bubble_detector/data/date_horizons.py": {
-    "mtime": 1788456987.4150155,
-    "ast_hash": "2659f4c8fb8de954d95b923fdbd4fec8",
-    "semantic_hash": ""
-  },
-  "bubble_detector/features/utils.py": {
-    "mtime": 1788457032.3412454,
-    "ast_hash": "b066f4c025e53c9536e18f3607e0fb55",
     "semantic_hash": ""
   }
 }

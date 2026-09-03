@@ -79,10 +79,15 @@ class MacroMahalanobisDetector:
             min_p = max(15, window // 6)
             r_mean = s.rolling(window, min_periods=min_p).mean().to_numpy()
             r_std = s.rolling(window, min_periods=min_p).std().to_numpy()
-            r_std = np.where(r_std < 1e-6, 1.0, r_std)
-            r_mean = np.nan_to_num(r_mean, nan=np.nanmean(arr) if len(arr) > 0 else 0.0)
 
-            # Rolling z-score
+            # Rolling z-score with strictly causal expanding-window fallback (zero forward-looking lookahead)
+            exp_mean = s.expanding(min_periods=1).mean().to_numpy()
+            exp_std = s.expanding(min_periods=1).std().to_numpy()
+            exp_std = np.where(np.isnan(exp_std) | (exp_std < 1e-6), 1.0, exp_std)
+
+            r_mean = np.where(np.isnan(r_mean), exp_mean, r_mean)
+            r_std = np.where(np.isnan(r_std) | (r_std < 1e-6), exp_std, r_std)
+
             z_col = (arr - r_mean) / r_std
             z_col = np.nan_to_num(z_col, nan=0.0).astype(np.float32)
             Z[:, j] = z_col
@@ -97,19 +102,20 @@ class MacroMahalanobisDetector:
     ) -> np.ndarray:
         """
         Compute rolling Mahalanobis Distance from historical normal macro regime.
-        Uses Tikhonov ridge regularization to guarantee numerical stability
-        and solves linear systems directly (10x faster than full pinv).
+        Uses Tikhonov ridge regularization and requires N >= max(30, 2k) sample points
+        to prevent rank-deficient matrix singularity spikes on early windows.
         """
         window = rolling_window or self.rolling_window
         alpha = ridge_alpha or self.ridge_alpha
         n, k = Z.shape
         m_distances = np.zeros(n, dtype=np.float32)
         eye_k = alpha * np.eye(k, dtype=np.float64)
+        min_samples = max(30, 2 * k)
 
-        for i in range(15, n):
+        for i in range(min_samples, n):
             start_idx = max(0, i - window)
             w = Z[start_idx:i]
-            if len(w) < 15:
+            if len(w) < min_samples:
                 continue
 
             mu = np.mean(w, axis=0)
@@ -128,10 +134,9 @@ class MacroMahalanobisDetector:
                 dist_sq = np.dot(diff, np.dot(pinv_cov, diff))
                 m_distances[i] = np.sqrt(max(0.0, float(dist_sq)))
 
-        # Warm-up backfill for initial rows
-        first_valid = 15
-        if n > first_valid:
-            m_distances[:first_valid] = m_distances[first_valid]
+        # Warm-up backfill from the first well-conditioned sample window
+        if n > min_samples:
+            m_distances[:min_samples] = m_distances[min_samples]
 
         return np.clip(m_distances, 0.0, 12.0).astype(np.float32)
 

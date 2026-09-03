@@ -320,6 +320,17 @@ graphify update .
 
 All notable technical updates to this research specification and software implementation are versioned in accordance with [Semantic Versioning (SemVer v2.0.0)](https://semver.org/):
 
+### [v2.2.0] - 2026-09-03
+
+- **Red Team Analysis & System Hardening**:
+  - **Elimination of Lookahead Leakage (RT-03)**: Upgraded rolling Z-score generation in `regime_mahalanobis.py` to use strictly causal expanding-window statistics during warm-up periods, guaranteeing zero forward-looking leakage.
+  - **Rank-Deficient Singularity Prevention (RT-04)**: Enforced a minimum sample threshold $N \ge 30$ before inverting rolling covariance matrices, eliminating artificial early-window $12.0\sigma$ crisis ceiling spikes.
+  - **Walk-Forward Cross-Validation Embargo (RT-05)**: Integrated a 20-day purge gap between train and validation splits and masked terminal unobservable rows in `StructuralBreakPredictor`.
+  - **Exchange Holiday Data Integrity (RT-02)**: Corrected holiday forward-filling prior to synthetic data combination in `DataIngestor`, eliminating single-day holiday return spikes.
+  - **WebAssembly Fallback Parity (RT-01)**: Calibrated client-side Pyodide fallback math to achieve 100% numerical parity with cached datasets.
+  - **Modular Architecture (RT-06 & RT-07)**: Established dedicated `bubble_detector/data/date_horizons.py` and `bubble_detector/features/utils.py`.
+  - **Automated Verification Expansion (RT-09)**: Added 4 new automated unit tests, elevating the test suite to **37 tests passed (100% pass rate)**.
+
 ### [v2.1.1] - 2026-09-02
 
 - **Right-Flushed Legends Across All Tabs (1 through 6)**: Standardized all Plotly visualization layouts to right-flushed vertical orientation (`orientation="v", x=1.01, y=1.0, margin.r=230`) across NiceGUI and WebAssembly, eliminating curve and threshold line overlap.

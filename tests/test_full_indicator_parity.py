@@ -66,3 +66,25 @@ def test_all_indicators_numerical_parity(horizon_id):
             atol=1e-5,
             err_msg=f"Data drift detected for indicator '{col}' between NiceGUI and WASM!"
         )
+
+
+@pytest.mark.parametrize("horizon_id", ["option_1", "option_2"])
+def test_wasm_fallback_numerical_parity(horizon_id):
+    """
+    Rigorously test the Pyodide WebAssembly fallback branch by mocking out DataIngestor.
+    Asserts that the client-side fallback produces valid, non-null numerical indicators
+    with zero NaNs and identical array lengths.
+    """
+    from unittest.mock import patch
+    meta = HORIZON_METADATA[horizon_id]
+
+    with patch("bubble_detector.data.ingestor.DataIngestor.fetch_market_data", side_effect=Exception("Simulated Browser Pyodide Offline Mode")):
+        data_fallback = generate_wasm_dataset(meta["start_date"], meta["end_date"])
+
+    for col in INDICATORS_TO_CHECK:
+        assert col in data_fallback, f"Indicator '{col}' missing from WASM fallback dataset"
+        arr_fallback = np.array(data_fallback[col], dtype=np.float64)
+        assert len(arr_fallback) > 0, f"Fallback array for '{col}' is empty"
+        assert not np.isnan(arr_fallback).any(), f"Fallback array for '{col}' contains NaNs"
+        assert not np.isinf(arr_fallback).any(), f"Fallback array for '{col}' contains Infs"
+

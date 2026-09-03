@@ -239,3 +239,21 @@ def test_all_tabs_legends_right_flushed():
         assert fig.layout.margin.r >= 200, f"{label} right margin should be >= 200 to accommodate right legend, got {fig.layout.margin.r}"
 
 
+def test_mahalanobis_no_early_rank_singularity():
+    """Verify that early rows (0..30) do not artificially peg at the 12.0 crisis ceiling due to rank deficiency."""
+    from bubble_detector.models.regime_mahalanobis import MacroMahalanobisDetector
+
+    detector = MacroMahalanobisDetector()
+    np.random.seed(42)
+    # Generate 100 observations across 15 features
+    Z = np.random.randn(100, 15).astype(np.float32)
+    m_dist = detector.compute_mahalanobis_distance(Z)
+
+    # In early rows, distance must be well-conditioned and strictly below the 12.0 clipping ceiling
+    early_max = float(np.max(m_dist[:35]))
+    assert early_max < 10.0, f"Early Mahalanobis distance spiked to {early_max}, indicating rank-deficient singularity"
+    assert not np.isnan(m_dist).any(), "Early Mahalanobis distances contain NaNs"
+    assert (m_dist >= 0.0).all(), "Mahalanobis distances contain negative values"
+
+
+

@@ -9,6 +9,10 @@ from bubble_detector.config import (
     HORIZON_METADATA, HORIZON_OPTION_1_ID, HORIZON_OPTION_2_ID,
     get_dynamic_50yr_date_range, get_current_date
 )
+from bubble_detector.data.date_horizons import (
+    get_dynamic_50yr_date_range as direct_date_range,
+    get_current_date as direct_current_date
+)
 from bubble_detector.data.ingestor import DataIngestor
 from bubble_detector.ui.dashboard import DashboardState
 

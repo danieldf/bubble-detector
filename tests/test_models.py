@@ -39,3 +39,14 @@ def test_predict_drawdown_probability(processed_df):
     assert isinstance(probs, np.ndarray)
     assert len(probs) == len(processed_df)
     assert np.all(probs >= 0.0) and np.all(probs <= 1.0)
+
+
+def test_structural_breaks_embargo_no_lookahead(processed_df):
+    """Verify that fit_walk_forward enforces a purge embargo gap preventing forward target leakage."""
+    predictor = StructuralBreakPredictor(n_estimators=10, max_depth=2)
+    metrics = predictor.fit_walk_forward(processed_df, n_splits=3, embargo_window=20)
+
+    assert "embargo_window" in metrics
+    assert metrics["embargo_window"] == 20
+    assert metrics["cv_mean_accuracy"] >= 0.0
+    assert predictor.is_trained

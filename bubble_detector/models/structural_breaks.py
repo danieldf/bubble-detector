@@ -90,22 +90,37 @@ class StructuralBreakPredictor:
 
         return X, y
 
-    def fit_walk_forward(self, df: pl.DataFrame, n_splits: int = 5) -> Dict[str, float]:
+    def fit_walk_forward(self, df: pl.DataFrame, n_splits: int = 5, embargo_window: int = 20) -> Dict[str, float]:
         """
-        Train ML model using expanding window TimeSeriesSplit cross-validation.
+        Train ML model using expanding window TimeSeriesSplit cross-validation
+        with a purge embargo gap to eliminate overlapping forward target leakage.
         """
-        logger.info(f"Training StructuralBreakPredictor with {n_splits}-fold TimeSeriesSplit...")
+        logger.info(f"Training StructuralBreakPredictor with {n_splits}-fold TimeSeriesSplit (embargo={embargo_window})...")
         X, y = self._prepare_data(df)
 
         if len(X) < 50:
             raise ModelTrainingError("Insufficient data rows to perform walk-forward cross validation.")
 
+        # Mask unobservable terminal forward return rows for training
+        if len(X) > embargo_window + 30:
+            X_obs = X[:-embargo_window]
+            y_obs = y[:-embargo_window]
+        else:
+            X_obs = X
+            y_obs = y
+
         tss = TimeSeriesSplit(n_splits=n_splits)
         fold_accuracies = []
 
-        for fold, (train_idx, val_idx) in enumerate(tss.split(X)):
-            X_train, y_train = X[train_idx], y[train_idx]
-            X_val, y_val = X[val_idx], y[val_idx]
+        for fold, (train_idx, val_idx) in enumerate(tss.split(X_obs)):
+            # Apply purge embargo: drop the last `embargo_window` rows of train to avoid leaking into validation
+            if len(train_idx) > embargo_window + 10:
+                train_idx_purged = train_idx[:-embargo_window]
+            else:
+                train_idx_purged = train_idx
+
+            X_train, y_train = X_obs[train_idx_purged], y_obs[train_idx_purged]
+            X_val, y_val = X_obs[val_idx], y_obs[val_idx]
 
             # Fit RobustScaler on training fold only (zero look-ahead bias)
             scaler_fold = RobustScaler()
@@ -119,15 +134,15 @@ class StructuralBreakPredictor:
             acc = float(np.mean(val_preds == y_val))
             fold_accuracies.append(acc)
 
-        # Final fit on full dataset
-        X_scaled = self.scaler.fit_transform(X)
-        self.model.fit(X_scaled, y)
+        # Final fit on all observable historical rows
+        X_scaled = self.scaler.fit_transform(X_obs)
+        self.model.fit(X_scaled, y_obs)
         self.is_trained = True
 
         mean_acc = float(np.mean(fold_accuracies))
         logger.info(f"Walk-forward CV mean accuracy: {mean_acc:.4f}")
 
-        return {"cv_mean_accuracy": mean_acc, "n_splits": n_splits}
+        return {"cv_mean_accuracy": mean_acc, "n_splits": n_splits, "embargo_window": embargo_window}
 
     def predict_drawdown_probability(self, df: pl.DataFrame) -> np.ndarray:
         """Predict structural break drawdown probabilities for input dataframe."""

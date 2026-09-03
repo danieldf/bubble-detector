@@ -273,16 +273,20 @@ def generate_wasm_dataset(start_date: str, end_date: str):
             min_p = max(15, window_md // 6)
             r_mean = s_j.rolling(window_md, min_periods=min_p).mean().to_numpy()
             r_std = s_j.rolling(window_md, min_periods=min_p).std().to_numpy()
-            r_std = np.where(r_std < 1e-6, 1.0, r_std)
-            r_mean = np.nan_to_num(r_mean, nan=np.nanmean(arr_j) if len(arr_j) > 0 else 0.0)
+            exp_m = s_j.expanding(min_periods=1).mean().to_numpy()
+            exp_s = s_j.expanding(min_periods=1).std().to_numpy()
+            exp_s = np.where(np.isnan(exp_s) | (exp_s < 1e-6), 1.0, exp_s)
+            r_mean = np.where(np.isnan(r_mean), exp_m, r_mean)
+            r_std = np.where(np.isnan(r_std) | (r_std < 1e-6), exp_s, r_std)
             Z_mat[:, j] = np.nan_to_num((arr_j - r_mean) / r_std, nan=0.0).astype(np.float32)
 
         m_dist = np.zeros(n, dtype=np.float32)
         eye_k = 1e-2 * np.eye(k_feat, dtype=np.float64)
-        for i in range(15, n):
+        min_samples = max(30, 2 * k_feat)
+        for i in range(min_samples, n):
             start_i = max(0, i - window_md)
             w_z = Z_mat[start_i:i]
-            if len(w_z) < 15:
+            if len(w_z) < min_samples:
                 continue
             mu_z = np.mean(w_z, axis=0)
             diff_z = Z_mat[i] - mu_z
@@ -294,8 +298,8 @@ def generate_wasm_dataset(start_date: str, end_date: str):
                 pinv_z = np.linalg.pinv(cov_z)
                 m_dist[i] = np.sqrt(max(0.0, float(np.dot(diff_z, np.dot(pinv_z, diff_z)))))
 
-        if n > 15:
-            m_dist[:15] = m_dist[15]
+        if n > min_samples:
+            m_dist[:min_samples] = m_dist[min_samples]
         m_dist = np.clip(m_dist, 0.0, 12.0).astype(np.float32)
 
         # Empirical percentile rank
@@ -456,14 +460,18 @@ def build_sentiment_vol_fig(horizon_id: str) -> go.Figure:
     )
     return fig
 
-def normalize_tda_indicator(tda_array: np.ndarray, target_min: float = 0.8, target_max: float = 7.0) -> np.ndarray:
-    """Dynamically normalize TDA Persistence L2 Norm to target display y-range [target_min, target_max]."""
-    t_min = float(np.nanmin(tda_array))
-    t_max = float(np.nanmax(tda_array))
-    denom = t_max - t_min
-    if denom < 1e-8:
-        return np.full_like(tda_array, (target_min + target_max) / 2.0)
-    return target_min + (target_max - target_min) * (tda_array - t_min) / denom
+try:
+    from bubble_detector.features.utils import normalize_tda_indicator
+except Exception:
+    def normalize_tda_indicator(tda_array: np.ndarray, target_min: float = 0.8, target_max: float = 7.0) -> np.ndarray:
+        """Dynamically normalize TDA Persistence L2 Norm to target display y-range [target_min, target_max]."""
+        arr = np.asarray(tda_array, dtype=np.float64)
+        t_min = float(np.nanmin(arr))
+        t_max = float(np.nanmax(arr))
+        denom = t_max - t_min
+        if denom < 1e-8:
+            return np.full_like(arr, (target_min + target_max) / 2.0, dtype=np.float32)
+        return (target_min + (target_max - target_min) * (arr - t_min) / denom).astype(np.float32)
 
 def build_sector_health_fig(horizon_id: str) -> go.Figure:
     """Build Plotly figure for Sector Health Dashboard (matching NiceGUI 100%)."""
@@ -707,18 +715,22 @@ template = pn.template.FastListTemplate(
 
 # Event Callback for Date Horizon Reactivity
 def update_horizon(event=None):
-    h_id = horizon_selector.value
+    try:
+        h_id = horizon_selector.value
 
-    # 1. Update Markdown Card text
-    note_pane.object = generate_explanatory_markdown(h_id)
+        # 1. Update Markdown Card text
+        note_pane.object = generate_explanatory_markdown(h_id)
 
-    # 2. Update all 6 Plotly Chart panes with newly built Plotly Figures
-    macro_pane.object = build_macro_valuation_fig(h_id)
-    leverage_pane.object = build_leverage_fig(h_id)
-    econometric_pane.object = build_econometric_fig(h_id)
-    sentiment_pane.object = build_sentiment_vol_fig(h_id)
-    sector_pane.object = build_sector_health_fig(h_id)
-    mahalanobis_pane.object = build_mahalanobis_fig(h_id)
+        # 2. Update all 6 Plotly Chart panes with newly built Plotly Figures
+        macro_pane.object = build_macro_valuation_fig(h_id)
+        leverage_pane.object = build_leverage_fig(h_id)
+        econometric_pane.object = build_econometric_fig(h_id)
+        sentiment_pane.object = build_sentiment_vol_fig(h_id)
+        sector_pane.object = build_sector_health_fig(h_id)
+        mahalanobis_pane.object = build_mahalanobis_fig(h_id)
+    except Exception as err:
+        print(f"Error updating horizon: {err}")
+        note_pane.object = f"⚠️ **Error updating horizon data**: {err}"
 
 # Register explicit param.watch listener on horizon_selector
 horizon_selector.param.watch(update_horizon, 'value')

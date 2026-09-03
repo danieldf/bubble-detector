@@ -15,7 +15,8 @@ from bubble_detector.data.ingestor import DataIngestor
 from bubble_detector.features import (
     compute_technical_indicators, compute_macro_valuations,
     compute_margin_leverage_metrics, compute_gsadf_gpt_decomposition,
-    compute_tda_wavelet_complexity, compute_options_volatility_metrics
+    compute_tda_wavelet_complexity, compute_options_volatility_metrics,
+    normalize_tda_indicator
 )
 from bubble_detector.models.structural_breaks import StructuralBreakPredictor
 from bubble_detector.models.regime_mahalanobis import MacroMahalanobisDetector
@@ -195,15 +196,6 @@ def build_sentiment_vol_chart(state: DashboardState) -> go.Figure:
         margin=dict(l=40, r=230, t=60, b=40),
     )
     return fig
-
-def normalize_tda_indicator(tda_array: np.ndarray, target_min: float = 0.8, target_max: float = 7.0) -> np.ndarray:
-    """Dynamically normalize TDA Persistence L2 Norm to target display y-range [target_min, target_max]."""
-    t_min = float(np.nanmin(tda_array))
-    t_max = float(np.nanmax(tda_array))
-    denom = t_max - t_min
-    if denom < 1e-8:
-        return np.full_like(tda_array, (target_min + target_max) / 2.0)
-    return target_min + (target_max - target_min) * (tda_array - t_min) / denom
 
 def build_sector_health_chart(state: DashboardState) -> go.Figure:
     """Build Plotly figure for Sector-Specific Health Dashboard."""
@@ -391,10 +383,14 @@ def create_app():
         refresh_dashboard()
 
     def on_horizon_change(e):
-        new_horizon = e.value
-        ui.notify(f"Switching to {HORIZON_METADATA[new_horizon]['label']}...", type="info")
-        state.load_data(horizon_id=new_horizon)
-        refresh_dashboard()
+        try:
+            new_horizon = e.value
+            ui.notify(f"Switching to {HORIZON_METADATA[new_horizon]['label']}...", type="info")
+            state.load_data(horizon_id=new_horizon)
+            refresh_dashboard()
+        except Exception as err:
+            logger.error(f"Error switching horizon: {err}")
+            ui.notify(f"Failed to load horizon: {err}", type="negative")
 
     def run_diagnostics():
         ui.notify(f"Running diagnostics on {HORIZON_METADATA[state.selected_horizon_id]['label']}...", type="positive")

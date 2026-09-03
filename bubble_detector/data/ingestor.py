@@ -15,10 +15,11 @@ import polars as pl
 import yfinance as yf
 
 from bubble_detector.config import (
-    CACHE_DIR, DEFAULT_END_DATE, DEFAULT_START_DATE,
+    CACHE_DIR,
     SECTOR_TICKERS, SP500_TICKER, VOLATILITY_TICKERS,
     DataFetchError, ValidationError, logger
 )
+from bubble_detector.data.date_horizons import DEFAULT_END_DATE, DEFAULT_START_DATE
 
 class DataIngestor:
     """Handles fetching, preprocessing, Polars downcasting, and Parquet caching of market datasets."""
@@ -65,6 +66,11 @@ class DataIngestor:
         else:
             # Reindex to full business days range from start_date to end_date
             df_raw = df_raw.reindex(df_synth.index)
+            # Forward fill within each asset's active trading lifetime to prevent exchange holidays from taking synthetic values
+            for col in df_raw.columns:
+                first_idx = df_raw[col].first_valid_index()
+                if first_idx is not None:
+                    df_raw.loc[first_idx:, col] = df_raw.loc[first_idx:, col].ffill()
             # Combine exchange data with calibrated historical data for pre-availability periods (e.g. pre-1993 for SPY)
             df_raw = df_raw.combine_first(df_synth).ffill().bfill()
 

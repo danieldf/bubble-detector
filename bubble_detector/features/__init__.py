@@ -5,6 +5,7 @@ from .leverage import compute_margin_leverage_metrics
 from .econometric import compute_gsadf_gpt_decomposition
 from .topology import compute_tda_wavelet_complexity
 from .options_vol import compute_options_volatility_metrics
+from .utils import normalize_tda_indicator, calculate_adf_stat, takens_embedding
 
 __all__ = [
     "compute_technical_indicators",
@@ -13,4 +14,7 @@ __all__ = [
     "compute_gsadf_gpt_decomposition",
     "compute_tda_wavelet_complexity",
     "compute_options_volatility_metrics",
+    "normalize_tda_indicator",
+    "calculate_adf_stat",
+    "takens_embedding",
 ]
