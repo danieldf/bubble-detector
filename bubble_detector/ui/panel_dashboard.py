@@ -478,5 +478,5 @@ app_layout = pn.Column(
     sizing_mode="stretch_both"
 )
 
-if __name__ in {"__main__", "bokeh_app"}:
-    app_layout.servable()
+app_layout.servable()
+
