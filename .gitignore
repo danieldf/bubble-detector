@@ -13,6 +13,7 @@ ENV/
 build/
 dist/
 *.parquet
+!data/provenance/*.parquet
 
 # Testing & Coverage
 .pytest_cache/

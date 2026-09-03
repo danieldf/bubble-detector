@@ -70,6 +70,8 @@ jobs:
           with open('dist/index.html', 'w', encoding='utf-8') as f:
               f.write(content)
           "
+          cp data/provenance/*.parquet dist/ 2>/dev/null || true
+
 
 
 

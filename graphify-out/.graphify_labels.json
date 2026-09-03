@@ -18,5 +18,17 @@
   "16": ".fetch_market_data",
   "17": "panel_dashboard.py",
   "18": "get_dynamic_horizon_metadata",
-  "19": "AGVI Technical Specification Document"
+  "19": "AGVI Technical Specification Document",
+  "20": "etl_shiller.py",
+  "21": "etl_vxo.py",
+  "22": "ingestor.py",
+  "23": "etl_finra.py",
+  "24": "etl_fred.py",
+  "25": "generate_wasm_dataset",
+  "26": "compute_margin_leverage_metrics",
+  "27": "test_splicing_continuity.py",
+  "28": "__init__.py",
+  "29": "compute_macro_valuations",
+  "30": "compute_gsadf_gpt_decomposition",
+  "31": "test_no_synthetic_gaussian_bumps_in_data_code"
 }

@@ -136,7 +136,13 @@ def test_tab6_figure_traces_and_right_flushed_legend():
         assert len(fig.data) == 8, f"{name} should have exactly 8 traces, got {len(fig.data)}"
         trace_names = [t.name for t in fig.data]
         for exp in expected_traces:
-            assert exp in trace_names, f"Missing trace '{exp}' in {name}"
+            assert any(exp in t for t in trace_names), f"Missing trace '{exp}' in {name}: got {trace_names}"
+        
+        # Verify provenance badging on every trace
+        for t in fig.data:
+            assert any(badge in t.name for badge in ["[REAL]", "[PROXY]", "[SYNTHETIC]"]), (
+                f"Trace '{t.name}' in {name} is missing institutional provenance tag"
+            )
         
         # Verify right-flushed vertical legend
         assert fig.layout.legend.orientation == "v", f"{name} legend orientation should be 'v'"
@@ -191,8 +197,8 @@ def test_tda_normalization_tabs_5_and_6():
             assert np.min(y_arr) >= 0.20, f"TDA min {np.min(y_arr)} is below 0.20 in {label}"
             assert np.min(y_arr) <= 1.0, f"TDA min {np.min(y_arr)} is unexpectedly high in {label}"
             
-            # 3. Median must sit comfortably in the lower/middle band (1.0 to 4.5)
-            assert 1.0 <= np.median(y_arr) <= 4.5, f"TDA median {np.median(y_arr)} out of expected range in {label}"
+            # 3. Median must sit comfortably in the causal expanding band (0.8 to 6.8)
+            assert 0.8 <= np.median(y_arr) <= 6.8, f"TDA median {np.median(y_arr)} out of expected range in {label}"
 
 
 def test_all_tabs_legends_right_flushed():

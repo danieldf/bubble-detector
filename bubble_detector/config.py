@@ -11,9 +11,11 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 LOG_DIR = BASE_DIR / "logs"
 CACHE_DIR = BASE_DIR / "data" / "cache"
+PROVENANCE_DIR = BASE_DIR / "data" / "provenance"
 
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
+PROVENANCE_DIR.mkdir(parents=True, exist_ok=True)
 
 # Logger Setup
 LOG_FILE = LOG_DIR / "bubble_detector.log"

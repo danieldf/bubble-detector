@@ -32,6 +32,10 @@ def compute_macro_valuations(df: pl.DataFrame) -> pl.DataFrame:
     else:
         df = df.with_columns(pl.Series("Buffett_Indicator", np.full(len(df), 218.1, dtype=np.float32)))
 
+    # Real Earnings Yield (1 / CAPE)
+    if "Real_Earnings_Yield" not in cols:
+        df = df.with_columns((1.0 / pl.col("Shiller_CAPE")).alias("Real_Earnings_Yield"))
+
     # Historical Z-Scores for CAPE & Buffett Indicator
     cape_mean = 17.0
     cape_std = 6.5

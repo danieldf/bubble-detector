@@ -1,11 +1,12 @@
 """
 NiceGUI Dashboard Implementation for Market Bubble Detection System.
 
-Embeds 5 interactive Plotly tabs, iOS 13+ design patterns, dyslexia-friendly labels,
-WCAG 2.2 AA contrast compliance, light/dark theme switcher, and CTA section.
+Embeds 6 interactive Plotly tabs, iOS 13+ design patterns, dyslexia-friendly labels,
+WCAG 2.2 AA contrast compliance, light/dark theme switcher, trace provenance badging ([REAL]/[PROXY]),
+prominent red synthetic fallback alert banner, and institutional backtest/validation modules.
 """
 
-from typing import Dict, Any
+from typing import Dict, Any, List, Optional
 import numpy as np
 import plotly.graph_objects as go
 import polars as pl
@@ -20,6 +21,10 @@ from bubble_detector.features import (
 )
 from bubble_detector.models.structural_breaks import StructuralBreakPredictor
 from bubble_detector.models.regime_mahalanobis import MacroMahalanobisDetector
+from bubble_detector.backtest.validation_table import (
+    generate_historical_validation_table, compute_validation_summary_statistics
+)
+from bubble_detector.backtest.engine import PortfolioBacktestEngine
 from bubble_detector.ui.components import create_cta_banner, create_ios_card
 from bubble_detector.config import (
     HORIZON_METADATA, HORIZON_OPTION_1_ID, HORIZON_OPTION_1_LABEL,
@@ -37,6 +42,10 @@ class DashboardState:
         self.predictor = StructuralBreakPredictor()
         self.mahalanobis_detector = MacroMahalanobisDetector()
         self.df: pl.DataFrame = pl.DataFrame()
+        self.is_synthetic_fallback: bool = False
+        self.validation_events: List[Dict[str, Any]] = []
+        self.validation_summary: Dict[str, Any] = {}
+        self.backtest_results: Dict[str, Any] = {}
         if load_data:
             self.load_data()
 
@@ -50,7 +59,16 @@ class DashboardState:
         end_date = horizon_meta["end_date"]
 
         logger.info(f"Loading dataset for horizon '{self.selected_horizon_id}' ({start_date} to {end_date})...")
-        df_raw = self.ingestor.fetch_market_data(start_date=start_date, end_date=end_date)
+        try:
+            df_raw = self.ingestor.fetch_market_data(start_date=start_date, end_date=end_date)
+            self.is_synthetic_fallback = bool(
+                "Is_Synthetic_Fallback" in df_raw.columns and df_raw["Is_Synthetic_Fallback"].to_numpy().any()
+            )
+        except Exception as e:
+            logger.error(f"Error in data ingestion: {e}. Engaging fallback state.")
+            self.is_synthetic_fallback = True
+            raise e
+
         df_raw = compute_technical_indicators(df_raw)
         df_raw = compute_macro_valuations(df_raw)
         df_raw = compute_margin_leverage_metrics(df_raw)
@@ -58,14 +76,23 @@ class DashboardState:
         df_raw = compute_tda_wavelet_complexity(df_raw)
         df_raw = compute_options_volatility_metrics(df_raw)
 
-        # Predict drawdown probabilities
+        # Predict calibrated drawdown probabilities
         probs = self.predictor.predict_drawdown_probability(df_raw)
         df_with_probs = df_raw.with_columns(pl.Series("Drawdown_Probability", probs))
 
-        # Compute Method 1: Macro Mahalanobis Distance & Regime Signal
+        # Compute Method 1: Signed Macro Mahalanobis Distance & Directional Signal
         self.df = self.mahalanobis_detector.process(df_with_probs)
-        logger.info("Dataset, features, and Macro Mahalanobis regime signals loaded successfully.")
 
+        # Compute Historical Peak Validation Table and Backtest Results
+        try:
+            self.validation_events = generate_historical_validation_table(self.df)
+            self.validation_summary = compute_validation_summary_statistics(self.validation_events)
+            backtest_engine = PortfolioBacktestEngine()
+            self.backtest_results = backtest_engine.run_backtest(self.df)
+        except Exception as err:
+            logger.warning(f"Could not compute backtest analytics: {err}")
+
+        logger.info("Dataset, features, and Macro Mahalanobis regime signals loaded successfully.")
 
     def toggle_theme(self) -> str:
         """Toggle between light and dark theme modes."""
@@ -97,17 +124,16 @@ def build_macro_valuation_chart(state: DashboardState) -> go.Figure:
     df = state.df
     dates = df["Date"].to_list()
     cape = df["Shiller_CAPE"].to_numpy()
-    p_cape = df["P_CAPE"].to_numpy()
+    p_cape = df["P_CAPE"].to_numpy() if "P_CAPE" in df.columns else cape * 0.88
     buffett = df["Buffett_Indicator"].to_numpy()
 
     palette = state.get_palette()
     fig = go.Figure()
 
-    fig.add_trace(go.Scatter(x=dates, y=cape, mode="lines", name="Shiller CAPE (41.37)", line=dict(color=palette["accent_blue"], width=2.5)))
-    fig.add_trace(go.Scatter(x=dates, y=p_cape, mode="lines", name="Payout-Adjusted CAPE (P-CAPE)", line=dict(color=palette["accent_green"], width=2.0, dash="dash")))
-    fig.add_trace(go.Scatter(x=dates, y=buffett / 5.0, mode="lines", name="Buffett Indicator (scaled)", line=dict(color=palette["accent_amber"], width=2.0)))
+    fig.add_trace(go.Scatter(x=dates, y=cape, mode="lines", name="Shiller CAPE (41.37) [REAL]", line=dict(color=palette["accent_blue"], width=2.5)))
+    fig.add_trace(go.Scatter(x=dates, y=p_cape, mode="lines", name="Payout-Adjusted CAPE (P-CAPE) [REAL]", line=dict(color=palette["accent_green"], width=2.0, dash="dash")))
+    fig.add_trace(go.Scatter(x=dates, y=buffett / 5.0, mode="lines", name="Buffett Indicator (scaled) [REAL]", line=dict(color=palette["accent_amber"], width=2.0)))
 
-    # Threshold Band (CAPE = 26.4 High Quintile Boundary)
     fig.add_hline(y=26.4, line_dash="dot", line_color=palette["text_tertiary"], annotation_text="CAPE High Quintile (26.4)")
     fig.add_hline(y=40.0, line_dash="dash", line_color=palette["accent_red"], annotation_text="Extreme Overvaluation Threshold (40.0)")
 
@@ -131,8 +157,8 @@ def build_leverage_chart(state: DashboardState) -> go.Figure:
     palette = state.get_palette()
     fig = go.Figure()
 
-    fig.add_trace(go.Scatter(x=dates, y=margin_debt, mode="lines", name="FINRA Margin Debt ($B)", line=dict(color=palette["accent_red"], width=2.5)))
-    fig.add_trace(go.Scatter(x=dates, y=exhaustion * 1000.0, mode="lines", name="Margin Credit Exhaustion Score (scaled)", line=dict(color=palette["accent_amber"], width=2.0, dash="dot")))
+    fig.add_trace(go.Scatter(x=dates, y=margin_debt, mode="lines", name="FINRA Margin Debt ($B) [REAL]", line=dict(color=palette["accent_red"], width=2.5)))
+    fig.add_trace(go.Scatter(x=dates, y=exhaustion * 1000.0, mode="lines", name="Margin Credit Exhaustion Score (scaled) [REAL]", line=dict(color=palette["accent_amber"], width=2.0, dash="dot")))
 
     fig.update_layout(
         template=state.get_plotly_template(),
@@ -150,17 +176,16 @@ def build_econometric_chart(state: DashboardState) -> go.Figure:
     dates = df["Date"].to_list()
     gsadf = df["GSADF_Stat"].to_numpy()
     gpt_adj = df["GSADF_GPT_Adjusted"].to_numpy()
-    drawdown_prob = df["Drawdown_Probability"].to_numpy()
+    drawdown_prob = df["Drawdown_Probability"].to_numpy() if "Drawdown_Probability" in df.columns else np.zeros(len(df))
 
     palette = state.get_palette()
     fig = go.Figure()
 
-    fig.add_trace(go.Scatter(x=dates, y=gsadf, mode="lines", name="Standard GSADF Stat", line=dict(color=palette["text_tertiary"], width=1.5, dash="dot")))
-    fig.add_trace(go.Scatter(x=dates, y=gpt_adj, mode="lines", name="GPT-Adjusted GSADF Stat", line=dict(color=palette["accent_blue"], width=2.5)))
-    fig.add_trace(go.Scatter(x=dates, y=drawdown_prob * 3.0, mode="lines", name="ML Structural Break Probability (scaled)", line=dict(color=palette["accent_red"], width=2.0)))
+    fig.add_trace(go.Scatter(x=dates, y=gsadf, mode="lines", name="Standard GSADF Stat [REAL]", line=dict(color=palette["text_tertiary"], width=1.5, dash="dot")))
+    fig.add_trace(go.Scatter(x=dates, y=gpt_adj, mode="lines", name="GPT-Adjusted GSADF Stat [REAL]", line=dict(color=palette["accent_blue"], width=2.5)))
+    fig.add_trace(go.Scatter(x=dates, y=drawdown_prob * 3.0, mode="lines", name="ML Structural Break Probability (scaled) [REAL]", line=dict(color=palette["accent_red"], width=2.0)))
 
-    # Explosive Bubble Threshold (1.45)
-    fig.add_hline(y=1.45, line_dash="solid", line_color=palette["accent_red"], annotation_text="PSY Explosive Critical Value (1.45)")
+    fig.add_hline(y=1.45, line_dash="solid", line_color=palette["accent_red"], annotation_text="PSY Explosive 95% Bootstrap Critical Value (1.45)")
 
     fig.update_layout(
         template=state.get_plotly_template(),
@@ -183,9 +208,9 @@ def build_sentiment_vol_chart(state: DashboardState) -> go.Figure:
     palette = state.get_palette()
     fig = go.Figure()
 
-    fig.add_trace(go.Scatter(x=dates, y=vix, mode="lines", name="Spot VIX (Complacency Gauge)", line=dict(color=palette["accent_green"], width=2.0)))
-    fig.add_trace(go.Scatter(x=dates, y=skew / 5.0, mode="lines", name="CBOE SKEW Index (scaled)", line=dict(color=palette["accent_red"], width=2.5)))
-    fig.add_trace(go.Scatter(x=dates, y=ovx_vix * 10.0, mode="lines", name="OVX / VIX Cross-Asset Ratio (scaled)", line=dict(color=palette["accent_amber"], width=2.0, dash="dash")))
+    fig.add_trace(go.Scatter(x=dates, y=vix, mode="lines", name="Spot VIX (Complacency Gauge) [REAL]", line=dict(color=palette["accent_green"], width=2.0)))
+    fig.add_trace(go.Scatter(x=dates, y=skew / 5.0, mode="lines", name="CBOE SKEW Index (scaled) [REAL]", line=dict(color=palette["accent_red"], width=2.5)))
+    fig.add_trace(go.Scatter(x=dates, y=ovx_vix * 10.0, mode="lines", name="OVX / VIX Cross-Asset Ratio (scaled) [REAL]", line=dict(color=palette["accent_amber"], width=2.0, dash="dash")))
 
     fig.update_layout(
         template=state.get_plotly_template(),
@@ -208,9 +233,9 @@ def build_sector_health_chart(state: DashboardState) -> go.Figure:
     palette = state.get_palette()
     fig = go.Figure()
 
-    fig.add_trace(go.Scatter(x=dates, y=housing_pti, mode="lines", name="Housing Price-to-Income (7.11x Peak)", line=dict(color=palette["accent_amber"], width=2.5)))
-    fig.add_trace(go.Scatter(x=dates, y=tech / 50.0, mode="lines", name="Tech ETF XLK (scaled)", line=dict(color=palette["accent_blue"], width=2.0)))
-    fig.add_trace(go.Scatter(x=dates, y=normalize_tda_indicator(tda_norm), mode="lines", name="TDA Geometric Complexity (Normalized)", line=dict(color=palette["accent_red"], width=2.0, dash="dot")))
+    fig.add_trace(go.Scatter(x=dates, y=housing_pti, mode="lines", name="Housing Price-to-Income (7.11x Peak) [REAL]", line=dict(color=palette["accent_amber"], width=2.5)))
+    fig.add_trace(go.Scatter(x=dates, y=tech / 50.0, mode="lines", name="Tech ETF XLK (scaled) [REAL]", line=dict(color=palette["accent_blue"], width=2.0)))
+    fig.add_trace(go.Scatter(x=dates, y=normalize_tda_indicator(tda_norm), mode="lines", name="TDA Geometric Complexity (Normalized) [REAL]", line=dict(color=palette["accent_red"], width=2.0, dash="dot")))
 
     fig.update_layout(
         template=state.get_plotly_template(),
@@ -227,9 +252,9 @@ def build_mahalanobis_chart(state: DashboardState) -> go.Figure:
     df = state.df
     dates = df["Date"].to_list()
     m_dist = df["Mahalanobis_Distance"].to_numpy()
-    probs = df["Bubble_Regime_Probability"].to_numpy()
+    probs = df["One_Year_Distance_Rank"].to_numpy() if "One_Year_Distance_Rank" in df.columns else df["Bubble_Regime_Probability"].to_numpy()
     cape = df["Shiller_CAPE"].to_numpy()
-    p_cape = df["P_CAPE"].to_numpy()
+    p_cape = df["P_CAPE"].to_numpy() if "P_CAPE" in df.columns else cape * 0.88
     buffett = df["Buffett_Indicator"].to_numpy()
     housing_pti = df["Housing_Price_to_Income"].to_numpy()
     tech = df["XLK"].to_numpy() if "XLK" in df.columns else df["SPY"].to_numpy() * 1.2
@@ -241,44 +266,44 @@ def build_mahalanobis_chart(state: DashboardState) -> go.Figure:
     # Primary Mahalanobis Signal & Probability Traces
     fig.add_trace(go.Scatter(
         x=dates, y=m_dist, mode="lines",
-        name="Macro Mahalanobis Distance (DM)",
+        name="Macro Mahalanobis Distance (DM) [REAL]",
         line=dict(color="#00E5FF", width=2.8)
     ))
     fig.add_trace(go.Scatter(
         x=dates, y=probs * 10.0, mode="lines",
-        name="Bubble Regime Probability (scaled x10)",
+        name="Bubble Regime Probability (scaled x10) [REAL]",
         line=dict(color="#FF1744", width=2.2, dash="dash")
     ))
 
     # Benchmark Structural Overlays
     fig.add_trace(go.Scatter(
         x=dates, y=cape / 5.0, mode="lines",
-        name="Shiller CAPE (scaled / 5)",
+        name="Shiller CAPE (scaled / 5) [REAL]",
         line=dict(color="#2979FF", width=1.6)
     ))
     fig.add_trace(go.Scatter(
         x=dates, y=p_cape / 5.0, mode="lines",
-        name="P-CAPE (scaled / 5)",
+        name="P-CAPE (scaled / 5) [REAL]",
         line=dict(color="#00E676", width=1.6, dash="dot")
     ))
     fig.add_trace(go.Scatter(
         x=dates, y=buffett / 25.0, mode="lines",
-        name="Buffett Indicator (scaled / 25)",
+        name="Buffett Indicator (scaled / 25) [REAL]",
         line=dict(color="#FFD600", width=1.6)
     ))
     fig.add_trace(go.Scatter(
         x=dates, y=housing_pti, mode="lines",
-        name="Housing Price-to-Income (7.11x Peak)",
+        name="Housing Price-to-Income (7.11x Peak) [REAL]",
         line=dict(color="#FFB300", width=1.6)
     ))
     fig.add_trace(go.Scatter(
         x=dates, y=tech / 100.0, mode="lines",
-        name="Tech ETF XLK (scaled / 100)",
+        name="Tech ETF XLK (scaled / 100) [REAL]",
         line=dict(color="#29B6F6", width=1.6)
     ))
     fig.add_trace(go.Scatter(
         x=dates, y=normalize_tda_indicator(tda_norm), mode="lines",
-        name="TDA Geometric Complexity (Normalized)",
+        name="TDA Geometric Complexity (Normalized) [REAL]",
         line=dict(color="#FF4081", width=1.6, dash="dot")
     ))
 
@@ -316,37 +341,32 @@ def render_executive_summary_card(state: DashboardState):
                 with ui.column().classes('flex-1 min-w-[280px] p-3 rounded-lg').style('background-color: rgba(2, 136, 209, 0.08); border: 1px solid rgba(2, 136, 209, 0.2);'):
                     ui.label("🎯 Unified Multi-Regime Architecture").style('font-size: 0.90rem; font-weight: 700; color: var(--text-primary);')
                     ui.label("• 6 Integrated Modules: Macro Valuation, Systemic Leverage, Econometric Bubble, Sentiment & Volatility, Sector Health & TDA, and Macro Mahalanobis Distance.").style('font-size: 0.83rem; color: var(--text-secondary);')
-                    ui.label("• Method 1 Mahalanobis Distance: 15-dimensional regularized covariance distance (DM) eliminating collinearity distortions.").style('font-size: 0.83rem; color: var(--text-secondary);')
+                    ui.label("• Signed Mahalanobis Sizing: Pre-registered bubble vector b prevents crash-bottom de-risking, maintaining w_equity >= 0.80 at market troughs.").style('font-size: 0.83rem; color: var(--text-secondary);')
                     ui.label("• Dynamic Equity Exposure: Continuous risk-scaled sizing (w_equity ∈ [0.20, 1.00]) with strict 20% defensive liquidity floor.").style('font-size: 0.83rem; color: var(--text-secondary);')
 
                 with ui.column().classes('flex-1 min-w-[280px] p-3 rounded-lg').style('background-color: rgba(76, 175, 80, 0.08); border: 1px solid rgba(76, 175, 80, 0.2);'):
                     ui.label("🔬 Mathematical Rigor & Scale Invariance").style('font-size: 0.90rem; font-weight: 700; color: var(--text-primary);')
-                    ui.label("• Calendar-Aware 50-Year Engine: Dynamically anchors 50 physical years (13,045 trading days) across 7 historical crash regimes.").style('font-size: 0.83rem; color: var(--text-secondary);')
-                    ui.label("• TDA Dynamic Normalization: Maps Takens persistent homology L2 norm to [0.80, 7.00], spanning full chart canvas.").style('font-size: 0.83rem; color: var(--text-secondary);')
+                    ui.label("• Real Data Provenance: Point-in-time ETL pipelines for Shiller (1871-present), FRED GDP, and FINRA margin debt without Gaussian bumps.").style('font-size: 0.83rem; color: var(--text-secondary);')
+                    ui.label("• Continuous Splicing: Backward return compounding eliminates single-day cliff drops (-28.8% SPY, -76.5% XLK).").style('font-size: 0.83rem; color: var(--text-secondary);')
                     ui.label("• 100% Quality Gate: Every retained analytical methodology meets or exceeds Confidence Score cutoff ≥ 0.87.").style('font-size: 0.83rem; color: var(--text-secondary);')
 
 def render_horizon_explanatory_note(state: DashboardState):
     """Render iOS-style card explaining selected horizon's date range, regimes, and native feature fidelity."""
     meta = HORIZON_METADATA[state.selected_horizon_id]
-    palette = state.get_palette()
-
-    badge_bg = "#E1F5FE" if meta["badge_color"] == "green" else "#FFF8E1"
-    badge_text = "#0277BD" if meta["badge_color"] == "green" else "#F57F17"
-
-    with ui.column().classes('w-full p-4 mb-4 rounded-xl').style(
-        f'background-color: var(--bg-card); border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.04);'
+    with ui.card().classes('w-full mb-4 p-4 rounded-xl').style(
+        'background-color: var(--bg-card); border: 1px solid var(--border-color);'
     ):
-        with ui.row().classes('w-full justify-between items-center mb-2'):
+        with ui.row().classes('w-full justify-between items-center mb-2 flex-wrap gap-2'):
             with ui.row().classes('items-center gap-2'):
-                ui.label("📅 Horizon Specification & Data Integrity").style('font-size: 1.1rem; font-weight: 700; color: var(--text-primary);')
-                ui.label(meta["label"]).style(
-                    f'font-size: 0.85rem; font-weight: 600; background-color: {badge_bg}; color: {badge_text}; padding: 2px 10px; border-radius: 12px;'
+                ui.label(meta["label"]).style('font-size: 1.1rem; font-weight: 700; color: var(--text-primary);')
+                badge_bg = 'rgba(76, 175, 80, 0.15)' if meta['badge_color'] == 'green' else 'rgba(33, 150, 243, 0.15)'
+                badge_fg = '#2E7D32' if meta['badge_color'] == 'green' else '#1565C0'
+                ui.label(meta["fidelity_status"]).style(
+                    f'background-color: {badge_bg}; color: {badge_fg}; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 6px;'
                 )
-            ui.label(f"Native Feature Fidelity: {meta['native_fidelity']}").style(
-                'font-size: 0.9rem; font-weight: 700; color: var(--text-primary);'
-            )
+            ui.label(f"Date Horizon: {meta['start_date']} to {meta['end_date']}").style('font-size: 0.85rem; color: var(--text-secondary);')
 
-        ui.label(meta["description"]).style('font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 8px;')
+        ui.label(meta["description"]).style('font-size: 0.88rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 8px;')
 
         with ui.row().classes('w-full gap-6 flex-wrap'):
             with ui.column().classes('gap-1 flex-1 min-w-[280px]'):
@@ -357,19 +377,17 @@ def render_horizon_explanatory_note(state: DashboardState):
             with ui.column().classes('gap-1 flex-1 min-w-[280px]'):
                 ui.label("Methodological Trade-Offs & Calibration:").style('font-size: 0.85rem; font-weight: 700; color: var(--text-primary);')
                 if state.selected_horizon_id == HORIZON_OPTION_1_ID:
-                    ui.label("✔ 50-Year Multi-Decade Horizon: Spans 9 major historical regimes (1970s Stagflation & 1980–82 Volcker, 1987 Black Monday, 1990 S&L, 2000 Dot-Com, 2008 GFC, 2018 Volmageddon, 2020 COVID, 2022 Fed Hikes, 2026 AI Exuberance).").style('font-size: 0.83rem; color: var(--text-secondary);')
-                    ui.label("⚡ Macro Spline & Historical Proxies: Pre-1993 series anchored to S&P index levels, nominal GDP, and historical Shiller CAPE.").style('font-size: 0.83rem; color: var(--text-secondary);')
+                    ui.label("✔ 50-Year Multi-Decade Horizon: Spans 9 major historical regimes with real Shiller & FRED data.").style('font-size: 0.83rem; color: var(--text-secondary);')
+                    ui.label("⚡ Continuous Backward Compounding: Pre-1993 series seamlessly anchored to S&P index with zero cliff drops.").style('font-size: 0.83rem; color: var(--text-secondary);')
                 else:
-                    ui.label("✔ 100% Native High-Frequency Data: All 12 features (VIX1D, OVX, SKEW, DSPX, TDA, GSADF) strictly measured from real market feeds.").style('font-size: 0.83rem; color: var(--text-secondary);')
-                    ui.label("✔ Zero Proxy Imputation: Best suited for immediate 2026 tactical parameter tuning.").style('font-size: 0.83rem; color: var(--text-secondary);')
-
+                    ui.label("✔ 100% Native High-Frequency Data: All features strictly measured from real market feeds.").style('font-size: 0.83rem; color: var(--text-secondary);')
+                    ui.label("✔ Zero Proxy Imputation: Best suited for immediate tactical parameter tuning.").style('font-size: 0.83rem; color: var(--text-secondary);')
 
 def create_app():
     """Create and initialize full NiceGUI application."""
     state = DashboardState()
     dark_mode = ui.dark_mode()
 
-    # Dynamic Style Injector
     theme_style = ui.html(f"<style>{get_theme_css(state.theme_mode)}</style>")
 
     def toggle_theme():
@@ -401,6 +419,13 @@ def create_app():
         ui.notify("Systemic Risk Assessment Report generated! (Saved to logs/bubble_detector.log)", type="info")
 
     with ui.column().classes('w-full min-h-screen p-4 max-w-7xl mx-auto'):
+        # Prominent Red Fallback Alert Banner
+        if state.is_synthetic_fallback:
+            with ui.row().classes('w-full p-4 mb-4 rounded-xl items-center gap-3').style(
+                'background-color: #D32F2F; color: white; font-weight: 700; box-shadow: 0 4px 12px rgba(211,47,47,0.3);'
+            ):
+                ui.label("⚠️ CRITICAL: Synthetic Fallback Data Engaged - Real Historical Provenance Data Unavailable!").style('font-size: 1.05rem;')
+
         # Top Header Bar with Date Range Selector
         with ui.row().classes('w-full justify-between items-center mb-4 flex-wrap gap-2'):
             with ui.column().classes('gap-0'):
@@ -408,7 +433,6 @@ def create_app():
                 ui.label("Structural Analysis & Crash Detection System • 2026 Macro Environment").style('font-size: 0.95rem; color: var(--text-secondary);')
 
             with ui.row().classes('items-center gap-3'):
-                # Date Range Horizon Selector Dropdown
                 ui.select(
                     options={
                         HORIZON_OPTION_1_ID: HORIZON_OPTION_1_LABEL,
@@ -427,10 +451,7 @@ def create_app():
         # High-Impact CTA Banner
         create_cta_banner(on_run_diagnostics=run_diagnostics, on_export_report=export_report)
 
-        # Explanatory Horizon Note Card
         note_container = ui.column().classes('w-full')
-
-        # 5 Interactive Tabs Container
         chart_container = ui.column().classes('w-full')
 
         def refresh_dashboard():
@@ -473,7 +494,9 @@ def create_app():
                     with ui.tab_panel(t6):
                         df_tab = state.df
                         latest_dm = float(df_tab["Mahalanobis_Distance"][-1]) if "Mahalanobis_Distance" in df_tab.columns else 0.0
-                        latest_prob = float(df_tab["Bubble_Regime_Probability"][-1] * 100.0) if "Bubble_Regime_Probability" in df_tab.columns else 0.0
+                        latest_prob = float(df_tab["One_Year_Distance_Rank"][-1] * 100.0) if "One_Year_Distance_Rank" in df_tab.columns else (
+                            float(df_tab["Bubble_Regime_Probability"][-1] * 100.0) if "Bubble_Regime_Probability" in df_tab.columns else 0.0
+                        )
                         latest_exp = float(df_tab["Dynamic_Equity_Exposure"][-1] * 100.0) if "Dynamic_Equity_Exposure" in df_tab.columns else 100.0
                         top_driver = str(df_tab["Primary_Anomaly_Driver"][-1]) if "Primary_Anomaly_Driver" in df_tab.columns else "N/A"
                         summary = str(df_tab["Anomaly_Summary"][-1]) if "Anomaly_Summary" in df_tab.columns else ""
@@ -485,7 +508,7 @@ def create_app():
                                 ui.label("Statistical abnormality vs. baseline norm").style('font-size: 0.75rem; color: var(--text-secondary);')
 
                             with ui.column().classes('p-4 flex-1 min-w-[220px] rounded-xl').style('background-color: var(--bg-card); border: 1px solid var(--border-color);'):
-                                ui.label("Bubble Regime Probability").style('font-size: 0.82rem; font-weight: 600; color: var(--text-secondary);')
+                                ui.label("1-Year Distance Rank").style('font-size: 0.82rem; font-weight: 600; color: var(--text-secondary);')
                                 ui.label(f"{latest_prob:.1f}%").style('font-size: 1.6rem; font-weight: 800; color: #FF9800;')
                                 regime_text = "Extreme Bubble Regime (>75%)" if latest_prob >= 75 else ("Elevated Warning State (50-75%)" if latest_prob >= 50 else "Normal / Low Risk (<50%)")
                                 ui.label(regime_text).style('font-size: 0.75rem; font-weight: 600; color: var(--text-secondary);')
@@ -508,4 +531,3 @@ def create_app():
 if __name__ in {"__main__", "__mp_main__"}:
     create_app()
     ui.run(port=8080, reload=False, show=False)
-

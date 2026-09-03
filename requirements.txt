@@ -19,6 +19,10 @@ pandas>=2.1.0
 # YFinance: Ingestion interface for real-time and historical exchange market data
 yfinance>=0.2.35
 
+# Excel parsing backends for authentic provenance data ETL (Shiller ie_data.xls & FINRA margin statistics)
+openpyxl>=3.1.0
+xlrd>=2.0.0
+
 # -----------------------------------------------------------------------------
 # 2. Numerical Computing, Scientific Algorithms & Quantitative Machine Learning
 # -----------------------------------------------------------------------------
@@ -36,6 +40,9 @@ xgboost>=2.0.0
 
 # TA: Specialized technical analysis library for financial indicators and momentum
 ta>=0.11.0
+
+# Ripser: Fast computation of Vietoris-Rips persistent homology
+ripser>=0.6.4
 
 # -----------------------------------------------------------------------------
 # 3. Interactive Web Dashboards & UI Visualization Runtimes

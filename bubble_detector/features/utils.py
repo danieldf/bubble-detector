@@ -54,18 +54,28 @@ def normalize_tda_indicator(
     target_max: float = 7.0
 ) -> np.ndarray:
     """
-    Linearly rescale raw TDA Persistence Landscape L2 Norm to span [target_min, target_max]
-    (default: [0.8, 7.0]) matching the vertical y-range of Tabs 5 and 6.
-    Ensures that structural topological spikes reach the upper bounds without obscuring baselines.
+    Causally rescale raw TDA Persistence Landscape L2 Norm to span [target_min, target_max]
+    (default: [0.8, 7.0]) using strictly expanding-window historical bounds.
+    Eradicates full-sample 50-year forward lookahead bias.
     """
     arr = np.asarray(tda_array, dtype=np.float64)
-    min_val = np.nanmin(arr)
-    max_val = np.nanmax(arr)
-    span = max_val - min_val
+    n = len(arr)
+    if n == 0:
+        return np.array([], dtype=np.float32)
 
-    if span < 1e-6:
-        # Avoid division by zero if flat
-        return np.full_like(arr, (target_min + target_max) / 2.0, dtype=np.float32)
+    # Strictly causal expanding-window bounds
+    exp_min = np.minimum.accumulate(arr)
+    exp_max = np.maximum.accumulate(arr)
+    exp_span = exp_max - exp_min
 
-    scaled = target_min + (arr - min_val) / span * (target_max - target_min)
+    scaled = np.zeros(n, dtype=np.float64)
+    # Warm-up default anchor for early points before variation establishes
+    for i in range(n):
+        span_i = exp_span[i]
+        if span_i < 1e-6:
+            scaled[i] = (target_min + target_max) / 2.0
+        else:
+            scaled[i] = target_min + (arr[i] - exp_min[i]) / span_i * (target_max - target_min)
+
+    scaled = np.clip(scaled, 0.20, target_max)
     return np.nan_to_num(scaled, nan=target_min).astype(np.float32)

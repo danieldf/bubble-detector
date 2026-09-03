@@ -18,5 +18,10 @@
   "16": ".fetch_market_data",
   "17": "panel_dashboard.py",
   "18": "get_dynamic_horizon_metadata",
-  "19": "AGVI Technical Specification Document"
+  "19": "AGVI Technical Specification Document",
+  "20": "etl_shiller.py",
+  "21": "etl_vxo.py",
+  "22": "ingestor.py",
+  "23": "etl_finra.py",
+  "24": "etl_fred.py"
 }
