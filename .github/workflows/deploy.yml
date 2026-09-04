@@ -39,10 +39,11 @@ jobs:
       - name: Convert Panel Dashboard to WebAssembly (Ultra-Fast Pyodide Engine)
         run: |
           mkdir -p dist
-          PYTHONPATH=. panel convert bubble_detector/ui/panel_dashboard.py --to pyodide --requirements panel bokeh plotly numpy --out dist/
+          WASM_BUILD_PACKAGING=1 PYTHONPATH=. panel convert bubble_detector/ui/panel_dashboard.py --to pyodide --requirements panel bokeh plotly numpy --out dist/
           mv dist/panel_dashboard.html dist/index.html
           cp data/provenance/*.parquet dist/ 2>/dev/null || true
           cp data/provenance/*.json dist/ 2>/dev/null || true
+          cp sw.js dist/ 2>/dev/null || true
           python bubble_detector/ui/postprocess_wasm.py
 
 

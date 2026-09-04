@@ -36,6 +36,7 @@ requirements, zero cloud API fees, and zero remote data transmission.
 """
 
 import datetime
+import os
 import sys
 from pathlib import Path
 from typing import Dict, Any, Tuple, Optional, Union
@@ -61,7 +62,8 @@ try:
         HORIZON_OPTION_1_ID, HORIZON_OPTION_2_ID,
         get_dynamic_horizon_metadata
     )
-    from bubble_detector.features.utils import normalize_tda_indicator
+    from bubble_detector.features.utils import normalize_tda_indicator, lttb_downsample
+    from bubble_detector.ui_theme import DARK_THEME
     from bubble_detector.config import BASE_DIR, CACHE_DIR, PROVENANCE_DIR, logger
 except ImportError:
     import logging
@@ -183,6 +185,71 @@ except ImportError:
                 scaled[i] = target_min + (arr[i] - exp_min[i]) / span_i * (target_max - target_min)
         scaled = np.clip(scaled, 0.20, target_max)
         return np.nan_to_num(scaled, nan=target_min).astype(np.float32)
+
+    DARK_THEME = {
+        "bg_system": "#000000",
+        "bg_card": "#1C1C1E",
+        "bg_card_secondary": "#2C2C2E",
+        "text_primary": "#F2F2F7",
+        "text_secondary": "#EBEBF5",
+        "text_tertiary": "#AEAEC0",
+        "accent_blue": "#409CFF",
+        "accent_red": "#FF453A",
+        "accent_green": "#32D74B",
+        "accent_amber": "#FFD60A",
+        "border_color": "#38383A",
+        "card_shadow": "0 4px 14px rgba(0, 0, 0, 0.4)",
+        "plotly_template": "plotly_dark",
+    }
+
+    def lttb_downsample(dates, values, target_points=1000):
+        n = len(dates)
+        y = np.asarray(values, dtype=np.float64)
+        if n <= target_points or target_points < 3 or n != len(y):
+            return [str(d)[:10] for d in dates], y
+
+        x = np.linspace(0.0, 1.0, n, dtype=np.float64)
+        y_clean = np.nan_to_num(y, nan=0.0)
+
+        sampled_indices = [0]
+        bucket_size = (n - 2) / (target_points - 2)
+
+        a_idx = 0
+        for b in range(target_points - 2):
+            start = int(np.floor(b * bucket_size)) + 1
+            end = int(np.floor((b + 1) * bucket_size)) + 1
+            end = min(end, n - 1)
+            if start >= end:
+                start = max(1, end - 1)
+
+            if b < target_points - 3:
+                next_start = int(np.floor((b + 1) * bucket_size)) + 1
+                next_end = int(np.floor((b + 2) * bucket_size)) + 1
+                next_end = min(next_end, n - 1)
+                if next_start >= next_end:
+                    next_start = max(1, next_end - 1)
+                avg_x = np.mean(x[next_start:next_end])
+                avg_y = np.mean(y_clean[next_start:next_end])
+            else:
+                avg_x = x[n - 1]
+                avg_y = y_clean[n - 1]
+
+            x_a = x[a_idx]
+            y_a = y_clean[a_idx]
+
+            cand_x = x[start:end]
+            cand_y = y_clean[start:end]
+            areas = 0.5 * np.abs((x_a - avg_x) * (cand_y - y_a) - (x_a - cand_x) * (avg_y - y_a))
+            areas = np.nan_to_num(areas, nan=-1.0)
+
+            best_offset = int(np.argmax(areas))
+            best_idx = start + best_offset
+            sampled_indices.append(best_idx)
+            a_idx = best_idx
+
+        sampled_indices.append(n - 1)
+        return [str(dates[i])[:10] for i in sampled_indices], y[sampled_indices]
+
 
 _dyn_start_50, _dyn_end = get_dynamic_50yr_date_range()
 HORIZON_OPTION_1_LABEL = f"Option 1: 50-Year Multi-Decade Horizon ({_dyn_start_50[:4]}–{_dyn_end[:4]})"
@@ -457,13 +524,46 @@ _DATASET_CACHE: Dict[str, Dict[str, Any]] = {}
 def fetch_dataset(horizon_id: str):
     if horizon_id in _DATASET_CACHE:
         return _DATASET_CACHE[horizon_id]
+
+    # Lazy-load Option 2 JSON dataset only upon user selection when running in Pyodide
+    if horizon_id == HORIZON_OPTION_2_ID and ("pyodide" in sys.modules or "panel.io.pyodide" in sys.modules):
+        try:
+            import js
+            if not Path("market_data_modern.json").exists():
+                js.eval("""
+                    (async () => {
+                        try {
+                            let r = await fetch('market_data_modern.json');
+                            if (r.ok) {
+                                let t = await r.text();
+                                pyodide.FS.writeFile('market_data_modern.json', t);
+                                console.log('Lazy-loaded Option 2 dataset: market_data_modern.json');
+                            }
+                        } catch(e) { console.warn('Lazy-load failed for market_data_modern.json', e); }
+                    })()
+                """)
+        except Exception:
+            pass
+
     meta = HORIZON_METADATA[horizon_id]
     data = generate_wasm_dataset(meta["start_date"], meta["end_date"])
     _DATASET_CACHE[horizon_id] = data
     return data
 
-def get_right_flushed_legend() -> dict:
-    """Return standard right-flushed vertical legend configuration for Panel WASM."""
+def get_right_flushed_legend(is_mobile: bool = False) -> dict:
+    """Return standard legend configuration for Panel WASM (desktop right-flushed vs mobile bottom-horizontal)."""
+    if is_mobile:
+        return dict(
+            orientation="h",
+            yanchor="top",
+            y=-0.25,
+            xanchor="left",
+            x=0.0,
+            bgcolor="rgba(15, 23, 42, 0.85)",
+            bordercolor="rgba(100, 116, 139, 0.4)",
+            borderwidth=1,
+            font=dict(size=10)
+        )
     return dict(
         orientation="v",
         yanchor="top",
@@ -476,7 +576,23 @@ def get_right_flushed_legend() -> dict:
         font=dict(size=10)
     )
 
-def build_macro_valuation_fig(horizon_id: str) -> go.Figure:
+def get_figure_margin(is_mobile: bool = False) -> dict:
+    """Return responsive figure margins."""
+    if is_mobile:
+        return dict(l=40, r=40, t=60, b=80)
+    return dict(l=40, r=230, t=60, b=40)
+
+PLOTLY_TEMPLATE = None if os.environ.get("WASM_BUILD_PACKAGING") == "1" else "plotly_dark"
+
+def _prepare_trace(dates, values, target_points: int = 1000) -> Tuple[list, np.ndarray]:
+    """Decimate time series via pure NumPy LTTB, or take compact 5-point proxy during WASM_BUILD_PACKAGING."""
+    if os.environ.get("WASM_BUILD_PACKAGING") == "1":
+        d = list(dates)[:5]
+        v = np.asarray(values, dtype=np.float64)[:5]
+        return d, v
+    return lttb_downsample(dates, values, target_points=target_points)
+
+def build_macro_valuation_fig(horizon_id: str, is_mobile: bool = False) -> go.Figure:
     """Build Plotly figure for Macro Valuation Dashboard (matching NiceGUI 100%)."""
     data = fetch_dataset(horizon_id)
     dates = data["Date"]
@@ -485,24 +601,27 @@ def build_macro_valuation_fig(horizon_id: str) -> go.Figure:
     buffett = data["Buffett_Indicator"]
 
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=dates, y=cape, mode="lines", name="Shiller CAPE (41.37) [REAL]", line=dict(color="#0288D1", width=2.5)))
-    fig.add_trace(go.Scatter(x=dates, y=p_cape, mode="lines", name="Payout-Adjusted CAPE (P-CAPE) [REAL]", line=dict(color="#388E3C", width=2.0, dash="dash")))
-    fig.add_trace(go.Scatter(x=dates, y=buffett / 5.0, mode="lines", name="Buffett Indicator (scaled) [REAL]", line=dict(color="#F57C00", width=2.0)))
+    d_cape, v_cape = _prepare_trace(dates, cape)
+    fig.add_trace(go.Scatter(x=d_cape, y=v_cape, mode="lines", name="Shiller CAPE (41.37) [REAL]", line=dict(color="#0288D1", width=2.5)))
+    d_pcape, v_pcape = _prepare_trace(dates, p_cape)
+    fig.add_trace(go.Scatter(x=d_pcape, y=v_pcape, mode="lines", name="Payout-Adjusted CAPE (P-CAPE) [REAL]", line=dict(color="#4CAF50", width=2.0, dash="dash")))
+    d_buff, v_buff = _prepare_trace(dates, buffett / 5.0)
+    fig.add_trace(go.Scatter(x=d_buff, y=v_buff, mode="lines", name="Buffett Indicator (scaled) [REAL]", line=dict(color="#F57C00", width=2.0)))
 
-    fig.add_hline(y=26.4, line_dash="dot", line_color="#757575", annotation_text="CAPE High Quintile (26.4)", annotation_font_color="#E0E0E0")
-    fig.add_hline(y=40.0, line_dash="dash", line_color="#D32F2F", annotation_text="Extreme Overvaluation Threshold (40.0)", annotation_font_color="#E0E0E0")
+    fig.add_hline(y=26.4, line_dash="dot", line_color="#B0B0B0", annotation_text="CAPE High Quintile (26.4)", annotation_font_color="#E0E0E0")
+    fig.add_hline(y=40.0, line_dash="dash", line_color="#FF5252", annotation_text="Extreme Overvaluation Threshold (40.0)", annotation_font_color="#E0E0E0")
 
     fig.update_layout(
-        template="plotly_dark",
+        template=PLOTLY_TEMPLATE,
         title="Macro Valuation Anchors: Shiller CAPE, P-CAPE & Buffett Indicator",
         xaxis_title="Date",
         yaxis_title="Valuation Multiple / Indicator Score",
-        legend=get_right_flushed_legend(),
-        margin=dict(l=40, r=230, t=60, b=40)
+        legend=get_right_flushed_legend(is_mobile),
+        margin=get_figure_margin(is_mobile)
     )
     return fig
 
-def build_leverage_fig(horizon_id: str) -> go.Figure:
+def build_leverage_fig(horizon_id: str, is_mobile: bool = False) -> go.Figure:
     """Build Plotly figure for Systemic Leverage Dashboard (matching NiceGUI 100%)."""
     data = fetch_dataset(horizon_id)
     dates = data["Date"]
@@ -510,20 +629,22 @@ def build_leverage_fig(horizon_id: str) -> go.Figure:
     exhaustion = data["Margin_Exhaustion_Score"]
 
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=dates, y=margin_debt, mode="lines", name="FINRA Margin Debt ($B) [REAL]", line=dict(color="#D32F2F", width=2.5)))
-    fig.add_trace(go.Scatter(x=dates, y=exhaustion * 1000.0, mode="lines", name="Margin Credit Exhaustion Score (scaled) [REAL]", line=dict(color="#F57C00", width=2.0, dash="dot")))
+    d_debt, v_debt = _prepare_trace(dates, margin_debt)
+    fig.add_trace(go.Scatter(x=d_debt, y=v_debt, mode="lines", name="FINRA Margin Debt ($B) [REAL]", line=dict(color="#FF5252", width=2.5)))
+    d_exh, v_exh = _prepare_trace(dates, exhaustion * 1000.0)
+    fig.add_trace(go.Scatter(x=d_exh, y=v_exh, mode="lines", name="Margin Credit Exhaustion Score (scaled) [REAL]", line=dict(color="#F57C00", width=2.0, dash="dot")))
 
     fig.update_layout(
-        template="plotly_dark",
+        template=PLOTLY_TEMPLATE,
         title="Systemic Leverage: FINRA Margin Debt Velocity & Capacity Exhaustion",
         xaxis_title="Date",
         yaxis_title="Margin Debt ($ Billion)",
-        legend=get_right_flushed_legend(),
-        margin=dict(l=40, r=230, t=60, b=40)
+        legend=get_right_flushed_legend(is_mobile),
+        margin=get_figure_margin(is_mobile)
     )
     return fig
 
-def build_econometric_fig(horizon_id: str) -> go.Figure:
+def build_econometric_fig(horizon_id: str, is_mobile: bool = False) -> go.Figure:
     """Build Plotly figure for Econometric Bubble Dashboard (matching NiceGUI 100%)."""
     data = fetch_dataset(horizon_id)
     dates = data["Date"]
@@ -532,23 +653,26 @@ def build_econometric_fig(horizon_id: str) -> go.Figure:
     drawdown_prob = data["Drawdown_Probability"] if "Drawdown_Probability" in data else np.zeros(len(dates))
 
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=dates, y=gsadf, mode="lines", name="Standard GSADF Stat [REAL]", line=dict(color="#757575", width=1.5, dash="dot")))
-    fig.add_trace(go.Scatter(x=dates, y=gpt_adj, mode="lines", name="GPT-Adjusted GSADF Stat [REAL]", line=dict(color="#0288D1", width=2.5)))
-    fig.add_trace(go.Scatter(x=dates, y=drawdown_prob * 3.0, mode="lines", name="ML Structural Break Probability (scaled) [REAL]", line=dict(color="#D32F2F", width=2.0)))
+    d_gsadf, v_gsadf = _prepare_trace(dates, gsadf)
+    fig.add_trace(go.Scatter(x=d_gsadf, y=v_gsadf, mode="lines", name="Standard GSADF Stat [REAL]", line=dict(color="#B0B0B0", width=1.5, dash="dot")))
+    d_gpt, v_gpt = _prepare_trace(dates, gpt_adj)
+    fig.add_trace(go.Scatter(x=d_gpt, y=v_gpt, mode="lines", name="GPT-Adjusted GSADF Stat [REAL]", line=dict(color="#0288D1", width=2.5)))
+    d_dd, v_dd = _prepare_trace(dates, drawdown_prob * 3.0)
+    fig.add_trace(go.Scatter(x=d_dd, y=v_dd, mode="lines", name="ML Structural Break Probability (scaled) [REAL]", line=dict(color="#FF5252", width=2.0)))
 
-    fig.add_hline(y=1.45, line_dash="solid", line_color="#D32F2F", annotation_text="PSY Explosive Critical Value (1.45)", annotation_font_color="#E0E0E0")
+    fig.add_hline(y=1.45, line_dash="solid", line_color="#FF5252", annotation_text="PSY Explosive Critical Value (1.45)", annotation_font_color="#E0E0E0")
 
     fig.update_layout(
-        template="plotly_dark",
+        template=PLOTLY_TEMPLATE,
         title="Econometric Bubble Detection: GSADF t-Stat & GPT Fundamental Decomposition",
         xaxis_title="Date",
         yaxis_title="t-Statistic / Explosive Signal",
-        legend=get_right_flushed_legend(),
-        margin=dict(l=40, r=230, t=60, b=40)
+        legend=get_right_flushed_legend(is_mobile),
+        margin=get_figure_margin(is_mobile)
     )
     return fig
 
-def build_sentiment_vol_fig(horizon_id: str) -> go.Figure:
+def build_sentiment_vol_fig(horizon_id: str, is_mobile: bool = False) -> go.Figure:
     """Build Plotly figure for Sentiment & Volatility Dashboard (matching NiceGUI 100%)."""
     data = fetch_dataset(horizon_id)
     dates = data["Date"]
@@ -557,44 +681,50 @@ def build_sentiment_vol_fig(horizon_id: str) -> go.Figure:
     ovx_vix = data["OVX_VIX_CrossAsset_Ratio"]
 
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=dates, y=vix, mode="lines", name="Spot VIX (Complacency Gauge) [REAL]", line=dict(color="#388E3C", width=2.0)))
-    fig.add_trace(go.Scatter(x=dates, y=skew / 5.0, mode="lines", name="CBOE SKEW Index (scaled) [REAL]", line=dict(color="#D32F2F", width=2.5)))
-    fig.add_trace(go.Scatter(x=dates, y=ovx_vix * 10.0, mode="lines", name="OVX / VIX Cross-Asset Ratio (scaled) [REAL]", line=dict(color="#F57C00", width=2.0, dash="dash")))
+    d_vix, v_vix = _prepare_trace(dates, vix)
+    fig.add_trace(go.Scatter(x=d_vix, y=v_vix, mode="lines", name="Spot VIX (Complacency Gauge) [REAL]", line=dict(color="#4CAF50", width=2.0)))
+    d_skew, v_skew = _prepare_trace(dates, skew / 5.0)
+    fig.add_trace(go.Scatter(x=d_skew, y=v_skew, mode="lines", name="CBOE SKEW Index (scaled) [REAL]", line=dict(color="#FF5252", width=2.5)))
+    d_ovx, v_ovx = _prepare_trace(dates, ovx_vix * 10.0)
+    fig.add_trace(go.Scatter(x=d_ovx, y=v_ovx, mode="lines", name="OVX / VIX Cross-Asset Ratio (scaled) [REAL]", line=dict(color="#F57C00", width=2.0, dash="dash")))
 
     fig.update_layout(
-        template="plotly_dark",
+        template=PLOTLY_TEMPLATE,
         title="Options Market Sentiment: VIX Suppressed Spot vs SKEW Tail-Risk Divergence",
         xaxis_title="Date",
         yaxis_title="Index Level / Ratio",
-        legend=get_right_flushed_legend(),
-        margin=dict(l=40, r=230, t=60, b=40)
+        legend=get_right_flushed_legend(is_mobile),
+        margin=get_figure_margin(is_mobile)
     )
     return fig
 
-def build_sector_health_fig(horizon_id: str) -> go.Figure:
+def build_sector_health_fig(horizon_id: str, is_mobile: bool = False) -> go.Figure:
     """Build Plotly figure for Sector Health Dashboard (matching NiceGUI 100%)."""
     data = fetch_dataset(horizon_id)
     dates = data["Date"]
     housing_pti = data["Housing_Price_to_Income"]
     tech = data["XLK"]
-    tda_norm = data["TDA_Persistence_L2_Norm"]
+    tda_norm = normalize_tda_indicator(data["TDA_Persistence_L2_Norm"])
 
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=dates, y=housing_pti, mode="lines", name="Housing Price-to-Income (7.11x Peak) [REAL]", line=dict(color="#F57C00", width=2.5)))
-    fig.add_trace(go.Scatter(x=dates, y=tech / 50.0, mode="lines", name="Tech ETF XLK (scaled) [REAL]", line=dict(color="#0288D1", width=2.0)))
-    fig.add_trace(go.Scatter(x=dates, y=normalize_tda_indicator(tda_norm), mode="lines", name="TDA Geometric Complexity (Normalized) [REAL]", line=dict(color="#D32F2F", width=2.0, dash="dot")))
+    d_h, v_h = _prepare_trace(dates, housing_pti)
+    fig.add_trace(go.Scatter(x=d_h, y=v_h, mode="lines", name="Housing Price-to-Income (7.11x Peak) [REAL]", line=dict(color="#F57C00", width=2.5)))
+    d_tech, v_tech = _prepare_trace(dates, tech / 50.0)
+    fig.add_trace(go.Scatter(x=d_tech, y=v_tech, mode="lines", name="Tech ETF XLK (scaled) [REAL]", line=dict(color="#0288D1", width=2.0)))
+    d_tda, v_tda = _prepare_trace(dates, tda_norm)
+    fig.add_trace(go.Scatter(x=d_tda, y=v_tda, mode="lines", name="TDA Geometric Complexity (Normalized) [REAL]", line=dict(color="#FF5252", width=2.0, dash="dot")))
 
     fig.update_layout(
-        template="plotly_dark",
+        template=PLOTLY_TEMPLATE,
         title="Sector Health & Topological Complexity: Housing Affordability & Tech CapEx",
         xaxis_title="Date",
         yaxis_title="Ratio / Valuation Level",
-        legend=get_right_flushed_legend(),
-        margin=dict(l=40, r=230, t=60, b=40)
+        legend=get_right_flushed_legend(is_mobile),
+        margin=get_figure_margin(is_mobile)
     )
     return fig
 
-def build_mahalanobis_fig(horizon_id: str) -> go.Figure:
+def build_mahalanobis_fig(horizon_id: str, is_mobile: bool = False) -> go.Figure:
     """Build Plotly figure for Macro Mahalanobis Distance Dashboard (matching NiceGUI 100%)."""
     data = fetch_dataset(horizon_id)
     dates = data["Date"]
@@ -605,62 +735,70 @@ def build_mahalanobis_fig(horizon_id: str) -> go.Figure:
     buffett = data["Buffett_Indicator"]
     housing_pti = data["Housing_Price_to_Income"]
     tech = data["XLK"]
-    tda_norm = data["TDA_Persistence_L2_Norm"]
+    tda_norm = normalize_tda_indicator(data["TDA_Persistence_L2_Norm"])
 
     fig = go.Figure()
+    d_md, v_md = _prepare_trace(dates, m_dist)
     fig.add_trace(go.Scatter(
-        x=dates, y=m_dist, mode="lines",
+        x=d_md, y=v_md, mode="lines",
         name="Macro Mahalanobis Distance (DM) [REAL]",
         line=dict(color="#00E5FF", width=3.0)
     ))
+    d_pr, v_pr = _prepare_trace(dates, probs * 10.0)
     fig.add_trace(go.Scatter(
-        x=dates, y=probs * 10.0, mode="lines",
+        x=d_pr, y=v_pr, mode="lines",
         name="Bubble Regime Probability (scaled x10) [REAL]",
         line=dict(color="#FF1744", width=2.2, dash="dash")
     ))
+    d_c, v_c = _prepare_trace(dates, cape / 5.0)
     fig.add_trace(go.Scatter(
-        x=dates, y=cape / 5.0, mode="lines",
+        x=d_c, y=v_c, mode="lines",
         name="Shiller CAPE (scaled / 5) [REAL]",
         line=dict(color="#2979FF", width=1.6)
     ))
+    d_pc, v_pc = _prepare_trace(dates, p_cape / 5.0)
     fig.add_trace(go.Scatter(
-        x=dates, y=p_cape / 5.0, mode="lines",
+        x=d_pc, y=v_pc, mode="lines",
         name="P-CAPE (scaled / 5) [REAL]",
         line=dict(color="#00E676", width=1.6, dash="dot")
     ))
+    d_b, v_b = _prepare_trace(dates, buffett / 25.0)
     fig.add_trace(go.Scatter(
-        x=dates, y=buffett / 25.0, mode="lines",
+        x=d_b, y=v_b, mode="lines",
         name="Buffett Indicator (scaled / 25) [REAL]",
         line=dict(color="#FFD600", width=1.6)
     ))
+    d_hp, v_hp = _prepare_trace(dates, housing_pti)
     fig.add_trace(go.Scatter(
-        x=dates, y=housing_pti, mode="lines",
+        x=d_hp, y=v_hp, mode="lines",
         name="Housing Price-to-Income (7.11x Peak) [REAL]",
         line=dict(color="#FFB300", width=1.6)
     ))
+    d_tk, v_tk = _prepare_trace(dates, tech / 100.0)
     fig.add_trace(go.Scatter(
-        x=dates, y=tech / 100.0, mode="lines",
+        x=d_tk, y=v_tk, mode="lines",
         name="Tech ETF XLK (scaled / 100) [REAL]",
         line=dict(color="#29B6F6", width=1.6)
     ))
+    d_tda, v_tda = _prepare_trace(dates, tda_norm)
     fig.add_trace(go.Scatter(
-        x=dates, y=normalize_tda_indicator(tda_norm), mode="lines",
+        x=d_tda, y=v_tda, mode="lines",
         name="TDA Geometric Complexity (Normalized) [REAL]",
         line=dict(color="#FF4081", width=1.6, dash="dot")
     ))
 
     fig.add_hline(y=3.8, line_dash="dot", line_color="#4CAF50", annotation_text="Historical Norm Baseline (3.8σ)", annotation_position="top left", annotation_font_color="#E0E0E0")
     fig.add_hline(y=5.0, line_dash="dashdot", line_color="#FF9800", annotation_text="Warning Threshold (5.0σ)", annotation_position="top left", annotation_font_color="#E0E0E0")
-    fig.add_hline(y=6.2, line_dash="dash", line_color="#D32F2F", annotation_text="Extreme Crisis Regime (6.2σ)", annotation_position="top left", annotation_font_color="#E0E0E0")
+    fig.add_hline(y=6.2, line_dash="dash", line_color="#FF5252", annotation_text="Extreme Crisis Regime (6.2σ)", annotation_position="top left", annotation_font_color="#E0E0E0")
 
     fig.update_layout(
-        template="plotly_dark",
+        template=PLOTLY_TEMPLATE,
         title="Macro Mahalanobis Distance & Multi-Dimensional Regime Signals vs. Key Valuation Benchmarks",
         xaxis_title="Date",
         yaxis_title="Statistical Distance (σ) / Scaled Multiple",
         yaxis=dict(rangemode="tozero"),
-        legend=get_right_flushed_legend(),
-        margin=dict(l=40, r=230, t=60, b=40)
+        legend=get_right_flushed_legend(is_mobile),
+        margin=get_figure_margin(is_mobile)
     )
     return fig
 
@@ -735,9 +873,9 @@ _init_prob = float(_init_data["One_Year_Distance_Rank"][-1] * 100.0) if "One_Yea
 _init_exposure = float(_init_data["Dynamic_Equity_Exposure"][-1] * 100.0)
 _init_driver = str(_init_data.get("Primary_Anomaly_Driver", ["N/A"])[-1])
 
-metric_dm = pn.indicators.Number(label="Mahalanobis Distance (DM)", value=_init_dm, format="{value:.2f} σ", colors=[(5.0, "green"), (6.2, "gold"), (12.0, "red")])
-metric_prob = pn.indicators.Number(label="1-Year Distance Rank", value=_init_prob, format="{value:.1f}%", colors=[(50.0, "green"), (75.0, "gold"), (100.0, "red")])
-metric_exposure = pn.indicators.Number(label="Dynamic Equity Allocation", value=_init_exposure, format="{value:.1f}%", colors=[(30.0, "red"), (60.0, "gold"), (100.0, "green")])
+metric_dm = pn.indicators.Number(label="Mahalanobis Distance (DM)", value=_init_dm, format="{value:.2f} σ", colors=[(5.0, "#32D74B"), (6.2, "#FFD60A"), (12.0, "#FF453A")])
+metric_prob = pn.indicators.Number(label="1-Year Distance Rank", value=_init_prob, format="{value:.1f}%", colors=[(50.0, "#32D74B"), (75.0, "#FFD60A"), (100.0, "#FF453A")])
+metric_exposure = pn.indicators.Number(label="Dynamic Equity Allocation", value=_init_exposure, format="{value:.1f}%", colors=[(30.0, "#FF453A"), (60.0, "#FFD60A"), (100.0, "#32D74B")])
 metric_driver = pn.indicators.String(label="Primary Anomaly Driver", value=_init_driver)
 
 red_fallback_banner = pn.pane.Alert(

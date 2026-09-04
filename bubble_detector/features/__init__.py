@@ -52,7 +52,7 @@ from .leverage import compute_margin_leverage_metrics
 from .econometric import compute_gsadf_gpt_decomposition
 from .topology import compute_tda_wavelet_complexity
 from .options_vol import compute_options_volatility_metrics
-from .utils import normalize_tda_indicator, calculate_adf_stat, takens_embedding
+from .utils import normalize_tda_indicator, calculate_adf_stat, takens_embedding, lttb_downsample
 
 # Canonical aliases for agent accessibility and backward compatibility
 from . import leverage as margin_leverage
@@ -69,6 +69,7 @@ __all__ = [
     "normalize_tda_indicator",
     "calculate_adf_stat",
     "takens_embedding",
+    "lttb_downsample",
     "margin_leverage",
     "options_volatility",
     "technical",
