@@ -1,38 +1,8 @@
 """
 Panel (HoloViz) Enterprise WebAssembly Dashboard for Market Bubble Detection.
 =============================================================================
-
-WebAssembly & Client-Side Pyodide Architecture:
------------------------------------------------
-This module implements the browser-executable WebAssembly (WASM) dashboard powered by
-HoloViz Panel, Bokeh, and Plotly under the Pyodide CPython-in-WASM runtime.
-It runs completely client-side inside the user's web browser with zero server-side daemon
-requirements, zero cloud API fees, and zero remote data transmission.
-
-1. High-Performance Virtual Memory Filesystem (MEMFS):
-   During build packaging (`panel convert --to pyodide-worker`), institutional Parquet datasets
-   and JSON payloads are staged into the browser's in-memory virtual filesystem (`/memfs/` or Emscripten FS).
-   `panel_dashboard.py` detects whether it is running under native CPython or Pyodide WASM,
-   dynamically routing dataset I/O between local disk and virtual memory buffers.
-
-2. Dual-Engine Numerical Parity Guarantee:
-   Every econometric indicator, scaling formula, and visual chart in this Panel WASM runtime
-   matches the NiceGUI server dashboard with 100% numerical parity:
-   - Identical 15-indicator Signed Mahalanobis distance formulation and directional projections.
-   - Identical Bubenik persistence landscape L2 norms and Morlet wavelet complexity scores.
-   - Identical right-flushed legend layouts (`x=1.02, xanchor='left'`) preventing line overlap.
-
-3. Reactive Dynamic Horizon State Management:
-   Features reactive multi-horizon switching between:
-   - Option 1 (Rolling 50-Year Multi-Decade Horizon, 1976–2026): 9 historical stress regimes.
-   - Option 2 (Modern 5-Regime Horizon, 2015–present): 100% native exchange-traded assets.
-   Toggling the horizon selector re-renders all 6 interactive analytical tabs without page reloads.
-
-4. Institutional Provenance Badging & Auditability:
-   All visual traces carry explicit provenance tags:
-   - [REAL]: Primary exchange trades or audited regulatory filings.
-   - [PROXY]: Continuous backward-compounded series.
-   - [SYNTHETIC]: Explicitly flagged fallback series with persistent visual warning banners.
+Runs completely client-side in browser under Pyodide runtime with zero server daemons.
+Maintains 100% numerical parity with NiceGUI server analytics and WCAG 2.2 AA compliance.
 """
 
 import datetime
@@ -63,7 +33,6 @@ try:
         get_dynamic_horizon_metadata
     )
     from bubble_detector.features.utils import normalize_tda_indicator, lttb_downsample
-    from bubble_detector.ui_theme import DARK_THEME
     from bubble_detector.config import BASE_DIR, CACHE_DIR, PROVENANCE_DIR, logger
 except ImportError:
     import logging
@@ -111,17 +80,6 @@ except ImportError:
                 "regimes_count": 9,
                 "native_fidelity": "~92%",
                 "fidelity_status": "50-Year Multi-Decade Historical Spectrum [REAL + CONTINUOUS PROXY]",
-                "badge_color": "green",
-                "audit_status": "Institutional Audit Passed: Zero Gaussian Bumps, Zero Splicing Cliffs",
-                "provenance_breakdown": {
-                    "SP500": "1993–present [REAL] (SPY ETF), 1976–1993 [PROXY] (Continuous Backward Compounding via ^GSPC)",
-                    "Tech_XLK": "1998–present [REAL] (XLK ETF), 1976–1998 [PROXY] (Continuous Backward Compounding via Tech Index)",
-                    "VIX": "1990–present [REAL] (^VIX), 1986–1990 [REAL] (Authentic CBOE ^VXO)",
-                    "Shiller_CAPE": "1871–present [REAL] (Point-in-time Shiller ie_data)",
-                    "GDP": "1950–present [REAL] (FRED GDP with 60d publication lag)",
-                    "Margin_Debt": "1959–present [REAL] (FINRA/NYSE with 21d publication lag)",
-                    "Housing_PTI": "1975–present [REAL] (Case-Shiller CSUSHPINSA / Income with 60d lag)"
-                },
                 "included_crashes": [
                     "1970s Stagflation & 1980–1982 Volcker Rate Shock (20% Fed Funds Rate)",
                     "1987 Black Monday Crash (-20.5% single-day drawdown)",
@@ -142,17 +100,6 @@ except ImportError:
                 "regimes_count": 5,
                 "native_fidelity": "100%",
                 "fidelity_status": "Native High-Fidelity Coverage [100% REAL]",
-                "badge_color": "blue",
-                "audit_status": "Institutional Audit Passed: 100% Native Exchange Traded Data",
-                "provenance_breakdown": {
-                    "SP500": "2015–present [REAL] (SPY ETF)",
-                    "Tech_XLK": "2015–present [REAL] (XLK ETF)",
-                    "VIX": "2015–present [REAL] (^VIX)",
-                    "Shiller_CAPE": "2015–present [REAL] (Point-in-time Shiller ie_data)",
-                    "GDP": "2015–present [REAL] (FRED GDP)",
-                    "Margin_Debt": "2015–present [REAL] (FINRA Margin Debt)",
-                    "Housing_PTI": "2015–present [REAL] (Case-Shiller CSUSHPINSA / Income)"
-                },
                 "included_crashes": [
                     "2018 Volmageddon & Q4 QT Compression",
                     "2020 COVID-19 Flash Crash (VIX 82.7 Spike)",
@@ -164,48 +111,27 @@ except ImportError:
             }
         }
 
-    def normalize_tda_indicator(
-        tda_array: np.ndarray,
-        target_min: float = 0.8,
-        target_max: float = 7.0
-    ) -> np.ndarray:
+    def normalize_tda_indicator(tda_array: np.ndarray, target_min: float = 0.8, target_max: float = 7.0) -> np.ndarray:
         arr = np.asarray(tda_array, dtype=np.float64)
-        n = len(arr)
-        if n == 0:
+        if len(arr) == 0:
             return np.array([], dtype=np.float32)
-        exp_min = np.minimum.accumulate(arr)
-        exp_max = np.maximum.accumulate(arr)
+        exp_min, exp_max = np.minimum.accumulate(arr), np.maximum.accumulate(arr)
         exp_span = exp_max - exp_min
-        scaled = np.zeros(n, dtype=np.float64)
-        for i in range(n):
-            span_i = exp_span[i]
-            if span_i < 1e-6:
-                scaled[i] = (target_min + target_max) / 2.0
-            else:
-                scaled[i] = target_min + (arr[i] - exp_min[i]) / span_i * (target_max - target_min)
-        scaled = np.clip(scaled, 0.20, target_max)
-        return np.nan_to_num(scaled, nan=target_min).astype(np.float32)
+        scaled = np.where(exp_span < 1e-6, (target_min + target_max) / 2.0, target_min + (arr - exp_min) / np.maximum(exp_span, 1e-6) * (target_max - target_min))
+        return np.nan_to_num(np.clip(scaled, 0.20, target_max), nan=target_min).astype(np.float32)
 
-    DARK_THEME = {
-        "bg_system": "#000000",
-        "bg_card": "#1C1C1E",
-        "bg_card_secondary": "#2C2C2E",
-        "text_primary": "#F2F2F7",
-        "text_secondary": "#EBEBF5",
-        "text_tertiary": "#AEAEC0",
-        "accent_blue": "#409CFF",
-        "accent_red": "#FF453A",
-        "accent_green": "#32D74B",
-        "accent_amber": "#FFD60A",
-        "border_color": "#38383A",
-        "card_shadow": "0 4px 14px rgba(0, 0, 0, 0.4)",
-        "plotly_template": "plotly_dark",
-    }
+
 
     def lttb_downsample(dates, values, target_points=1000):
         n = len(dates)
         y = np.asarray(values, dtype=np.float64)
-        if n <= target_points or target_points < 3 or n != len(y):
+        if n == 0:
+            return [], np.array([], dtype=np.float64)
+        if target_points <= 2:
+            if n == 1:
+                return [str(dates[0])[:10]], np.array([y[0]], dtype=np.float64)
+            return [str(dates[0])[:10], str(dates[-1])[:10]], np.array([y[0], y[-1]], dtype=np.float64)
+        if n <= target_points or n != len(y):
             return [str(d)[:10] for d in dates], y
 
         x = np.linspace(0.0, 1.0, n, dtype=np.float64)
@@ -285,71 +211,10 @@ CORE_WASM_COLUMNS = [
 _IS_SYNTHETIC_FALLBACK_ACTIVE = False
 
 def precompile_wasm_parquet_datasets():
-    """
-    Pre-compile production Parquet and lightweight clean JSON datasets for
-    client-side WebAssembly virtual filesystem loading.
-    Serializes to data/provenance/, build/, and dist/ directories.
-    """
-    import json
-    from bubble_detector.data.ingestor import DataIngestor
-    from bubble_detector.features import (
-        compute_technical_indicators, compute_macro_valuations,
-        compute_margin_leverage_metrics, compute_gsadf_gpt_decomposition,
-        compute_tda_wavelet_complexity, compute_options_volatility_metrics
-    )
-    from bubble_detector.models.structural_breaks import StructuralBreakPredictor
-    from bubble_detector.models.regime_mahalanobis import MacroMahalanobisDetector
+    """Pre-compile production Parquet and lightweight clean JSON datasets for WebAssembly."""
+    import stage_provenance
+    return stage_provenance.precompile_wasm_parquet_datasets()
 
-    build_dir = BASE_DIR / "build"
-    dist_dir = BASE_DIR / "dist"
-    build_dir.mkdir(parents=True, exist_ok=True)
-    dist_dir.mkdir(parents=True, exist_ok=True)
-    PROVENANCE_DIR.mkdir(parents=True, exist_ok=True)
-    ingestor = DataIngestor()
-
-    for horizon_id in [HORIZON_OPTION_1_ID, HORIZON_OPTION_2_ID]:
-        meta = HORIZON_METADATA[horizon_id]
-        s_dt, e_dt = meta["start_date"], meta["end_date"]
-        df = ingestor.fetch_market_data(start_date=s_dt, end_date=e_dt)
-        df = compute_technical_indicators(df)
-        df = compute_macro_valuations(df)
-        df = compute_margin_leverage_metrics(df)
-        df = compute_gsadf_gpt_decomposition(df)
-        df = compute_tda_wavelet_complexity(df)
-        df = compute_options_volatility_metrics(df)
-
-        predictor = StructuralBreakPredictor()
-        probs = predictor.predict_drawdown_probability(df)
-        import polars as pl
-        df = df.with_columns(pl.Series("Drawdown_Probability", probs))
-
-        detector = MacroMahalanobisDetector()
-        df = detector.process(df)
-
-        out_name_parquet = "market_data_50yr.parquet" if horizon_id == HORIZON_OPTION_1_ID else "market_data_modern.parquet"
-        out_name_json = "market_data_50yr.json" if horizon_id == HORIZON_OPTION_1_ID else "market_data_modern.json"
-
-        # Write Parquet artifacts
-        for target_dir in [build_dir, PROVENANCE_DIR, dist_dir]:
-            df.write_parquet(target_dir / out_name_parquet)
-
-        # Build clean, lightweight JSON table for MEMFS pre-loading (21 core columns)
-        target_cols = [c for c in CORE_WASM_COLUMNS if c in df.columns]
-        json_dict = {}
-        for col in target_cols:
-            if col == "Date":
-                json_dict["Date"] = [str(d)[:10] for d in df["Date"].to_list()]
-            elif col == "Primary_Anomaly_Driver" or df[col].dtype in (pl.Utf8, pl.String):
-                json_dict[col] = df[col].to_list()
-            else:
-                vals = df[col].to_list()
-                json_dict[col] = [round(float(v), 5) if (v is not None and not np.isnan(v)) else 0.0 for v in vals]
-
-        for target_dir in [build_dir, PROVENANCE_DIR, dist_dir]:
-            with open(target_dir / out_name_json, "w", encoding="utf-8") as f:
-                json.dump(json_dict, f)
-
-        logger.info(f"Pre-compiled WASM Parquet and JSON datasets: {out_name_parquet}, {out_name_json}")
 
 def generate_wasm_dataset(start_date: str, end_date: str) -> Dict[str, Any]:
     """
@@ -525,29 +390,31 @@ def fetch_dataset(horizon_id: str):
     if horizon_id in _DATASET_CACHE:
         return _DATASET_CACHE[horizon_id]
 
-    # Lazy-load Option 2 JSON dataset only upon user selection when running in Pyodide
+    # Lazy-load Option 2 JSON dataset synchronously into Pyodide MEMFS only upon user selection
     if horizon_id == HORIZON_OPTION_2_ID and ("pyodide" in sys.modules or "panel.io.pyodide" in sys.modules):
         try:
             import js
             if not Path("market_data_modern.json").exists():
                 js.eval("""
-                    (async () => {
-                        try {
-                            let r = await fetch('market_data_modern.json');
-                            if (r.ok) {
-                                let t = await r.text();
-                                pyodide.FS.writeFile('market_data_modern.json', t);
-                                console.log('Lazy-loaded Option 2 dataset: market_data_modern.json');
-                            }
-                        } catch(e) { console.warn('Lazy-load failed for market_data_modern.json', e); }
-                    })()
+                    try {
+                        let xhr = new XMLHttpRequest();
+                        xhr.open('GET', 'market_data_modern.json', false);
+                        xhr.send(null);
+                        if (xhr.status === 200 || xhr.status === 0) {
+                            pyodide.FS.writeFile('market_data_modern.json', xhr.responseText);
+                            console.log('Synchronously lazy-loaded Option 2 dataset: market_data_modern.json');
+                        }
+                    } catch (e) {
+                        console.warn('Synchronous lazy-load failed for market_data_modern.json:', e);
+                    }
                 """)
         except Exception:
             pass
 
     meta = HORIZON_METADATA[horizon_id]
     data = generate_wasm_dataset(meta["start_date"], meta["end_date"])
-    _DATASET_CACHE[horizon_id] = data
+    if not _IS_SYNTHETIC_FALLBACK_ACTIVE:
+        _DATASET_CACHE[horizon_id] = data
     return data
 
 def get_right_flushed_legend(is_mobile: bool = False) -> dict:
@@ -585,12 +452,13 @@ def get_figure_margin(is_mobile: bool = False) -> dict:
 PLOTLY_TEMPLATE = None if os.environ.get("WASM_BUILD_PACKAGING") == "1" else "plotly_dark"
 
 def _prepare_trace(dates, values, target_points: int = 1000) -> Tuple[list, np.ndarray]:
-    """Decimate time series via pure NumPy LTTB, or take compact 5-point proxy during WASM_BUILD_PACKAGING."""
+    """Decimate time series via pure NumPy LTTB, or take compact 2-point proxy during WASM_BUILD_PACKAGING."""
     if os.environ.get("WASM_BUILD_PACKAGING") == "1":
-        d = list(dates)[:5]
-        v = np.asarray(values, dtype=np.float64)[:5]
+        d = list(dates)[:2]
+        v = np.asarray(values, dtype=np.float64)[:2]
         return d, v
     return lttb_downsample(dates, values, target_points=target_points)
+
 
 def build_macro_valuation_fig(horizon_id: str, is_mobile: bool = False) -> go.Figure:
     """Build Plotly figure for Macro Valuation Dashboard (matching NiceGUI 100%)."""
@@ -832,7 +700,7 @@ def generate_explanatory_markdown(horizon_id: str) -> str:
     return f"""
 ### {ICON_CALENDAR} Horizon Specification & Data Integrity: {meta['label']}
 **Native Feature Fidelity:** <span style="color:#0288D1; font-weight:bold;">{meta['native_fidelity']} ({meta['fidelity_status']})</span>  
-*Time Bounds:* `{meta['start_date']}` to `{meta['end_date']}` ({meta['regimes_count']} Historical Regimes)
+*Time Bounds:* <code>{meta['start_date']}</code> to <code>{meta['end_date']}</code> ({meta['regimes_count']} Historical Regimes)
 
 {meta['description']}
 
@@ -902,6 +770,21 @@ def update_all_charts(horizon_id: str):
     metric_prob.value = p_val
     metric_exposure.value = float(data["Dynamic_Equity_Exposure"][-1] * 100.0)
     metric_driver.value = str(data.get("Primary_Anomaly_Driver", ["N/A"])[-1])
+
+    # Dispatch screen reader announcement to W3C ARIA live region
+    try:
+        import js
+        lbl = HORIZON_METADATA[horizon_id]["label"]
+        dm_curr = metric_dm.value
+        eq_curr = metric_exposure.value
+        ann_msg = f"Loaded {lbl}. Macro Mahalanobis Distance is {dm_curr:.2f} sigma. Dynamic equity allocation is {eq_curr:.1f}%."
+        escaped_ann = ann_msg.replace("'", "\\'")
+        js.eval(f"""
+            const announcer = document.getElementById('a11y-status-announcer');
+            if (announcer) {{ announcer.textContent = '{escaped_ann}'; }}
+        """)
+    except Exception:
+        pass
 
 horizon_selector.param.watch(lambda event: update_all_charts(event.new), 'value')
 

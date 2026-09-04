@@ -278,59 +278,12 @@ def test_template_and_cards_reconstruction():
     assert len(template.sidebar) >= 3
     assert len(template.main) >= 6
 
+from bubble_detector.ui.postprocess_wasm import postprocess_wasm_content
+
 def apply_postprocessing(html_content: str) -> str:
-    """Helper implementing the exact GitHub Actions deployment postprocessing."""
-    content = re.sub(r'\'https://cdn\.holoviz\.org/panel/wheels/bokeh-[^\']+\.whl\'', '\'bokeh\'', html_content)
-    content = re.sub(r'\'https://cdn\.holoviz\.org/panel/[^\']+/panel-[^\']+\.whl\'', '\'panel\'', content)
-    content = re.sub(r'\\+U0001([0-9a-fA-F]{4})', lambda m: chr(int('0001' + m.group(1), 16)), content)
-    content = re.sub(r'U0001([0-9a-fA-F]{4})', lambda m: chr(int('0001' + m.group(1), 16)), content)
+    """Helper delegating to the production WebAssembly postprocessing engine."""
+    return postprocess_wasm_content(html_content)
 
-    replacements = {
-        'U0001f3db': '🏛️',
-        '\\U0001f3db': '🏛️',
-        'U0001f3af': '🎯',
-        '\\U0001f3af': '🎯',
-        'U0001f52c': '🔬',
-        '\\U0001f52c': '🔬',
-        'U0001f4c5': '📅',
-        '\\U0001f4c5': '📅',
-        'U0001f4c9': '📉',
-        '\\U0001f4c9': '📉',
-        'U0001f680': '🚀',
-        '\\U0001f680': '🚀',
-        'U0001f319': '🌙',
-        '\\U0001f319': '🌙',
-        'U0001f917': '🤗',
-        '\\U0001f917': '🤗',
-    }
-    for k, v in replacements.items():
-        content = content.replace(k, v)
-
-    preloader_and_error_boundary = '''
-      for (const ds of ['market_data_50yr.json', 'market_data_modern.json']) {
-        try {
-          let r = await fetch(ds);
-          if (r.ok) {
-            let t = await r.text();
-            pyodide.FS.writeFile(ds, t);
-            console.log('Pre-loaded MEMFS dataset: ' + ds);
-          }
-        } catch(e) { console.warn('Could not pre-load ' + ds, e); }
-      }
-      try {
-        await pyodide.runPythonAsync(code);
-      } catch (err) {
-        document.body.classList.remove('pn-loading');
-        let el = document.createElement('div');
-        el.style.cssText = 'margin: 2rem; padding: 1.5rem; background: #2A1515; border: 1px solid #FF5252; color: #FFF; border-radius: 8px; font-family: monospace; white-space: pre-wrap;';
-        el.innerHTML = '<h3>⚠️ WebAssembly Initialization Error</h3><p>' + err + '</p>';
-        document.body.prepend(el);
-      }'''
-
-    if 'WebAssembly Initialization Error' not in content:
-        content = re.sub(r'await\s+pyodide\.runPythonAsync\(code\);?', preloader_and_error_boundary, content)
-
-    return content
 
 def test_dist_index_html_postprocessing_idempotence():
     """Verify that postprocessing is completely idempotent and never creates nested try/catch blocks."""

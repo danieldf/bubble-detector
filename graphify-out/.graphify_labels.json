@@ -44,5 +44,6 @@
   "42": "test_wasm_full_script_pyodide_execution",
   "43": "test_wasm_full_script_pure_numpy_fallback_execution",
   "44": "test_template_and_cards_reconstruction",
-  "45": "test_dist_index_html_on_disk"
+  "45": "test_dist_index_html_on_disk",
+  "46": "precompile_wasm_parquet_datasets"
 }

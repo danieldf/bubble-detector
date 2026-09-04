@@ -100,7 +100,11 @@ self.addEventListener('fetch', (event) => {
         })
         .catch(() => {
           return caches.match(request).then((cached) => {
-            return cached || caches.match('index.html') || caches.match('./');
+            if (cached) return cached;
+            return caches.match('index.html').then((indexCached) => {
+              if (indexCached) return indexCached;
+              return caches.match('./');
+            });
           });
         })
     );

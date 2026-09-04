@@ -26,7 +26,76 @@ from bubble_detector.data.etl_shiller import ShillerETL
 from bubble_detector.data.etl_fred import FredETL
 from bubble_detector.data.etl_finra import FinraETL
 from bubble_detector.data.etl_vxo import VxoETL
-from bubble_detector.ui.panel_dashboard import precompile_wasm_parquet_datasets, CORE_WASM_COLUMNS
+from bubble_detector.ui.panel_dashboard import CORE_WASM_COLUMNS, HORIZON_OPTION_1_ID, HORIZON_OPTION_2_ID, HORIZON_METADATA
+
+def precompile_wasm_parquet_datasets():
+    """
+    Pre-compile production Parquet and lightweight clean JSON datasets for
+    client-side WebAssembly virtual filesystem loading.
+    Serializes to data/provenance/, build/, and dist/ directories.
+    """
+    import json
+    import numpy as np
+    import polars as pl
+    from bubble_detector.data.ingestor import DataIngestor
+    from bubble_detector.features import (
+        compute_technical_indicators, compute_macro_valuations,
+        compute_margin_leverage_metrics, compute_gsadf_gpt_decomposition,
+        compute_tda_wavelet_complexity, compute_options_volatility_metrics
+    )
+    from bubble_detector.models.structural_breaks import StructuralBreakPredictor
+    from bubble_detector.models.regime_mahalanobis import MacroMahalanobisDetector
+
+    build_dir = BASE_DIR / "build"
+    dist_dir = BASE_DIR / "dist"
+    build_dir.mkdir(parents=True, exist_ok=True)
+    dist_dir.mkdir(parents=True, exist_ok=True)
+    PROVENANCE_DIR.mkdir(parents=True, exist_ok=True)
+    ingestor = DataIngestor()
+
+    for horizon_id in [HORIZON_OPTION_1_ID, HORIZON_OPTION_2_ID]:
+        meta = HORIZON_METADATA[horizon_id]
+        s_dt, e_dt = meta["start_date"], meta["end_date"]
+        df = ingestor.fetch_market_data(start_date=s_dt, end_date=e_dt)
+        df = compute_technical_indicators(df)
+        df = compute_macro_valuations(df)
+        df = compute_margin_leverage_metrics(df)
+        df = compute_gsadf_gpt_decomposition(df)
+        df = compute_tda_wavelet_complexity(df)
+        df = compute_options_volatility_metrics(df)
+
+        predictor = StructuralBreakPredictor()
+        probs = predictor.predict_drawdown_probability(df)
+        df = df.with_columns(pl.Series("Drawdown_Probability", probs))
+
+        detector = MacroMahalanobisDetector()
+        df = detector.process(df)
+
+        out_name_parquet = "market_data_50yr.parquet" if horizon_id == HORIZON_OPTION_1_ID else "market_data_modern.parquet"
+        out_name_json = "market_data_50yr.json" if horizon_id == HORIZON_OPTION_1_ID else "market_data_modern.json"
+
+        # Write Parquet artifacts
+        for target_dir in [build_dir, PROVENANCE_DIR, dist_dir]:
+            df.write_parquet(target_dir / out_name_parquet)
+
+        # Build clean, lightweight JSON table for MEMFS pre-loading (21 core columns)
+        target_cols = [c for c in CORE_WASM_COLUMNS if c in df.columns]
+        json_dict = {}
+        for col in target_cols:
+            if col == "Date":
+                json_dict["Date"] = [str(d)[:10] for d in df["Date"].to_list()]
+            elif col == "Primary_Anomaly_Driver" or df[col].dtype in (pl.Utf8, pl.String):
+                json_dict[col] = df[col].to_list()
+            else:
+                vals = df[col].to_list()
+                json_dict[col] = [round(float(v), 5) if (v is not None and not np.isnan(v)) else 0.0 for v in vals]
+
+        for target_dir in [build_dir, PROVENANCE_DIR, dist_dir]:
+            with open(target_dir / out_name_json, "w", encoding="utf-8") as f:
+                json.dump(json_dict, f)
+
+        logger.info(f"Pre-compiled WASM Parquet and JSON datasets: {out_name_parquet}, {out_name_json}")
+
 
 def sync_parquet_to_json():
     """Convert existing staged Parquet datasets into clean JSON tables for WebAssembly MEMFS."""

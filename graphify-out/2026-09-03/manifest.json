@@ -65,8 +65,8 @@
     "semantic_hash": ""
   },
   "bubble_detector/features/__init__.py": {
-    "mtime": 1788480647.0616887,
-    "ast_hash": "579c8c8f4df5d7802ae5d592469c12de",
+    "mtime": 1788484882.0202968,
+    "ast_hash": "5ca2c1864573c2c5ff21b544851d63f3",
     "semantic_hash": ""
   },
   "bubble_detector/features/econometric.py": {
@@ -195,13 +195,13 @@
     "semantic_hash": ""
   },
   "bubble_detector/ui/panel_dashboard.py": {
-    "mtime": 1788479717.673886,
-    "ast_hash": "2d116da22acd3c7e0a3dcf69bad078ad",
+    "mtime": 1788485398.7889802,
+    "ast_hash": "f319dd653c68851054db5fa0ca6f00e0",
     "semantic_hash": ""
   },
   ".github/workflows/deploy.yml": {
-    "mtime": 1788478178.2518022,
-    "ast_hash": "ed0b2a68882c62e27f46235790d3624a",
+    "mtime": 1788485383.9688196,
+    "ast_hash": "1b4724d187837163bd8afcd959bd7f3a",
     "semantic_hash": ""
   },
   "README.md": {
@@ -240,8 +240,8 @@
     "semantic_hash": ""
   },
   "bubble_detector/features/utils.py": {
-    "mtime": 1788479655.2065759,
-    "ast_hash": "03d0f82bd5a36e9257b580908c99af81",
+    "mtime": 1788485623.1218405,
+    "ast_hash": "0a2b2331d8fdd448a4bc93958cdd3d4e",
     "semantic_hash": ""
   },
   "bubble_detector/backtest/__init__.py": {
@@ -330,12 +330,12 @@
     "semantic_hash": ""
   },
   "data/provenance/market_data_50yr.json": {
-    "mtime": 1788480855.2930849,
+    "mtime": 1788485743.2593393,
     "ast_hash": "dde2ac3991d423e81313e58a30174f50",
     "semantic_hash": ""
   },
   "data/provenance/market_data_modern.json": {
-    "mtime": 1788480855.4261346,
+    "mtime": 1788485743.3944902,
     "ast_hash": "e6b299356f0bcf9e6967445cb36618db",
     "semantic_hash": ""
   },
@@ -345,8 +345,8 @@
     "semantic_hash": ""
   },
   "bubble_detector/ui/postprocess_wasm.py": {
-    "mtime": 1788479731.73377,
-    "ast_hash": "f3c6d3115de8ca69d475fd507ce95a09",
+    "mtime": 1788485648.081744,
+    "ast_hash": "ddd7e6e55fd18d093914b76f5a2173df",
     "semantic_hash": ""
   },
   ".agents/rules/system_architecture.md": {
@@ -377,6 +377,16 @@
   "tests/test_module_aliases.py": {
     "mtime": 1788480746.4769754,
     "ast_hash": "a08d7c5e1ac61e3bafcc9f4286d6c810",
+    "semantic_hash": ""
+  },
+  "sw.js": {
+    "mtime": 1788485019.8504517,
+    "ast_hash": "6df4cc8792bae497c50cb75d705a7a1f",
+    "semantic_hash": ""
+  },
+  "tests/test_ui_ux_wasm_optimizations.py": {
+    "mtime": 1788485631.225794,
+    "ast_hash": "150133f06d826e5d9d5cd3c0a3a17d94",
     "semantic_hash": ""
   }
 }

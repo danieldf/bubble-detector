@@ -147,8 +147,8 @@ def test_wcag_aa_color_contrast_tokens():
 
 def test_wasm_build_packaging_html_size():
     """
-    Assert that dist/index.html compiled with WASM_BUILD_PACKAGING=1 is < 150 KB,
-    demonstrating the 37x+ size reduction from legacy 4.67MB.
+    Assert that dist/index.html compiled with WASM_BUILD_PACKAGING=1 is < 120 KB,
+    demonstrating the 39x+ size reduction from legacy 4.67MB.
     """
     index_path = BASE_DIR / "dist" / "index.html"
     assert index_path.exists(), "dist/index.html must exist"
@@ -156,10 +156,11 @@ def test_wasm_build_packaging_html_size():
     size_bytes = index_path.stat().st_size
     size_kb = size_bytes / 1024.0
 
-    assert size_kb < 150.0, (
-        f"dist/index.html size ({size_kb:.1f} KB) exceeds the 150 KB ceiling! "
+    assert size_kb < 120.0, (
+        f"dist/index.html size ({size_kb:.1f} KB) exceeds the 120 KB ceiling! "
         f"Build-time proxy decoupling (WASM_BUILD_PACKAGING=1) was not applied correctly."
     )
+
 
 
 def test_service_worker_file_validity():
