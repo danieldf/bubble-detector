@@ -330,12 +330,12 @@
     "semantic_hash": ""
   },
   "data/provenance/market_data_50yr.json": {
-    "mtime": 1788486991.5711062,
+    "mtime": 1788487164.6977317,
     "ast_hash": "dde2ac3991d423e81313e58a30174f50",
     "semantic_hash": ""
   },
   "data/provenance/market_data_modern.json": {
-    "mtime": 1788486991.704776,
+    "mtime": 1788487164.830532,
     "ast_hash": "e6b299356f0bcf9e6967445cb36618db",
     "semantic_hash": ""
   },
