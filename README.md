@@ -4,7 +4,7 @@
 [![Live WebAssembly Dashboard](https://img.shields.io/badge/Live_Dashboard-GitHub_Pages-0288D1?style=flat&logo=github)](https://danieldf.github.io/bubble-detector/)
 [![Version](https://img.shields.io/badge/Version-v3.0.0-4CAF50?style=flat)](https://github.com/danieldf/bubble-detector/releases/tag/v3.0.0)
 [![Python Version](https://img.shields.io/badge/Python-3.11%2B%20%7C%203.14-blue?style=flat&logo=python)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/Tests-72%20Passed%20(100%25)-success?style=flat)](https://github.com/danieldf/bubble-detector/actions)
+[![Tests](https://img.shields.io/badge/Tests-76%20Passed%20(100%25)-success?style=flat)](https://github.com/danielsflscientific.com/bubble-detector/actions)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey.svg)](LICENSE)
 
 An enterprise-grade quantitative econometric system, statistical distance classifier, and machine learning framework engineered to detect financial asset bubbles, diagnose non-linear macroeconomic regime shifts, quantify systemic distance from historical equilibrium, and dynamically adjust portfolio equity exposure with zero lookahead bias and institutional cost accounting.
@@ -228,10 +228,10 @@ python -m http.server 8000 --directory dist/
 
 ### 5. Run the Automated Test Suite
 
-Executes all 72 automated unit, integration, numerical parity, and anti-synthetic tests:
+Executes all 76 automated unit, integration, numerical parity, module alias, and anti-synthetic tests:
 
 ```bash
-# Run all 72 tests
+# Run all 76 tests
 ./.venv/bin/pytest tests/ -v
 
 # Run Mahalanobis and Tab 6 normalization tests specifically
@@ -242,6 +242,9 @@ Executes all 72 automated unit, integration, numerical parity, and anti-syntheti
 
 # Run anti-synthetic provenance certification
 ./.venv/bin/pytest tests/test_no_gaussian_bumps.py -v
+
+# Run module alias compatibility verification
+./.venv/bin/pytest tests/test_module_aliases.py -v
 ```
 
 ### 6. Synchronize Repository Knowledge Graph
@@ -283,9 +286,10 @@ All notable changes to this project are documented in this section adhering to [
   - Institutional trace provenance badging (`[REAL]`, `[PROXY]`, `[SYNTHETIC]`) and dynamic red fallback alert banner.
 - **Comprehensive Institutional Code Commentary & Agent Documentation**:
   - Authored comprehensive mathematical formulas, economic theory, algorithmic derivations, and design trade-off docstrings across all modules in `bubble_detector/data/`, `bubble_detector/features/`, `bubble_detector/models/`, `bubble_detector/backtest/`, and `bubble_detector/ui/`.
+  - Added seamless canonical module aliases (`margin_leverage.py`, `options_volatility.py`, `technical.py`, `ui/theme.py`) ensuring frictionless developer and agent importing across alternative naming conventions.
   - Deeply documented packaging and dependency requirements (`requirements.txt`, `pyproject.toml`) and added agent navigation rules for high reproducibility across Python and WebAssembly.
 - **Automated Verification Expansion**:
-  - Test suite expanded to **72 automated tests passing with 100% success rate** (`pytest tests/ -v`).
+  - Test suite expanded to **76 automated tests passing with 100% success rate** (`pytest tests/ -v`).
 
 ---
 

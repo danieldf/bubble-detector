@@ -31,13 +31,16 @@ bubble_detector/
 │   ├── etl_vxo.py        # CBOE VXO daily history (1986–present, 150.19 Black Monday peak)
 │   └── ingestor.py       # Continuous backward compounding, multi-asset stitching, schema downcasting
 ├── features/             # Quantitative indicator engines & mathematical signal transforms
-│   ├── technicals.py     # MA20/50/200, Bollinger %B, Wilder's RSI, 20d realized volatility
+│   ├── technicals.py     # MA20/50/200, Bollinger %B, Wilder's RSI, 20d realized volatility (alias: technical.py)
 │   ├── macro_valuation.py# CAPE (41.37), P-CAPE, Buffett Indicator (218.1% GDP), CAEY yield
-│   ├── leverage.py       # FINRA YoY growth, 20d debt velocity, margin credit exhaustion score
+│   ├── leverage.py       # FINRA YoY growth, 20d debt velocity, margin credit exhaustion score (alias: margin_leverage.py)
 │   ├── econometric.py    # Phillips-Shi-Yu (2015) recursive BSADF, GPT AI CapEx ($754B) decomposition
 │   ├── topology.py       # Takens delay embedding (m=3, tau=2), Vietoris-Rips persistent homology, CWT Morlet
-│   ├── options_vol.py    # VIX term contango slope, SKEW tail risk (>145), DSPX vs COR3M dispersion
-│   └── utils.py          # Central pure-math utilities (expanding z-scores, ADF OLS, TDA scaling)
+│   ├── options_vol.py    # VIX term contango slope, SKEW tail risk (>145), DSPX vs COR3M dispersion (alias: options_volatility.py)
+│   ├── utils.py          # Central pure-math utilities (expanding z-scores, ADF OLS, TDA scaling)
+│   ├── margin_leverage.py# Canonical alias module exporting compute_margin_leverage_metrics
+│   ├── options_volatility.py # Canonical alias module exporting compute_options_volatility_metrics
+│   └── technical.py      # Canonical alias module exporting compute_technical_indicators
 ├── models/               # Institutional statistical & machine learning regime classifiers
 │   ├── regime_mahalanobis.py # Regularized Signed Mahalanobis distance with direction vector b in {-1, +1}^15
 │   └── structural_breaks.py  # Purged-embargo walk-forward GBDT, isotonic probability calibration
@@ -47,6 +50,8 @@ bubble_detector/
 └── ui/                   # Dual-runtime responsive visualization dashboards
     ├── dashboard.py      # NiceGUI server-side interactive 6-tab dashboard
     ├── panel_dashboard.py# HoloViz Panel Pyodide WebAssembly client-side dashboard (100% parity)
+    ├── components.py     # iOS 13+ cards, typography tokens, CTA banners, WCAG 2.2 AA containers
+    ├── theme.py          # Canonical alias module exporting UI design system tokens and WCAG contrast algorithms
     └── postprocess_wasm.py # WebAssembly artifact post-processor (MEMFS loader, emoji sanitizer)
 ```
 
@@ -74,7 +79,7 @@ bubble_detector/
   ```bash
   ./.venv/bin/pytest tests/ -v
   ```
-  Expected result: **72 passed tests (100% pass rate)**.
+  Expected result: **76 passed tests (100% pass rate)**.
 - Anti-synthetic regression verification:
   ```bash
   ./.venv/bin/pytest tests/test_no_gaussian_bumps.py -v

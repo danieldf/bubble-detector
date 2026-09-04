@@ -362,8 +362,9 @@ All notable technical updates to this research specification and software implem
   - **Item 8 (WebAssembly Parquet Virtual Filesystem & Provenance Badges)**: Bundled real parquet tables into client-side virtual filesystem, badged all Plotly traces with institutional provenance indicators (`[REAL]`, `[PROXY]`, `[SYNTHETIC]`), and integrated red banner alert for fallback activation.
 - **Comprehensive Institutional Code Commentary & Documentation**:
   - Authored comprehensive mathematical formulas, economic theory, algorithmic derivations, and design trade-off docstrings across all modules in `bubble_detector/data/`, `bubble_detector/features/`, `bubble_detector/models/`, `bubble_detector/backtest/`, and `bubble_detector/ui/`.
+  - Added seamless canonical module aliases (`margin_leverage.py`, `options_volatility.py`, `technical.py`, `ui/theme.py`) ensuring frictionless developer and agent importing across alternative naming conventions.
   - Deeply documented packaging and dependency requirements (`requirements.txt`, `pyproject.toml`) for high reproducibility across Python and WebAssembly.
-- **Automated Verification Expansion**: Expanded suite to **72 passed tests (100% pass rate)**, including a dedicated anti-synthetic regression certification suite (`test_no_gaussian_bumps.py`).
+- **Automated Verification Expansion**: Expanded suite to **76 passed tests (100% pass rate)**, including dedicated module alias verification (`test_module_aliases.py`) and anti-synthetic regression certification (`test_no_gaussian_bumps.py`).
 
 ### [v2.2.0] - 2026-09-03
 

@@ -52,23 +52,50 @@ if not logger.handlers:
 
 # Custom Exceptions
 class BubbleDetectorError(Exception):
-    """Base exception for Bubble Detector package."""
+    """
+    Root base exception for all domain-specific errors in the Bubble Detector ecosystem.
+
+    Inherited by all specialized sub-exceptions to allow callers to catch all package
+    exceptions via a single high-level exception handler.
+    """
     pass
 
 class DataFetchError(BubbleDetectorError):
-    """Raised when data fetching fails."""
+    """
+    Raised when financial market, macroeconomic, or provenance data acquisition fails.
+
+    Triggered during network timeouts, HTTP 4xx/5xx API responses from yfinance or FRED,
+    missing local provenance Parquet tables, or corrupt Excel workbooks (e.g. Shiller ie_data.xls).
+    """
     pass
 
 class IndicatorComputationError(BubbleDetectorError):
-    """Raised when indicator computation fails."""
+    """
+    Raised when econometric, technical, or topological indicator calculations fail.
+
+    Triggered when required columns are absent from the input panel, when rolling windows
+    encounter invalid numerical conditions, or when numerical operations fail (e.g. Takens
+    embedding dimension mismatches or persistence diagram extraction errors).
+    """
     pass
 
 class ModelTrainingError(BubbleDetectorError):
-    """Raised when ML model training fails."""
+    """
+    Raised when machine learning or statistical regime estimation fails.
+
+    Triggered during purged-embargo walk-forward cross-validation if sample sizes are
+    insufficient, if class distributions are degenerately single-class, or if covariance
+    matrix regularization encounters persistent non-positive-definite singularities.
+    """
     pass
 
 class ValidationError(BubbleDetectorError):
-    """Raised when data validation fails."""
+    """
+    Raised when financial time-series integrity constraints or schemas are violated.
+
+    Triggered when transition seams exhibit discontinuous jumps (>= 3%), when null values
+    persist in critical feature columns, or when publication lag constraints are breached.
+    """
     pass
 
 # Financial & Market Constants (2026 Macro Environment Defaults)

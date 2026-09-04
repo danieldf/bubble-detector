@@ -132,6 +132,22 @@ DARK_THEME: Dict[str, str] = {
     "plotly_template": "plotly_dark",
 }
 
+def get_plotly_template(theme_mode: str = "light") -> str:
+    """
+    Return the Plotly template identifier for the specified theme mode.
+
+    Parameters
+    ----------
+    theme_mode : str
+        Active theme mode ('light' or 'dark').
+
+    Returns
+    -------
+    str
+        'plotly_white' for light mode, 'plotly_dark' for dark mode.
+    """
+    return "plotly_white" if theme_mode == "light" else "plotly_dark"
+
 def get_theme_css(theme_mode: str = "light") -> str:
     """Generate dynamic CSS variables and global stylesheet enforcing UI/UX & accessibility specs."""
     palette = LIGHT_THEME if theme_mode == "light" else DARK_THEME

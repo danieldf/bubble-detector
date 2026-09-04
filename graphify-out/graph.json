@@ -109,7 +109,7 @@
       "norm_label": "__init__.py"
     },
     {
-      "label": "Backtesting & Historical Empirical Validation Module.",
+      "label": "Institutional Backtest Simulation & Falsifiable Peak Validation Subpackage. ====",
       "file_type": "rationale",
       "source_file": "bubble_detector/backtest/__init__.py",
       "source_location": "L1",
@@ -117,7 +117,7 @@
       "id": "bubble_detector_backtest_init_rationale_1",
       "community": 8,
       "community_name": "test_ui_theme.py",
-      "norm_label": "backtesting & historical empirical validation module."
+      "norm_label": "institutional backtest simulation & falsifiable peak validation subpackage. ===="
     },
     {
       "label": "engine.py",
@@ -379,8 +379,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_config",
-      "community": 33,
-      "community_name": "BubbleDetectorError",
+      "community": 29,
+      "community_name": "stage_provenance.py",
       "norm_label": "config.py"
     },
     {
@@ -390,8 +390,8 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "bubble_detector_config_bubbledetectorerror",
-      "community": 33,
-      "community_name": "BubbleDetectorError",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "bubbledetectorerror"
     },
     {
@@ -401,52 +401,52 @@
       "source_location": "",
       "_origin": "ast",
       "id": "exception",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "exception"
     },
     {
       "label": "DataFetchError",
       "file_type": "code",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L58",
+      "source_location": "L63",
       "_origin": "ast",
       "id": "bubble_detector_config_datafetcherror",
-      "community": 33,
-      "community_name": "BubbleDetectorError",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "datafetcherror"
     },
     {
       "label": "IndicatorComputationError",
       "file_type": "code",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L62",
+      "source_location": "L72",
       "_origin": "ast",
       "id": "bubble_detector_config_indicatorcomputationerror",
-      "community": 33,
-      "community_name": "BubbleDetectorError",
+      "community": 32,
+      "community_name": "compute_technical_indicators",
       "norm_label": "indicatorcomputationerror"
     },
     {
       "label": "ModelTrainingError",
       "file_type": "code",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L66",
+      "source_location": "L82",
       "_origin": "ast",
       "id": "bubble_detector_config_modeltrainingerror",
-      "community": 33,
-      "community_name": "BubbleDetectorError",
+      "community": 6,
+      "community_name": "FINRA Margin Debt Metrics",
       "norm_label": "modeltrainingerror"
     },
     {
       "label": "ValidationError",
       "file_type": "code",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L70",
+      "source_location": "L92",
       "_origin": "ast",
       "id": "bubble_detector_config_validationerror",
-      "community": 33,
-      "community_name": "BubbleDetectorError",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "validationerror"
     },
     {
@@ -456,64 +456,64 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_config_rationale_1",
-      "community": 33,
-      "community_name": "BubbleDetectorError",
+      "community": 29,
+      "community_name": "stage_provenance.py",
       "norm_label": "global configuration, logging infrastructure & constants module. ==============="
     },
     {
-      "label": "Base exception for Bubble Detector package.",
+      "label": "Root base exception for all domain-specific errors in the Bubble Detector ecosys",
       "file_type": "rationale",
       "source_file": "bubble_detector/config.py",
       "source_location": "L55",
       "_origin": "ast",
       "id": "bubble_detector_config_rationale_55",
-      "community": 33,
-      "community_name": "BubbleDetectorError",
-      "norm_label": "base exception for bubble detector package."
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
+      "norm_label": "root base exception for all domain-specific errors in the bubble detector ecosys"
     },
     {
-      "label": "Raised when data fetching fails.",
+      "label": "Raised when financial market, macroeconomic, or provenance data acquisition fail",
       "file_type": "rationale",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L59",
+      "source_location": "L64",
       "_origin": "ast",
-      "id": "bubble_detector_config_rationale_59",
-      "community": 33,
-      "community_name": "BubbleDetectorError",
-      "norm_label": "raised when data fetching fails."
+      "id": "bubble_detector_config_rationale_64",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
+      "norm_label": "raised when financial market, macroeconomic, or provenance data acquisition fail"
     },
     {
-      "label": "Raised when indicator computation fails.",
+      "label": "Raised when econometric, technical, or topological indicator calculations fail.",
       "file_type": "rationale",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L63",
+      "source_location": "L73",
       "_origin": "ast",
-      "id": "bubble_detector_config_rationale_63",
-      "community": 33,
-      "community_name": "BubbleDetectorError",
-      "norm_label": "raised when indicator computation fails."
+      "id": "bubble_detector_config_rationale_73",
+      "community": 32,
+      "community_name": "compute_technical_indicators",
+      "norm_label": "raised when econometric, technical, or topological indicator calculations fail."
     },
     {
-      "label": "Raised when ML model training fails.",
+      "label": "Raised when machine learning or statistical regime estimation fails.      Trigge",
       "file_type": "rationale",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L67",
+      "source_location": "L83",
       "_origin": "ast",
-      "id": "bubble_detector_config_rationale_67",
-      "community": 33,
-      "community_name": "BubbleDetectorError",
-      "norm_label": "raised when ml model training fails."
+      "id": "bubble_detector_config_rationale_83",
+      "community": 6,
+      "community_name": "FINRA Margin Debt Metrics",
+      "norm_label": "raised when machine learning or statistical regime estimation fails.      trigge"
     },
     {
-      "label": "Raised when data validation fails.",
+      "label": "Raised when financial time-series integrity constraints or schemas are violated.",
       "file_type": "rationale",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L71",
+      "source_location": "L93",
       "_origin": "ast",
-      "id": "bubble_detector_config_rationale_71",
-      "community": 33,
-      "community_name": "BubbleDetectorError",
-      "norm_label": "raised when data validation fails."
+      "id": "bubble_detector_config_rationale_93",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
+      "norm_label": "raised when financial time-series integrity constraints or schemas are violated."
     },
     {
       "label": "__init__.py",
@@ -522,20 +522,20 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_data_init",
-      "community": 23,
-      "community_name": "etl_finra.py",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "__init__.py"
     },
     {
-      "label": "Data Ingestion Module",
+      "label": "Point-in-Time Data Ingestion & Multi-Decade Horizon Subpackage. ================",
       "file_type": "rationale",
       "source_file": "bubble_detector/data/__init__.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_data_init_rationale_1",
-      "community": 23,
-      "community_name": "etl_finra.py",
-      "norm_label": "data ingestion module"
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
+      "norm_label": "point-in-time data ingestion & multi-decade horizon subpackage. ================"
     },
     {
       "label": "date_horizons.py",
@@ -1149,8 +1149,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_data_etl_vxo",
-      "community": 31,
-      "community_name": "test_no_synthetic_gaussian_bumps_in_data_code",
+      "community": 29,
+      "community_name": "stage_provenance.py",
       "norm_label": "etl_vxo.py"
     },
     {
@@ -1193,8 +1193,8 @@
       "source_location": "L144",
       "_origin": "ast",
       "id": "bubble_detector_data_etl_vxo_vxoetl",
-      "community": 31,
-      "community_name": "test_no_synthetic_gaussian_bumps_in_data_code",
+      "community": 29,
+      "community_name": "stage_provenance.py",
       "norm_label": "vxoetl"
     },
     {
@@ -1248,8 +1248,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_data_etl_vxo_rationale_1",
-      "community": 31,
-      "community_name": "test_no_synthetic_gaussian_bumps_in_data_code",
+      "community": 29,
+      "community_name": "stage_provenance.py",
       "norm_label": "cboe s&p 100 volatility index (^vxo) etl & historical splicer (1986\u2013present). =="
     },
     {
@@ -1270,8 +1270,8 @@
       "source_location": "L145",
       "_origin": "ast",
       "id": "bubble_detector_data_etl_vxo_rationale_145",
-      "community": 31,
-      "community_name": "test_no_synthetic_gaussian_bumps_in_data_code",
+      "community": 29,
+      "community_name": "stage_provenance.py",
       "norm_label": "etl pipeline for cboe vxo volatility index."
     },
     {
@@ -1314,8 +1314,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_data_ingestor",
-      "community": 33,
-      "community_name": "BubbleDetectorError",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "ingestor.py"
     },
     {
@@ -1325,8 +1325,8 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "bubble_detector_data_ingestor_dataingestor",
-      "community": 18,
-      "community_name": "get_dynamic_horizon_metadata",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "dataingestor"
     },
     {
@@ -1336,8 +1336,8 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "bubble_detector_data_ingestor_dataingestor_init",
-      "community": 18,
-      "community_name": "get_dynamic_horizon_metadata",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": ".__init__()"
     },
     {
@@ -1347,8 +1347,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "bubble_detector_data_ingestor_py_path",
-      "community": 18,
-      "community_name": "get_dynamic_horizon_metadata",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "path"
     },
     {
@@ -1358,8 +1358,8 @@
       "source_location": "L85",
       "_origin": "ast",
       "id": "bubble_detector_data_ingestor_dataingestor_fetch_market_data",
-      "community": 18,
-      "community_name": "get_dynamic_horizon_metadata",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": ".fetch_market_data()"
     },
     {
@@ -1369,8 +1369,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "bubble_detector_data_ingestor_py_dataframe",
-      "community": 18,
-      "community_name": "get_dynamic_horizon_metadata",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "dataframe"
     },
     {
@@ -1380,8 +1380,8 @@
       "source_location": "L162",
       "_origin": "ast",
       "id": "bubble_detector_data_ingestor_dataingestor_build_continuous_market_series",
-      "community": 18,
-      "community_name": "get_dynamic_horizon_metadata",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "._build_continuous_market_series()"
     },
     {
@@ -1391,8 +1391,8 @@
       "source_location": "L368",
       "_origin": "ast",
       "id": "bubble_detector_data_ingestor_dataingestor_append_real_macro_indicators",
-      "community": 18,
-      "community_name": "get_dynamic_horizon_metadata",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "._append_real_macro_indicators()"
     },
     {
@@ -1402,8 +1402,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_data_ingestor_rationale_1",
-      "community": 33,
-      "community_name": "BubbleDetectorError",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "data ingestor module for market bubble detection. =============================="
     },
     {
@@ -1413,8 +1413,8 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "bubble_detector_data_ingestor_rationale_76",
-      "community": 18,
-      "community_name": "get_dynamic_horizon_metadata",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "high-performance ingestion engine orchestrating market prices, macroeconomic etl"
     },
     {
@@ -1424,8 +1424,8 @@
       "source_location": "L91",
       "_origin": "ast",
       "id": "bubble_detector_data_ingestor_rationale_91",
-      "community": 18,
-      "community_name": "get_dynamic_horizon_metadata",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "fetch historical price and macroeconomic datasets for spy, sectors, and volatili"
     },
     {
@@ -1435,8 +1435,8 @@
       "source_location": "L169",
       "_origin": "ast",
       "id": "bubble_detector_data_ingestor_rationale_169",
-      "community": 18,
-      "community_name": "get_dynamic_horizon_metadata",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "construct seamless asset time series with continuous backward return compounding"
     },
     {
@@ -1446,8 +1446,8 @@
       "source_location": "L374",
       "_origin": "ast",
       "id": "bubble_detector_data_ingestor_rationale_374",
-      "community": 18,
-      "community_name": "get_dynamic_horizon_metadata",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "merge authentic point-in-time macroeconomic series (shiller cape, fred gdp, finr"
     },
     {
@@ -1462,7 +1462,7 @@
       "norm_label": "__init__.py"
     },
     {
-      "label": "Feature Engineering Module",
+      "label": "Quantitative Feature Engineering & Mathematical Signal Processing Subpackage. ==",
       "file_type": "rationale",
       "source_file": "bubble_detector/features/__init__.py",
       "source_location": "L1",
@@ -1470,7 +1470,7 @@
       "id": "bubble_detector_features_init_rationale_1",
       "community": 26,
       "community_name": "__init__.py",
-      "norm_label": "feature engineering module"
+      "norm_label": "quantitative feature engineering & mathematical signal processing subpackage. =="
     },
     {
       "label": "econometric.py",
@@ -1693,14 +1693,36 @@
       "norm_label": "compute shiller cape, payout-adjusted cape (p-cape), and buffett indicator metri"
     },
     {
+      "label": "margin_leverage.py",
+      "file_type": "code",
+      "source_file": "bubble_detector/features/margin_leverage.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "bubble_detector_features_margin_leverage",
+      "community": 30,
+      "community_name": "compute_margin_leverage_metrics",
+      "norm_label": "margin_leverage.py"
+    },
+    {
+      "label": "Systemic Margin Leverage & Credit Exhaustion Indicator Module. =================",
+      "file_type": "rationale",
+      "source_file": "bubble_detector/features/margin_leverage.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "bubble_detector_features_margin_leverage_rationale_1",
+      "community": 30,
+      "community_name": "compute_margin_leverage_metrics",
+      "norm_label": "systemic margin leverage & credit exhaustion indicator module. ================="
+    },
+    {
       "label": "options_vol.py",
       "file_type": "code",
       "source_file": "bubble_detector/features/options_vol.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_features_options_vol",
-      "community": 26,
-      "community_name": "__init__.py",
+      "community": 28,
+      "community_name": "test_features.py",
       "norm_label": "options_vol.py"
     },
     {
@@ -1732,8 +1754,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_features_options_vol_rationale_1",
-      "community": 26,
-      "community_name": "__init__.py",
+      "community": 28,
+      "community_name": "test_features.py",
       "norm_label": "options market microstructure & volatility behavioral dynamics module. ========="
     },
     {
@@ -1748,14 +1770,58 @@
       "norm_label": "compute vix term structure slope, skew tail-risk alert, dispersion index, and cr"
     },
     {
+      "label": "options_volatility.py",
+      "file_type": "code",
+      "source_file": "bubble_detector/features/options_volatility.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "bubble_detector_features_options_volatility",
+      "community": 28,
+      "community_name": "test_features.py",
+      "norm_label": "options_volatility.py"
+    },
+    {
+      "label": "Options Market Microstructure & Volatility Behavioral Dynamics Module. =========",
+      "file_type": "rationale",
+      "source_file": "bubble_detector/features/options_volatility.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "bubble_detector_features_options_volatility_rationale_1",
+      "community": 28,
+      "community_name": "test_features.py",
+      "norm_label": "options market microstructure & volatility behavioral dynamics module. ========="
+    },
+    {
+      "label": "technical.py",
+      "file_type": "code",
+      "source_file": "bubble_detector/features/technical.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "bubble_detector_features_technical",
+      "community": 32,
+      "community_name": "compute_technical_indicators",
+      "norm_label": "technical.py"
+    },
+    {
+      "label": "Technical Indicators & Momentum Oscillators Module. ============================",
+      "file_type": "rationale",
+      "source_file": "bubble_detector/features/technical.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "bubble_detector_features_technical_rationale_1",
+      "community": 32,
+      "community_name": "compute_technical_indicators",
+      "norm_label": "technical indicators & momentum oscillators module. ============================"
+    },
+    {
       "label": "technicals.py",
       "file_type": "code",
       "source_file": "bubble_detector/features/technicals.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_features_technicals",
-      "community": 33,
-      "community_name": "BubbleDetectorError",
+      "community": 32,
+      "community_name": "compute_technical_indicators",
       "norm_label": "technicals.py"
     },
     {
@@ -1787,8 +1853,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_features_technicals_rationale_1",
-      "community": 33,
-      "community_name": "BubbleDetectorError",
+      "community": 32,
+      "community_name": "compute_technical_indicators",
       "norm_label": "technical indicators & momentum oscillators module. ============================"
     },
     {
@@ -1941,8 +2007,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_features_utils",
-      "community": 37,
-      "community_name": "normalize_tda_indicator",
+      "community": 26,
+      "community_name": "__init__.py",
       "norm_label": "utils.py"
     },
     {
@@ -1985,8 +2051,8 @@
       "source_location": "L89",
       "_origin": "ast",
       "id": "bubble_detector_features_utils_normalize_tda_indicator",
-      "community": 37,
-      "community_name": "normalize_tda_indicator",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "normalize_tda_indicator()"
     },
     {
@@ -1996,8 +2062,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_features_utils_rationale_1",
-      "community": 37,
-      "community_name": "normalize_tda_indicator",
+      "community": 26,
+      "community_name": "__init__.py",
       "norm_label": "shared mathematical & topological utilities. ==================================="
     },
     {
@@ -2029,8 +2095,8 @@
       "source_location": "L94",
       "_origin": "ast",
       "id": "bubble_detector_features_utils_rationale_94",
-      "community": 37,
-      "community_name": "normalize_tda_indicator",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "causally rescale raw tda persistence landscape l2 norm to span [target_min, targ"
     },
     {
@@ -2045,7 +2111,7 @@
       "norm_label": "__init__.py"
     },
     {
-      "label": "Machine Learning Models Module",
+      "label": "Regime Classification & Structural Break Machine Learning Subpackage. ==========",
       "file_type": "rationale",
       "source_file": "bubble_detector/models/__init__.py",
       "source_location": "L1",
@@ -2053,7 +2119,7 @@
       "id": "bubble_detector_models_init_rationale_1",
       "community": 1,
       "community_name": "AGVI System Pipeline and Dashboard",
-      "norm_label": "machine learning models module"
+      "norm_label": "regime classification & structural break machine learning subpackage. =========="
     },
     {
       "label": "regime_mahalanobis.py",
@@ -2524,20 +2590,20 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_ui_init",
-      "community": 22,
-      "community_name": "ingestor.py",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "__init__.py"
     },
     {
-      "label": "UI Module for NiceGUI Dashboard",
+      "label": "User Interface & Presentation Layer Subpackage. ================================",
       "file_type": "rationale",
       "source_file": "bubble_detector/ui/__init__.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_ui_init_rationale_1",
-      "community": 22,
-      "community_name": "ingestor.py",
-      "norm_label": "ui module for nicegui dashboard"
+      "community": 17,
+      "community_name": "panel_dashboard.py",
+      "norm_label": "user interface & presentation layer subpackage. ================================"
     },
     {
       "label": "components.py",
@@ -2546,64 +2612,64 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_ui_components",
-      "community": 22,
-      "community_name": "ingestor.py",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "components.py"
     },
     {
       "label": "create_cta_banner()",
       "file_type": "code",
       "source_file": "bubble_detector/ui/components.py",
-      "source_location": "L12",
+      "source_location": "L37",
       "_origin": "ast",
       "id": "bubble_detector_ui_components_create_cta_banner",
-      "community": 22,
-      "community_name": "ingestor.py",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "create_cta_banner()"
     },
     {
       "label": "create_ios_card()",
       "file_type": "code",
       "source_file": "bubble_detector/ui/components.py",
-      "source_location": "L39",
+      "source_location": "L76",
       "_origin": "ast",
       "id": "bubble_detector_ui_components_create_ios_card",
-      "community": 22,
-      "community_name": "ingestor.py",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "create_ios_card()"
     },
     {
-      "label": "UI Components Module.  Provides iOS 13+ card containers, segmented control tab w",
+      "label": "UI Accessible Components & iOS 13+ Design System Module. =======================",
       "file_type": "rationale",
       "source_file": "bubble_detector/ui/components.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_ui_components_rationale_1",
-      "community": 22,
-      "community_name": "ingestor.py",
-      "norm_label": "ui components module.  provides ios 13+ card containers, segmented control tab w"
+      "community": 17,
+      "community_name": "panel_dashboard.py",
+      "norm_label": "ui accessible components & ios 13+ design system module. ======================="
     },
     {
-      "label": "Renders a Call-To-Action (CTA) section with powerful typography (600-800 weight)",
+      "label": "Render a high-impact Call-To-Action (CTA) section with heavy typography and acce",
       "file_type": "rationale",
       "source_file": "bubble_detector/ui/components.py",
-      "source_location": "L16",
+      "source_location": "L41",
       "_origin": "ast",
-      "id": "bubble_detector_ui_components_rationale_16",
-      "community": 22,
-      "community_name": "ingestor.py",
-      "norm_label": "renders a call-to-action (cta) section with powerful typography (600-800 weight)"
+      "id": "bubble_detector_ui_components_rationale_41",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
+      "norm_label": "render a high-impact call-to-action (cta) section with heavy typography and acce"
     },
     {
-      "label": "Creates an iOS 13+ inset card container with subtle shadow, rounded corners,",
+      "label": "Create an iOS 13+ inset card container with subtle elevation, rounded corners, a",
       "file_type": "rationale",
       "source_file": "bubble_detector/ui/components.py",
-      "source_location": "L40",
+      "source_location": "L77",
       "_origin": "ast",
-      "id": "bubble_detector_ui_components_rationale_40",
-      "community": 22,
-      "community_name": "ingestor.py",
-      "norm_label": "creates an ios 13+ inset card container with subtle shadow, rounded corners,"
+      "id": "bubble_detector_ui_components_rationale_77",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
+      "norm_label": "create an ios 13+ inset card container with subtle elevation, rounded corners, a"
     },
     {
       "label": "dashboard.py",
@@ -2612,8 +2678,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "dashboard.py"
     },
     {
@@ -2623,8 +2689,8 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_dashboardstate",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "dashboardstate"
     },
     {
@@ -2634,8 +2700,8 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_dashboardstate_init",
-      "community": 32,
-      "community_name": "compute_technical_indicators",
+      "community": 30,
+      "community_name": "compute_margin_leverage_metrics",
       "norm_label": ".__init__()"
     },
     {
@@ -2645,8 +2711,8 @@
       "source_location": "L78",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_dashboardstate_load_data",
-      "community": 32,
-      "community_name": "compute_technical_indicators",
+      "community": 30,
+      "community_name": "compute_margin_leverage_metrics",
       "norm_label": ".load_data()"
     },
     {
@@ -2656,8 +2722,8 @@
       "source_location": "L123",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_dashboardstate_toggle_theme",
-      "community": 22,
-      "community_name": "ingestor.py",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": ".toggle_theme()"
     },
     {
@@ -2667,8 +2733,8 @@
       "source_location": "L128",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_dashboardstate_get_plotly_template",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": ".get_plotly_template()"
     },
     {
@@ -2678,8 +2744,8 @@
       "source_location": "L131",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_dashboardstate_get_palette",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": ".get_palette()"
     },
     {
@@ -2689,8 +2755,8 @@
       "source_location": "L134",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_get_right_flushed_legend",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "get_right_flushed_legend()"
     },
     {
@@ -2700,8 +2766,8 @@
       "source_location": "L148",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_build_macro_valuation_chart",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "build_macro_valuation_chart()"
     },
     {
@@ -2711,8 +2777,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_py_figure",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "figure"
     },
     {
@@ -2722,8 +2788,8 @@
       "source_location": "L176",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_build_leverage_chart",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "build_leverage_chart()"
     },
     {
@@ -2733,8 +2799,8 @@
       "source_location": "L199",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_build_econometric_chart",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "build_econometric_chart()"
     },
     {
@@ -2744,8 +2810,8 @@
       "source_location": "L226",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_build_sentiment_vol_chart",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "build_sentiment_vol_chart()"
     },
     {
@@ -2755,8 +2821,8 @@
       "source_location": "L251",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_build_sector_health_chart",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "build_sector_health_chart()"
     },
     {
@@ -2766,8 +2832,8 @@
       "source_location": "L276",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_build_mahalanobis_chart",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "build_mahalanobis_chart()"
     },
     {
@@ -2777,8 +2843,8 @@
       "source_location": "L352",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_render_executive_summary_card",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "render_executive_summary_card()"
     },
     {
@@ -2788,8 +2854,8 @@
       "source_location": "L379",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_render_horizon_explanatory_note",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "render_horizon_explanatory_note()"
     },
     {
@@ -2799,8 +2865,8 @@
       "source_location": "L412",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_create_app",
-      "community": 22,
-      "community_name": "ingestor.py",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "create_app()"
     },
     {
@@ -2810,8 +2876,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_rationale_1",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "nicegui interactive dashboard for market bubble detection system. =============="
     },
     {
@@ -2821,8 +2887,8 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_rationale_62",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "central state manager for dataset, feature engine, model, horizon selection, and"
     },
     {
@@ -2832,8 +2898,8 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_rationale_79",
-      "community": 32,
-      "community_name": "compute_technical_indicators",
+      "community": 30,
+      "community_name": "compute_margin_leverage_metrics",
       "norm_label": "fetch and process full dataset pipeline for selected date horizon."
     },
     {
@@ -2843,8 +2909,8 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_rationale_124",
-      "community": 22,
-      "community_name": "ingestor.py",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "toggle between light and dark theme modes."
     },
     {
@@ -2854,8 +2920,8 @@
       "source_location": "L135",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_rationale_135",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "return standard right-flushed vertical legend configuration."
     },
     {
@@ -2865,8 +2931,8 @@
       "source_location": "L149",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_rationale_149",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "build plotly figure for macro valuation dashboard (cape, p-cape, buffett indicat"
     },
     {
@@ -2876,8 +2942,8 @@
       "source_location": "L177",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_rationale_177",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "build plotly figure for liquidity & systemic leverage dashboard."
     },
     {
@@ -2887,8 +2953,8 @@
       "source_location": "L200",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_rationale_200",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "build plotly figure for econometric bubble dashboard (gsadf + gpt decomposition)"
     },
     {
@@ -2898,8 +2964,8 @@
       "source_location": "L227",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_rationale_227",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "build plotly figure for sentiment & volatility dashboard."
     },
     {
@@ -2909,8 +2975,8 @@
       "source_location": "L252",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_rationale_252",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "build plotly figure for sector-specific health dashboard."
     },
     {
@@ -2920,8 +2986,8 @@
       "source_location": "L277",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_rationale_277",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "build plotly figure for macro mahalanobis distance dashboard (method 1)."
     },
     {
@@ -2931,8 +2997,8 @@
       "source_location": "L353",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_rationale_353",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "render high-impact executive summary card giving macroeconomic context and quant"
     },
     {
@@ -2942,8 +3008,8 @@
       "source_location": "L380",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_rationale_380",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "render ios-style card explaining selected horizon's date range, regimes, and nat"
     },
     {
@@ -2953,8 +3019,8 @@
       "source_location": "L413",
       "_origin": "ast",
       "id": "bubble_detector_ui_dashboard_rationale_413",
-      "community": 22,
-      "community_name": "ingestor.py",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "create and initialize full nicegui application."
     },
     {
@@ -2975,8 +3041,8 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "bubble_detector_ui_panel_dashboard_get_current_date",
-      "community": 34,
-      "community_name": "get_current_date",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "get_current_date()"
     },
     {
@@ -2986,8 +3052,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "bubble_detector_ui_panel_dashboard_py_date",
-      "community": 34,
-      "community_name": "get_current_date",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "date"
     },
     {
@@ -2997,8 +3063,8 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "bubble_detector_ui_panel_dashboard_get_dynamic_50yr_date_range",
-      "community": 34,
-      "community_name": "get_current_date",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "get_dynamic_50yr_date_range()"
     },
     {
@@ -3008,8 +3074,8 @@
       "source_location": "L98",
       "_origin": "ast",
       "id": "bubble_detector_ui_panel_dashboard_get_dynamic_horizon_metadata",
-      "community": 34,
-      "community_name": "get_current_date",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "get_dynamic_horizon_metadata()"
     },
     {
@@ -3019,8 +3085,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "bubble_detector_ui_panel_dashboard_py_any",
-      "community": 34,
-      "community_name": "get_current_date",
+      "community": 2,
+      "community_name": "Econometric Bubble Detection Models",
       "norm_label": "any"
     },
     {
@@ -3206,8 +3272,8 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "bubble_detector_ui_panel_dashboard_rationale_74",
-      "community": 34,
-      "community_name": "get_current_date",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "return current execution date, or parse override date string/object."
     },
     {
@@ -3217,8 +3283,8 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "bubble_detector_ui_panel_dashboard_rationale_82",
-      "community": 34,
-      "community_name": "get_current_date",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "compute rolling 50-year date range from current execution date.         safely h"
     },
     {
@@ -3387,12 +3453,34 @@
       "norm_label": "apply post-processing transformations to the compiled panel webassembly html bun"
     },
     {
+      "label": "theme.py",
+      "file_type": "code",
+      "source_file": "bubble_detector/ui/theme.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "bubble_detector_ui_theme_py_bubble_detector_ui_theme_9cc261",
+      "community": 22,
+      "community_name": "ingestor.py",
+      "norm_label": "theme.py"
+    },
+    {
+      "label": "UI Theme and Accessibility Design System Module (UI Package Binding). ==========",
+      "file_type": "rationale",
+      "source_file": "bubble_detector/ui/theme.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "bubble_detector_ui_theme_py_bubble_detector_ui_theme_rationale_1_9cc261",
+      "community": 22,
+      "community_name": "ingestor.py",
+      "norm_label": "ui theme and accessibility design system module (ui package binding). =========="
+    },
+    {
       "label": "ui_theme.py",
       "file_type": "code",
       "source_file": "bubble_detector/ui_theme.py",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "bubble_detector_ui_theme",
+      "id": "bubble_detector_ui_theme_py_bubble_detector_ui_theme_94738c",
       "community": 22,
       "community_name": "ingestor.py",
       "norm_label": "ui_theme.py"
@@ -3442,10 +3530,21 @@
       "norm_label": "is_wcag_aa_compliant()"
     },
     {
-      "label": "get_theme_css()",
+      "label": "get_plotly_template()",
       "file_type": "code",
       "source_file": "bubble_detector/ui_theme.py",
       "source_location": "L135",
+      "_origin": "ast",
+      "id": "bubble_detector_ui_theme_get_plotly_template",
+      "community": 22,
+      "community_name": "ingestor.py",
+      "norm_label": "get_plotly_template()"
+    },
+    {
+      "label": "get_theme_css()",
+      "file_type": "code",
+      "source_file": "bubble_detector/ui_theme.py",
+      "source_location": "L151",
       "_origin": "ast",
       "id": "bubble_detector_ui_theme_get_theme_css",
       "community": 22,
@@ -3458,7 +3557,7 @@
       "source_file": "bubble_detector/ui_theme.py",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "bubble_detector_ui_theme_rationale_1",
+      "id": "bubble_detector_ui_theme_py_bubble_detector_ui_theme_rationale_1_94738c",
       "community": 22,
       "community_name": "ingestor.py",
       "norm_label": "ui theme and accessibility design system for bubble detector. =================="
@@ -3508,12 +3607,23 @@
       "norm_label": "check if foreground on background satisfies wcag 2.2 aa standards (4.5:1 text, 3"
     },
     {
-      "label": "Generate dynamic CSS variables and global stylesheet enforcing UI/UX & accessibi",
+      "label": "Return the Plotly template identifier for the specified theme mode.      Paramet",
       "file_type": "rationale",
       "source_file": "bubble_detector/ui_theme.py",
       "source_location": "L136",
       "_origin": "ast",
       "id": "bubble_detector_ui_theme_rationale_136",
+      "community": 22,
+      "community_name": "ingestor.py",
+      "norm_label": "return the plotly template identifier for the specified theme mode.      paramet"
+    },
+    {
+      "label": "Generate dynamic CSS variables and global stylesheet enforcing UI/UX & accessibi",
+      "file_type": "rationale",
+      "source_file": "bubble_detector/ui_theme.py",
+      "source_location": "L152",
+      "_origin": "ast",
+      "id": "bubble_detector_ui_theme_rationale_152",
       "community": 22,
       "community_name": "ingestor.py",
       "norm_label": "generate dynamic css variables and global stylesheet enforcing ui/ux & accessibi"
@@ -3726,8 +3836,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_data_provenance",
-      "community": 31,
-      "community_name": "test_no_synthetic_gaussian_bumps_in_data_code",
+      "community": 5,
+      "community_name": "Valuation and Feature Engineering",
       "norm_label": "test_data_provenance.py"
     },
     {
@@ -3737,8 +3847,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "tests_test_data_provenance_test_shiller_provenance_schema_and_bounds",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 5,
+      "community_name": "Valuation and Feature Engineering",
       "norm_label": "test_shiller_provenance_schema_and_bounds()"
     },
     {
@@ -3748,8 +3858,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "tests_test_data_provenance_test_fred_publication_lags",
-      "community": 24,
-      "community_name": "etl_fred.py",
+      "community": 5,
+      "community_name": "Valuation and Feature Engineering",
       "norm_label": "test_fred_publication_lags()"
     },
     {
@@ -3759,8 +3869,8 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "tests_test_data_provenance_test_finra_margin_publication_lag",
-      "community": 23,
-      "community_name": "etl_finra.py",
+      "community": 5,
+      "community_name": "Valuation and Feature Engineering",
       "norm_label": "test_finra_margin_publication_lag()"
     },
     {
@@ -3770,8 +3880,8 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "tests_test_data_provenance_test_vxo_authenticity_and_black_monday",
-      "community": 31,
-      "community_name": "test_no_synthetic_gaussian_bumps_in_data_code",
+      "community": 5,
+      "community_name": "Valuation and Feature Engineering",
       "norm_label": "test_vxo_authenticity_and_black_monday()"
     },
     {
@@ -3781,8 +3891,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_data_provenance_rationale_1",
-      "community": 31,
-      "community_name": "test_no_synthetic_gaussian_bumps_in_data_code",
+      "community": 5,
+      "community_name": "Valuation and Feature Engineering",
       "norm_label": "unit tests for institutional data provenance & publication lags (shiller, fred,"
     },
     {
@@ -3792,8 +3902,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "tests_test_data_provenance_rationale_17",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 5,
+      "community_name": "Valuation and Feature Engineering",
       "norm_label": "asserts real shiller data spans 1871-present with valid cape, earnings, and divi"
     },
     {
@@ -3803,8 +3913,8 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "tests_test_data_provenance_rationale_41",
-      "community": 24,
-      "community_name": "etl_fred.py",
+      "community": 5,
+      "community_name": "Valuation and Feature Engineering",
       "norm_label": "asserts gdp and case-shiller releases are strictly point-in-time lagged by >= 60"
     },
     {
@@ -3814,8 +3924,8 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "tests_test_data_provenance_rationale_62",
-      "community": 23,
-      "community_name": "etl_finra.py",
+      "community": 5,
+      "community_name": "Valuation and Feature Engineering",
       "norm_label": "asserts margin debt data incorporates mandatory 3-week reporting lag."
     },
     {
@@ -3825,8 +3935,8 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "tests_test_data_provenance_rationale_83",
-      "community": 31,
-      "community_name": "test_no_synthetic_gaussian_bumps_in_data_code",
+      "community": 5,
+      "community_name": "Valuation and Feature Engineering",
       "norm_label": "asserts authentic cboe vxo captures the 1987 black monday volatility spike."
     },
     {
@@ -3957,8 +4067,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_features",
-      "community": 28,
-      "community_name": "test_features.py",
+      "community": 32,
+      "community_name": "compute_technical_indicators",
       "norm_label": "test_features.py"
     },
     {
@@ -3968,8 +4078,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "tests_test_features_sample_df",
-      "community": 28,
-      "community_name": "test_features.py",
+      "community": 32,
+      "community_name": "compute_technical_indicators",
       "norm_label": "sample_df()"
     },
     {
@@ -4045,8 +4155,8 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "tests_test_features_test_tda_wasm_parity",
-      "community": 28,
-      "community_name": "test_features.py",
+      "community": 2,
+      "community_name": "Econometric Bubble Detection Models",
       "norm_label": "test_tda_wasm_parity()"
     },
     {
@@ -4056,8 +4166,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_features_rationale_1",
-      "community": 28,
-      "community_name": "test_features.py",
+      "community": 32,
+      "community_name": "compute_technical_indicators",
       "norm_label": "unit tests for feature engineering modules (technicals, macro valuations, levera"
     },
     {
@@ -4067,8 +4177,8 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "tests_test_features_rationale_66",
-      "community": 28,
-      "community_name": "test_features.py",
+      "community": 2,
+      "community_name": "Econometric Bubble Detection Models",
       "norm_label": "verify 100% numerical parity for tda persistence l2 norm between wasm app and to"
     },
     {
@@ -4078,8 +4188,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_full_indicator_parity",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "test_full_indicator_parity.py"
     },
     {
@@ -4089,8 +4199,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "tests_test_full_indicator_parity_test_all_indicators_numerical_parity",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "test_all_indicators_numerical_parity()"
     },
     {
@@ -4100,8 +4210,8 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "tests_test_full_indicator_parity_test_wasm_fallback_numerical_parity",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "test_wasm_fallback_numerical_parity()"
     },
     {
@@ -4111,8 +4221,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_full_indicator_parity_rationale_1",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "comprehensive parity test: verifies 100% numerical parity across all 15 indicato"
     },
     {
@@ -4122,8 +4232,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "tests_test_full_indicator_parity_rationale_35",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "assert that every single indicator across all 5 tabs in the webassembly app"
     },
     {
@@ -4133,8 +4243,8 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "tests_test_full_indicator_parity_rationale_73",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "rigorously test the pyodide webassembly fallback branch by mocking out datainges"
     },
     {
@@ -4144,8 +4254,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_ingestor",
-      "community": 18,
-      "community_name": "get_dynamic_horizon_metadata",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "test_ingestor.py"
     },
     {
@@ -4155,8 +4265,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "tests_test_ingestor_ingestor",
-      "community": 18,
-      "community_name": "get_dynamic_horizon_metadata",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "ingestor()"
     },
     {
@@ -4166,8 +4276,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "tests_test_ingestor_test_fetch_market_data_schema_and_downcasting",
-      "community": 18,
-      "community_name": "get_dynamic_horizon_metadata",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "test_fetch_market_data_schema_and_downcasting()"
     },
     {
@@ -4177,8 +4287,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "tests_test_ingestor_test_parquet_caching",
-      "community": 18,
-      "community_name": "get_dynamic_horizon_metadata",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "test_parquet_caching()"
     },
     {
@@ -4188,8 +4298,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_ingestor_rationale_1",
-      "community": 18,
-      "community_name": "get_dynamic_horizon_metadata",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "unit tests for dataingestor module."
     },
     {
@@ -4199,8 +4309,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_integration",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "test_integration.py"
     },
     {
@@ -4210,8 +4320,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "tests_test_integration_test_full_system_integration",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "test_full_system_integration()"
     },
     {
@@ -4221,8 +4331,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_integration_rationale_1",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "end-to-end integration test verifying data pipeline -> features -> model -> ui s"
     },
     {
@@ -4298,8 +4408,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_mahalanobis",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 1,
+      "community_name": "AGVI System Pipeline and Dashboard",
       "norm_label": "test_mahalanobis.py"
     },
     {
@@ -4309,8 +4419,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "tests_test_mahalanobis_mock_indicators_df",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 1,
+      "community_name": "AGVI System Pipeline and Dashboard",
       "norm_label": "mock_indicators_df()"
     },
     {
@@ -4386,8 +4496,8 @@
       "source_location": "L113",
       "_origin": "ast",
       "id": "tests_test_mahalanobis_test_tab6_figure_traces_and_right_flushed_legend",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "test_tab6_figure_traces_and_right_flushed_legend()"
     },
     {
@@ -4397,8 +4507,8 @@
       "source_location": "L152",
       "_origin": "ast",
       "id": "tests_test_mahalanobis_test_tab6_all_traces_finite_and_bounded",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "test_tab6_all_traces_finite_and_bounded()"
     },
     {
@@ -4408,8 +4518,8 @@
       "source_location": "L168",
       "_origin": "ast",
       "id": "tests_test_mahalanobis_test_tda_normalization_tabs_5_and_6",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "test_tda_normalization_tabs_5_and_6()"
     },
     {
@@ -4419,8 +4529,8 @@
       "source_location": "L204",
       "_origin": "ast",
       "id": "tests_test_mahalanobis_test_all_tabs_legends_right_flushed",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "test_all_tabs_legends_right_flushed()"
     },
     {
@@ -4441,8 +4551,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_mahalanobis_rationale_1",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 1,
+      "community_name": "AGVI System Pipeline and Dashboard",
       "norm_label": "unit tests for macro mahalanobis distance regime-switching bubble detector (meth"
     },
     {
@@ -4452,8 +4562,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "tests_test_mahalanobis_rationale_20",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 1,
+      "community_name": "AGVI System Pipeline and Dashboard",
       "norm_label": "generate mock 500-day polars dataframe containing all 15 indicators."
     },
     {
@@ -4474,8 +4584,8 @@
       "source_location": "L114",
       "_origin": "ast",
       "id": "tests_test_mahalanobis_rationale_114",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "verify that tab 6 contains all 8 traces with right-flushed legend in both nicegu"
     },
     {
@@ -4485,8 +4595,8 @@
       "source_location": "L153",
       "_origin": "ast",
       "id": "tests_test_mahalanobis_rationale_153",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "verify that all 8 traces plotted on tab 6 have 0 nans and fall cleanly within [0"
     },
     {
@@ -4496,8 +4606,8 @@
       "source_location": "L169",
       "_origin": "ast",
       "id": "tests_test_mahalanobis_rationale_169",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "verify that tda geometric complexity on both tab 5 and tab 6 spans the 0 to 7 y-"
     },
     {
@@ -4507,8 +4617,8 @@
       "source_location": "L205",
       "_origin": "ast",
       "id": "tests_test_mahalanobis_rationale_205",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "verify that all tabs 1 to 6 in both nicegui and wasm use right-flushed vertical"
     },
     {
@@ -4529,8 +4639,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_models",
-      "community": 6,
-      "community_name": "FINRA Margin Debt Metrics",
+      "community": 35,
+      "community_name": "compute_macro_valuations",
       "norm_label": "test_models.py"
     },
     {
@@ -4540,8 +4650,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "tests_test_models_processed_df",
-      "community": 30,
-      "community_name": "compute_margin_leverage_metrics",
+      "community": 35,
+      "community_name": "compute_macro_valuations",
       "norm_label": "processed_df()"
     },
     {
@@ -4551,8 +4661,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "tests_test_models_test_structural_break_predictor_walk_forward",
-      "community": 6,
-      "community_name": "FINRA Margin Debt Metrics",
+      "community": 35,
+      "community_name": "compute_macro_valuations",
       "norm_label": "test_structural_break_predictor_walk_forward()"
     },
     {
@@ -4562,8 +4672,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "tests_test_models_test_predict_drawdown_probability",
-      "community": 6,
-      "community_name": "FINRA Margin Debt Metrics",
+      "community": 35,
+      "community_name": "compute_macro_valuations",
       "norm_label": "test_predict_drawdown_probability()"
     },
     {
@@ -4584,8 +4694,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_models_rationale_1",
-      "community": 6,
-      "community_name": "FINRA Margin Debt Metrics",
+      "community": 35,
+      "community_name": "compute_macro_valuations",
       "norm_label": "unit tests for structuralbreakpredictor machine learning module."
     },
     {
@@ -4598,6 +4708,116 @@
       "community": 6,
       "community_name": "FINRA Margin Debt Metrics",
       "norm_label": "verify that fit_walk_forward enforces a purge embargo gap preventing forward tar"
+    },
+    {
+      "label": "test_module_aliases.py",
+      "file_type": "code",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_test_module_aliases",
+      "community": 28,
+      "community_name": "test_features.py",
+      "norm_label": "test_module_aliases.py"
+    },
+    {
+      "label": "test_margin_leverage_alias_parity()",
+      "file_type": "code",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L35",
+      "_origin": "ast",
+      "id": "tests_test_module_aliases_test_margin_leverage_alias_parity",
+      "community": 30,
+      "community_name": "compute_margin_leverage_metrics",
+      "norm_label": "test_margin_leverage_alias_parity()"
+    },
+    {
+      "label": "test_options_volatility_alias_parity()",
+      "file_type": "code",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L53",
+      "_origin": "ast",
+      "id": "tests_test_module_aliases_test_options_volatility_alias_parity",
+      "community": 28,
+      "community_name": "test_features.py",
+      "norm_label": "test_options_volatility_alias_parity()"
+    },
+    {
+      "label": "test_technical_alias_parity()",
+      "file_type": "code",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L72",
+      "_origin": "ast",
+      "id": "tests_test_module_aliases_test_technical_alias_parity",
+      "community": 28,
+      "community_name": "test_features.py",
+      "norm_label": "test_technical_alias_parity()"
+    },
+    {
+      "label": "test_ui_theme_alias_parity()",
+      "file_type": "code",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L87",
+      "_origin": "ast",
+      "id": "tests_test_module_aliases_test_ui_theme_alias_parity",
+      "community": 22,
+      "community_name": "ingestor.py",
+      "norm_label": "test_ui_theme_alias_parity()"
+    },
+    {
+      "label": "Unit tests for canonical module aliases and backward compatibility bindings.  Ve",
+      "file_type": "rationale",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_test_module_aliases_rationale_1",
+      "community": 28,
+      "community_name": "test_features.py",
+      "norm_label": "unit tests for canonical module aliases and backward compatibility bindings.  ve"
+    },
+    {
+      "label": "Verify margin_leverage module function matches canonical implementation.",
+      "file_type": "rationale",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L36",
+      "_origin": "ast",
+      "id": "tests_test_module_aliases_rationale_36",
+      "community": 30,
+      "community_name": "compute_margin_leverage_metrics",
+      "norm_label": "verify margin_leverage module function matches canonical implementation."
+    },
+    {
+      "label": "Verify options_volatility module function matches canonical implementation.",
+      "file_type": "rationale",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L54",
+      "_origin": "ast",
+      "id": "tests_test_module_aliases_rationale_54",
+      "community": 28,
+      "community_name": "test_features.py",
+      "norm_label": "verify options_volatility module function matches canonical implementation."
+    },
+    {
+      "label": "Verify technical module function matches canonical implementation.",
+      "file_type": "rationale",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L73",
+      "_origin": "ast",
+      "id": "tests_test_module_aliases_rationale_73",
+      "community": 28,
+      "community_name": "test_features.py",
+      "norm_label": "verify technical module function matches canonical implementation."
+    },
+    {
+      "label": "Verify ui.theme module re-exports tokens and contrast algorithms identically.",
+      "file_type": "rationale",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L88",
+      "_origin": "ast",
+      "id": "tests_test_module_aliases_rationale_88",
+      "community": 22,
+      "community_name": "ingestor.py",
+      "norm_label": "verify ui.theme module re-exports tokens and contrast algorithms identically."
     },
     {
       "label": "test_no_gaussian_bumps.py",
@@ -4826,8 +5046,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "tests_test_psy_ripser_integrity_test_ripser_persistence_landscapes_causal",
-      "community": 25,
-      "community_name": "generate_wasm_dataset",
+      "community": 9,
+      "community_name": "__init__.py",
       "norm_label": "test_ripser_persistence_landscapes_causal()"
     },
     {
@@ -4859,8 +5079,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "tests_test_psy_ripser_integrity_rationale_44",
-      "community": 25,
-      "community_name": "generate_wasm_dataset",
+      "community": 9,
+      "community_name": "__init__.py",
       "norm_label": "asserts persistent homology computed via ripser/topology engine uses strictly ca"
     },
     {
@@ -4958,8 +5178,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_splicing_continuity",
-      "community": 27,
-      "community_name": "test_splicing_continuity.py",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "test_splicing_continuity.py"
     },
     {
@@ -4969,8 +5189,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "tests_test_splicing_continuity_multi_decade_df",
-      "community": 27,
-      "community_name": "test_splicing_continuity.py",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "multi_decade_df()"
     },
     {
@@ -4980,8 +5200,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "tests_test_splicing_continuity_test_spy_backward_compounding_no_cliff",
-      "community": 27,
-      "community_name": "test_splicing_continuity.py",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "test_spy_backward_compounding_no_cliff()"
     },
     {
@@ -4991,8 +5211,8 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "tests_test_splicing_continuity_test_xlk_backward_compounding_no_cliff",
-      "community": 27,
-      "community_name": "test_splicing_continuity.py",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "test_xlk_backward_compounding_no_cliff()"
     },
     {
@@ -5002,8 +5222,8 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "tests_test_splicing_continuity_test_vxo_vix_seam_continuity",
-      "community": 27,
-      "community_name": "test_splicing_continuity.py",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "test_vxo_vix_seam_continuity()"
     },
     {
@@ -5013,8 +5233,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_splicing_continuity_rationale_1",
-      "community": 27,
-      "community_name": "test_splicing_continuity.py",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "unit tests for continuous backward return compounding splicing (zero cliffs)."
     },
     {
@@ -5024,8 +5244,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "tests_test_splicing_continuity_rationale_18",
-      "community": 27,
-      "community_name": "test_splicing_continuity.py",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "asserts single-day return at 1993-01-22 seam is bounded within normal daily dist"
     },
     {
@@ -5035,8 +5255,8 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "tests_test_splicing_continuity_rationale_37",
-      "community": 27,
-      "community_name": "test_splicing_continuity.py",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "asserts 1998-12-16 seam discontinuity is < 3%, completely eliminating the legacy"
     },
     {
@@ -5046,8 +5266,8 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "tests_test_splicing_continuity_rationale_53",
-      "community": 27,
-      "community_name": "test_splicing_continuity.py",
+      "community": 4,
+      "community_name": "Graphify Settings and Rules",
       "norm_label": "asserts 1990 vix seam matches cboe ^vxo within continuous market tolerance."
     },
     {
@@ -5134,8 +5354,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_wasm_parquet_parity",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "test_wasm_parquet_parity.py"
     },
     {
@@ -5145,8 +5365,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "tests_test_wasm_parquet_parity_test_wasm_loads_exact_parquet_dataset",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "test_wasm_loads_exact_parquet_dataset()"
     },
     {
@@ -5156,8 +5376,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_wasm_parquet_parity_rationale_1",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "unit tests for webassembly parquet parity and zero-mathematical-drift loading."
     },
     {
@@ -5167,8 +5387,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "tests_test_wasm_parquet_parity_rationale_14",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "asserts pyodide webassembly dataset matches nicegui dataset with zero discrepanc"
     },
     {
@@ -5178,8 +5398,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_wasm_pyodide_sandbox",
-      "community": 17,
-      "community_name": "panel_dashboard.py",
+      "community": 38,
+      "community_name": "apply_postprocessing",
       "norm_label": "test_wasm_pyodide_sandbox.py"
     },
     {
@@ -5189,8 +5409,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "tests_test_wasm_pyodide_sandbox_test_json_datasets_staging",
-      "community": 29,
-      "community_name": "stage_provenance.py",
+      "community": 38,
+      "community_name": "apply_postprocessing",
       "norm_label": "test_json_datasets_staging()"
     },
     {
@@ -5222,8 +5442,8 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "tests_test_wasm_pyodide_sandbox_test_date_horizon_selector_robust_against_year_shift",
-      "community": 39,
-      "community_name": "test_date_horizon_selector_robust_against_year_shift",
+      "community": 2,
+      "community_name": "Econometric Bubble Detection Models",
       "norm_label": "test_date_horizon_selector_robust_against_year_shift()"
     },
     {
@@ -5233,8 +5453,8 @@
       "source_location": "L151",
       "_origin": "ast",
       "id": "tests_test_wasm_pyodide_sandbox_test_wasm_full_script_pyodide_execution",
-      "community": 40,
-      "community_name": "test_wasm_full_script_pyodide_execution",
+      "community": 38,
+      "community_name": "apply_postprocessing",
       "norm_label": "test_wasm_full_script_pyodide_execution()"
     },
     {
@@ -5244,8 +5464,8 @@
       "source_location": "L209",
       "_origin": "ast",
       "id": "tests_test_wasm_pyodide_sandbox_test_wasm_full_script_pure_numpy_fallback_execution",
-      "community": 41,
-      "community_name": "test_wasm_full_script_pure_numpy_fallback_execution",
+      "community": 38,
+      "community_name": "apply_postprocessing",
       "norm_label": "test_wasm_full_script_pure_numpy_fallback_execution()"
     },
     {
@@ -5266,8 +5486,8 @@
       "source_location": "L261",
       "_origin": "ast",
       "id": "tests_test_wasm_pyodide_sandbox_test_template_and_cards_reconstruction",
-      "community": 42,
-      "community_name": "test_template_and_cards_reconstruction",
+      "community": 38,
+      "community_name": "apply_postprocessing",
       "norm_label": "test_template_and_cards_reconstruction()"
     },
     {
@@ -5299,8 +5519,8 @@
       "source_location": "L351",
       "_origin": "ast",
       "id": "tests_test_wasm_pyodide_sandbox_test_dist_index_html_on_disk",
-      "community": 43,
-      "community_name": "test_dist_index_html_on_disk",
+      "community": 38,
+      "community_name": "apply_postprocessing",
       "norm_label": "test_dist_index_html_on_disk()"
     },
     {
@@ -5310,8 +5530,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_wasm_pyodide_sandbox_rationale_1",
-      "community": 17,
-      "community_name": "panel_dashboard.py",
+      "community": 38,
+      "community_name": "apply_postprocessing",
       "norm_label": "unit tests for webassembly pyodide sandbox isolation, end-to-end execution, and"
     },
     {
@@ -5321,8 +5541,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "tests_test_wasm_pyodide_sandbox_rationale_44",
-      "community": 29,
-      "community_name": "stage_provenance.py",
+      "community": 38,
+      "community_name": "apply_postprocessing",
       "norm_label": "verify that 21-column json datasets are created within strict payload size budge"
     },
     {
@@ -5354,8 +5574,8 @@
       "source_location": "L125",
       "_origin": "ast",
       "id": "tests_test_wasm_pyodide_sandbox_rationale_125",
-      "community": 39,
-      "community_name": "test_date_horizon_selector_robust_against_year_shift",
+      "community": 2,
+      "community_name": "Econometric Bubble Detection Models",
       "norm_label": "verify candidate dataset selection correctly maps 50-year rolling horizons to ma"
     },
     {
@@ -5365,8 +5585,8 @@
       "source_location": "L152",
       "_origin": "ast",
       "id": "tests_test_wasm_pyodide_sandbox_rationale_152",
-      "community": 40,
-      "community_name": "test_wasm_full_script_pyodide_execution",
+      "community": 38,
+      "community_name": "apply_postprocessing",
       "norm_label": "end-to-end execution of bubble_detector/ui/panel_dashboard.py under total packag"
     },
     {
@@ -5376,8 +5596,8 @@
       "source_location": "L210",
       "_origin": "ast",
       "id": "tests_test_wasm_pyodide_sandbox_rationale_210",
-      "community": 41,
-      "community_name": "test_wasm_full_script_pure_numpy_fallback_execution",
+      "community": 38,
+      "community_name": "apply_postprocessing",
       "norm_label": "end-to-end execution of panel_dashboard.py under total package isolation in an e"
     },
     {
@@ -5398,8 +5618,8 @@
       "source_location": "L262",
       "_origin": "ast",
       "id": "tests_test_wasm_pyodide_sandbox_rationale_262",
-      "community": 42,
-      "community_name": "test_template_and_cards_reconstruction",
+      "community": 38,
+      "community_name": "apply_postprocessing",
       "norm_label": "verify executive summary, horizon specifications card, and fastlisttemplate."
     },
     {
@@ -5431,8 +5651,8 @@
       "source_location": "L352",
       "_origin": "ast",
       "id": "tests_test_wasm_pyodide_sandbox_rationale_352",
-      "community": 43,
-      "community_name": "test_dist_index_html_on_disk",
+      "community": 38,
+      "community_name": "apply_postprocessing",
       "norm_label": "verify that dist/index.html exists on disk and contains exactly one error bounda"
     },
     {
@@ -5615,7 +5835,7 @@
       "label": "10. Institutional Code Commentary, Packaging & Agent Navigation:",
       "file_type": "document",
       "source_file": "ImplementationOverview_DDFv100.md",
-      "source_location": "L85",
+      "source_location": "L86",
       "_origin": "ast",
       "id": "implementationoverview_ddfv100_10_institutional_code_commentary_packaging_agent_navigation",
       "community": 11,
@@ -5923,7 +6143,7 @@
       "label": "6. Synchronize Repository Knowledge Graph",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L247",
+      "source_location": "L250",
       "_origin": "ast",
       "id": "readme_6_synchronize_repository_knowledge_graph",
       "community": 16,
@@ -5934,7 +6154,7 @@
       "label": "\ud83d\udccb Changelog",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L255",
+      "source_location": "L258",
       "_origin": "ast",
       "id": "readme_changelog",
       "community": 16,
@@ -5945,7 +6165,7 @@
       "label": "[v3.0.0] - 2026-09-03",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L259",
+      "source_location": "L262",
       "_origin": "ast",
       "id": "readme_v3_0_0_2026_09_03",
       "community": 16,
@@ -5956,7 +6176,7 @@
       "label": "Added",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L261",
+      "source_location": "L264",
       "_origin": "ast",
       "id": "readme_added",
       "community": 16,
@@ -5967,7 +6187,7 @@
       "label": "[v2.2.0] - 2026-09-03",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L292",
+      "source_location": "L296",
       "_origin": "ast",
       "id": "readme_v2_2_0_2026_09_03",
       "community": 16,
@@ -5978,9 +6198,9 @@
       "label": "Added",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L294",
+      "source_location": "L298",
       "_origin": "ast",
-      "id": "readme_added_294",
+      "id": "readme_added_298",
       "community": 16,
       "community_name": ".fetch_market_data",
       "norm_label": "added"
@@ -5989,7 +6209,7 @@
       "label": "[v2.1.1] - 2026-09-02",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L309",
+      "source_location": "L313",
       "_origin": "ast",
       "id": "readme_v2_1_1_2026_09_02",
       "community": 16,
@@ -6000,9 +6220,9 @@
       "label": "Added",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L311",
+      "source_location": "L315",
       "_origin": "ast",
-      "id": "readme_added_311",
+      "id": "readme_added_315",
       "community": 16,
       "community_name": ".fetch_market_data",
       "norm_label": "added"
@@ -6011,7 +6231,7 @@
       "label": "[v2.1.0] - 2026-09-02",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L329",
+      "source_location": "L333",
       "_origin": "ast",
       "id": "readme_v2_1_0_2026_09_02",
       "community": 16,
@@ -6022,9 +6242,9 @@
       "label": "Added",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L331",
+      "source_location": "L335",
       "_origin": "ast",
-      "id": "readme_added_331",
+      "id": "readme_added_335",
       "community": 16,
       "community_name": ".fetch_market_data",
       "norm_label": "added"
@@ -6033,7 +6253,7 @@
       "label": "Fixed",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L351",
+      "source_location": "L355",
       "_origin": "ast",
       "id": "readme_fixed",
       "community": 16,
@@ -6044,7 +6264,7 @@
       "label": "[v1.0.0] - 2026-08-05",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L358",
+      "source_location": "L362",
       "_origin": "ast",
       "id": "readme_v1_0_0_2026_08_05",
       "community": 16,
@@ -6055,9 +6275,9 @@
       "label": "Added",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L360",
+      "source_location": "L364",
       "_origin": "ast",
-      "id": "readme_added_360",
+      "id": "readme_added_364",
       "community": 16,
       "community_name": ".fetch_market_data",
       "norm_label": "added"
@@ -6066,7 +6286,7 @@
       "label": "\ud83d\udcdc License",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L369",
+      "source_location": "L373",
       "_origin": "ast",
       "id": "readme_license",
       "community": 16,
@@ -7025,7 +7245,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/backtest/__init__.py",
-      "source_location": "L5",
+      "source_location": "L31",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_backtest_init",
@@ -7037,7 +7257,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/backtest/__init__.py",
-      "source_location": "L5",
+      "source_location": "L31",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_backtest_init",
@@ -7049,7 +7269,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/backtest/__init__.py",
-      "source_location": "L5",
+      "source_location": "L31",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_backtest_init",
@@ -7061,7 +7281,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/backtest/__init__.py",
-      "source_location": "L6",
+      "source_location": "L32",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_backtest_init",
@@ -7073,7 +7293,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/backtest/__init__.py",
-      "source_location": "L6",
+      "source_location": "L32",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_backtest_init",
@@ -7085,7 +7305,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/backtest/__init__.py",
-      "source_location": "L6",
+      "source_location": "L32",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_backtest_init",
@@ -7569,7 +7789,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L58",
+      "source_location": "L63",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_config",
@@ -7580,7 +7800,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L62",
+      "source_location": "L72",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_config",
@@ -7591,7 +7811,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L66",
+      "source_location": "L82",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_config",
@@ -7602,7 +7822,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L70",
+      "source_location": "L92",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_config",
@@ -7614,7 +7834,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L93",
+      "source_location": "L120",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_config",
@@ -7626,7 +7846,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L93",
+      "source_location": "L120",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_config",
@@ -7638,7 +7858,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L93",
+      "source_location": "L120",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_config",
@@ -7650,7 +7870,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L93",
+      "source_location": "L120",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_config",
@@ -7911,7 +8131,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L58",
+      "source_location": "L63",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_config_datafetcherror",
@@ -7922,7 +8142,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L62",
+      "source_location": "L72",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_config_indicatorcomputationerror",
@@ -7933,7 +8153,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L66",
+      "source_location": "L82",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_config_modeltrainingerror",
@@ -7955,7 +8175,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L70",
+      "source_location": "L92",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_config_validationerror",
@@ -7978,10 +8198,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L59",
+      "source_location": "L64",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "bubble_detector_config_rationale_59",
+      "source": "bubble_detector_config_rationale_64",
       "target": "bubble_detector_config_datafetcherror",
       "confidence_score": 1.0
     },
@@ -8012,10 +8232,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L63",
+      "source_location": "L73",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "bubble_detector_config_rationale_63",
+      "source": "bubble_detector_config_rationale_73",
       "target": "bubble_detector_config_indicatorcomputationerror",
       "confidence_score": 1.0
     },
@@ -8047,10 +8267,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L67",
+      "source_location": "L83",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "bubble_detector_config_rationale_67",
+      "source": "bubble_detector_config_rationale_83",
       "target": "bubble_detector_config_modeltrainingerror",
       "confidence_score": 1.0
     },
@@ -8093,10 +8313,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/config.py",
-      "source_location": "L71",
+      "source_location": "L93",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "bubble_detector_config_rationale_71",
+      "source": "bubble_detector_config_rationale_93",
       "target": "bubble_detector_config_validationerror",
       "confidence_score": 1.0
     },
@@ -8128,7 +8348,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/data/__init__.py",
-      "source_location": "L2",
+      "source_location": "L44",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_data_init",
@@ -8140,7 +8360,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/data/__init__.py",
-      "source_location": "L2",
+      "source_location": "L44",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_data_init",
@@ -8152,7 +8372,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/data/__init__.py",
-      "source_location": "L2",
+      "source_location": "L44",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_data_init",
@@ -8164,7 +8384,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/data/__init__.py",
-      "source_location": "L2",
+      "source_location": "L44",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_data_init",
@@ -8176,7 +8396,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/data/__init__.py",
-      "source_location": "L15",
+      "source_location": "L57",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_data_init",
@@ -8188,7 +8408,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/data/__init__.py",
-      "source_location": "L15",
+      "source_location": "L57",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_data_init",
@@ -8200,7 +8420,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/data/__init__.py",
-      "source_location": "L14",
+      "source_location": "L56",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_data_init",
@@ -8212,7 +8432,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/data/__init__.py",
-      "source_location": "L14",
+      "source_location": "L56",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_data_init",
@@ -8224,7 +8444,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/data/__init__.py",
-      "source_location": "L13",
+      "source_location": "L55",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_data_init",
@@ -8236,7 +8456,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/data/__init__.py",
-      "source_location": "L13",
+      "source_location": "L55",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_data_init",
@@ -8248,7 +8468,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/data/__init__.py",
-      "source_location": "L16",
+      "source_location": "L58",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_data_init",
@@ -8260,7 +8480,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/data/__init__.py",
-      "source_location": "L16",
+      "source_location": "L58",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_data_init",
@@ -8272,7 +8492,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/data/__init__.py",
-      "source_location": "L12",
+      "source_location": "L54",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_data_init",
@@ -8284,7 +8504,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/data/__init__.py",
-      "source_location": "L12",
+      "source_location": "L54",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_data_init",
@@ -10665,7 +10885,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/features/__init__.py",
-      "source_location": "L5",
+      "source_location": "L52",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_features_init",
@@ -10677,7 +10897,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/features/__init__.py",
-      "source_location": "L5",
+      "source_location": "L52",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_features_init",
@@ -10685,11 +10905,23 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/features/__init__.py",
+      "source_location": "L58",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_features_init",
+      "target": "bubble_detector_features_init",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "re_exports",
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/features/__init__.py",
-      "source_location": "L4",
+      "source_location": "L51",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_features_init",
@@ -10701,7 +10933,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/features/__init__.py",
-      "source_location": "L4",
+      "source_location": "L51",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_features_init",
@@ -10713,7 +10945,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/features/__init__.py",
-      "source_location": "L3",
+      "source_location": "L50",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_features_init",
@@ -10725,7 +10957,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/features/__init__.py",
-      "source_location": "L3",
+      "source_location": "L50",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_features_init",
@@ -10737,7 +10969,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/features/__init__.py",
-      "source_location": "L7",
+      "source_location": "L54",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_features_init",
@@ -10749,7 +10981,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/features/__init__.py",
-      "source_location": "L7",
+      "source_location": "L54",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_features_init",
@@ -10761,7 +10993,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/features/__init__.py",
-      "source_location": "L2",
+      "source_location": "L49",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_features_init",
@@ -10773,7 +11005,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/features/__init__.py",
-      "source_location": "L2",
+      "source_location": "L49",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_features_init",
@@ -10785,7 +11017,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/features/__init__.py",
-      "source_location": "L6",
+      "source_location": "L53",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_features_init",
@@ -10797,7 +11029,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/features/__init__.py",
-      "source_location": "L6",
+      "source_location": "L53",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_features_init",
@@ -10809,7 +11041,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/features/__init__.py",
-      "source_location": "L8",
+      "source_location": "L55",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_features_init",
@@ -10821,7 +11053,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/features/__init__.py",
-      "source_location": "L8",
+      "source_location": "L55",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_features_init",
@@ -10833,7 +11065,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/features/__init__.py",
-      "source_location": "L8",
+      "source_location": "L55",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_features_init",
@@ -10845,7 +11077,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/features/__init__.py",
-      "source_location": "L8",
+      "source_location": "L55",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_features_init",
@@ -11191,6 +11423,18 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/features/margin_leverage.py",
+      "source_location": "L56",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_features_margin_leverage",
+      "target": "bubble_detector_features_leverage",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "references",
       "context": "return_type",
       "confidence": "EXTRACTED",
@@ -11210,6 +11454,18 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_features_leverage_rationale_50",
+      "target": "bubble_detector_features_leverage_compute_margin_leverage_metrics",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/features/margin_leverage.py",
+      "source_location": "L56",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_features_margin_leverage",
       "target": "bubble_detector_features_leverage_compute_margin_leverage_metrics",
       "confidence_score": 1.0
     },
@@ -11344,6 +11600,30 @@
       "_origin": "ast",
       "source": "tests_test_models_processed_df",
       "target": "bubble_detector_features_leverage_compute_margin_leverage_metrics"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_module_aliases",
+      "target": "bubble_detector_features_leverage_compute_margin_leverage_metrics",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L48",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_module_aliases_test_margin_leverage_alias_parity",
+      "target": "bubble_detector_features_leverage_compute_margin_leverage_metrics",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11523,6 +11803,29 @@
       "target": "bubble_detector_features_macro_valuation_compute_macro_valuations"
     },
     {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/features/margin_leverage.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_features_margin_leverage_rationale_1",
+      "target": "bubble_detector_features_margin_leverage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "submodule_import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_module_aliases",
+      "target": "bubble_detector_features_margin_leverage",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/features/options_vol.py",
@@ -11541,6 +11844,18 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_features_options_vol_rationale_1",
+      "target": "bubble_detector_features_options_vol",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/features/options_volatility.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_features_options_volatility",
       "target": "bubble_detector_features_options_vol",
       "confidence_score": 1.0
     },
@@ -11564,6 +11879,18 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_features_options_vol_rationale_50",
+      "target": "bubble_detector_features_options_vol_compute_options_volatility_metrics",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/features/options_volatility.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_features_options_volatility",
       "target": "bubble_detector_features_options_vol_compute_options_volatility_metrics",
       "confidence_score": 1.0
     },
@@ -11698,6 +12025,100 @@
       "_origin": "ast",
       "source": "tests_test_models_processed_df",
       "target": "bubble_detector_features_options_vol_compute_options_volatility_metrics"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_module_aliases",
+      "target": "bubble_detector_features_options_vol_compute_options_volatility_metrics",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L67",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_module_aliases_test_options_volatility_alias_parity",
+      "target": "bubble_detector_features_options_vol_compute_options_volatility_metrics",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/features/options_volatility.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_features_options_volatility_rationale_1",
+      "target": "bubble_detector_features_options_volatility",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "submodule_import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_module_aliases",
+      "target": "bubble_detector_features_options_volatility",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/features/technical.py",
+      "source_location": "L49",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_features_technical",
+      "target": "bubble_detector_features_technicals",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/features/technical.py",
+      "source_location": "L49",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_features_technical",
+      "target": "bubble_detector_features_technicals_compute_technical_indicators",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/features/technical.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_features_technical_rationale_1",
+      "target": "bubble_detector_features_technical",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "submodule_import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_module_aliases",
+      "target": "bubble_detector_features_technical",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11849,6 +12270,30 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_test_mahalanobis_test_full_pipeline_polars_integration",
+      "target": "bubble_detector_features_technicals_compute_technical_indicators",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_module_aliases",
+      "target": "bubble_detector_features_technicals_compute_technical_indicators",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L82",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_module_aliases_test_technical_alias_parity",
       "target": "bubble_detector_features_technicals_compute_technical_indicators",
       "confidence_score": 1.0
     },
@@ -12453,7 +12898,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/models/__init__.py",
-      "source_location": "L3",
+      "source_location": "L25",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_models_init",
@@ -12465,7 +12910,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/models/__init__.py",
-      "source_location": "L3",
+      "source_location": "L25",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_models_init",
@@ -12477,7 +12922,7 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/models/__init__.py",
-      "source_location": "L2",
+      "source_location": "L24",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_models_init",
@@ -12489,7 +12934,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/models/__init__.py",
-      "source_location": "L2",
+      "source_location": "L24",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_models_init",
@@ -13783,7 +14228,43 @@
       "context": "export",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/ui/__init__.py",
-      "source_location": "L2",
+      "source_location": "L35",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_ui_init",
+      "target": "bubble_detector_ui_components",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/ui/__init__.py",
+      "source_location": "L35",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_ui_init",
+      "target": "bubble_detector_ui_components_create_cta_banner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/ui/__init__.py",
+      "source_location": "L35",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_ui_init",
+      "target": "bubble_detector_ui_components_create_ios_card",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/ui/__init__.py",
+      "source_location": "L34",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_ui_init",
@@ -13795,11 +14276,35 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/ui/__init__.py",
-      "source_location": "L2",
+      "source_location": "L34",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_ui_init",
       "target": "bubble_detector_ui_dashboard_create_app",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/ui/__init__.py",
+      "source_location": "L34",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_ui_init",
+      "target": "bubble_detector_ui_dashboard_dashboardstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/ui/__init__.py",
+      "source_location": "L36",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_ui_init",
+      "target": "bubble_detector_ui_init",
       "confidence_score": 1.0
     },
     {
@@ -13817,7 +14322,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/ui/components.py",
-      "source_location": "L12",
+      "source_location": "L37",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_ui_components",
@@ -13828,23 +14333,11 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/ui/components.py",
-      "source_location": "L39",
+      "source_location": "L76",
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_ui_components",
       "target": "bubble_detector_ui_components_create_ios_card",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/components.py",
-      "source_location": "L10",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_components",
-      "target": "bubble_detector_ui_theme",
       "confidence_score": 1.0
     },
     {
@@ -13874,10 +14367,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/ui/components.py",
-      "source_location": "L16",
+      "source_location": "L41",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "bubble_detector_ui_components_rationale_16",
+      "source": "bubble_detector_ui_components_rationale_41",
       "target": "bubble_detector_ui_components_create_cta_banner",
       "confidence_score": 1.0
     },
@@ -13909,10 +14402,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/ui/components.py",
-      "source_location": "L40",
+      "source_location": "L77",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "bubble_detector_ui_components_rationale_40",
+      "source": "bubble_detector_ui_components_rationale_77",
       "target": "bubble_detector_ui_components_create_ios_card",
       "confidence_score": 1.0
     },
@@ -14059,18 +14552,6 @@
       "_origin": "ast",
       "source": "bubble_detector_ui_dashboard",
       "target": "bubble_detector_ui_dashboard_render_horizon_explanatory_note",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "bubble_detector/ui/dashboard.py",
-      "source_location": "L59",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "bubble_detector_ui_dashboard",
-      "target": "bubble_detector_ui_theme",
       "confidence_score": 1.0
     },
     {
@@ -16519,13 +17000,108 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/ui/theme.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_ui_theme_py_bubble_detector_ui_theme_9cc261",
+      "target": "bubble_detector_ui_theme_calculate_contrast_ratio",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/ui/theme.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_ui_theme_py_bubble_detector_ui_theme_9cc261",
+      "target": "bubble_detector_ui_theme_get_plotly_template",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/ui/theme.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_ui_theme_py_bubble_detector_ui_theme_9cc261",
+      "target": "bubble_detector_ui_theme_get_theme_css",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/ui/theme.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_ui_theme_py_bubble_detector_ui_theme_9cc261",
+      "target": "bubble_detector_ui_theme_is_wcag_aa_compliant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/ui/theme.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_ui_theme_py_bubble_detector_ui_theme_9cc261",
+      "target": "bubble_detector_ui_theme_parse_hex_color",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/ui/theme.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_ui_theme_py_bubble_detector_ui_theme_9cc261",
+      "target": "bubble_detector_ui_theme_py_bubble_detector_ui_theme_9cc261",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/ui/theme.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_ui_theme_py_bubble_detector_ui_theme_9cc261",
+      "target": "bubble_detector_ui_theme_relative_luminance",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/ui/theme.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_ui_theme_py_bubble_detector_ui_theme_rationale_1_9cc261",
+      "target": "bubble_detector_ui_theme_py_bubble_detector_ui_theme_9cc261",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "bubble_detector/ui_theme.py",
       "source_location": "L64",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "bubble_detector_ui_theme",
+      "source": "bubble_detector_ui_theme_py_bubble_detector_ui_theme_94738c",
       "target": "bubble_detector_ui_theme_calculate_contrast_ratio",
       "confidence_score": 1.0
     },
@@ -16536,7 +17112,18 @@
       "source_location": "L135",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "bubble_detector_ui_theme",
+      "source": "bubble_detector_ui_theme_py_bubble_detector_ui_theme_94738c",
+      "target": "bubble_detector_ui_theme_get_plotly_template",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/ui_theme.py",
+      "source_location": "L151",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_ui_theme_py_bubble_detector_ui_theme_94738c",
       "target": "bubble_detector_ui_theme_get_theme_css",
       "confidence_score": 1.0
     },
@@ -16547,7 +17134,7 @@
       "source_location": "L72",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "bubble_detector_ui_theme",
+      "source": "bubble_detector_ui_theme_py_bubble_detector_ui_theme_94738c",
       "target": "bubble_detector_ui_theme_is_wcag_aa_compliant",
       "confidence_score": 1.0
     },
@@ -16558,7 +17145,7 @@
       "source_location": "L42",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "bubble_detector_ui_theme",
+      "source": "bubble_detector_ui_theme_py_bubble_detector_ui_theme_94738c",
       "target": "bubble_detector_ui_theme_parse_hex_color",
       "confidence_score": 1.0
     },
@@ -16569,7 +17156,7 @@
       "source_location": "L54",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "bubble_detector_ui_theme",
+      "source": "bubble_detector_ui_theme_py_bubble_detector_ui_theme_94738c",
       "target": "bubble_detector_ui_theme_relative_luminance",
       "confidence_score": 1.0
     },
@@ -16580,20 +17167,8 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "bubble_detector_ui_theme_rationale_1",
-      "target": "bubble_detector_ui_theme",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/test_ui_theme.py",
-      "source_location": "L6",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "tests_test_ui_theme",
-      "target": "bubble_detector_ui_theme",
+      "source": "bubble_detector_ui_theme_py_bubble_detector_ui_theme_rationale_1_94738c",
+      "target": "bubble_detector_ui_theme_py_bubble_detector_ui_theme_94738c",
       "confidence_score": 1.0
     },
     {
@@ -16666,6 +17241,18 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "indirect_call",
+      "context": "argument",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L91",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_module_aliases_test_ui_theme_alias_parity",
+      "target": "bubble_detector_ui_theme_calculate_contrast_ratio"
+    },
+    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -16701,6 +17288,18 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L92",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_module_aliases_test_ui_theme_alias_parity",
+      "target": "bubble_detector_ui_theme_is_wcag_aa_compliant"
+    },
+    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -16732,6 +17331,17 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "bubble_detector_ui_theme_rationale_136",
+      "target": "bubble_detector_ui_theme_get_plotly_template",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/ui_theme.py",
+      "source_location": "L152",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_ui_theme_rationale_152",
       "target": "bubble_detector_ui_theme_get_theme_css",
       "confidence_score": 1.0
     },
@@ -17723,6 +18333,105 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L35",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_module_aliases",
+      "target": "tests_test_module_aliases_test_margin_leverage_alias_parity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L53",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_module_aliases",
+      "target": "tests_test_module_aliases_test_options_volatility_alias_parity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L72",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_module_aliases",
+      "target": "tests_test_module_aliases_test_technical_alias_parity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L87",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_module_aliases",
+      "target": "tests_test_module_aliases_test_ui_theme_alias_parity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_module_aliases_rationale_1",
+      "target": "tests_test_module_aliases",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L36",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_module_aliases_rationale_36",
+      "target": "tests_test_module_aliases_test_margin_leverage_alias_parity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L54",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_module_aliases_rationale_54",
+      "target": "tests_test_module_aliases_test_options_volatility_alias_parity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L73",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_module_aliases_rationale_73",
+      "target": "tests_test_module_aliases_test_technical_alias_parity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_module_aliases_rationale_88",
+      "target": "tests_test_module_aliases_test_ui_theme_alias_parity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "tests/test_no_gaussian_bumps.py",
       "source_location": "L77",
       "weight": 1.0,
@@ -18539,7 +19248,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "ImplementationOverview_DDFv100.md",
-      "source_location": "L85",
+      "source_location": "L86",
       "weight": 1.0,
       "_origin": "ast",
       "source": "implementationoverview_ddfv100_overview_of_completed_implementation_multidimensional_market_bubble_detector",
@@ -18671,7 +19380,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L255",
+      "source_location": "L258",
       "weight": 1.0,
       "_origin": "ast",
       "source": "readme_multidimensional_market_bubble_detector_structural_break_system",
@@ -18715,7 +19424,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L369",
+      "source_location": "L373",
       "weight": 1.0,
       "_origin": "ast",
       "source": "readme_multidimensional_market_bubble_detector_structural_break_system",
@@ -18946,7 +19655,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L247",
+      "source_location": "L250",
       "weight": 1.0,
       "_origin": "ast",
       "source": "readme_local_setup_execution_guide",
@@ -18957,7 +19666,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L358",
+      "source_location": "L362",
       "weight": 1.0,
       "_origin": "ast",
       "source": "readme_changelog",
@@ -18968,7 +19677,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L329",
+      "source_location": "L333",
       "weight": 1.0,
       "_origin": "ast",
       "source": "readme_changelog",
@@ -18979,7 +19688,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L309",
+      "source_location": "L313",
       "weight": 1.0,
       "_origin": "ast",
       "source": "readme_changelog",
@@ -18990,7 +19699,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L292",
+      "source_location": "L296",
       "weight": 1.0,
       "_origin": "ast",
       "source": "readme_changelog",
@@ -19001,7 +19710,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L259",
+      "source_location": "L262",
       "weight": 1.0,
       "_origin": "ast",
       "source": "readme_changelog",
@@ -19012,7 +19721,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L261",
+      "source_location": "L264",
       "weight": 1.0,
       "_origin": "ast",
       "source": "readme_v3_0_0_2026_09_03",
@@ -19023,40 +19732,40 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L294",
+      "source_location": "L298",
       "weight": 1.0,
       "_origin": "ast",
       "source": "readme_v2_2_0_2026_09_03",
-      "target": "readme_added_294",
+      "target": "readme_added_298",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L311",
+      "source_location": "L315",
       "weight": 1.0,
       "_origin": "ast",
       "source": "readme_v2_1_1_2026_09_02",
-      "target": "readme_added_311",
+      "target": "readme_added_315",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L331",
+      "source_location": "L335",
       "weight": 1.0,
       "_origin": "ast",
       "source": "readme_v2_1_0_2026_09_02",
-      "target": "readme_added_331",
+      "target": "readme_added_335",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L351",
+      "source_location": "L355",
       "weight": 1.0,
       "_origin": "ast",
       "source": "readme_v2_1_0_2026_09_02",
@@ -19067,11 +19776,11 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L360",
+      "source_location": "L364",
       "weight": 1.0,
       "_origin": "ast",
       "source": "readme_v1_0_0_2026_08_05",
-      "target": "readme_added_360",
+      "target": "readme_added_364",
       "confidence_score": 1.0
     },
     {
@@ -19995,5 +20704,5 @@
       "source_file": "impliedvolatilitymetric.png"
     }
   ],
-  "built_at_commit": "f15764338de3fe88a00188d7ebec2e6bed803aeb"
+  "built_at_commit": "034aaf9742a6a3f9c64391ded27388cd4ace0d05"
 }
