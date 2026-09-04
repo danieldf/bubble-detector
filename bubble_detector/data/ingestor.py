@@ -1,14 +1,51 @@
 """
 Data Ingestor Module for Market Bubble Detection.
+=================================================
 
-Fetches equity, macro, volatility, and leverage data using real point-in-time provenance datasets,
-eliminating all analytical Gaussian bumps and artificial splicing cliffs via continuous backward
-return compounding:
-    P_{t-1}^{proxy} = P_t^{proxy} * (S_{t-1}^{benchmark} / S_t^{benchmark})
+Mathematical & Financial Architecture:
+--------------------------------------
+The data ingestion layer is responsible for constructing a unified, multi-asset,
+multi-decade panel of equity prices, macroeconomic valuation ratios, options-implied
+volatilities, and systemic leverage indicators.
 
-Applies Polars schema downcasting (float32/int32), implements forward fill and cubic spline
-interpolation for missing metrics, tracks data provenance ([REAL], [PROXY], [SYNTHETIC]),
-and serializes to Parquet format.
+1. Continuous Backward Return Compounding (Cliff Eradication):
+   When analyzing modern exchange-traded funds (ETFs) over multi-decade horizons,
+   financial econometricians face an inception boundary problem:
+   - SPY (SPDR S&P 500 ETF) inception: 1993-01-22 (prior anchor: $43.94)
+   - XLK (Technology Select Sector SPDR) inception: 1998-12-16 (prior anchor: $32.50)
+
+   Naive concatenation of ETF prices with raw benchmark index levels causes severe
+   discontinuities (e.g. an artificial -28.8% drop on SPY and -76.5% drop on XLK),
+   generating spurious volatility spikes and corrupting covariance estimation.
+
+   To eliminate splicing cliffs with mathematical rigor, we implement continuous backward
+   return compounding:
+       P_{t-1}^{proxy} = P_t^{proxy} \\cdot \\left(\\frac{S_{t-1}^{benchmark}}{S_t^{benchmark}}\\right)
+   Expanding recursively from the inception anchor date T_{incept}:
+       P_t^{proxy} = P_{T_{incept}}^{real} \\cdot \\left(\\frac{S_t^{benchmark}}{S_{T_{incept}}^{benchmark}}\\right), \\quad \\forall t < T_{incept}
+
+   Mathematical Invariant:
+       \\Delta \\ln P_t^{proxy} = \\ln P_t^{proxy} - \\ln P_{t-1}^{proxy} \\equiv \\ln S_t^{benchmark} - \\ln S_{t-1}^{benchmark} = \\Delta \\ln S_t^{benchmark}
+   The logarithmic daily return series of the synthetic proxy is IDENTICAL to the institutional
+   underlying benchmark index, guaranteeing zero artificial jump discontinuity at T_{incept}.
+
+2. Term Structure of Implied Volatility:
+   Options pricing theory distinguishes between normal contango regimes and inverted backwardation:
+   - Contango (Market Calm): Near-term uncertainty is lower than longer-term variance risk,
+     yielding VIX1D < VIX (30-day) < VIX3M.
+   - Backwardation (Crash & Panic): Immediate hedging demand drives short-dated options to
+     extreme premia, inverting the term structure: VIX1D > VIX > VIX3M.
+
+3. Institutional Provenance Tracking:
+   Every feature row and column carries explicit provenance metadata:
+   - [REAL]: Primary exchange-traded market quotes or official regulatory filings.
+   - [PROXY]: Continuous backward-compounded series tied to authentic benchmark indexes.
+   - [SYNTHETIC]: Derived or fallback series (strictly flagged for regulatory compliance).
+
+4. Memory Downcasting & WebAssembly (WASM) Serialization:
+   To enable instant execution within browser-side Pyodide WebAssembly environments,
+   all float64 arrays are safely cast to float32 and int64 to int32, halving RAM consumption
+   and disk I/O latency while retaining 7 decimal digits of precision (sufficient for basis-point accuracy).
 """
 
 import os
@@ -37,8 +74,8 @@ VIX_INCEPTION_DATE = "1990-01-02"
 
 class DataIngestor:
     """
-    Handles fetching, preprocessing, backward continuous return compounding,
-    Polars downcasting, and Parquet caching of market datasets.
+    High-performance ingestion engine orchestrating market prices, macroeconomic ETL pipelines,
+    backward return compounding, Polars schema downcasting, and Parquet caching.
     """
 
     def __init__(self, cache_dir: Optional[Path] = None):

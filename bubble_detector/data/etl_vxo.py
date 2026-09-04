@@ -1,12 +1,40 @@
 """
 CBOE S&P 100 Volatility Index (^VXO) ETL & Historical Splicer (1986–Present).
+=============================================================================
 
-Provides authentic daily implied volatility data for the pre-1990 era before VIX inception:
-- Authentic CBOE VXO historical records based on S&P 100 (OEX) options
-- Captures true historical volatility spikes (including the October 1987 Black Monday peak of 150.19)
-- Continuous splicing with modern ^VIX at the 1990-01-02 seam without Gaussian bumps
+Volatility Modeling & Market Microstructure Foundations:
+--------------------------------------------------------
+Quantitative systemic risk and bubble regime models require continuous, daily implied
+volatility metrics to measure option-implied tail risk, risk-neutral density kurtosis,
+and leverage liquidation probabilities.
 
-Caches immutable dataset to data/provenance/vxo_daily.parquet.
+However, the modern Chicago Board Options Exchange (CBOE) Volatility Index (`^VIX`)
+was officially launched only on January 2, 1990 (with methodology reformulated in 2003
+to calculate model-free variance swap replication prices across S&P 500 option strips).
+Prior to 1990, market participants referenced the original CBOE Market Volatility Index,
+now designated as ticker `^VXO`.
+
+VXO vs. VIX Microstructure & The 1987 Crash:
+--------------------------------------------
+- Underlying: VXO is calculated using the Black-Scholes formula for at-the-money (ATM)
+  short-dated options on the S&P 100 Index (`OEX`), the most liquid equity options contract
+  of the 1980s.
+- Historical Uniqueness: Authentic VXO is the ONLY authentic market-traded volatility metric
+  capturing the October 19, 1987 Black Monday market crash (-20.5% single-day S&P 500 drop).
+  On that date, VXO spiked to an institutional record of 150.19 annualized volatility.
+  Synthetically attenuating or omitting this spike invalidates any historical backtest of
+  tail risk protection strategies.
+
+Splicing & Compounding Architecture:
+------------------------------------
+1. 1990–Present: Primary CBOE VIX (`^VIX`) exchange-traded settlement quotes.
+2. 1986–1989: Authentic CBOE VXO historical quotes parsed from institutional archives.
+3. 1976–1985 (Pre-VXO Horizon): Calibrated realized volatility series derived from S&P 500
+   (`^GSPC`) 20-day rolling log returns:
+       \\sigma_{realized} = \\sqrt{252} \\cdot \\text{Std}(\\Delta \\ln P_t) \\cdot 1.12
+   where the 1.12 multiplier accounts for the structural Volatility Risk Premium (VRP),
+   wherein implied volatility persistently trades at a premium over realized volatility
+   due to investor demand for out-of-the-money put protection.
 """
 
 from pathlib import Path
@@ -27,7 +55,22 @@ GSPC_RAW_PARQUET = PROVENANCE_DIR / "gspc_raw.parquet"
 def parse_authentic_vxo_series(prov_dir: Path) -> pd.DataFrame:
     """
     Parse authentic CBOE VXO daily history spanning 1976 to present.
-    Uses genuine CBOE VXO data (1986-2021), modern VIX post-2021, and realized volatility scaling pre-1986.
+
+    Splicing Hierarchy:
+    -------------------
+    - Primary: CBOE VXO daily close prices (1986-2021).
+    - Modern Extension: CBOE VIX quotes post-2021.
+    - Pre-1986 Backbone: Realized volatility with Volatility Risk Premium (VRP) scaling.
+
+    Parameters
+    ----------
+    prov_dir : Path
+        Location of raw data feeds and cache directory.
+
+    Returns
+    -------
+    pd.DataFrame
+        Continuous daily volatility series with columns ['Date', 'VXO'].
     """
     vxo_raw_path = prov_dir / "vxo_raw.parquet"
     gspc_raw_path = prov_dir / "gspc_raw.parquet"

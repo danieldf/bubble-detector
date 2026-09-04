@@ -1,5 +1,23 @@
 """
-Pre-compilation and staging script for provenance and WASM Parquet datasets.
+Provenance Data Staging & WebAssembly Binary Pre-Compilation Pipeline.
+=====================================================================
+
+Institutional Data Lineage & Build Architecture:
+------------------------------------------------
+This build automation script orchestrates the end-to-end extraction, verification,
+and binary serialization of authentic macroeconomic and financial time series:
+
+1. Provenance ETL Orchestration:
+   - ShillerETL: Robert Shiller S&P Composite, CAPE, real earnings, dividends, and CPI (1871–present).
+   - FredETL: Nominal GDP (quarterly, 60d lag) and Case-Shiller Housing Price-to-Income (monthly, 60d lag).
+   - FinraETL: FINRA customer margin debit balances + NYSE historical archives (1959–present, 21d lag).
+   - VxoETL: CBOE VXO daily quotes capturing the 1987 Black Monday peak (150.19) and modern VIX.
+
+2. WebAssembly Dual-Format Serialization (Parquet & JSON MEMFS):
+   - Pre-compiles full historical market data into zero-copy Apache Arrow Parquet files.
+   - Converts core feature columns into lightweight JSON format (`market_data_50yr.json`, `market_data_modern.json`).
+   - Replicates compiled datasets across `build/`, `dist/`, and `data/provenance/` directories,
+     enabling instant synchronous loading inside Pyodide's virtual Emscripten filesystem.
 """
 
 from pathlib import Path

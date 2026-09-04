@@ -1,14 +1,44 @@
 """
 FRED Macroeconomic Point-in-Time Data ETL Module.
+=================================================
 
-Ingests and models genuine macroeconomic indicators from the Federal Reserve Bank of St. Louis (FRED):
-- Nominal GDP (FRED: GDP) with mandatory 60-day quarterly publication lag
-- S&P/Case-Shiller U.S. National Home Price Index (CSUSHPINSA) with mandatory 60-day lag
-- Real Median Household Income (MEHOINUSA672N) with annual publication lag
-- Derived Housing Price-to-Income (PTI) ratio
+Economic & Econometric Rationale:
+---------------------------------
+Systemic financial bubbles rarely occur in an economic vacuum; they are characterized
+by severe decoupling between asset valuations and real macroeconomic productivity.
+This module ingests and standardizes primary macroeconomic time series from the
+Federal Reserve Bank of St. Louis (FRED):
 
-Enforces strict point-in-time publication lag constraints without analytical Gaussian bumps.
-Saves immutable dataset to data/provenance/fred_macro.parquet.
+1. Nominal Gross Domestic Product (FRED: `GDP`):
+   - Frequency: Quarterly, seasonally adjusted annual rate (SAAR) in billions of USD.
+   - Economic Purpose: Serves as the fundamental scaling denominator in the Warren Buffett
+     Indicator (Equities / Gross Domestic Output), measuring aggregate corporate revenue capacity.
+   - Publication Lag: The Bureau of Economic Analysis (BEA) releases Advance GDP estimates
+     ~30 days post quarter-end, followed by Second (~60 days) and Third (~90 days) revisions.
+     To eliminate lookahead bias, we enforce a mandatory 60-day publication lag before GDP
+     enters any trading or feature calculation:
+         Available\\_Date_q = QuarterEnd(Quarter_Date_q) + 60 \\text{ calendar days}
+
+2. Housing Price-to-Income (PTI) Multiple:
+   - Components:
+     * S&P CoreLogic Case-Shiller U.S. National Home Price Index (FRED: `CSUSHPINSA`).
+     * Real Median Household Income (FRED: `MEHOINUSA672N`).
+   - Economic Purpose: Quantifies residential real estate overvaluation and consumer balance
+     sheet fragility. Extreme housing PTI precedes systemic banking crises (e.g., 2006–2008 GFC).
+   - Empirical Historical Anchors:
+     * 1976 baseline: ~3.2x
+     * 2006 Subprime bubble peak: ~7.0x
+     * 2012 Post-crisis trough: ~4.5x
+     * 2024–2026 AI / Post-COVID housing cycle: ~7.1x
+   - Publication Lag: Case-Shiller indices are published with an institutional 2-month (60-day)
+     reporting lag. Census household income is released annually each September.
+
+Point-in-Time Alignment & Causal Spline Architecture:
+-----------------------------------------------------
+All macroeconomic indicators are merged onto daily trading calendars using strictly
+backward-looking as-of joins (`pd.merge_asof(..., direction='backward')`). Forward filling
+is applied to reflect information state persistence between official statistical releases,
+ensuring zero future information leakage into historical backtests.
 """
 
 from pathlib import Path
@@ -30,6 +60,22 @@ FRED_INC_CSV = PROVENANCE_DIR / "fred_mehoinusa672n.csv"
 def parse_fred_macro_series(prov_dir: Path) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Parse real historical FRED macroeconomic releases (GDP, Case-Shiller, Median Income).
+
+    ETL Logic & Causality Rules:
+    ----------------------------
+    - Ingests official CSVs directly from FRED repository endpoints.
+    - Appends strict point-in-time `Available_Date` stamps reflecting publication releases.
+    - Constructs the normalized Housing Price-to-Income ratio scaled to institutional benchmarks.
+
+    Parameters
+    ----------
+    prov_dir : Path
+        Directory housing raw FRED CSV downloads and persistent cache.
+
+    Returns
+    -------
+    Tuple[pd.DataFrame, pd.DataFrame]
+        (df_gdp, df_housing) monthly/quarterly series with publication timestamps.
     """
     gdp_path = prov_dir / "fred_gdp.csv"
     cs_path = prov_dir / "fred_csushpinsa.csv"

@@ -1,10 +1,38 @@
 """
 Panel (HoloViz) Enterprise WebAssembly Dashboard for Market Bubble Detection.
+=============================================================================
 
-Matches NiceGUI quantitative formulas, data scaling, and plot Y-axis bounds 100%
-identically across both 5-Regime (2015–2026) and 50-Year Multi-Decade (1976–2026) horizons.
-Uses pre-compiled Parquet binary loading into virtual filesystem (Pyodide.FS), trace provenance
-badging ([REAL]/[PROXY]), and prominent red banner alert if synthetic fallback data is engaged.
+WebAssembly & Client-Side Pyodide Architecture:
+-----------------------------------------------
+This module implements the browser-executable WebAssembly (WASM) dashboard powered by
+HoloViz Panel, Bokeh, and Plotly under the Pyodide CPython-in-WASM runtime.
+It runs completely client-side inside the user's web browser with zero server-side daemon
+requirements, zero cloud API fees, and zero remote data transmission.
+
+1. High-Performance Virtual Memory Filesystem (MEMFS):
+   During build packaging (`panel convert --to pyodide-worker`), institutional Parquet datasets
+   and JSON payloads are staged into the browser's in-memory virtual filesystem (`/memfs/` or Emscripten FS).
+   `panel_dashboard.py` detects whether it is running under native CPython or Pyodide WASM,
+   dynamically routing dataset I/O between local disk and virtual memory buffers.
+
+2. Dual-Engine Numerical Parity Guarantee:
+   Every econometric indicator, scaling formula, and visual chart in this Panel WASM runtime
+   matches the NiceGUI server dashboard with 100% numerical parity:
+   - Identical 15-indicator Signed Mahalanobis distance formulation and directional projections.
+   - Identical Bubenik persistence landscape L2 norms and Morlet wavelet complexity scores.
+   - Identical right-flushed legend layouts (`x=1.02, xanchor='left'`) preventing line overlap.
+
+3. Reactive Dynamic Horizon State Management:
+   Features reactive multi-horizon switching between:
+   - Option 1 (Rolling 50-Year Multi-Decade Horizon, 1976–2026): 9 historical stress regimes.
+   - Option 2 (Modern 5-Regime Horizon, 2015–present): 100% native exchange-traded assets.
+   Toggling the horizon selector re-renders all 6 interactive analytical tabs without page reloads.
+
+4. Institutional Provenance Badging & Auditability:
+   All visual traces carry explicit provenance tags:
+   - [REAL]: Primary exchange trades or audited regulatory filings.
+   - [PROXY]: Continuous backward-compounded series.
+   - [SYNTHETIC]: Explicitly flagged fallback series with persistent visual warning banners.
 """
 
 import datetime

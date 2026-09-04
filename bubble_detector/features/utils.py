@@ -1,14 +1,52 @@
 """
 Shared Mathematical & Topological Utilities.
+============================================
 
-Provides reusable numerical algorithms: Augmented Dickey-Fuller t-statistic calculation,
-Takens delay-coordinate embedding, and dynamic range normalization for TDA persistence norms.
+Numerical Algorithms & Lookahead Elimination:
+---------------------------------------------
+This module provides reusable numerical routines for econometric and topological processing.
+A core architectural requirement across all quantitative functions is the strict prevention
+of lookahead leakage in feature scaling and time-series normalization.
+
+1. Strictly Causal Expanding-Window Dynamic Scaling:
+   In financial backtesting, naive min-max scaling:
+       \\tilde{x}_t = \\frac{x_t - \\min_{1 \\le s \\le T} x_s}{\\max_{1 \\le s \\le T} x_s - \\min_{1 \\le s \\le T} x_s}
+   leaks future global extrema into past trading days, corrupting backtest validity.
+   To preserve causality, `normalize_tda_indicator` uses expanding-window historical bounds:
+       M_t = \\max_{1 \\le s \\le t} x_s, \\quad m_t = \\min_{1 \\le s \\le t} x_s
+       \\tilde{x}_t = z_{min} + \\left( \\frac{x_t - m_t}{M_t - m_t + \\epsilon} \\right) (z_{max} - z_{min})
+   At operational time t, only historical observations [1, t] influence the scaling envelope.
+
+2. Augmented Dickey-Fuller (ADF) Ordinary Least Squares:
+   Evaluates right-tailed explosive test statistics via numerically stabilized
+   Moore-Penrose pseudo-inversion (`np.linalg.pinv(X^T X)`), preventing matrix singular
+   exceptions during low-variance market consolidations.
+
+3. Takens' Delay Coordinate Embedding:
+   Vectorized lag embedding mapping 1D series into N-dimensional phase space manifolds.
 """
 
 import numpy as np
 
 def calculate_adf_stat(prices: np.ndarray) -> float:
-    """Calculate Augmented Dickey-Fuller t-statistic for explosive root testing."""
+    """
+    Calculate Augmented Dickey-Fuller t-statistic for right-tailed explosive root testing.
+
+    Model:
+        \\Delta y_t = \\alpha + \\gamma \\cdot y_{t-1} + e_t, \\quad y_t = \\ln(P_t)
+        \\text{Test}: \\quad H_0: \\gamma = 0 \\quad \\text{vs.} \\quad H_1: \\gamma > 0
+        t = \\frac{\\hat{\\gamma}}{\\text{SE}(\\hat{\\gamma})}
+
+    Parameters
+    ----------
+    prices : np.ndarray
+        Array of price levels.
+
+    Returns
+    -------
+    float
+        Calculated ADF t-statistic.
+    """
     if len(prices) < 15:
         return 0.0
     

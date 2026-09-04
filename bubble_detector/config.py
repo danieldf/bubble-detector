@@ -1,5 +1,19 @@
 """
-Configuration and Logging Module for Bubble Detector.
+Global Configuration, Logging Infrastructure & Constants Module.
+=================================================================
+
+Architectural Purpose:
+----------------------
+Serves as the centralized single source of truth for runtime directories, logging topology,
+custom exception hierarchies, ticker mappings, and date horizon parameters across the
+entire Bubble Detector ecosystem.
+
+Directory Structure:
+--------------------
+- BASE_DIR: Repository root filesystem path.
+- LOG_DIR: Target for rotating application logs (`logs/bubble_detector.log`).
+- CACHE_DIR: Persistent intermediate query cache (`data/cache/`).
+- PROVENANCE_DIR: Permanent institutional raw datasets (`data/provenance/`).
 """
 
 import os

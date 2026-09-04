@@ -1,13 +1,54 @@
 """
 Structural Break Machine Learning Classifier & Probability Calibration Module.
+==============================================================================
 
-Utilizes Gradient Boosting with RobustScaler preprocessing, expanding-window TimeSeriesSplit
-with purge-embargo gaps, and Isotonic / Platt probability calibration to evaluate:
-    P(Drawdown_{t -> t+H} > threshold | Score_t)
+Financial Machine Learning & Calibration Foundations:
+-----------------------------------------------------
+Predicting structural regime breaks and drawdown probabilities requires moving beyond
+static statistical distances to non-linear, multi-variate supervised pattern classification.
+However, applying machine learning to financial time series introduces dangerous pitfalls:
+label overlap leakage, serial correlation distortion, and overconfident probability estimates.
 
-Provides statistical calibration diagnostics:
-- Brier Score (BS) evaluated against unconditional baseline
-- 10-bin Reliability Diagram and Expected Calibration Error (ECE)
+1. Definition of the Forward Drawdown Event:
+   For operational trading day t, investment horizon H = 20 trading days (~1 month), and
+   drawdown threshold \\theta = 0.05 (5% peak-to-trough decline):
+       \\text{DD}_{t, H} = \\min_{1 \\le h \\le H} \\left( \\frac{P_{t+h} - P_t}{P_t} \\right)
+       y_t = \\mathbb{I}(\\text{DD}_{t, H} < -\\theta) \\in \\{0, 1\\}
+   The binary target y_t indicates whether a structural break / sharp correction occurs
+   within the forward 20-day horizon.
+
+2. Purged & Embargoed Cross-Validation (López de Prado, 2018):
+   Standard k-fold cross-validation assumes independent and identically distributed (i.i.d.)
+   observations. In financial markets with multi-day forward labels, observation t overlaps
+   with observations t+1, \\dots, t+H-1. Naive random or unpurged splitting leaks future
+   information across folds, inflating out-of-sample performance.
+   This implementation enforces:
+   - Expanding-Window TimeSeriesSplit: Preserves temporal order; fold k trains only on past data.
+   - Purge & Embargo Gap: The final H = 20 observations of each training fold are purged:
+         \\text{Train\\_Purged}_k = \\text{Train}_k[:-H]
+   - Terminal Unobservable Mask: The final H observations of the historical dataset cannot
+     observe future prices, and are strictly masked during training.
+
+3. Robust Feature Preprocessing:
+   Financial features exhibit fat tails and extreme outliers (e.g. 1987 VXO of 150.19, March 2020 VIX of 82.69).
+   Standard mean-variance normalization (z = (x - \\mu)/\\sigma) is corrupted by extreme outliers.
+   We implement `RobustScaler`:
+       \\tilde{x} = \\frac{x - \\text{median}(x)}{\\text{IQR}(x)}, \\quad \\text{IQR} = Q_3 - Q_1
+
+4. Non-Parametric Isotonic Probability Calibration (Zadrozny & Elkan, 2002):
+   Tree-based boosting algorithms maximize rank-order separation (AUC) rather than calibrated
+   log-loss, producing probabilities clustered near 0 and 1.
+   We fit an out-of-fold monotonic step function m: [0, 1] \\to [0, 1] via pool-adjacent violators:
+       \\min_m \\sum_{i=1}^N (y_i - m(\\hat{p}_i))^2 \\quad \\text{s.t.} \\quad \\hat{p}_i \\le \\hat{p}_j \\implies m(\\hat{p}_i) \\le m(\\hat{p}_j)
+
+5. Calibration Verification: Brier Score & Expected Calibration Error (ECE):
+   - Brier Score (Brier, 1950):
+         \\text{BS} = \\frac{1}{N} \\sum_{i=1}^N (p_i - y_i)^2 \\in [0, 1]
+     Benchmark: Unconditional naive climatological baseline \\text{BS}_{base} = \\bar{y}(1 - \\bar{y}).
+     A well-calibrated classifier satisfies \\text{BS} < \\text{BS}_{base}.
+   - Expected Calibration Error (ECE; Guo et al., 2017):
+     Partition predictions into M = 10 equal-width confidence bins B_1, \\dots, B_M:
+         \\text{ECE} = \\sum_{m=1}^M \\frac{|B_m|}{N} \\left| \\text{acc}(B_m) - \\text{conf}(B_m) \\right|
 """
 
 from typing import Dict, List, Tuple, Optional, Any

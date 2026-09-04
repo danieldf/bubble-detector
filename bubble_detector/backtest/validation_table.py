@@ -1,16 +1,44 @@
 """
 Falsifiable Historical Peak Validation Event Table Module.
+==========================================================
 
-Evaluates early warning signals, lead times (t_peak - t_alert), realized peak-to-trough drawdowns,
-crash contraction times, and annual false alarm rates across 8 landmark historical market crashes:
-1. 1980 Volcker Rate Shock (Nov 1980)
-2. 1987 Black Monday Crash (Aug 1987)
-3. 1990 S&L Crisis & Recession (Jul 1990)
-4. 2000 Dot-Com Bubble (Mar 2000)
-5. 2007 Great Financial Crisis (Oct 2007)
-6. 2018 Volmageddon & Q4 QT (Sep 2018)
-7. 2020 COVID-19 Flash Crash (Feb 2020)
-8. 2022 Fed Rate Tightening (Jan 2022)
+Popperian Falsifiability & Event Study Methodology:
+---------------------------------------------------
+A persistent pathology in financial literature is retrospective curve-fitting: parameterizing
+indicators after the fact so they appear to anticipate historical crashes.
+Under Karl Popper's criterion of scientific falsifiability (1959), an early warning model
+is only valid if its predictions can be empirically tested and falsified against historical events.
+
+This module evaluates the system across 8 landmark historical crisis events using strict,
+pre-specified event study rules:
+
+1. Canonical Crisis Inventory:
+   - 1980 Volcker Rate Shock (20% Fed Funds Rate, -27.1% S&P decline)
+   - 1987 Black Monday Crash (-20.5% single-day crash, -33.5% total drawdown)
+   - 1990 S&L Crisis & Gulf War Recession (-19.9% drawdown)
+   - 2000 Dot-Com Tech Bubble & Crash (-49.1% S&P / -78% NASDAQ collapse)
+   - 2007–2009 Global Financial Crisis (-56.8% peak-to-trough collapse)
+   - 2018 Volmageddon & Q4 Quantitative Tightening (-19.8% drawdown)
+   - 2020 COVID-19 Flash Crash (-33.9% drawdown in 23 trading days)
+   - 2022 Global Rate Tightening & Tech Valuation Compression (-25.4% drawdown)
+
+2. Objective Event Metric Formulations:
+   - Cycle Peak Date (t_{peak}): Maximum closing price prior to a >= 15% drawdown.
+   - First Warning Crossing (t_{alert}): First trading day in the 252-day lookback window [t_{peak} - 252, t_{peak}]
+     where D_M(t) \\ge 4.5 or \\text{Score}_{bubble}(t) \\ge 1.2.
+   - Lead Time (\\Delta t_{lead}):
+         \\Delta t_{lead} = t_{peak} - t_{alert} \\quad (\\text{Trading Days})
+     Valid early warnings satisfy 10 \\le \\Delta t_{lead} \\le 252 days.
+     If \\Delta t_{lead} \\le 0, the model is lagging and fails the validation test.
+   - Realized Drawdown:
+         \\text{DD}_{peak-to-trough} = \\left( \\frac{P_{trough} - P_{peak}}{P_{peak}} \\right) \\times 100\\%
+   - Contraction Time (\\Delta t_{contract}):
+         \\Delta t_{contract} = t_{trough} - t_{peak} \\quad (\\text{Trading Days})
+
+3. Diagnostic Distributional Summaries:
+   - Warning Hit Rate: Percentage of historical crises preceded by a valid early alert.
+   - Median Lead Time: Typical operational cushion provided to portfolio managers to hedge or de-risk.
+   - Annual False Alarm Rate: Number of unconfirmed warning episodes per calendar year.
 """
 
 from typing import Dict, List, Any, Optional

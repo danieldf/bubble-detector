@@ -1,5 +1,5 @@
 # =============================================================================
-# Multidimensional Market Bubble Detector & Structural Break System
+# Multidimensional Market Bubble Detector & Structural Break System (v3.0.0)
 # Production & Development Requirements Specification
 # Compatible with `uv pip install -r requirements.txt` and standard pip
 # =============================================================================
@@ -7,90 +7,120 @@
 # -----------------------------------------------------------------------------
 # 1. High-Speed Vectorized Data Processing & Parquet Storage
 # -----------------------------------------------------------------------------
-# Polars: Apache Arrow columnar DataFrame engine; multithreaded query execution
+# Polars: Apache Arrow columnar DataFrame engine.
+# - Role: Multithreaded vectorized query execution, SIMD expression evaluations,
+#   and zero-copy in-memory transformations. Reduces memory footprint by ~50%
+#   via Float32/Int32 schema downcasting.
 polars>=1.0.0
 
-# PyArrow: Columnar memory format and high-throughput Parquet read/write backend
+# PyArrow: Columnar memory format and high-throughput Parquet read/write backend.
+# - Role: Interoperability with Arrow memory buffers, IPC streaming, and
+#   snappy-compressed Parquet caching for multi-decade panel datasets.
 pyarrow>=15.0.0
 
-# Pandas: Interoperability layer for financial time series and business-day logic
+# Pandas: Tabular interoperability and financial business-day datetime indexing.
+# - Role: Provides backward-looking as-of merging (`pd.merge_asof(..., direction='backward')`)
+#   for strict point-in-time publication lag enforcement and rolling calendar math.
 pandas>=2.1.0
 
-# YFinance: Ingestion interface for real-time and historical exchange market data
+# YFinance: Market data ingestion interface.
+# - Role: Connects to Yahoo Finance API to download exchange-traded asset closes
+#   (SPY, XLK, SMH, XLE, ITB, ITA, ^VIX, ^VXO, ^SKEW, etc.).
 yfinance>=0.2.35
 
-# Excel parsing backends for authentic provenance data ETL (Shiller ie_data.xls & FINRA margin statistics)
+# Excel parsing backends for authentic provenance data ETL.
+# - OpenPyXL: Parses modern XML-based Excel (.xlsx) workbooks, specifically FINRA `margin_statistics.xlsx`.
+# - XLRD: Parses legacy binary BIFF8 Excel (.xls) spreadsheets, specifically Robert Shiller's `ie_data.xls`.
 openpyxl>=3.1.0
 xlrd>=2.0.0
 
 # -----------------------------------------------------------------------------
 # 2. Numerical Computing, Scientific Algorithms & Quantitative Machine Learning
 # -----------------------------------------------------------------------------
-# NumPy: Foundational N-dimensional array mathematics and vectorized calculations
+# NumPy: Foundational N-dimensional array mathematics.
+# - Role: Fast vector operations, matrix products, eigen-decomposition,
+#   and polynomial curve fitting. Pinned >=1.26 for Python 3.12/3.14 C-API compatibility.
 numpy>=1.26.0
 
-# SciPy: Regularized matrix solvers, optimization routines, and eigenvalue decomposition
+# SciPy: Regularized matrix solvers, optimization routines, and signal processing.
+# - Role: Sparse minimum spanning tree (MST) algorithms (`scipy.sparse.csgraph`),
+#   continuous Morlet wavelet transformation (`scipy.signal.cwt`), and pseudo-inversion.
 scipy>=1.12.0
 
-# Scikit-Learn: Robust covariance estimators, Ridge regularization, and TimeSeriesSplit
+# Scikit-Learn: Robust covariance estimators and walk-forward cross-validation.
+# - Role: Ledoit-Wolf shrinkage (`LedoitWolf`), Minimum Covariance Determinant (`MinCovDet`),
+#   outlier-resistant scaling (`RobustScaler`), TimeSeriesSplit with purge-embargo,
+#   and Isotonic Regression (`IsotonicRegression`) for empirical probability calibration.
 scikit-learn>=1.4.0
 
-# XGBoost: Scalable, distributed gradient-boosted decision trees for regime prediction
+# XGBoost: Scalable, distributed gradient-boosted decision trees.
+# - Role: Non-linear classifier predicting forward 20-day structural break drawdowns (>5%).
+#   Gracefully falls back to SciKit-Learn `HistGradientBoostingClassifier` if binary wheels are absent.
 xgboost>=2.0.0
 
-# TA: Specialized technical analysis library for financial indicators and momentum
+# TA: Specialized technical analysis library for financial momentum.
+# - Role: Computes moving average convergences, Bollinger Bands, and oscillators.
 ta>=0.11.0
 
-# Ripser: Fast computation of Vietoris-Rips persistent homology
+# Ripser: Fast computation of Vietoris-Rips persistent homology.
+# - Role: Extracts H0 connected components and H1 topological cycle birth-death barcodes
+#   from Takens' delay-coordinate point clouds. Pure-Python/scipy MST fallback provided for WASM.
 ripser>=0.6.4
 
 # -----------------------------------------------------------------------------
-# 3. Interactive Web Dashboards & UI Visualization Runtimes
+# 3. Interactive Analytical Dashboards & UI Visualization Runtimes
 # -----------------------------------------------------------------------------
-# NiceGUI: High-performance Python UI framework built on FastAPI and Vue/Quasar
+# NiceGUI: Modern, high-performance Python UI framework built on FastAPI and Vue/Quasar.
+# - Role: Powers the full-featured server-side analytical desktop dashboard with reactive state.
 nicegui>=1.4.0
 
-# FastAPI: Modern, asynchronous ASGI web framework powering NiceGUI endpoints
+# FastAPI: High-concurrency ASGI web framework driving NiceGUI reactive endpoints.
 fastapi>=0.110.0
 
-# Uvicorn: Lightning-fast ASGI web server implementation
+# Uvicorn: Ultra-fast ASGI web server implementation powering FastAPI event loops.
 uvicorn>=0.28.0
 
-# HoloViz Panel: High-level reactive visualization framework supporting Pyodide WASM
+# HoloViz Panel: High-level reactive visualization framework supporting Pyodide WebAssembly.
+# - Role: Powers the zero-install, client-side WebAssembly browser dashboard with identical numerical parity.
 panel>=1.3.0
 
-# Bokeh: Native plotting library powering Panel interactive layout widgets
+# Bokeh: Native plotting library and layout engine powering Panel reactive interactive widgets.
 bokeh>=3.3.0
 
-# Param: Declarative Python programming framework for reactive parameters
+# Param: Declarative Python programming framework for reactive component parameters.
 param>=2.0.0
 
-# Plotly: Publication-quality interactive graphing library with WebGL acceleration
+# Plotly: Publication-quality interactive graphing library with WebGL acceleration.
+# - Role: Renders 6 analytical tabs across server and WASM dashboards with right-flushed legends.
 plotly>=5.18.0
 
 # -----------------------------------------------------------------------------
 # 4. Networking, Serialization, Validation & Utilities
 # -----------------------------------------------------------------------------
-# Pydantic: Data validation and settings management using Python type annotations
+# Pydantic: Data validation and settings management using Python type annotations.
+# - Role: Schema enforcement for API contracts and provenance configuration models.
 pydantic>=2.6.0
 
-# Requests: Battle-tested HTTP client for external macroeconomic API data ingestion
+# Requests: Resilient HTTP client for external macroeconomic API data fetching.
+# - Role: Downloads raw Shiller workbooks, FRED economic CSVs, and FINRA regulatory tables.
 requests>=2.31.0
 
-# Python-Dateutil: Extended date and time handling for multi-decade financial horizons
+# Python-Dateutil: Extended date and time handling.
+# - Role: Business-day offset arithmetic and multi-decade rolling horizon date boundaries.
 python-dateutil>=2.8.2
 
-# PyYAML: Robust YAML parser for configuration files and horizon metadata
+# PyYAML: Strict YAML parser for horizon metadata and pipeline configurations.
 pyyaml>=6.0.1
 
 # -----------------------------------------------------------------------------
-# 5. Quality Assurance, Testing & Validation
+# 5. Quality Assurance, Testing & Validation Suite
 # -----------------------------------------------------------------------------
-# Pytest: Enterprise-grade automated test runner and fixture architecture
+# Pytest: Enterprise-grade automated test runner and fixture architecture.
+# - Role: Executes the 72-test institutional verification suite covering provenance, models, and UI.
 pytest>=8.0.0
 
-# AnyIO: Asynchronous concurrency library supporting async test execution
+# AnyIO: Asynchronous concurrency library supporting async test execution.
 anyio>=4.0.0
 
-# Tqdm: Fast, extensible progress bars for walk-forward cross-validation loops
+# Tqdm: Fast, extensible progress bars for walk-forward cross-validation loops.
 tqdm>=4.66.0

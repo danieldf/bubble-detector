@@ -78,7 +78,15 @@
 
 ## 9. Comprehensive Verification Suite:
 
-* Full automated test suite expanded to **62 automated unit, numerical parity, anti-synthetic provenance regression, and integration tests passing with 100% success rate** (`pytest tests/ -v`).
+* Full automated test suite expanded to **72 automated unit, numerical parity, anti-synthetic provenance regression, and integration tests passing with 100% success rate** (`pytest tests/ -v`).
+* Dedicated anti-synthetic regression suite (`tests/test_no_gaussian_bumps.py`) certifying zero analytical Gaussian curves or synthetic bell shapes in `bubble_detector/data/`.
+* Parity test suite (`tests/test_full_indicator_parity.py`) guaranteeing bitwise and numerical parity across Python and Pyodide WebAssembly environments.
+
+## 10. Institutional Code Commentary, Packaging & Agent Navigation:
+
+* **Comprehensive Mathematical & Econometric Docstrings**: Every module across `bubble_detector/data/`, `bubble_detector/features/`, `bubble_detector/models/`, `bubble_detector/backtest/`, and `bubble_detector/ui/` has been annotated with exhaustive docstrings detailing underlying mathematical formulations (e.g. Campbell-Shiller 1988 earnings smoothing, Phillips-Shi-Yu 2015 recursive BSADF, Takens delay embedding, Vietoris-Rips persistent homology, Ledoit-Wolf regularized Mahalanobis distance), financial economic rationales, algorithmic trade-offs, and failure mode defenses.
+* **Modern Packaging Infrastructure (`requirements.txt` & `pyproject.toml`)**: Deeply annotated dependency specifications explaining runtime footprint, WASM compatibility considerations, and version constraints adhering to PEP 621 and modern `uv` workflows.
+* **Agent Navigation & Architecture Rules**: Dedicated guidance in `GEMINI.md` and `.agents/rules/system_architecture.md` allowing autonomous AI coding agents to navigate, test, and extend the system with high reliability.
 
 <!-- ### -->
 <!-- # eNd ImplementationOverview_DDFv100.md -->

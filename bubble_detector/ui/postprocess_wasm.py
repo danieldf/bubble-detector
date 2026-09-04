@@ -1,12 +1,49 @@
 """
-Post-processing utility for Panel WebAssembly compiled output (dist/index.html).
-Injects MEMFS dataset pre-loader, adds error boundary, and decodes unicode emojis.
+Post-Processing Utility for Panel WebAssembly Compiled Artifacts (`dist/index.html`).
+===================================================================================
+
+WebAssembly Compilation & Virtual Filesystem Architecture:
+----------------------------------------------------------
+When compiling interactive Python dashboards to client-side WebAssembly via HoloViz Panel
+(`panel convert bubble_detector/ui/panel_dashboard.py --to pyodide-worker --out dist/`),
+the resulting static HTML file requires targeted post-processing to function seamlessly
+in sandboxed browser runtimes:
+
+1. In-Memory Virtual Filesystem (MEMFS) Pre-Loading:
+   Standard browser Python cannot perform synchronous POSIX file I/O against remote web servers.
+   This postprocessor injects an asynchronous JavaScript initialization routine that fetches
+   the pre-staged JSON datasets (`market_data_50yr.json`, `market_data_modern.json`) and mounts
+   them directly into Pyodide's virtual Emscripten filesystem (`pyodide.FS.writeFile`).
+   When `panel_dashboard.py` executes, it reads these files instantly from local virtual memory.
+
+2. Wheel Normalization:
+   Normalizes version-pinned CDN wheel URLs to canonical package names recognized by Pyodide's
+   built-in micropip installer, preventing CDN timeout and version mismatch failures.
+
+3. Unicode Emoji Deserialization:
+   Resolves Python-to-JavaScript string serialization artifacts where 32-bit Unicode characters
+   (such as institutional icons and financial emojis) become corrupted into literal escape strings
+   (e.g., `\\U0001f3db`).
+
+4. Resilient Browser Error Boundary:
+   Standard Pyodide loading screens fail silently if a Python import or syntax error occurs,
+   leaving users stranded on an infinite loading spinner (`pn-loading`).
+   The injected error boundary intercepts exceptions during `pyodide.runPythonAsync(code)`
+   and renders an informative diagnostic error panel directly in the DOM.
 """
 
 import re
 from pathlib import Path
 
 def postprocess_wasm_html(html_path: Path = Path("dist/index.html")):
+    """
+    Apply post-processing transformations to the compiled Panel WebAssembly HTML bundle.
+
+    Parameters
+    ----------
+    html_path : Path
+        Filesystem path to the target `index.html` artifact in the distribution folder.
+    """
     if not html_path.exists():
         print(f"Warning: {html_path} does not exist.")
         return

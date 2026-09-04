@@ -1,9 +1,35 @@
 """
-NiceGUI Dashboard Implementation for Market Bubble Detection System.
+NiceGUI Interactive Dashboard for Market Bubble Detection System.
+=================================================================
 
-Embeds 6 interactive Plotly tabs, iOS 13+ design patterns, dyslexia-friendly labels,
-WCAG 2.2 AA contrast compliance, light/dark theme switcher, trace provenance badging ([REAL]/[PROXY]),
-prominent red synthetic fallback alert banner, and institutional backtest/validation modules.
+Server-Side Reactive Architecture & Human-Centered UI Design:
+-------------------------------------------------------------
+This module implements the primary desktop/server-side analytical dashboard powered by
+NiceGUI, FastAPI, and Plotly. It coordinates the full end-to-end quantitative pipeline:
+data ingestion, technical and econometric feature extraction, topological complexity
+computation, machine learning structural break prediction, Signed Mahalanobis distance
+regime classification, and cost-inclusive portfolio backtesting.
+
+1. Reactive State Management & Multi-Horizon Architecture:
+   The `DashboardState` class acts as the centralized reactive model governing:
+   - Dynamic horizon state (Option 1: 50-year multi-decade vs. Option 2: modern 5-regime).
+   - Real-time feature re-computation and regime classification upon horizon toggle.
+   - Global UI theme state (Light mode vs. Dark mode with WCAG 2.2 AA contrast compliance).
+   - Provenance tracking ([REAL], [PROXY], [SYNTHETIC]) and prominent audit alerting.
+
+2. Accessibility & Typography System (WCAG 2.2 AA Compliance):
+   The interface is engineered according to institutional human-factors specifications:
+   - Minimum 4.5:1 contrast ratio for all body typography and 3.0:1 for graphical UI elements.
+   - Dyslexia-friendly typographic scales and high-contrast color tokens.
+   - Descriptive ARIA attributes, semantic container hierarchies, and tactile CTA banners.
+
+3. Interactive Plotly Analytical Suite (Tabs 1–6):
+   - Tab 1: Executive Overview & Macro Risk Dashboard (KPI metrics, regime gauge, timeline).
+   - Tab 2: Macro Valuation Multiples (Shiller CAPE, Payout-Adjusted CAPE, Buffett Indicator).
+   - Tab 3: Systemic Leverage & Debt Dynamics (FINRA margin debt, velocity, exhaustion gap).
+   - Tab 4: Econometric & Topological Fragility (Canonical PSY GSADF, GPT residual, TDA L2 norm).
+   - Tab 5: Volatility & Options Microstructure (VIX slope, SKEW tail risk alert, dispersion).
+   - Tab 6: Regime Mahalanobis Distance, Signed Projection & Dynamic Exposure Calibration.
 """
 
 from typing import Dict, Any, List, Optional

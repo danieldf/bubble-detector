@@ -82,7 +82,7 @@ where $\\mathbf{z}_t$ is the 15-dimensional standardized indicator vector, $\\bo
   $$w_{\\text{equity}}(t) = \\text{clip}(1.0 - 0.80 \\cdot P_{\\text{bubble}}(t), 0.20, 1.00)$$
   guaranteeing a strict 20% defensive liquidity reserve floor at extreme crisis regimes ($D_M > 6.2\\sigma$).
 
-## 9. Data Red Team Remediation & Institutional Hardening Specifications
+## 8. Data Red Team Remediation & Institutional Hardening Specifications
 
 1. **Ground Truth Data Provenance & Point-in-Time ETL (Item 1)**: Primary inputs are anchored in verified historical data sources: Robert Shiller's `ie_data.xls` (1871–present monthly S&P prices, earnings, dividends, CPI, and CAPE), FRED macroeconomic series with publication lags (GDP quarterly +60d, M2 weekly +14d), FINRA margin debt with +25d reporting lag, and CBOE VXO daily (1986–present). Staged datasets are packaged as `.parquet` files under `data/provenance/`.
 2. **Continuous Splicing Cliff Elimination (Item 2)**: All multi-decade spliced time series (SPY 1993, XLK 1998, VXO/VIX) use continuous backward return compounding:
@@ -96,7 +96,8 @@ where $\\mathbf{z}_t$ is the 15-dimensional standardized indicator vector, $\\bo
 6. **Elimination of Endogeneity & Collinearity Leakage (Item 6)**: The model forecast `Drawdown_Probability` and collinearly scaled `P_CAPE` are strictly excluded from the covariance matrix estimation feature space, reducing matrix condition numbers by $> 500\times$.
 7. **Institutional Cost-Inclusive Backtest Simulation Engine (Item 7)**: Real-world portfolio dynamics are simulated with 10 bps transaction fees, 5 bps market-impact slippage, 4.0% annualized cash yield, and borrowing penalties. The strategy demonstrates superior Sharpe ratios, sortino ratios, and reduced maximum drawdowns compared to Buy & Hold and Naive CAPE benchmark rules.
 8. **WebAssembly Parquet Virtual Filesystem & Provenance Badges (Item 8)**: Parquet tables are mounted directly into Pyodide virtual filesystems for instant zero-drift client execution. All visual traces across Tabs 1–6 display explicit provenance badges (`[REAL]`, `[PROXY]`, `[SYNTHETIC]`), and an prominent red alert banner dynamically renders if fallback data is engaged.
-9. **Automated Verification Quality Gate**: All 62 unit, numerical parity, anti-synthetic provenance regression, and system integration tests must pass with 100% success rate (`pytest tests/`).
+9. **Automated Verification Quality Gate**: All 72 unit, numerical parity, anti-synthetic provenance regression, and system integration tests must pass with 100% success rate (`pytest tests/`).
+10. **Institutional Documentation & Code Commentary**: Complete mathematical docstrings, parameter explanations, economic rationale, and failure modes across all modules in `bubble_detector/`. Requirements file and packaging specifications must document library trade-offs and WebAssembly sandboxing constraints.
 
 <!-- ### -->
 <!-- # eNd TechnicalSpecification_DDFv100.md -->

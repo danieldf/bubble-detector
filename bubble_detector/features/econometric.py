@@ -1,9 +1,56 @@
 """
 Econometric Bubble Detection Module (Canonical PSY & GSADF).
+============================================================
 
-Implements the Phillips, Shi & Yu (2015) recursive expanding sub-window procedure (GSADF / BSADF)
-and General-Purpose Technology (GPT) structural cointegration decomposition to isolate speculative
-explosive behavior from rational productivity repricing.
+Econometric Foundations & Mathematical Formulations:
+---------------------------------------------------
+Conventional econometric unit root tests (e.g., standard Dickey-Fuller) test the null
+hypothesis of a unit root H0: \\delta = 1 against the left-tailed stationary alternative
+H1: \\delta < 1 (mean reversion). However, asset price bubbles are characterized by
+transitory episodes of explosive behavior where prices grow faster than an exponential
+random walk.
+
+1. Canonical Phillips, Shi & Yu (PSY, 2015) Testing Framework:
+   Consider the autoregressive model for log-prices or log price-to-dividend ratios:
+       y_t = \\mu + \\delta \\cdot y_{t-1} + \\sum_{j=1}^k \\psi_j \\Delta y_{t-j} + \\epsilon_t, \\quad \\epsilon_t \\sim \\text{i.i.d.}(0, \\sigma^2)
+   The econometric test evaluates:
+       H_0: \\delta = 1 \\quad \\text{(Martingale Unit Root)}
+       H_1: \\delta > 1 \\quad \\text{(Right-Tailed Mildly Explosive Behavior)}
+
+   Under H1, prices exhibit explosive sub-trajectories:
+       \\Delta y_t = \\mu + (\\delta - 1) y_{t-1} + \\epsilon_t = \\mu + \\gamma y_{t-1} + \\epsilon_t, \\quad \\gamma > 0
+   The test statistic is the t-ratio for \\gamma:
+       \\text{ADF} = \\frac{\\hat{\\gamma}}{\\text{SE}(\\hat{\\gamma})}
+
+2. Recursive Expanding Backward Supremum ADF (BSADF):
+   Because bubbles emerge and collapse at unknown historical dates, static full-sample tests
+   suffer from catastrophic power collapse (a bubble followed by a crash looks stationary
+   in aggregate samples). PSY formulate the Backward Supremum ADF:
+   Let r_2 be the current sample endpoint (normalized to [0, 1]) and r_1 be a variable starting point:
+       \\text{BSADF}_{r_2}(r_0) = \\sup_{r_1 \\in [0, r_2 - r_0]} \\text{ADF}_{r_1}^{r_2}
+   where r_0 is the minimum initialization window fraction. When BSADF exceeds the critical
+   threshold, a statistically significant explosive episode is active at time r_2.
+
+3. General-Purpose Technology (GPT) Structural Cointegration Decomposition:
+   Not all rapid price expansions are speculative bubbles; transformative General-Purpose
+   Technologies (GPTs) — such as railroads, electrification, personal computers, the Internet,
+   and Generative Artificial Intelligence — generate genuine structural shifts in expected future
+   productivity and cash flow growth (Jovanovic & Rousseau, 2005).
+
+   To isolate speculative mania from rational technological repricing:
+       \\ln(P_t) = \\alpha + \\beta \\cdot \\ln(\\text{Tech}_t) + u_t
+   where \\text{Tech}_t is the technology sector price index reflecting realized productivity investments.
+   - Fundamental Component: \\hat{P}_t^{fund} = \\exp(\\hat{\\alpha} + \\hat{\\beta} \\ln(\\text{Tech}_t))
+   - Speculative Froth Residual: e_t = P_t - \\hat{P}_t^{fund} + \\overline{P}
+   Evaluating BSADF on e_t produces `GSADF_GPT_Adjusted`. If GSADF is elevated on P_t but
+   collapses toward zero on e_t, the price surge is fundamentally justified by technological
+   capital expenditure rather than unanchored speculative leverage.
+
+4. Asymptotic Distribution & Wild Bootstrap:
+   Under H0: \\delta = 1, the test statistic follows a non-standard Wiener functional:
+       \\text{ADF} \\Rightarrow \\frac{\\int_0^1 W(s) dW(s)}{\\left(\\int_0^1 W(s)^2 ds\\right)^{1/2}}
+   Wild bootstrap critical values (Rademacher innovations \\eta_t \\in \\{-1, +1\\}) establish
+   finite-sample 95% (cv \\approx 1.45) and 99% (cv \\approx 2.05) significance thresholds.
 """
 
 from typing import Tuple, Optional

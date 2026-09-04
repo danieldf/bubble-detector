@@ -1,13 +1,41 @@
 """
 FINRA & NYSE Margin Debt Point-in-Time ETL Module.
+=================================================
 
-Ingests monthly margin debt statistics spanning 1959 to 2026:
-- Historical NYSE Margin Debt (1959–1996) based on published regulatory records
-- Authentic FINRA Customer Debit Balances in Margin Accounts (1997–present) parsed from `margin_statistics.xlsx`
-- Enforces mandatory 3-week (~21-day) post month-end publication lag
-- Computes YoY margin debt growth and momentum velocity without Gaussian bumps
+Economic & Financial Instability Theory:
+----------------------------------------
+In Hyman Minsky's Financial Instability Hypothesis (1986, 1992), financial systems
+endogenously transition over prolonged economic expansions from "hedge finance"
+(cash flows cover principal and interest) to "speculative finance" (cash flows cover
+interest only) and ultimately to "Ponzi finance" (borrowing increases to meet interest
+commitments, contingent upon continuous asset price appreciation).
 
-Saves immutable dataset to data/provenance/finra_margin_debt.parquet.
+Brokerage customer margin debt serves as the primary empirical bellwether for systemic
+market leverage:
+- Expansion Phase: Rising collateral asset values loosen broker lending constraints,
+  fueling pro-cyclical purchasing power and driving asset prices above fundamental values.
+- Liquidation Phase: At the inflection point, price declines trigger regulatory maintenance
+  margin calls (FINRA Rule 4210). Forced liquidations drive further market declines,
+  generating a self-reinforcing fire-sale spiral.
+
+Empirical Lineage & Regulatory Data Provenance:
+----------------------------------------------
+1. 1959–1996: Historical New York Stock Exchange (NYSE) member firm customer debit balances,
+   archived by the Board of Governors of the Federal Reserve System and NYSE Research.
+2. 1997–Present: Financial Industry Regulatory Authority (FINRA) Rule 4521 mandatory broker
+   margin debit disclosures, parsed directly from `margin_statistics.xlsx`.
+
+Publication Lag Constraints & Zero-Lookahead Architecture:
+----------------------------------------------------------
+Under FINRA reporting guidelines, clearing firms submit customer debit balances by the 6th
+business day following month-end. FINRA compiles, audits, and publicly posts the aggregate
+monthly statistics during the 3rd week of the subsequent month (~21 calendar days post month-end).
+
+To strictly prevent lookahead bias in historical backtests:
+    Available\\_Date_m = MonthEnd(Month\\_Date_m) + 21 \\text{ calendar days}
+Merging onto daily trading calendars is executed exclusively via backward-looking as-of joins
+(`direction='backward'`), ensuring that the model never observes margin statistics prior to
+their actual public regulatory release.
 """
 
 from pathlib import Path
@@ -44,6 +72,22 @@ NYSE_HISTORICAL_ANCHORS = [
 def parse_finra_margin_debt_series(prov_dir: Path) -> pd.DataFrame:
     """
     Parse authentic FINRA margin debt statistics workbook and combine with NYSE records.
+
+    ETL Logic & Splicing:
+    ---------------------
+    - Ingests official FINRA workbook (`margin_statistics.xlsx`) covering 1997–present.
+    - Spliced with authentic NYSE regulatory anchor points (1959–1996) using linear interpolation.
+    - Appends strict 21-day publication lag to ensure causal historical validation.
+
+    Parameters
+    ----------
+    prov_dir : Path
+        Directory housing raw FINRA spreadsheets and cached artifacts.
+
+    Returns
+    -------
+    pd.DataFrame
+        Cleaned time series containing Month_Date, Available_Date, and FINRA_Margin_Debt.
     """
     xlsx_path = prov_dir / "margin_statistics.xlsx"
 

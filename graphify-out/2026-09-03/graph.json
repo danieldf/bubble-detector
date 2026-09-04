@@ -390,8 +390,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "bubble_detector_config_bubbledetectorerror",
-      "community": 33,
-      "community_name": "BubbleDetectorError",
+      "community": 18,
+      "community_name": "get_dynamic_horizon_metadata",
       "norm_label": "bubbledetectorerror"
     },
     {
@@ -401,8 +401,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "exception",
-      "community": 20,
-      "community_name": "etl_shiller.py",
+      "community": 5,
+      "community_name": "Valuation and Feature Engineering",
       "norm_label": "exception"
     },
     {
@@ -412,8 +412,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "bubble_detector_config_datafetcherror",
-      "community": 33,
-      "community_name": "BubbleDetectorError",
+      "community": 18,
+      "community_name": "get_dynamic_horizon_metadata",
       "norm_label": "datafetcherror"
     },
     {
@@ -445,8 +445,8 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "bubble_detector_config_validationerror",
-      "community": 33,
-      "community_name": "BubbleDetectorError",
+      "community": 18,
+      "community_name": "get_dynamic_horizon_metadata",
       "norm_label": "validationerror"
     },
     {
@@ -467,8 +467,8 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "bubble_detector_config_rationale_41",
-      "community": 33,
-      "community_name": "BubbleDetectorError",
+      "community": 18,
+      "community_name": "get_dynamic_horizon_metadata",
       "norm_label": "base exception for bubble detector package."
     },
     {
@@ -478,8 +478,8 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "bubble_detector_config_rationale_45",
-      "community": 33,
-      "community_name": "BubbleDetectorError",
+      "community": 18,
+      "community_name": "get_dynamic_horizon_metadata",
       "norm_label": "raised when data fetching fails."
     },
     {
@@ -511,8 +511,8 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "bubble_detector_config_rationale_57",
-      "community": 33,
-      "community_name": "BubbleDetectorError",
+      "community": 18,
+      "community_name": "get_dynamic_horizon_metadata",
       "norm_label": "raised when data validation fails."
     },
     {
@@ -698,8 +698,8 @@
       "source_location": "L95",
       "_origin": "ast",
       "id": "bubble_detector_data_etl_finra_finraetl",
-      "community": 23,
-      "community_name": "etl_finra.py",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "finraetl"
     },
     {
@@ -775,8 +775,8 @@
       "source_location": "L96",
       "_origin": "ast",
       "id": "bubble_detector_data_etl_finra_rationale_96",
-      "community": 23,
-      "community_name": "etl_finra.py",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "etl pipeline for finra & nyse margin debt with strict publication lag constraint"
     },
     {
@@ -907,8 +907,8 @@
       "source_location": "L205",
       "_origin": "ast",
       "id": "bubble_detector_data_etl_fred_get_fred_data",
-      "community": 21,
-      "community_name": "etl_vxo.py",
+      "community": 2,
+      "community_name": "Econometric Bubble Detection Models",
       "norm_label": "get_fred_data()"
     },
     {
@@ -973,8 +973,8 @@
       "source_location": "L206",
       "_origin": "ast",
       "id": "bubble_detector_data_etl_fred_rationale_206",
-      "community": 21,
-      "community_name": "etl_vxo.py",
+      "community": 2,
+      "community_name": "Econometric Bubble Detection Models",
       "norm_label": "public helper to obtain daily point-in-time fred macroeconomic indicators."
     },
     {
@@ -1160,8 +1160,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "bubble_detector_data_etl_vxo_parse_authentic_vxo_series",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 31,
+      "community_name": "test_no_synthetic_gaussian_bumps_in_data_code",
       "norm_label": "parse_authentic_vxo_series()"
     },
     {
@@ -1171,8 +1171,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "bubble_detector_data_etl_vxo_py_path",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 31,
+      "community_name": "test_no_synthetic_gaussian_bumps_in_data_code",
       "norm_label": "path"
     },
     {
@@ -1182,8 +1182,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "bubble_detector_data_etl_vxo_py_dataframe",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 31,
+      "community_name": "test_no_synthetic_gaussian_bumps_in_data_code",
       "norm_label": "dataframe"
     },
     {
@@ -1193,8 +1193,8 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "bubble_detector_data_etl_vxo_vxoetl",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "vxoetl"
     },
     {
@@ -1204,8 +1204,8 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "bubble_detector_data_etl_vxo_vxoetl_init",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 31,
+      "community_name": "test_no_synthetic_gaussian_bumps_in_data_code",
       "norm_label": ".__init__()"
     },
     {
@@ -1215,8 +1215,8 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "bubble_detector_data_etl_vxo_vxoetl_fetch_and_stage",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 31,
+      "community_name": "test_no_synthetic_gaussian_bumps_in_data_code",
       "norm_label": ".fetch_and_stage()"
     },
     {
@@ -1226,8 +1226,8 @@
       "source_location": "L128",
       "_origin": "ast",
       "id": "bubble_detector_data_etl_vxo_vxoetl_get_daily_vxo",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 31,
+      "community_name": "test_no_synthetic_gaussian_bumps_in_data_code",
       "norm_label": ".get_daily_vxo()"
     },
     {
@@ -1259,8 +1259,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "bubble_detector_data_etl_vxo_rationale_28",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 31,
+      "community_name": "test_no_synthetic_gaussian_bumps_in_data_code",
       "norm_label": "parse authentic cboe vxo daily history spanning 1976 to present.     uses genuin"
     },
     {
@@ -1270,8 +1270,8 @@
       "source_location": "L102",
       "_origin": "ast",
       "id": "bubble_detector_data_etl_vxo_rationale_102",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "etl pipeline for cboe vxo volatility index."
     },
     {
@@ -1281,8 +1281,8 @@
       "source_location": "L110",
       "_origin": "ast",
       "id": "bubble_detector_data_etl_vxo_rationale_110",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 31,
+      "community_name": "test_no_synthetic_gaussian_bumps_in_data_code",
       "norm_label": "stage authentic vxo dataset to parquet."
     },
     {
@@ -1292,8 +1292,8 @@
       "source_location": "L129",
       "_origin": "ast",
       "id": "bubble_detector_data_etl_vxo_rationale_129",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 31,
+      "community_name": "test_no_synthetic_gaussian_bumps_in_data_code",
       "norm_label": "get daily vxo series reindexed to requested business dates."
     },
     {
@@ -1314,8 +1314,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_data_ingestor",
-      "community": 21,
-      "community_name": "etl_vxo.py",
+      "community": 18,
+      "community_name": "get_dynamic_horizon_metadata",
       "norm_label": "ingestor.py"
     },
     {
@@ -1358,8 +1358,8 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "bubble_detector_data_ingestor_dataingestor_fetch_market_data",
-      "community": 18,
-      "community_name": "get_dynamic_horizon_metadata",
+      "community": 2,
+      "community_name": "Econometric Bubble Detection Models",
       "norm_label": ".fetch_market_data()"
     },
     {
@@ -1369,8 +1369,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "bubble_detector_data_ingestor_py_dataframe",
-      "community": 18,
-      "community_name": "get_dynamic_horizon_metadata",
+      "community": 2,
+      "community_name": "Econometric Bubble Detection Models",
       "norm_label": "dataframe"
     },
     {
@@ -1380,8 +1380,8 @@
       "source_location": "L125",
       "_origin": "ast",
       "id": "bubble_detector_data_ingestor_dataingestor_build_continuous_market_series",
-      "community": 18,
-      "community_name": "get_dynamic_horizon_metadata",
+      "community": 2,
+      "community_name": "Econometric Bubble Detection Models",
       "norm_label": "._build_continuous_market_series()"
     },
     {
@@ -1391,8 +1391,8 @@
       "source_location": "L331",
       "_origin": "ast",
       "id": "bubble_detector_data_ingestor_dataingestor_append_real_macro_indicators",
-      "community": 18,
-      "community_name": "get_dynamic_horizon_metadata",
+      "community": 2,
+      "community_name": "Econometric Bubble Detection Models",
       "norm_label": "._append_real_macro_indicators()"
     },
     {
@@ -1402,8 +1402,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_data_ingestor_rationale_1",
-      "community": 21,
-      "community_name": "etl_vxo.py",
+      "community": 18,
+      "community_name": "get_dynamic_horizon_metadata",
       "norm_label": "data ingestor module for market bubble detection.  fetches equity, macro, volati"
     },
     {
@@ -1424,8 +1424,8 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "bubble_detector_data_ingestor_rationale_54",
-      "community": 18,
-      "community_name": "get_dynamic_horizon_metadata",
+      "community": 2,
+      "community_name": "Econometric Bubble Detection Models",
       "norm_label": "fetch historical price and macroeconomic datasets for spy, sectors, and volatili"
     },
     {
@@ -1435,8 +1435,8 @@
       "source_location": "L132",
       "_origin": "ast",
       "id": "bubble_detector_data_ingestor_rationale_132",
-      "community": 18,
-      "community_name": "get_dynamic_horizon_metadata",
+      "community": 2,
+      "community_name": "Econometric Bubble Detection Models",
       "norm_label": "construct seamless asset time series with continuous backward return compounding"
     },
     {
@@ -1446,8 +1446,8 @@
       "source_location": "L337",
       "_origin": "ast",
       "id": "bubble_detector_data_ingestor_rationale_337",
-      "community": 18,
-      "community_name": "get_dynamic_horizon_metadata",
+      "community": 2,
+      "community_name": "Econometric Bubble Detection Models",
       "norm_label": "merge authentic point-in-time macroeconomic series (shiller cape, fred gdp, finr"
     },
     {
@@ -1457,8 +1457,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_features_init",
-      "community": 28,
-      "community_name": "__init__.py",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "__init__.py"
     },
     {
@@ -1468,8 +1468,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_features_init_rationale_1",
-      "community": 28,
-      "community_name": "__init__.py",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "feature engineering module"
     },
     {
@@ -1479,8 +1479,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_features_econometric",
-      "community": 30,
-      "community_name": "compute_gsadf_gpt_decomposition",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "econometric.py"
     },
     {
@@ -1490,8 +1490,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "bubble_detector_features_econometric_calculate_adf_stat",
-      "community": 30,
-      "community_name": "compute_gsadf_gpt_decomposition",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "calculate_adf_stat()"
     },
     {
@@ -1501,8 +1501,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "bubble_detector_features_econometric_py_ndarray",
-      "community": 30,
-      "community_name": "compute_gsadf_gpt_decomposition",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "ndarray"
     },
     {
@@ -1512,8 +1512,8 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "bubble_detector_features_econometric_compute_wild_bootstrap_critical_values",
-      "community": 30,
-      "community_name": "compute_gsadf_gpt_decomposition",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "compute_wild_bootstrap_critical_values()"
     },
     {
@@ -1523,8 +1523,8 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "bubble_detector_features_econometric_compute_gsadf_gpt_decomposition",
-      "community": 30,
-      "community_name": "compute_gsadf_gpt_decomposition",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "compute_gsadf_gpt_decomposition()"
     },
     {
@@ -1534,8 +1534,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "bubble_detector_features_econometric_py_dataframe",
-      "community": 30,
-      "community_name": "compute_gsadf_gpt_decomposition",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "dataframe"
     },
     {
@@ -1545,8 +1545,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_features_econometric_rationale_1",
-      "community": 30,
-      "community_name": "compute_gsadf_gpt_decomposition",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "econometric bubble detection module (canonical psy & gsadf).  implements the phi"
     },
     {
@@ -1556,8 +1556,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "bubble_detector_features_econometric_rationale_15",
-      "community": 30,
-      "community_name": "compute_gsadf_gpt_decomposition",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "calculate augmented dickey-fuller t-statistic for right-tailed explosive root te"
     },
     {
@@ -1567,8 +1567,8 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "bubble_detector_features_econometric_rationale_50",
-      "community": 30,
-      "community_name": "compute_gsadf_gpt_decomposition",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "compute wild bootstrap critical values (95% and 99%) under the null hypothesis"
     },
     {
@@ -1578,8 +1578,8 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "bubble_detector_features_econometric_rationale_81",
-      "community": 30,
-      "community_name": "compute_gsadf_gpt_decomposition",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "computes canonical recursive expanding-window gsadf explosive test statistics"
     },
     {
@@ -1589,8 +1589,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_features_leverage",
-      "community": 26,
-      "community_name": "compute_margin_leverage_metrics",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "leverage.py"
     },
     {
@@ -1600,8 +1600,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "bubble_detector_features_leverage_compute_margin_leverage_metrics",
-      "community": 26,
-      "community_name": "compute_margin_leverage_metrics",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "compute_margin_leverage_metrics()"
     },
     {
@@ -1611,8 +1611,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "bubble_detector_features_leverage_py_dataframe",
-      "community": 26,
-      "community_name": "compute_margin_leverage_metrics",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "dataframe"
     },
     {
@@ -1622,8 +1622,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_features_leverage_rationale_1",
-      "community": 26,
-      "community_name": "compute_margin_leverage_metrics",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "systemic leverage module.  computes finra margin debt velocity, yoy growth rate,"
     },
     {
@@ -1633,8 +1633,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "bubble_detector_features_leverage_rationale_13",
-      "community": 26,
-      "community_name": "compute_margin_leverage_metrics",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "computes finra margin debt yoy growth, velocity, and unused margin credit capaci"
     },
     {
@@ -1644,8 +1644,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_features_macro_valuation",
-      "community": 28,
-      "community_name": "__init__.py",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "macro_valuation.py"
     },
     {
@@ -1677,8 +1677,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_features_macro_valuation_rationale_1",
-      "community": 28,
-      "community_name": "__init__.py",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "macro valuation indicators module.  computes shiller cape, payout-adjusted cape"
     },
     {
@@ -1699,8 +1699,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_features_options_vol",
-      "community": 28,
-      "community_name": "__init__.py",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "options_vol.py"
     },
     {
@@ -1710,8 +1710,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "bubble_detector_features_options_vol_compute_options_volatility_metrics",
-      "community": 28,
-      "community_name": "__init__.py",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "compute_options_volatility_metrics()"
     },
     {
@@ -1721,8 +1721,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "bubble_detector_features_options_vol_py_dataframe",
-      "community": 28,
-      "community_name": "__init__.py",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "dataframe"
     },
     {
@@ -1732,8 +1732,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_features_options_vol_rationale_1",
-      "community": 28,
-      "community_name": "__init__.py",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "options & volatility behavioral tracking module.  tracks cboe vix term structure"
     },
     {
@@ -1743,8 +1743,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "bubble_detector_features_options_vol_rationale_13",
-      "community": 28,
-      "community_name": "__init__.py",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "computes vix contango slope, skew tail-risk alert, dispersion divergence,     an"
     },
     {
@@ -1809,8 +1809,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_features_topology",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "topology.py"
     },
     {
@@ -1820,8 +1820,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "bubble_detector_features_topology_takens_embedding",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "_takens_embedding()"
     },
     {
@@ -1831,8 +1831,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "bubble_detector_features_topology_py_ndarray",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "ndarray"
     },
     {
@@ -1842,8 +1842,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "bubble_detector_features_topology_compute_rips_persistence_diagrams",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "_compute_rips_persistence_diagrams()"
     },
     {
@@ -1853,8 +1853,8 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "bubble_detector_features_topology_persistence_landscape_l2_norm",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "_persistence_landscape_l2_norm()"
     },
     {
@@ -1864,8 +1864,8 @@
       "source_location": "L108",
       "_origin": "ast",
       "id": "bubble_detector_features_topology_compute_tda_wavelet_complexity",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "compute_tda_wavelet_complexity()"
     },
     {
@@ -1875,8 +1875,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "bubble_detector_features_topology_py_dataframe",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "dataframe"
     },
     {
@@ -1886,8 +1886,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "bubble_detector_features_topology_rationale_1",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "topological data analysis (tda) & wavelet complexity module.  computes genuine v"
     },
     {
@@ -1897,8 +1897,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "bubble_detector_features_topology_rationale_22",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "transform 1d time series into takens' delay-coordinate high-dimensional point cl"
     },
     {
@@ -1908,8 +1908,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "bubble_detector_features_topology_rationale_34",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "compute vietoris-rips persistence diagrams for dimension 0 and dimension 1."
     },
     {
@@ -1919,8 +1919,8 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "bubble_detector_features_topology_rationale_83",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "calculate bubenik (2015) persistence landscape l2 norm representing topological"
     },
     {
@@ -1930,8 +1930,8 @@
       "source_location": "L113",
       "_origin": "ast",
       "id": "bubble_detector_features_topology_rationale_113",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "compute sliding window vietoris-rips persistent homology l2 norm and morlet wave"
     },
     {
@@ -3052,8 +3052,8 @@
       "source_location": "L192",
       "_origin": "ast",
       "id": "bubble_detector_ui_panel_dashboard_precompile_wasm_parquet_datasets",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "precompile_wasm_parquet_datasets()"
     },
     {
@@ -3063,8 +3063,8 @@
       "source_location": "L259",
       "_origin": "ast",
       "id": "bubble_detector_ui_panel_dashboard_generate_wasm_dataset",
-      "community": 20,
-      "community_name": "etl_shiller.py",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "generate_wasm_dataset()"
     },
     {
@@ -3228,8 +3228,8 @@
       "source_location": "L193",
       "_origin": "ast",
       "id": "bubble_detector_ui_panel_dashboard_rationale_193",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "pre-compile production parquet and lightweight clean json datasets for     clien"
     },
     {
@@ -3239,8 +3239,8 @@
       "source_location": "L260",
       "_origin": "ast",
       "id": "bubble_detector_ui_panel_dashboard_rationale_260",
-      "community": 20,
-      "community_name": "etl_shiller.py",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "generate high-speed financial time series dataset for pyodide webassembly.     s"
     },
     {
@@ -3330,6 +3330,50 @@
       "community": 17,
       "community_name": "panel_dashboard.py",
       "norm_label": "callback updating all 6 panel figures, kpi indicators, and explanatory card."
+    },
+    {
+      "label": "postprocess_wasm.py",
+      "file_type": "code",
+      "source_file": "bubble_detector/ui/postprocess_wasm.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "bubble_detector_ui_postprocess_wasm",
+      "community": 20,
+      "community_name": "etl_shiller.py",
+      "norm_label": "postprocess_wasm.py"
+    },
+    {
+      "label": "postprocess_wasm_html()",
+      "file_type": "code",
+      "source_file": "bubble_detector/ui/postprocess_wasm.py",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "bubble_detector_ui_postprocess_wasm_postprocess_wasm_html",
+      "community": 20,
+      "community_name": "etl_shiller.py",
+      "norm_label": "postprocess_wasm_html()"
+    },
+    {
+      "label": "Path",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "bubble_detector_ui_postprocess_wasm_py_path",
+      "community": 20,
+      "community_name": "etl_shiller.py",
+      "norm_label": "path"
+    },
+    {
+      "label": "Post-processing utility for Panel WebAssembly compiled output (dist/index.html).",
+      "file_type": "rationale",
+      "source_file": "bubble_detector/ui/postprocess_wasm.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "bubble_detector_ui_postprocess_wasm_rationale_1",
+      "community": 20,
+      "community_name": "etl_shiller.py",
+      "norm_label": "post-processing utility for panel webassembly compiled output (dist/index.html)."
     },
     {
       "label": "ui_theme.py",
@@ -3517,8 +3561,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "stage_provenance",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "stage_provenance.py"
     },
     {
@@ -3528,8 +3572,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "stage_provenance_sync_parquet_to_json",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "sync_parquet_to_json()"
     },
     {
@@ -3539,8 +3583,8 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "stage_provenance_stage_all",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "stage_all()"
     },
     {
@@ -3550,8 +3594,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "stage_provenance_rationale_1",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "pre-compilation and staging script for provenance and wasm parquet datasets."
     },
     {
@@ -3561,8 +3605,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "stage_provenance_rationale_14",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "convert existing staged parquet datasets into clean json tables for webassembly"
     },
     {
@@ -3671,8 +3715,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_data_provenance",
-      "community": 23,
-      "community_name": "etl_finra.py",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "test_data_provenance.py"
     },
     {
@@ -3704,8 +3748,8 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "tests_test_data_provenance_test_finra_margin_publication_lag",
-      "community": 23,
-      "community_name": "etl_finra.py",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "test_finra_margin_publication_lag()"
     },
     {
@@ -3715,8 +3759,8 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "tests_test_data_provenance_test_vxo_authenticity_and_black_monday",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "test_vxo_authenticity_and_black_monday()"
     },
     {
@@ -3726,8 +3770,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_data_provenance_rationale_1",
-      "community": 23,
-      "community_name": "etl_finra.py",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "unit tests for institutional data provenance & publication lags (shiller, fred,"
     },
     {
@@ -3759,8 +3803,8 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "tests_test_data_provenance_rationale_62",
-      "community": 23,
-      "community_name": "etl_finra.py",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "asserts margin debt data incorporates mandatory 3-week reporting lag."
     },
     {
@@ -3770,8 +3814,8 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "tests_test_data_provenance_rationale_83",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "asserts authentic cboe vxo captures the 1987 black monday volatility spike."
     },
     {
@@ -3946,8 +3990,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "tests_test_features_test_compute_margin_leverage_metrics",
-      "community": 26,
-      "community_name": "compute_margin_leverage_metrics",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "test_compute_margin_leverage_metrics()"
     },
     {
@@ -3957,8 +4001,8 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "tests_test_features_test_compute_gsadf_gpt_decomposition",
-      "community": 30,
-      "community_name": "compute_gsadf_gpt_decomposition",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "test_compute_gsadf_gpt_decomposition()"
     },
     {
@@ -3968,8 +4012,8 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "tests_test_features_test_compute_tda_wavelet_complexity",
-      "community": 2,
-      "community_name": "Econometric Bubble Detection Models",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "test_compute_tda_wavelet_complexity()"
     },
     {
@@ -3979,8 +4023,8 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "tests_test_features_test_compute_options_volatility_metrics",
-      "community": 28,
-      "community_name": "__init__.py",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "test_compute_options_volatility_metrics()"
     },
     {
@@ -3990,8 +4034,8 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "tests_test_features_test_tda_wasm_parity",
-      "community": 20,
-      "community_name": "etl_shiller.py",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "test_tda_wasm_parity()"
     },
     {
@@ -4012,8 +4056,8 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "tests_test_features_rationale_66",
-      "community": 20,
-      "community_name": "etl_shiller.py",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "verify 100% numerical parity for tda persistence l2 norm between wasm app and to"
     },
     {
@@ -4045,8 +4089,8 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "tests_test_full_indicator_parity_test_wasm_fallback_numerical_parity",
-      "community": 20,
-      "community_name": "etl_shiller.py",
+      "community": 5,
+      "community_name": "Valuation and Feature Engineering",
       "norm_label": "test_wasm_fallback_numerical_parity()"
     },
     {
@@ -4078,8 +4122,8 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "tests_test_full_indicator_parity_rationale_73",
-      "community": 20,
-      "community_name": "etl_shiller.py",
+      "community": 5,
+      "community_name": "Valuation and Feature Engineering",
       "norm_label": "rigorously test the pyodide webassembly fallback branch by mocking out datainges"
     },
     {
@@ -4364,8 +4408,8 @@
       "source_location": "L204",
       "_origin": "ast",
       "id": "tests_test_mahalanobis_test_all_tabs_legends_right_flushed",
-      "community": 17,
-      "community_name": "panel_dashboard.py",
+      "community": 5,
+      "community_name": "Valuation and Feature Engineering",
       "norm_label": "test_all_tabs_legends_right_flushed()"
     },
     {
@@ -4452,8 +4496,8 @@
       "source_location": "L205",
       "_origin": "ast",
       "id": "tests_test_mahalanobis_rationale_205",
-      "community": 17,
-      "community_name": "panel_dashboard.py",
+      "community": 5,
+      "community_name": "Valuation and Feature Engineering",
       "norm_label": "verify that all tabs 1 to 6 in both nicegui and wasm use right-flushed vertical"
     },
     {
@@ -4485,8 +4529,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "tests_test_models_processed_df",
-      "community": 26,
-      "community_name": "compute_margin_leverage_metrics",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "processed_df()"
     },
     {
@@ -4551,8 +4595,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_no_gaussian_bumps",
-      "community": 31,
-      "community_name": "test_no_synthetic_gaussian_bumps_in_data_code",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "test_no_gaussian_bumps.py"
     },
     {
@@ -4562,8 +4606,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "tests_test_no_gaussian_bumps_test_no_synthetic_gaussian_bumps_in_data_code",
-      "community": 31,
-      "community_name": "test_no_synthetic_gaussian_bumps_in_data_code",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "test_no_synthetic_gaussian_bumps_in_data_code()"
     },
     {
@@ -4584,8 +4628,8 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "tests_test_no_gaussian_bumps_test_authentic_cboe_vxo_black_monday",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "test_authentic_cboe_vxo_black_monday()"
     },
     {
@@ -4595,8 +4639,8 @@
       "source_location": "L92",
       "_origin": "ast",
       "id": "tests_test_no_gaussian_bumps_test_authentic_finra_margin_debt",
-      "community": 31,
-      "community_name": "test_no_synthetic_gaussian_bumps_in_data_code",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "test_authentic_finra_margin_debt()"
     },
     {
@@ -4617,8 +4661,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_no_gaussian_bumps_rationale_1",
-      "community": 31,
-      "community_name": "test_no_synthetic_gaussian_bumps_in_data_code",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "institutional data provenance certification & anti-synthetic regression suite."
     },
     {
@@ -4628,8 +4672,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "tests_test_no_gaussian_bumps_rationale_25",
-      "community": 31,
-      "community_name": "test_no_synthetic_gaussian_bumps_in_data_code",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "scans all source files in bubble_detector/data/ to certify that no disguised"
     },
     {
@@ -4650,8 +4694,8 @@
       "source_location": "L78",
       "_origin": "ast",
       "id": "tests_test_no_gaussian_bumps_rationale_78",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "certifies cboe vxo captures the exact 150.19 close on october 19, 1987."
     },
     {
@@ -4661,8 +4705,8 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "tests_test_no_gaussian_bumps_rationale_93",
-      "community": 31,
-      "community_name": "test_no_synthetic_gaussian_bumps_in_data_code",
+      "community": 21,
+      "community_name": "etl_vxo.py",
       "norm_label": "certifies finra margin debt reflects true regulatory figures exceeding $1.4 tril"
     },
     {
@@ -4749,8 +4793,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_psy_ripser_integrity",
-      "community": 17,
-      "community_name": "panel_dashboard.py",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "test_psy_ripser_integrity.py"
     },
     {
@@ -4760,8 +4804,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "tests_test_psy_ripser_integrity_test_canonical_monthly_gsadf_dotcom_spike",
-      "community": 30,
-      "community_name": "compute_gsadf_gpt_decomposition",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "test_canonical_monthly_gsadf_dotcom_spike()"
     },
     {
@@ -4771,8 +4815,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "tests_test_psy_ripser_integrity_test_ripser_persistence_landscapes_causal",
-      "community": 17,
-      "community_name": "panel_dashboard.py",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "test_ripser_persistence_landscapes_causal()"
     },
     {
@@ -4782,8 +4826,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_psy_ripser_integrity_rationale_1",
-      "community": 17,
-      "community_name": "panel_dashboard.py",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "unit tests for canonical psy/gsadf recursive sub-windows and vietoris-rips persi"
     },
     {
@@ -4793,8 +4837,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "tests_test_psy_ripser_integrity_rationale_16",
-      "community": 30,
-      "community_name": "compute_gsadf_gpt_decomposition",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "asserts recursive gsadf on monthly p/d crosses 99% bootstrap critical value duri"
     },
     {
@@ -4804,8 +4848,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "tests_test_psy_ripser_integrity_rationale_44",
-      "community": 17,
-      "community_name": "panel_dashboard.py",
+      "community": 25,
+      "community_name": "generate_wasm_dataset",
       "norm_label": "asserts persistent homology computed via ripser/topology engine uses strictly ca"
     },
     {
@@ -5079,8 +5123,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_wasm_parquet_parity",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "test_wasm_parquet_parity.py"
     },
     {
@@ -5090,8 +5134,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "tests_test_wasm_parquet_parity_test_wasm_loads_exact_parquet_dataset",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "test_wasm_loads_exact_parquet_dataset()"
     },
     {
@@ -5101,8 +5145,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_wasm_parquet_parity_rationale_1",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "unit tests for webassembly parquet parity and zero-mathematical-drift loading."
     },
     {
@@ -5112,8 +5156,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "tests_test_wasm_parquet_parity_rationale_14",
-      "community": 5,
-      "community_name": "Valuation and Feature Engineering",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "asserts pyodide webassembly dataset matches nicegui dataset with zero discrepanc"
     },
     {
@@ -5134,8 +5178,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "tests_test_wasm_pyodide_sandbox_test_json_datasets_staging",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "test_json_datasets_staging()"
     },
     {
@@ -5145,8 +5189,8 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "tests_test_wasm_pyodide_sandbox_test_wasm_pyodide_json_memfs_loading",
-      "community": 20,
-      "community_name": "etl_shiller.py",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "test_wasm_pyodide_json_memfs_loading()"
     },
     {
@@ -5156,8 +5200,8 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "tests_test_wasm_pyodide_sandbox_test_wasm_pyodide_pure_numpy_fallback",
-      "community": 20,
-      "community_name": "etl_shiller.py",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "test_wasm_pyodide_pure_numpy_fallback()"
     },
     {
@@ -5167,8 +5211,8 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "tests_test_wasm_pyodide_sandbox_test_date_horizon_selector_robust_against_year_shift",
-      "community": 20,
-      "community_name": "etl_shiller.py",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "test_date_horizon_selector_robust_against_year_shift()"
     },
     {
@@ -5266,8 +5310,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "tests_test_wasm_pyodide_sandbox_rationale_44",
-      "community": 19,
-      "community_name": "AGVI Technical Specification Document",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "verify that 21-column json datasets are created within strict payload size budge"
     },
     {
@@ -5277,8 +5321,8 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "tests_test_wasm_pyodide_sandbox_rationale_74",
-      "community": 20,
-      "community_name": "etl_shiller.py",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "simulate pyodide memfs where polars and bubble_detector are unavailable,     and"
     },
     {
@@ -5288,8 +5332,8 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "tests_test_wasm_pyodide_sandbox_rationale_101",
-      "community": 20,
-      "community_name": "etl_shiller.py",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "verify pure numpy fallback operates with zero dependencies when     neither parq"
     },
     {
@@ -5299,8 +5343,8 @@
       "source_location": "L125",
       "_origin": "ast",
       "id": "tests_test_wasm_pyodide_sandbox_rationale_125",
-      "community": 20,
-      "community_name": "etl_shiller.py",
+      "community": 17,
+      "community_name": "panel_dashboard.py",
       "norm_label": "verify candidate dataset selection correctly maps 50-year rolling horizons to ma"
     },
     {
@@ -16215,6 +16259,40 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/ui/postprocess_wasm.py",
+      "source_location": "L9",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_ui_postprocess_wasm",
+      "target": "bubble_detector_ui_postprocess_wasm_postprocess_wasm_html",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/ui/postprocess_wasm.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_ui_postprocess_wasm_rationale_1",
+      "target": "bubble_detector_ui_postprocess_wasm",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "bubble_detector/ui/postprocess_wasm.py",
+      "source_location": "L9",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "bubble_detector_ui_postprocess_wasm_postprocess_wasm_html",
+      "target": "bubble_detector_ui_postprocess_wasm_py_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "bubble_detector/ui_theme.py",
       "source_location": "L38",
       "weight": 1.0,
@@ -19590,5 +19668,5 @@
       "source_file": "impliedvolatilitymetric.png"
     }
   ],
-  "built_at_commit": "758f33d7396c0984302b3d511a98cc009e68ed1a"
+  "built_at_commit": "399d733d965ab6aabd5c0db1ea6cfd724bbb6e13"
 }

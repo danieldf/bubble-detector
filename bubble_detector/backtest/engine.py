@@ -1,16 +1,46 @@
 """
 Institutional Cost-Inclusive Portfolio Backtest Simulation Engine.
+===================================================================
 
-Simulates and compares dynamic regime-switching equity exposure against institutional benchmarks:
-1. Dynamic Equity Exposure (Signed Mahalanobis Strategy w_equity in [0.20, 1.00])
-2. Buy-and-Hold S&P 500 (SPY 100% Equity)
-3. Naive Valuation Rule ("Sell 100% Equity to Cash when CAPE > 30; Re-enter 100% Equity when CAPE < 20")
+Portfolio Theory & Institutional Backtesting Foundations:
+---------------------------------------------------------
+Academic literature often evaluates quantitative bubble models on theoretical signal
+accuracy (e.g. Area Under the ROC Curve) rather than implementable portfolio returns.
+In real-world asset management, transaction costs, execution slippage, cash drag,
+and benchmark tracking errors determine strategy viability.
 
-Incorporates realistic institutional friction:
-- 10 bps transaction fees per unit turnover ($0.0010 * |Delta w| * V)
-- 5 bps bid-ask execution slippage
-- Cash yield: Risk-free rate earned on unallocated cash reserves (contemporaneous SOFR / 3M Treasury)
-- Margin borrowing penalty: Fed Funds + 150 bps
+1. The Comparative Benchmark Trilogy:
+   - Dynamic Signed Mahalanobis Strategy (w_t \\in [0.20, 1.00]):
+     Continuous risk-budgeting allocation governed by Riemannian statistical distance.
+     De-risks down to w_{min} = 0.20 during bubble euphoria, but aggressively holds
+     exposure (w_t \\ge 0.80) during crash troughs (Deep Value / Liquidation).
+   - Buy-and-Hold S&P 500 (w_t \\equiv 1.00):
+     The passive institutional benchmark capturing the full equity risk premium (ERP).
+   - Naive Valuation Timing Rule (w_t \\in \\{0.0, 1.0\\}):
+     "Sell 100% Equity to Cash when CAPE > 30.0; Re-enter 100% Equity when CAPE < 20.0."
+     *Economic Pathology*: Demonstrates the catastrophic pitfall of naive valuation timing:
+     in prolonged technological expansions (1995–2000, 2016–2021, 2024–2026), CAPE
+     exceeds 30 for multiple consecutive years while markets surge another 100%–300%.
+     Binary valuation timers suffer massive opportunity cost and permanent capital impairment.
+
+2. Realistic Frictions & Capital Accounting:
+   - Turnover Frictions: Transaction fee of 10 bps (0.0010) + bid-ask execution slippage of 5 bps (0.0005)
+     = 15 bps total cost per unit of portfolio turnover:
+         \\text{Cost}_t = |w_t - w_{t-1}| \\cdot \\text{FeeRate}
+   - Rebalancing Deadband: Positions are rebalanced only if |w_t - w_{t-1}| \\ge 0.02 (2.0%),
+     eradicating micro-turnover friction.
+   - Cash Yield / Risk-Free Interest: Unallocated capital (1 - w_t) earns the prevailing cash
+     yield (4.0% annualized), preventing synthetic cash penalization.
+   - Margin Borrowing Penalty: Leveraged positions (w_t > 1.0) incur a borrowing surcharge
+     of Fed Funds + 150 bps.
+
+3. Performance Metrics:
+   - Compound Annual Growth Rate: \\text{CAGR} = (V_T / V_0)^{252 / T} - 1
+   - Annualized Volatility: \\sigma_{ann} = \\sqrt{252} \\cdot \\text{Std}(R_t)
+   - Sharpe Ratio (Sharpe, 1966): \\text{SR} = (\\text{CAGR} - r_f) / \\sigma_{ann}
+   - Sortino Ratio (Sortino & van der Meer, 1991): Evaluates downside semi-variance:
+         \\text{Sortino} = \\frac{\\text{CAGR} - r_f}{\\sqrt{252} \\cdot \\left(\\frac{1}{T} \\sum_{t=1}^T \\min(R_t - r_{f, daily}, 0)^2\\right)^{1/2}}
+   - Calmar Ratio: \\text{Calmar} = \\text{CAGR} / |\\text{MaxDrawdown}|
 """
 
 from dataclasses import dataclass

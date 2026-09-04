@@ -1,7 +1,43 @@
 """
-Macro Valuation Indicators Module.
+Macroeconomic Valuation & Long-Horizon Equilibrium Module.
+===========================================================
 
-Computes Shiller CAPE, Payout-Adjusted CAPE (P-CAPE), and the Buffett Indicator (Market Cap / GDP).
+Economic Foundations & Metric Formulations:
+-------------------------------------------
+Macroeconomic valuation metrics quantify aggregate asset pricing relative to underlying
+national income, replacement cost, and smoothed corporate profitability. When asset prices
+compound at rates far exceeding national economic output over multi-year horizons,
+mean-reverting economic gravity imposes structural correction risks.
+
+1. Robert Shiller Cyclically Adjusted P/E (CAPE):
+   Smoothes 10-year inflation-adjusted earnings to eliminate business-cycle volatility:
+       CAPE_t = \\frac{P_t^{real}}{\\frac{1}{10}\\sum_{i=0}^{9} E_{t-i}^{real}}
+   - Historical Baseline: Long-run historical average \\mu_{CAPE} \\approx 17.0, \\sigma_{CAPE} \\approx 6.5.
+   - Regimes: Exceeding 30.0 indicates severe historical overvaluation (seen in 1929 at 32.6,
+     2000 Dot-Com peak at 44.19, and 2024–2026 AI expansion at 41.37).
+
+2. Payout-Adjusted CAPE (P-CAPE) & Multicollinearity Prevention:
+   Traditional CAPE relies strictly on accounting earnings. However, post-1982 SEC Rule 10b-18,
+   corporations shifted cash distributions from dividends to share repurchases.
+   P-CAPE accounts for total cash distributions, historically trading at ~0.88x standard CAPE.
+   *Econometric Notice*: Because P_CAPE is linearly proportional to Shiller_CAPE in stylized
+   models, it is excluded from the 15-indicator Mahalanobis covariance vector (`INDICATORS_15`)
+   to prevent exact rank deficiency and matrix singularity (det(\\Sigma) \\to 0).
+
+3. Warren Buffett Indicator (Market Capitalization / Nominal GDP):
+   Pioneered by Warren Buffett (Fortune, 2001) as the single best macro yardstick of valuation:
+       \\text{Buffett}_t = \\left(\\frac{\\text{Aggregate Equity Value}_t}{\\text{Nominal GDP}_t}\\right) \\times 100\\%
+   In this pipeline, the aggregate equity proxy is computed via scaled S&P 500 index levels:
+       \\text{Buffett}_t = \\left(\\frac{P_{SPY}(t) \\cdot 85.0}{\\text{GDP}_{Nominal}(t)}\\right) \\times 100\\%
+   - Historical Distribution: Mean \\mu_{B} \\approx 100\\%, Standard Deviation \\sigma_{B} \\approx 35\\%.
+   - Overvaluation Thresholds:
+     * Fair Value: 90% – 115%
+     * Modestly Overvalued: 115% – 140%
+     * Extreme Bubble Regime: > 160% (reached >215% in the 2021 liquidity peak and 2025–2026 AI cycle).
+
+4. Real Earnings Yield:
+   The inverse of the valuation multiple, representing real expected yield per unit of equity:
+       EY_t = \\frac{1}{\\max(CAPE_t, 1.0)}
 """
 
 import numpy as np
@@ -11,6 +47,17 @@ from bubble_detector.config import SP500_TICKER, logger
 def compute_macro_valuations(df: pl.DataFrame) -> pl.DataFrame:
     """
     Compute Shiller CAPE, Payout-Adjusted CAPE (P-CAPE), and Buffett Indicator metrics.
+
+    Parameters
+    ----------
+    df : pl.DataFrame
+        Input DataFrame containing equity price series and macroeconomic provenance columns.
+
+    Returns
+    -------
+    pl.DataFrame
+        Enriched DataFrame with Shiller_CAPE, P_CAPE, Buffett_Indicator, Real_Earnings_Yield,
+        and standardized Z-scores (CAPE_ZScore, P_CAPE_ZScore, Buffett_ZScore).
     """
     logger.info("Computing Macro Valuation indicators...")
 

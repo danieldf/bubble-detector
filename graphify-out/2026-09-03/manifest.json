@@ -200,8 +200,8 @@
     "semantic_hash": ""
   },
   ".github/workflows/deploy.yml": {
-    "mtime": 1788477771.0935223,
-    "ast_hash": "af204425504b53a965bf6d7af71ceaeb",
+    "mtime": 1788478178.2518022,
+    "ast_hash": "ed0b2a68882c62e27f46235790d3624a",
     "semantic_hash": ""
   },
   "README.md": {
@@ -330,18 +330,23 @@
     "semantic_hash": ""
   },
   "data/provenance/market_data_50yr.json": {
-    "mtime": 1788477974.7076778,
+    "mtime": 1788478185.3726077,
     "ast_hash": "dde2ac3991d423e81313e58a30174f50",
     "semantic_hash": ""
   },
   "data/provenance/market_data_modern.json": {
-    "mtime": 1788477974.843111,
+    "mtime": 1788478185.5052936,
     "ast_hash": "e6b299356f0bcf9e6967445cb36618db",
     "semantic_hash": ""
   },
   "tests/test_wasm_pyodide_sandbox.py": {
     "mtime": 1788477836.852687,
     "ast_hash": "7aece5d14631136cfbb581f3fb281f52",
+    "semantic_hash": ""
+  },
+  "bubble_detector/ui/postprocess_wasm.py": {
+    "mtime": 1788478170.0128965,
+    "ast_hash": "a56da111c2b2f71fdb5e4ddf83fc2cf9",
     "semantic_hash": ""
   }
 }

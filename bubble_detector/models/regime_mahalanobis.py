@@ -1,17 +1,65 @@
 """
 Macro Mahalanobis Distance Regime-Switching Bubble Detector.
+============================================================
 
-Implements Method 1 (Statistical Distance & Directional Projection):
-1. Pre-processes 15 multi-asset indicators into stationary, standardized rolling z-scores
-   with pre-registered bubble direction vector b.
-2. Estimates robust covariance matrix via Ledoit-Wolf shrinkage or Minimum Covariance Determinant (MCD).
-3. Computes signed one-sided projection Score_bubble = (z - mu)^T Sigma^-1 b / sqrt(b^T Sigma^-1 b).
-4. Partitions Mahalanobis distance into Bubble (DM_bubble) and Crash (DM_crash) components.
-5. Calibrates Dynamic Equity Exposure (w_equity), maintaining high equity exposure (>= 0.80)
-   during crash troughs (Deep Value / Liquidation) and derisking down to 20% only in bubble regimes.
-6. Eradicates supervised target leakage: Drawdown_Probability is completely removed.
-7. Drops collinear P_CAPE and orthogonalizes equity proxies.
-8. Computes empirical 1-Year Distance Rank (One_Year_Distance_Rank) and anomaly attributions.
+Mathematical Foundations & Econometric Derivations:
+---------------------------------------------------
+Traditional statistical bubble models rely on Euclidean distance in feature space:
+    d_{Euclid}(z, \\mu) = \\|z - \\mu\\|_2 = \\sqrt{\\sum_{i=1}^k (z_i - \\mu_i)^2}
+However, financial indicators exhibit intense cross-sectional collinearity and heterogeneous
+volatility. Euclidean distance ignores covariance structures, double-counting correlated
+signals (e.g. CAPE and Buffett Indicator) and treating orthogonal informational shocks
+identically to collinear movements.
+
+1. Classical Mahalanobis Statistical Distance:
+   Given standardized stationary feature vector z_t \\in \\mathbb{R}^k and rolling mean \\mu_t \\in \\mathbb{R}^k:
+       D_M(z_t, \\mu_t) = \\sqrt{(z_t - \\mu_t)^T \\Sigma^{-1} (z_t - \\mu_t)}
+   where \\Sigma \\in \\mathbb{R}^{k \\times k} is the regularized covariance matrix.
+   Geometric Interpretation: Mahalanobis distance defines a Riemannian metric tensor where
+   equidistant contours form hyper-ellipsoids aligned with the eigenvectors of \\Sigma.
+   Deviations along high-variance directions are discounted, whereas deviations along tight,
+   orthogonal axes receive significant statistical weight.
+
+2. The Quadratic Form Symmetry Trap & Directional Asymmetry:
+   Because the quadratic form (z - \\mu)^T \\Sigma^{-1} (z - \\mu) is strictly non-negative,
+   standard Mahalanobis distance is completely blind to direction:
+       D_M(+\\Delta z) = D_M(-\\Delta z)
+   In empirical finance, this causes a catastrophic failure: during severe market crashes
+   (e.g., October 2008 GFC trough, March 2020 COVID trough), indicators deviate massively
+   from their historical means. A naive Mahalanobis detector misinterprets crash troughs
+   as "extreme bubbles" and de-risks (sells equities) at the market bottom!
+
+3. Pre-Registered Bubble Direction Vector b \\in \\{-1, +1\\}^k:
+   To resolve directional ambiguity with theoretical rigor, each indicator is mapped to an
+   economically grounded sign vector b:
+       b_j = +1.0 \\implies \\text{Positive excursion represents speculative overextension}
+       b_j = -1.0 \\implies \\text{Negative excursion represents valuation bubble (e.g. Real Earnings Yield)}
+
+4. Signed One-Sided Riemannian Bubble Projection:
+   We project the standardized innovation vector (z - \\mu) onto the bubble vector b in the
+   inner product space defined by metric tensor \\Sigma^{-1}:
+       \\text{Score}_{bubble}(t) = \\frac{(z_t - \\mu_t)^T \\Sigma^{-1} b}{\\sqrt{b^T \\Sigma^{-1} b}}
+   - \\text{Score}_{bubble} > 0: State vector aligns with speculative bubble overextension.
+   - \\text{Score}_{bubble} < 0: State vector aligns with market distress, panic selling, or deep value.
+
+5. Orthogonal Distance Decomposition:
+   We partition the raw innovation vector into positive (bubble) and negative (crash) components:
+       u_t = \\max(z_t - \\mu_t, 0), \\quad v_t = \\max(-(z_t - \\mu_t), 0)
+       \\text{DM}_{bubble}(t) = \\sqrt{u_t^T \\Sigma^{-1} u_t}, \\quad \\text{DM}_{crash}(t) = \\sqrt{v_t^T \\Sigma^{-1} v_t}
+
+6. Robust Covariance Estimation & Numerical Regularization:
+   In finite samples (T \\approx 252 trading days, k = 15 indicators), empirical sample
+   covariance S is noisy and ill-conditioned (eigenvalues collapse toward zero).
+   We provide two robust estimation backends:
+   - Ledoit-Wolf Shrinkage (2004): Optimal convex combination of sample covariance and spherical target:
+         \\hat{\\Sigma}_{LW} = (1 - \\rho) S + \\rho F, \\quad F = \\frac{\\text{Tr}(S)}{k} I_k
+   - Minimum Covariance Determinant (MCD; Rousseeuw, 1984): High-breakdown affine-equivariant estimator.
+   - Tikhonov / Ridge Regularization: \\Sigma_{reg} = \\hat{\\Sigma} + \\alpha I_k (\\alpha = 10^{-2})
+     guaranteeing strictly positive eigenvalues: \\lambda_i(\\Sigma_{reg}) \\ge \\alpha > 0.
+
+7. Leakage Eradication & Multicollinearity Prevention:
+   - `Drawdown_Probability` is strictly excluded from `INDICATORS_15` (supervised target leakage).
+   - `P_CAPE` is excluded because it is collinear with `Shiller_CAPE` (det(\\Sigma) \\to 0).
 """
 
 from typing import List, Tuple, Optional, Dict, Any

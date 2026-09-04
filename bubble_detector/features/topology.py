@@ -1,9 +1,51 @@
 """
 Topological Data Analysis (TDA) & Wavelet Complexity Module.
+============================================================
 
-Computes genuine Vietoris-Rips filtration persistent homology (H0, H1 barcodes) via ripser
-(with pure-python/scipy persistent homology fallback), Bubenik (2015) persistence landscape L2 norms,
-Takens' delay coordinate embedding, and Morlet continuous wavelet transform complexity.
+Mathematical & Dynamical Systems Foundations:
+---------------------------------------------
+Financial asset price dynamics are driven by non-linear, non-stationary feedback systems.
+Standard linear statistical tools (such as autocorrelation or classical Fourier transforms)
+fail to detect higher-order geometric transitions in the underlying state space attractor.
+This module combines Algebraic Topology (Persistent Homology) and Multi-Resolution Analysis
+(Continuous Wavelet Transforms) to quantify phase space deformation and regime fragility.
+
+1. Floris Takens' Delay Coordinate Embedding Theorem (1981):
+   Let the unknown state space attractor of the market system be a smooth compact manifold M
+   of dimension d. By Takens' Theorem, the delay coordinate map:
+       \\Phi_{\\tau, m}(r_t) = \\left( r_t, r_{t-\\tau}, r_{t-2\\tau}, \\dots, r_{t-(m-1)\\tau} \\right)^T \\in \\mathbb{R}^m
+   is a smooth embedding (diffeomorphism) preserving topological invariants provided m \\ge 2d + 1.
+   In this implementation, we map 1D rolling log-returns r_t into a reconstructed 3D phase space
+   point cloud (dimension m = 3, time delay \\tau = 2 trading days).
+
+2. Vietoris-Rips Complex Filtration & Persistent Homology:
+   Given the embedded point cloud X = \\{x_1, \\dots, x_N\\} \\subset \\mathbb{R}^3, we construct a parameterized
+   family of simplicial complexes VR_\\epsilon(X) across filtration radius \\epsilon \\ge 0:
+       \\sigma = [x_{i_0}, x_{i_1}, \\dots, x_{i_p}] \\in \\text{VR}_\\epsilon(X) \\iff \\|x_{i_a} - x_{i_b}\\|_2 \\le \\epsilon, \\quad \\forall 0 \\le a < b \\le p
+   - Dimension 0 (H_0): Tracks connected components. Components are born at \\epsilon = 0 and merge along
+     the Minimum Spanning Tree (MST) of the distance graph.
+   - Dimension 1 (H_1): Tracks 1-dimensional topological loops / tunnels that encircle phase space attractors.
+     A cycle is born when a closed loop of edges forms without being filled by 2-simplices (triangles),
+     and dies when \\epsilon expands enough to triangulate the interior.
+
+3. Peter Bubenik Persistence Landscape L2 Norm (2015):
+   For each topological persistence pair (b_j, d_j), the lifetime is \\ell_j = d_j - b_j.
+   The L2 norm of the persistence landscape maps the barcode diagram into a stable Hilbert space:
+       \\|\\lambda\\|_{L_2} = \\sqrt{\\sum_{j} (d_j - b_j)^2}
+   - Geometric Intuition: When market regimes are orderly and cyclical, phase space orbits form coherent
+     loops with long persistence lifetimes (elevated \\|\\lambda\\|_{L_2}). In chaotic bubble bursts or liquidity
+     evaporations, point clouds fragment into unstructured noise, collapsing persistence lifetimes.
+
+4. Continuous Morlet Wavelet Complexity:
+   To detect instantaneous frequency localization and power law energy bursts:
+       W(s, \\tau) = \\frac{1}{\\sqrt{s}} \\int_{-\\infty}^{\\infty} r(t) \\, \\psi^*\\left(\\frac{t - \\tau}{s}\\right) dt
+   using the complex analytic Morlet mother wavelet \\psi(t) = \\pi^{-1/4} e^{i \\omega_0 t} e^{-t^2 / 2}.
+   The scaleogram energy \\mathbb{E}[|W(s, \\tau)|^2] serves as the Wavelet Complexity Score.
+
+5. Pure-Python / WebAssembly Fallback Architecture:
+   When running in environments lacking compiled C++ `ripser` binaries (such as in-browser Pyodide
+   WebAssembly), this module falls back to exact pairwise distance matrix computation and
+   graph-theoretic Minimum Spanning Tree (MST) algorithms, preserving 100% numerical parity.
 """
 
 from typing import Tuple, List, Optional

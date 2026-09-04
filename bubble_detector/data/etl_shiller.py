@@ -1,19 +1,44 @@
 """
-Robert Shiller Monthly ie_data ETL & Point-in-Time Real Data Ingestor (1871–Present).
+Robert Shiller Monthly ie_data ETL & Point-in-Time Provenance Ingestor (1871–Present).
+=====================================================================================
 
-Parses authentic Shiller monthly S&P Composite series from Robert Shiller's published
-`ie_data.xls` workbook:
-- Real Price (P)
-- Real Earnings (E)
-- Real Dividends (D)
-- Consumer Price Index (CPI)
-- Cyclically Adjusted Price-to-Earnings (CAPE)
-- Price-to-Dividend Ratio (P/D)
-- Real Earnings Yield (1 / CAPE)
+Economic & Mathematical Theory:
+-------------------------------
+The Cyclically Adjusted Price-to-Earnings (CAPE) ratio, pioneered by Robert J. Shiller
+and John Y. Campbell (1988, 1998), serves as the bedrock valuation metric for long-horizon
+equity market pricing. Conventional single-year Price-to-Earnings (P/E) ratios suffer from
+extreme procyclicality: during economic recessions, accounting earnings collapse faster
+than equity prices, producing artificially elevated P/E multiples, while at peak expansions,
+record earnings temporarily depress P/E multiples.
 
-Enforces strict point-in-time availability (data published monthly post month-end),
-interpolating to daily market trading days with zero lookahead bias and zero Gaussian bumps.
-Caches immutable dataset to data/provenance/shiller_monthly.parquet.
+To filter out business-cycle earnings noise, Campbell and Shiller defined the CAPE multiple:
+
+    CAPE_t = \\frac{P_t^{real}}{\\frac{1}{10} \\sum_{i=0}^{9} E_{t-i}^{real}}
+
+where:
+    - P_t^{real} = P_t \\cdot \\frac{CPI_{latest}}{CPI_t} is the real inflation-adjusted S&P Composite price.
+    - E_{t-i}^{real} = E_{t-i} \\cdot \\frac{CPI_{latest}}{CPI_{t-i}} is the real trailing 10-year earnings.
+    - CPI is the U.S. Consumer Price Index.
+
+In this pipeline, we also track:
+1. Price-to-Dividend Ratio:
+    P/D_t = \\frac{P_t}{\\max(D_t, 10^{-4})}
+2. Real Earnings Yield:
+    EY_t = \\frac{1}{\\max(CAPE_t, 1.0)}
+
+Causality, Lookahead Prevention & Publication Lag:
+--------------------------------------------------
+A severe vulnerability in quantitative finance is "lookahead bias" (peeking into the future).
+Although Shiller's monthly data is indexed to the 1st of each month, the underlying CPI
+and corporate earnings are reported with an institutional publication delay.
+Specifically, BLS CPI releases occur approximately mid-month, and quarterly earnings are
+collated retrospectively.
+
+To guarantee zero lookahead bias, this ETL module implements:
+    Available\\_Date_t = MonthEnd(Date_t) + \\Delta_{lag} \\quad (\\Delta_{lag} = 5 \\text{ business days})
+Daily series are constructed strictly via `pd.merge_asof(..., direction='backward')`,
+ensuring that on day t, an algorithm can only observe macroeconomic statistics whose
+publication date strictly satisfies Available\\_Date <= t.
 """
 
 from pathlib import Path
@@ -33,6 +58,27 @@ SHILLER_XLS = PROVENANCE_DIR / "ie_data.xls"
 def parse_shiller_excel(xls_path: Path) -> pd.DataFrame:
     """
     Parse authentic Robert Shiller ie_data.xls spreadsheet directly into a clean monthly DataFrame.
+
+    Spreadsheet Layout & Processing Logic:
+    --------------------------------------
+    - Robert Shiller's workbook formats dates as fractional years: YYYY.MM (e.g. 2024.01 = Jan 2024).
+    - Rows 0 through 6 contain explanatory headers; data begins at row 7.
+    - Column P = Nominal S&P Composite Price.
+    - Column D = Nominal Dividends (annualized 12-month moving sum).
+    - Column E = Nominal Operating Earnings (annualized 12-month moving sum).
+    - Column CPI = U.S. Consumer Price Index (base year indexed).
+    - Column CAPE = Cyclically Adjusted Price-to-Earnings multiple.
+
+    Parameters
+    ----------
+    xls_path : Path
+        Filesystem location of the authentic `ie_data.xls` workbook.
+
+    Returns
+    -------
+    pd.DataFrame
+        Cleaned monthly time series containing Date, SP_Price, SP_Earnings,
+        SP_Dividends, CPI, Shiller_CAPE, Price_to_Dividend, and Real_Earnings_Yield.
     """
     xl = pd.ExcelFile(xls_path)
     sheet_name = "Data" if "Data" in xl.sheet_names else xl.sheet_names[0]
