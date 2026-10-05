@@ -41,7 +41,8 @@ def precompile_wasm_parquet_datasets():
     from bubble_detector.features import (
         compute_technical_indicators, compute_macro_valuations,
         compute_margin_leverage_metrics, compute_gsadf_gpt_decomposition,
-        compute_tda_wavelet_complexity, compute_options_volatility_metrics
+        compute_tda_wavelet_complexity, compute_options_volatility_metrics,
+        compute_lppls_confidence_indicator, compute_tech_exuberance_metrics
     )
     from bubble_detector.models.structural_breaks import StructuralBreakPredictor
     from bubble_detector.models.regime_mahalanobis import MacroMahalanobisDetector
@@ -63,6 +64,8 @@ def precompile_wasm_parquet_datasets():
         df = compute_gsadf_gpt_decomposition(df)
         df = compute_tda_wavelet_complexity(df)
         df = compute_options_volatility_metrics(df)
+        df = compute_lppls_confidence_indicator(df)
+        df = compute_tech_exuberance_metrics(df)
 
         predictor = StructuralBreakPredictor()
         probs = predictor.predict_drawdown_probability(df)
@@ -86,13 +89,16 @@ def precompile_wasm_parquet_datasets():
                 json_dict["Date"] = [str(d)[:10] for d in df["Date"].to_list()]
             elif col == "Primary_Anomaly_Driver" or df[col].dtype in (pl.Utf8, pl.String):
                 json_dict[col] = df[col].to_list()
+            elif df[col].dtype in (pl.Int8, pl.Int16, pl.Int32, pl.Int64, pl.UInt8, pl.UInt16, pl.UInt32, pl.UInt64, pl.Boolean):
+                vals = df[col].to_list()
+                json_dict[col] = [int(v) if (v is not None and not np.isnan(v)) else 0 for v in vals]
             else:
                 vals = df[col].to_list()
-                json_dict[col] = [round(float(v), 5) if (v is not None and not np.isnan(v)) else 0.0 for v in vals]
+                json_dict[col] = [round(float(v), 4) if (v is not None and not np.isnan(v)) else 0.0 for v in vals]
 
         for target_dir in [build_dir, PROVENANCE_DIR, dist_dir]:
             with open(target_dir / out_name_json, "w", encoding="utf-8") as f:
-                json.dump(json_dict, f)
+                json.dump(json_dict, f, separators=(',', ':'))
 
         logger.info(f"Pre-compiled WASM Parquet and JSON datasets: {out_name_parquet}, {out_name_json}")
 
@@ -126,12 +132,15 @@ def sync_parquet_to_json():
                     json_dict["Date"] = [str(d)[:10] for d in df["Date"].to_list()]
                 elif col == "Primary_Anomaly_Driver" or df[col].dtype in (pl.Utf8, pl.String):
                     json_dict[col] = df[col].to_list()
+                elif df[col].dtype in (pl.Int8, pl.Int16, pl.Int32, pl.Int64, pl.UInt8, pl.UInt16, pl.UInt32, pl.UInt64, pl.Boolean):
+                    vals = df[col].to_list()
+                    json_dict[col] = [int(v) if (v is not None and not np.isnan(v)) else 0 for v in vals]
                 else:
                     vals = df[col].to_list()
-                    json_dict[col] = [round(float(v), 5) if (v is not None and not np.isnan(v)) else 0.0 for v in vals]
+                    json_dict[col] = [round(float(v), 4) if (v is not None and not np.isnan(v)) else 0.0 for v in vals]
             for target_dir in [build_dir, PROVENANCE_DIR, dist_dir]:
                 with open(target_dir / j_name, "w", encoding="utf-8") as f:
-                    json.dump(json_dict, f)
+                    json.dump(json_dict, f, separators=(',', ':'))
                 if not (target_dir / p_name).exists() or target_dir != p_path.parent:
                     df.write_parquet(target_dir / p_name)
             print(f"Synced {p_name} to {j_name} across provenance, build, and dist directories.")

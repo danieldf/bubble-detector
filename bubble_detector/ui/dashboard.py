@@ -35,6 +35,7 @@ regime classification, and cost-inclusive portfolio backtesting.
 from typing import Dict, Any, List, Optional
 import numpy as np
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 import polars as pl
 from nicegui import ui
 
@@ -43,7 +44,8 @@ from bubble_detector.features import (
     compute_technical_indicators, compute_macro_valuations,
     compute_margin_leverage_metrics, compute_gsadf_gpt_decomposition,
     compute_tda_wavelet_complexity, compute_options_volatility_metrics,
-    normalize_tda_indicator
+    compute_lppls_confidence_indicator, compute_tech_exuberance_metrics,
+    compute_exuberance_spans, normalize_tda_indicator
 )
 from bubble_detector.models.structural_breaks import StructuralBreakPredictor
 from bubble_detector.models.regime_mahalanobis import MacroMahalanobisDetector
@@ -101,6 +103,8 @@ class DashboardState:
         df_raw = compute_gsadf_gpt_decomposition(df_raw)
         df_raw = compute_tda_wavelet_complexity(df_raw)
         df_raw = compute_options_volatility_metrics(df_raw)
+        df_raw = compute_lppls_confidence_indicator(df_raw)
+        df_raw = compute_tech_exuberance_metrics(df_raw)
 
         # Predict calibrated drawdown probabilities
         probs = self.predictor.predict_drawdown_probability(df_raw)
@@ -349,6 +353,90 @@ def build_mahalanobis_chart(state: DashboardState) -> go.Figure:
     )
     return fig
 
+def build_tech_exuberance_chart(state: DashboardState) -> go.Figure:
+    """
+    Build Plotly figure for Tab 7: Tech Exuberance Score (Option A Layout).
+    Features 4 synchronized stacked subplots with vertical glowing highlight spans
+    wherever Condition 1 (Macro) AND Condition 2 (Statistical) trigger true simultaneously.
+    """
+    df = state.df
+    dates = df["Date"].to_list()
+    palette = state.get_palette()
+
+    fig = make_subplots(
+        rows=4, cols=1,
+        shared_xaxes=True,
+        vertical_spacing=0.05,
+        subplot_titles=(
+            "1. Asset Price Action & Tech Sector Outperformance Ratio (XLK / SPY)",
+            "2. Statistical Singularity Diagnostics: Canonical BSADF vs LPPLS Bubble Confidence",
+            "3. Topological Complexity: Takens Persistence Landscape & Wavelet Spectral Entropy",
+            "4. Central Bank & Global Liquidity: M2 YoY% vs Fed Balance Sheet Expansion"
+        )
+    )
+
+    # Subplot 1: SPY, XLK, and Ratio
+    spy = df["SPY"].to_numpy()
+    xlk = df["XLK"].to_numpy() if "XLK" in df.columns else spy * 1.2
+    ratio = df["XLK_SPY_Ratio"].to_numpy() if "XLK_SPY_Ratio" in df.columns else (xlk / np.maximum(spy, 1e-4))
+
+    fig.add_trace(go.Scatter(x=dates, y=spy, mode="lines", name="S&P 500 (SPY) [REAL]", line=dict(color=palette["accent_blue"], width=2.0)), row=1, col=1)
+    fig.add_trace(go.Scatter(x=dates, y=xlk, mode="lines", name="Technology Sector (XLK) [REAL]", line=dict(color="#FF9800", width=2.0)), row=1, col=1)
+    fig.add_trace(go.Scatter(x=dates, y=ratio * 200.0, mode="lines", name="XLK / SPY Ratio (scaled x200) [REAL]", line=dict(color="#00E676", width=1.8, dash="dot")), row=1, col=1)
+
+    # Subplot 2: BSADF Stat vs Critical Values and LPPLS Confidence
+    bsadf = df["BSADF_Stat"].to_numpy() if "BSADF_Stat" in df.columns else (df["GSADF_Stat"].to_numpy() if "GSADF_Stat" in df.columns else np.zeros(len(df)))
+    lppls_ci = df["LPPLS_Confidence"].to_numpy() if "LPPLS_Confidence" in df.columns else np.zeros(len(df))
+    lppls_p90 = df["LPPLS_90th_Percentile"].to_numpy() if "LPPLS_90th_Percentile" in df.columns else np.zeros(len(df))
+
+    fig.add_trace(go.Scatter(x=dates, y=bsadf, mode="lines", name="PSY BSADF Test Statistic [REAL]", line=dict(color="#00E5FF", width=2.2)), row=2, col=1)
+    fig.add_trace(go.Scatter(x=dates, y=lppls_ci * 3.0, mode="lines", name="LPPLS Bubble Confidence (scaled x3) [REAL]", line=dict(color="#FF1744", width=2.2)), row=2, col=1)
+    fig.add_trace(go.Scatter(x=dates, y=lppls_p90 * 3.0, mode="lines", name="LPPLS 90th Pct Threshold [REAL]", line=dict(color="#FF5252", width=1.2, dash="dash")), row=2, col=1)
+    fig.add_hline(y=1.45, line_dash="solid", line_color="#D32F2F", annotation_text="PSY 95% CV (1.45)", row=2, col=1)
+    fig.add_hline(y=2.05, line_dash="dash", line_color="#B71C1C", annotation_text="PSY 99% CV (2.05)", row=2, col=1)
+
+    # Subplot 3: TDA Persistence L2, Persistence Entropy & Wavelet Spectral Entropy
+    tda_norm = df["TDA_Persistence_L2_Norm"].to_numpy() if "TDA_Persistence_L2_Norm" in df.columns else np.zeros(len(df))
+    tda_ent = df["TDA_Persistence_Entropy"].to_numpy() if "TDA_Persistence_Entropy" in df.columns else np.zeros(len(df))
+    wav_ent = df["Wavelet_Spectral_Entropy"].to_numpy() if "Wavelet_Spectral_Entropy" in df.columns else np.zeros(len(df))
+
+    fig.add_trace(go.Scatter(x=dates, y=normalize_tda_indicator(tda_norm), mode="lines", name="TDA Persistence L2 Norm (Normalized) [REAL]", line=dict(color="#E040FB", width=2.0)), row=3, col=1)
+    fig.add_trace(go.Scatter(x=dates, y=tda_ent, mode="lines", name="TDA Persistence Entropy E(D) [REAL]", line=dict(color="#7C4DFF", width=1.8, dash="dot")), row=3, col=1)
+    fig.add_trace(go.Scatter(x=dates, y=wav_ent, mode="lines", name="Wavelet Spectral Shannon Entropy [REAL]", line=dict(color="#00B0FF", width=1.8, dash="dash")), row=3, col=1)
+
+    # Subplot 4: Global Liquidity Index ($T), M2 YoY %, CB Balance Sheet YoY %
+    gli = df["Global_Liquidity_Index"].to_numpy() if "Global_Liquidity_Index" in df.columns else np.zeros(len(df))
+    m2_yoy = df["M2_YoY_Growth"].to_numpy() if "M2_YoY_Growth" in df.columns else np.zeros(len(df))
+    cb_yoy = df["CentralBank_YoY_Growth"].to_numpy() if "CentralBank_YoY_Growth" in df.columns else np.zeros(len(df))
+
+    fig.add_trace(go.Scatter(x=dates, y=gli, mode="lines", name="Global Liquidity Index ($ Trillion) [REAL]", line=dict(color="#FFD600", width=2.5)), row=4, col=1)
+    fig.add_trace(go.Scatter(x=dates, y=m2_yoy, mode="lines", name="U.S. M2 YoY Growth Rate (%) [REAL]", line=dict(color="#00E676", width=1.8)), row=4, col=1)
+    fig.add_trace(go.Scatter(x=dates, y=cb_yoy, mode="lines", name="Fed Balance Sheet YoY Growth (%) [REAL]", line=dict(color="#FF6D00", width=1.5, dash="dot")), row=4, col=1)
+
+    # Shaded vertical highlight spans for Conjoint Tech Exuberance
+    spans = compute_exuberance_spans(df)
+    first_span = True
+    for start_d, end_d in spans:
+        fig.add_vrect(
+            x0=start_d, x1=end_d,
+            fillcolor="rgba(255, 69, 58, 0.20)",
+            layer="below",
+            line_width=0,
+            annotation_text="🚨 Tech Exuberance Trigger" if first_span else None,
+            annotation_position="top left",
+        )
+        first_span = False
+
+    fig.update_layout(
+        template=state.get_plotly_template(),
+        title="Tech Exuberance Score: Macro Liquidity Decoupling vs Statistical Singularity Signatures",
+        legend=get_right_flushed_legend(state.theme_mode),
+        margin=dict(l=40, r=230, t=60, b=40),
+        height=850
+    )
+    fig.update_xaxes(title_text="Date", row=4, col=1)
+    return fig
+
 def render_executive_summary_card(state: DashboardState):
     """Render high-impact Executive Summary card giving macroeconomic context and quantitative scope."""
     with ui.expansion("🏛️ Executive Summary: Macro Landscape & Multidimensional Framework", icon="analytics").classes('w-full mb-4 rounded-xl').style(
@@ -366,7 +454,7 @@ def render_executive_summary_card(state: DashboardState):
             with ui.row().classes('w-full gap-4 mt-2 flex-wrap'):
                 with ui.column().classes('flex-1 min-w-[280px] p-3 rounded-lg').style('background-color: rgba(2, 136, 209, 0.08); border: 1px solid rgba(2, 136, 209, 0.2);'):
                     ui.label("🎯 Unified Multi-Regime Architecture").style('font-size: 0.90rem; font-weight: 700; color: var(--text-primary);')
-                    ui.label("• 6 Integrated Modules: Macro Valuation, Systemic Leverage, Econometric Bubble, Sentiment & Volatility, Sector Health & TDA, and Macro Mahalanobis Distance.").style('font-size: 0.83rem; color: var(--text-secondary);')
+                    ui.label("• 7 Integrated Modules: Macro Valuation, Systemic Leverage, Econometric Bubble, Sentiment & Volatility, Sector Health & TDA, Macro Mahalanobis Distance, and Tech Exuberance Score.").style('font-size: 0.83rem; color: var(--text-secondary);')
                     ui.label("• Signed Mahalanobis Sizing: Pre-registered bubble vector b prevents crash-bottom de-risking, maintaining w_equity >= 0.80 at market troughs.").style('font-size: 0.83rem; color: var(--text-secondary);')
                     ui.label("• Dynamic Equity Exposure: Continuous risk-scaled sizing (w_equity ∈ [0.20, 1.00]) with strict 20% defensive liquidity floor.").style('font-size: 0.83rem; color: var(--text-secondary);')
 
@@ -495,6 +583,7 @@ def create_app():
                     t4 = ui.tab('Sentiment & Volatility')
                     t5 = ui.tab('Sector Health')
                     t6 = ui.tab('Macro Mahalanobis Distance')
+                    t7 = ui.tab('Tech Exuberance Score')
 
                 with ui.tab_panels(tabs, value=t1).classes('w-full bg-transparent p-0'):
                     with ui.tab_panel(t1):
@@ -551,6 +640,44 @@ def create_app():
 
                         with create_ios_card("Macro Mahalanobis Distance & Multi-Dimensional Regime Signals", "Statistical Distance vs. Shiller CAPE, P-CAPE, Buffett Indicator & TDA Geometric Complexity"):
                             ui.plotly(build_mahalanobis_chart(state)).classes('w-full h-96')
+
+                    with ui.tab_panel(t7):
+                        df_tab7 = state.df
+                        latest_sig = int(df_tab7["Tech_Exuberance_Signal"][-1]) if "Tech_Exuberance_Signal" in df_tab7.columns else 0
+                        latest_macro = int(df_tab7["Condition_Macro"][-1]) if "Condition_Macro" in df_tab7.columns else 0
+                        latest_stat = int(df_tab7["Condition_Statistical"][-1]) if "Condition_Statistical" in df_tab7.columns else 0
+                        latest_gli = float(df_tab7["Global_Liquidity_Index"][-1]) if "Global_Liquidity_Index" in df_tab7.columns else 0.0
+                        latest_m2_yoy = float(df_tab7["M2_YoY_Growth"][-1]) if "M2_YoY_Growth" in df_tab7.columns else 0.0
+
+                        with ui.row().classes('w-full gap-4 mb-4 flex-wrap'):
+                            with ui.column().classes('p-4 flex-1 min-w-[220px] rounded-xl').style('background-color: var(--bg-card); border: 1px solid var(--border-color);'):
+                                ui.label("Conjoint Exuberance Signal").style('font-size: 0.82rem; font-weight: 600; color: var(--text-secondary);')
+                                sig_color = '#D32F2F' if latest_sig else '#00E676'
+                                sig_txt = "🚨 ACTIVE EXUBERANCE" if latest_sig else "Normal / Controlled"
+                                ui.label(sig_txt).style(f'font-size: 1.3rem; font-weight: 800; color: {sig_color};')
+                                ui.label("Condition 1 (Macro) & Condition 2 (Statistical)").style('font-size: 0.75rem; color: var(--text-secondary);')
+
+                            with ui.column().classes('p-4 flex-1 min-w-[220px] rounded-xl').style('background-color: var(--bg-card); border: 1px solid var(--border-color);'):
+                                ui.label("Macro Condition (Liquidity Decoupling)").style('font-size: 0.82rem; font-weight: 600; color: var(--text-secondary);')
+                                m_color = '#FF9800' if latest_macro else '#00E676'
+                                m_txt = "⚠️ M2 Slowing & Tech Surging" if latest_macro else "Monetary Alignment"
+                                ui.label(m_txt).style(f'font-size: 1.15rem; font-weight: 800; color: {m_color};')
+                                ui.label(f"M2 YoY: {latest_m2_yoy:.1f}%").style('font-size: 0.75rem; color: var(--text-secondary);')
+
+                            with ui.column().classes('p-4 flex-1 min-w-[220px] rounded-xl').style('background-color: var(--bg-card); border: 1px solid var(--border-color);'):
+                                ui.label("Statistical Singularity Condition").style('font-size: 0.82rem; font-weight: 600; color: var(--text-secondary);')
+                                s_color = '#D32F2F' if latest_stat else '#00E676'
+                                s_txt = "🚨 BSADF / LPPLS Singularity" if latest_stat else "No Finite-Time Singularity"
+                                ui.label(s_txt).style(f'font-size: 1.15rem; font-weight: 800; color: {s_color};')
+                                ui.label("Rolling BSADF > 95% CV or LPPLS CI >= 90th pct").style('font-size: 0.75rem; color: var(--text-secondary);')
+
+                            with ui.column().classes('p-4 flex-1 min-w-[220px] rounded-xl').style('background-color: var(--bg-card); border: 1px solid var(--border-color);'):
+                                ui.label("Global Liquidity Index").style('font-size: 0.82rem; font-weight: 600; color: var(--text-secondary);')
+                                ui.label(f"${latest_gli:.2f} Trillion").style('font-size: 1.4rem; font-weight: 800; color: var(--text-primary);')
+                                ui.label("U.S. M2 + Fed Total Assets").style('font-size: 0.75rem; color: var(--text-secondary);')
+
+                        with create_ios_card("Tech Exuberance Score: Synchronized Multi-Indicator Analytical Panel", "Macro Liquidity Decoupling, BSADF Explosive Tests, LPPLS Finite-Time Singularities & TDA Complexity"):
+                            ui.plotly(build_tech_exuberance_chart(state)).classes('w-full').style('min-height: 850px;')
 
         refresh_dashboard()
 

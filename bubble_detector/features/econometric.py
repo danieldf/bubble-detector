@@ -5,29 +5,30 @@ Econometric Bubble Detection Module (Canonical PSY & GSADF).
 Econometric Foundations & Mathematical Formulations:
 ---------------------------------------------------
 Conventional econometric unit root tests (e.g., standard Dickey-Fuller) test the null
-hypothesis of a unit root H0: \\delta = 1 against the left-tailed stationary alternative
-H1: \\delta < 1 (mean reversion). However, asset price bubbles are characterized by
+hypothesis of a unit root H0: delta = 1 against the left-tailed stationary alternative
+H1: delta < 1 (mean reversion). However, asset price bubbles are characterized by
 transitory episodes of explosive behavior where prices grow faster than an exponential
 random walk.
 
 1. Canonical Phillips, Shi & Yu (PSY, 2015) Testing Framework:
    Consider the autoregressive model for log-prices or log price-to-dividend ratios:
-       y_t = \\mu + \\delta \\cdot y_{t-1} + \\sum_{j=1}^k \\psi_j \\Delta y_{t-j} + \\epsilon_t, \\quad \\epsilon_t \\sim \\text{i.i.d.}(0, \\sigma^2)
+       y_t = mu + delta * y_{t-1} + sum_{j=1}^k psi_j Delta y_{t-j} + epsilon_t,  epsilon_t ~ i.i.d.(0, sigma^2)
    The econometric test evaluates:
-       H_0: \\delta = 1 \\quad \\text{(Martingale Unit Root)}
-       H_1: \\delta > 1 \\quad \\text{(Right-Tailed Mildly Explosive Behavior)}
+       H_0: delta = 1    (Martingale Unit Root)
+       H_1: delta > 1    (Right-Tailed Mildly Explosive Behavior)
 
    Under H1, prices exhibit explosive sub-trajectories:
-       \\Delta y_t = \\mu + (\\delta - 1) y_{t-1} + \\epsilon_t = \\mu + \\gamma y_{t-1} + \\epsilon_t, \\quad \\gamma > 0
-   The test statistic is the t-ratio for \\gamma:
-       \\text{ADF} = \\frac{\\hat{\\gamma}}{\\text{SE}(\\hat{\\gamma})}
+       Delta y_t = mu + (delta - 1) y_{t-1} + sum_{j=1}^k psi_j Delta y_{t-j} + epsilon_t
+                 = mu + gamma y_{t-1} + sum_{j=1}^k psi_j Delta y_{t-j} + epsilon_t,  gamma > 0
+   The test statistic is the right-tailed t-ratio for gamma:
+       ADF = hat{gamma} / SE(hat{gamma})
 
 2. Recursive Expanding Backward Supremum ADF (BSADF):
    Because bubbles emerge and collapse at unknown historical dates, static full-sample tests
    suffer from catastrophic power collapse (a bubble followed by a crash looks stationary
    in aggregate samples). PSY formulate the Backward Supremum ADF:
    Let r_2 be the current sample endpoint (normalized to [0, 1]) and r_1 be a variable starting point:
-       \\text{BSADF}_{r_2}(r_0) = \\sup_{r_1 \\in [0, r_2 - r_0]} \\text{ADF}_{r_1}^{r_2}
+       BSADF_{r_2}(r_0) = sup_{r_1 in [0, r_2 - r_0]} ADF_{r_1}^{r_2}
    where r_0 is the minimum initialization window fraction. When BSADF exceeds the critical
    threshold, a statistically significant explosive episode is active at time r_2.
 
@@ -38,61 +39,111 @@ random walk.
    productivity and cash flow growth (Jovanovic & Rousseau, 2005).
 
    To isolate speculative mania from rational technological repricing:
-       \\ln(P_t) = \\alpha + \\beta \\cdot \\ln(\\text{Tech}_t) + u_t
-   where \\text{Tech}_t is the technology sector price index reflecting realized productivity investments.
-   - Fundamental Component: \\hat{P}_t^{fund} = \\exp(\\hat{\\alpha} + \\hat{\\beta} \\ln(\\text{Tech}_t))
-   - Speculative Froth Residual: e_t = P_t - \\hat{P}_t^{fund} + \\overline{P}
+       ln(P_t) = alpha + beta * ln(Tech_t) + u_t
+   where Tech_t is the technology sector price index reflecting realized productivity investments.
+   - Fundamental Component: hat{P}_t^{fund} = exp(hat{alpha} + hat{beta} ln(Tech_t))
+   - Speculative Froth Residual: e_t = P_t - hat{P}_t^{fund} + bar{P}
    Evaluating BSADF on e_t produces `GSADF_GPT_Adjusted`. If GSADF is elevated on P_t but
    collapses toward zero on e_t, the price surge is fundamentally justified by technological
    capital expenditure rather than unanchored speculative leverage.
 
 4. Asymptotic Distribution & Wild Bootstrap:
-   Under H0: \\delta = 1, the test statistic follows a non-standard Wiener functional:
-       \\text{ADF} \\Rightarrow \\frac{\\int_0^1 W(s) dW(s)}{\\left(\\int_0^1 W(s)^2 ds\\right)^{1/2}}
-   Wild bootstrap critical values (Rademacher innovations \\eta_t \\in \\{-1, +1\\}) establish
-   finite-sample 95% (cv \\approx 1.45) and 99% (cv \\approx 2.05) significance thresholds.
+   Under H0: delta = 1, the test statistic follows a non-standard Wiener functional:
+       ADF => int_0^1 W(s) dW(s) / (int_0^1 W(s)^2 ds)^{1/2}
+   Wild bootstrap critical values (Rademacher innovations eta_t in {-1, +1}) establish
+   finite-sample 95% (cv approx 1.45) and 99% (cv approx 2.05) significance thresholds.
 """
 
-from typing import Tuple, Optional
+from typing import Tuple, Optional, List
 import numpy as np
+import pandas as pd
 import polars as pl
 from bubble_detector.config import SECTOR_TICKERS, SP500_TICKER, logger
 
-def calculate_adf_stat(series: np.ndarray) -> float:
+
+def calculate_adf_stat(series: np.ndarray, lag_order: Optional[int] = None) -> float:
     """
     Calculate Augmented Dickey-Fuller t-statistic for right-tailed explosive root testing
-    (H0: delta = 1 vs H1: delta > 1 in y_t = mu + delta * y_{t-1} + e_t).
+    (H0: gamma = 0 vs H1: gamma > 0 in Delta y_t = mu + gamma * y_{t-1} + sum psi_j Delta y_{t-j} + e_t).
+
+    Supports dynamic lag length selection k in {0, 1} via transient Akaike Information Criterion (AIC).
+
+    Parameters
+    ----------
+    series : np.ndarray
+        Price or valuation multiple time series.
+    lag_order : Optional[int]
+        Specific lag order (0 or 1). If None, automatically selects optimal lag via AIC.
+
+    Returns
+    -------
+    float
+        Right-tailed ADF t-statistic.
     """
-    if len(series) < 12:
+    n = len(series)
+    if n < 12:
         return 0.0
 
     y = np.log(np.maximum(series, 1e-4))
     dy = np.diff(y)
     y_lag = y[:-1]
 
-    # OLS regression: dy = alpha + gamma * y_{t-1} + error
-    X = np.column_stack([np.ones(len(y_lag)), y_lag])
-    try:
-        beta, residuals, rank, s = np.linalg.lstsq(X, dy, rcond=None)
-        gamma = beta[1]
+    # Model k=0: Delta y_t = mu + gamma * y_{t-1} + e_t
+    n_k0 = len(dy)
+    y_bar = np.mean(y_lag)
+    dy_bar = np.mean(dy)
+    ss_yy = np.sum((y_lag - y_bar) ** 2)
 
-        df = len(dy) - 2
-        if df <= 0:
-            return 0.0
-
-        sigma_sq = np.sum((dy - X @ beta) ** 2) / df
-        cov_matrix = sigma_sq * np.linalg.pinv(X.T @ X)
-        se_gamma = np.sqrt(np.maximum(cov_matrix[1, 1], 1e-8))
-
-        t_stat = float(gamma / se_gamma)
-        return t_stat
-    except Exception:
+    if ss_yy < 1e-9:
         return 0.0
+
+    gamma_0 = float(np.sum((y_lag - y_bar) * (dy - dy_bar)) / ss_yy)
+    mu_0 = float(dy_bar - gamma_0 * y_bar)
+    res_0 = dy - (mu_0 + gamma_0 * y_lag)
+    sse_0 = float(np.sum(res_0 ** 2))
+    df_0 = max(1, n_k0 - 2)
+    sigma2_0 = sse_0 / df_0
+    se_gamma_0 = float(np.sqrt(max(sigma2_0 / ss_yy, 1e-9)))
+    t_stat_0 = gamma_0 / se_gamma_0
+
+    if lag_order == 0 or n < 16:
+        return t_stat_0
+
+    # Model k=1: Delta y_t = mu + gamma * y_{t-1} + psi_1 * Delta y_{t-1} + e_t
+    y_lag1 = y_lag[1:]
+    dy_target = dy[1:]
+    dy_lag1 = dy[:-1]
+    n_k1 = len(dy_target)
+
+    X1 = np.column_stack([np.ones(n_k1, dtype=np.float64), y_lag1, dy_lag1])
+    try:
+        XtX = X1.T @ X1
+        XtY = X1.T @ dy_target
+        beta_1 = np.linalg.solve(XtX, XtY)
+        res_1 = dy_target - X1 @ beta_1
+        sse_1 = float(np.sum(res_1 ** 2))
+        df_1 = max(1, n_k1 - 3)
+        sigma2_1 = sse_1 / df_1
+        inv_XtX = np.linalg.inv(XtX)
+        se_gamma_1 = float(np.sqrt(max(sigma2_1 * inv_XtX[1, 1], 1e-9)))
+        t_stat_1 = float(beta_1[1] / se_gamma_1)
+
+        if lag_order == 1:
+            return t_stat_1
+
+        # AIC comparison: AIC = N * ln(SSE / N) + 2 * p
+        aic_0 = n_k0 * np.log(max(sse_0 / n_k0, 1e-12)) + 4.0
+        aic_1 = n_k1 * np.log(max(sse_1 / n_k1, 1e-12)) + 6.0
+
+        return t_stat_1 if aic_1 < aic_0 else t_stat_0
+    except Exception:
+        return t_stat_0
+
 
 def compute_wild_bootstrap_critical_values(
     n_obs: int = 100,
     n_boot: int = 200,
-    window_sizes: Tuple[int, ...] = (15, 25, 40)
+    window_sizes: Tuple[int, ...] = (15, 20, 30, 40)
 ) -> Tuple[float, float]:
     """
     Compute wild bootstrap critical values (95% and 99%) under the null hypothesis
@@ -102,11 +153,9 @@ def compute_wild_bootstrap_critical_values(
     max_stats = np.zeros(n_boot)
 
     for b in range(n_boot):
-        # Generate random walk null
         innovations = np.random.choice([-1.0, 1.0], size=n_obs) * np.random.randn(n_obs)
         null_series = np.exp(np.cumsum(innovations * 0.01) + 4.0)
 
-        # Compute supremum ADF across candidate sub-windows
         sup_stat = -99.0
         for w in window_sizes:
             if w <= n_obs:
@@ -119,6 +168,7 @@ def compute_wild_bootstrap_critical_values(
     cv_99 = float(np.percentile(max_stats, 99))
     return max(1.45, cv_95), max(2.05, cv_99)
 
+
 def compute_gsadf_gpt_decomposition(
     df: pl.DataFrame,
     target_col: str = SP500_TICKER,
@@ -126,15 +176,17 @@ def compute_gsadf_gpt_decomposition(
     min_window: int = 15
 ) -> pl.DataFrame:
     """
-    Computes canonical recursive expanding-window GSADF explosive test statistics
-    (Phillips, Shi & Yu, 2015) and GPT-adjusted structural fundamental decomposition.
-    
-    Sub-window supremum formulation:
-        BSADF_t(r_0) = sup_{r_1 in [0, r_2 - r_0]} ADF_{r_1}^{r_2}
+    Computes canonical recursive expanding-window Backward Supremum ADF (BSADF)
+    explosive test statistics (Phillips, Shi & Yu, 2015) and structural GPT
+    cointegration decomposition.
+
+    Recursive Expanding Backward Supremum Formulation:
+        BSADF_{r_2}(r_0) = sup_{r_1 in [0, r_2 - r_0]} ADF_{r_1}^{r_2}
+                         = max_{w in W} ADF(y_{t-w : t})
+    over continuous window grid W = [15, 20, 25, 30, 35, 40, 50, 60] trading days.
     """
     logger.info(f"Computing canonical PSY/GSADF & GPT decomposition for '{target_col}'...")
 
-    # Canonical series: Price_to_Dividend if present (Phillips et al. 2015 baseline), else target_col
     eval_col = "Price_to_Dividend" if "Price_to_Dividend" in df.columns else target_col
     if eval_col not in df.columns:
         eval_col = target_col if target_col in df.columns else df.columns[1]
@@ -146,11 +198,13 @@ def compute_gsadf_gpt_decomposition(
     gpt_adjusted_stats = np.zeros(n, dtype=np.float32)
     speculative_bubble_flag = np.zeros(n, dtype=np.int32)
 
-    # Sub-window lengths evaluated for the backward supremum ADF
-    sub_windows = [min_window, min_window + (window_size - min_window) // 2, window_size, min(window_size + 20, n)]
-    sub_windows = sorted(list(set([w for w in sub_windows if w <= n])))
+    # Continuous expanding backward window grid over [min_window, 60]
+    candidate_windows = [15, 20, 25, 30, 35, 40, 50, 60]
+    sub_windows = [w for w in candidate_windows if w >= min_window]
+    if not sub_windows:
+        sub_windows = [min_window, window_size]
 
-    # Tech Productivity Fundamental series
+    # Tech Productivity Fundamental series (XLK)
     tech_col = SECTOR_TICKERS.get("Technology", "XLK")
     if tech_col in df.columns:
         tech_prices = df[tech_col].to_numpy()
@@ -181,7 +235,6 @@ def compute_gsadf_gpt_decomposition(
         ln_tech = np.log(np.maximum(w_tech, 1e-4))
 
         if np.std(ln_tech) > 1e-4:
-            # Cointegration OLS: ln_p = alpha + beta * ln_tech + residual
             slope, intercept = np.polyfit(ln_tech, ln_p, 1)
             fundamental_component = np.exp(intercept + slope * ln_tech)
             speculative_residual = np.maximum(w_p - fundamental_component + np.mean(w_p), 1e-2)
@@ -200,8 +253,14 @@ def compute_gsadf_gpt_decomposition(
         gsadf_stats[:min_window] = gsadf_stats[min_window]
         gpt_adjusted_stats[:min_window] = gpt_adjusted_stats[min_window]
 
+    # Causal 252-day rolling 90th percentile of BSADF statistic
+    bsadf_series = pd.Series(gsadf_stats)
+    bsadf_90th = bsadf_series.rolling(252, min_periods=min_window).quantile(0.90).bfill().to_numpy().astype(np.float32)
+
     df = df.with_columns([
         pl.Series("GSADF_Stat", gsadf_stats),
+        pl.Series("BSADF_Stat", gsadf_stats),
+        pl.Series("BSADF_90th_Percentile", bsadf_90th),
         pl.Series("GSADF_GPT_Adjusted", gpt_adjusted_stats),
         pl.Series("Speculative_Bubble_Signal", speculative_bubble_flag),
         pl.Series("GSADF_Critical_Value_95", np.full(n, cv_95, dtype=np.float32)),

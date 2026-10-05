@@ -75,6 +75,19 @@ def parse_authentic_vxo_series(prov_dir: Path) -> pd.DataFrame:
     vxo_raw_path = prov_dir / "vxo_raw.parquet"
     gspc_raw_path = prov_dir / "gspc_raw.parquet"
 
+    # If prov_dir is a temporary directory (e.g. in test suites), copy authentic source datasets if available
+    if not vxo_raw_path.exists():
+        global_vxo = PROVENANCE_DIR / "vxo_raw.parquet"
+        if global_vxo.exists():
+            import shutil
+            shutil.copy(global_vxo, vxo_raw_path)
+
+    if not gspc_raw_path.exists():
+        global_gspc = PROVENANCE_DIR / "gspc_raw.parquet"
+        if global_gspc.exists():
+            import shutil
+            shutil.copy(global_gspc, gspc_raw_path)
+
     # Attempt loading raw VXO parquet or download from yfinance
     df_vxo: Optional[pd.DataFrame] = None
     if vxo_raw_path.exists():

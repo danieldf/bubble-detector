@@ -2,9 +2,9 @@
 
 [![Deploy WebAssembly Dashboard](https://github.com/danieldf/bubble-detector/actions/workflows/deploy.yml/badge.svg)](https://github.com/danieldf/bubble-detector/actions/workflows/deploy.yml)
 [![Live WebAssembly Dashboard](https://img.shields.io/badge/Live_Dashboard-GitHub_Pages-0288D1?style=flat&logo=github)](https://danieldf.github.io/bubble-detector/)
-[![Version](https://img.shields.io/badge/Version-v3.0.0-4CAF50?style=flat)](https://github.com/danieldf/bubble-detector/releases/tag/v3.0.0)
+[![Version](https://img.shields.io/badge/Version-v3.1.0-4CAF50?style=flat)](https://github.com/danieldf/bubble-detector/releases/tag/v3.1.0)
 [![Python Version](https://img.shields.io/badge/Python-3.11%2B%20%7C%203.14-blue?style=flat&logo=python)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/Tests-76%20Passed%20(100%25)-success?style=flat)](https://github.com/danielsflscientific.com/bubble-detector/actions)
+[![Tests](https://img.shields.io/badge/Tests-105%20Passed%20(100%25)-success?style=flat)](https://github.com/danieldf/bubble-detector/actions)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey.svg)](LICENSE)
 
 An enterprise-grade quantitative econometric system, statistical distance classifier, and machine learning framework engineered to detect financial asset bubbles, diagnose non-linear macroeconomic regime shifts, quantify systemic distance from historical equilibrium, and dynamically adjust portfolio equity exposure with zero lookahead bias and institutional cost accounting.
@@ -36,7 +36,7 @@ $$\text{Start Date} = \text{Current Date} - 50 \text{ physical calendar years}$$
 
 ---
 
-## 📊 6 Interactive Dashboard Modules
+## 📊 7 Interactive Dashboard Modules
 
 ### 1. Macro Valuation Anchors
 - **Shiller CAPE (41.37)**: Inflation-adjusted 10-year P/E ratio, positioned in the second-highest valuation epoch in U.S. financial history.
@@ -69,6 +69,16 @@ $$\text{Start Date} = \text{Current Date} - 50 \text{ physical calendar years}$$
 - **Crash-Trough De-Risking Elimination**: Automatically maintains high equity exposure ($w_{\text{equity}} \ge 0.80$) during liquidation troughs (March 2020, October 2008) while de-risking down to 20% only during bubble overextension.
 - **White-Box Anomaly Driver Attribution**: Automatically isolates top-3 contributing indicators with standardized z-score deviations.
 - **Right-Flushed Legends**: Unobstructed Plotly canvases with standardized reference thresholds at $3.8\sigma$ (Equilibrium), $5.0\sigma$ (Warning), and $6.2\sigma$ (Extreme Crisis).
+
+### 7. Tech Exuberance Score: Macro Decoupling vs Statistical Singularity
+- **Dual-Condition Conjoint Engine**: Evaluates the macroeconomic decoupling of technology equities from central bank liquidity alongside microstructural mathematical singularities.
+- **Condition 1 (Macro Decoupling)**: M2 money supply growth deceleration / negative liquidity momentum concurrent with accelerating Tech ETF (XLK / SPY) outperformance.
+- **Condition 2 (Statistical Singularity)**: Recursive Backward Supremum ADF (BSADF) or Log-Periodic Power Law Singularity (LPPLS) bubble confidence exceeding the 90th historical percentile.
+- **Synchronized 4-Subplot Architecture**:
+  1. Price Action & Outperformance Ratio (SPY, XLK, XLK/SPY) with illuminated highlight spans (`rgba(255, 69, 58, 0.20)`).
+  2. Statistical Singularity Diagnostics: Canonical BSADF ($CV_{95\%} = 1.45, CV_{99\%} = 2.05$) vs LPPLS Bubble Confidence ($CI \in [0, 1]$).
+  3. Topological Complexity: Takens Persistence Landscape $L_2$ Norm & Wavelet Spectral Shannon Entropy.
+  4. Central Bank & Global Liquidity: Global Liquidity Index (\$T), U.S. M2 YoY Growth (%), and Fed Balance Sheet YoY Growth (%).
 
 ---
 
@@ -108,24 +118,56 @@ $$w_{\text{equity}}(t) = \begin{cases}
 
 where $w_{min} = 0.20$ (20% defensive liquidity reserve floor).
 
-### 4. Canonical PSY Recursive Right-Tailed Unit Root Testing (GSADF)
+### 4. Canonical PSY Recursive Right-Tailed Unit Root Testing (GSADF / BSADF)
 
 $$\Delta y_t = \mu + \gamma \cdot y_{t-1} + \sum_{j=1}^k \psi_j \Delta y_{t-j} + \epsilon_t, \quad y_t = \ln(P_t / D_t)$$
 
-$$H_0: \gamma = 0 \quad \text{(Random Walk Martingale)} \quad \text{vs.} \quad H_1: \gamma > 0 \quad \text{(Explosive Sub-Trajectory)}$$
+Dynamic lag selection $k \in \{0, 1\}$ is determined causally via Akaike Information Criterion (AIC) with exact OLS standard error formulas.
+Recursive backward expanding supremum search over continuous window grid $w \in [15, 60]$ trading days:
 
-$$\text{BSADF}_{r_2}(r_0) = \sup_{r_1 \in [0, r_2 - r_0]} \text{ADF}_{r_1}^{r_2}$$
+$$\text{BSADF}_{t} = \max_{w \in \mathcal{W}} \text{ADF}(y_{t-w:t})$$
 
-### 5. Topological Data Analysis (TDA) Dynamic Persistence Scaling
+with wild bootstrap critical value thresholds at $CV_{95\%} = 1.45$ and $CV_{99\%} = 2.05$, alongside continuous rolling percentile series $\text{BSADF}_{90\%}$.
 
-Point cloud $\mathbf{v}_i = (r_i, r_{i-2}, r_{i-4}) \in \mathbb{R}^3$ constructed via Takens delay embedding.
-Persistence landscape $L_2$ norm evaluates topological loop lifetimes:
+### 5. Topological Data Analysis (TDA) & Wavelet Spectral Entropy
 
-$$\|\lambda\|_{L_2} = \sqrt{\sum_j (\text{death}_j - \text{birth}_j)^2}$$
+Point cloud $\mathbf{v}_i = (r_i, r_{i-2}, r_{i-4}) \in \mathbb{R}^3$ constructed via Takens delay embedding ($m=3, \tau=2$).
+Bubenik (2015) persistence landscape $L_2$ norm evaluates topological loop lifetimes:
 
-Causally scaled via historical expanding bounds:
+$$\|\lambda\|_{L_2} = \sqrt{\frac{1}{3} \sum_j (d_j - b_j)^3}$$
 
-$$\text{TDA}_{norm}(t) = 0.80 + \left(\frac{\|\lambda\|_{L_2}(t) - \min_{s \le t} \|\lambda\|_{L_2}(s)}{\max_{s \le t} \|\lambda\|_{L_2}(s) - \min_{s \le t} \|\lambda\|_{L_2}(s) + \epsilon}\right) \cdot (7.00 - 0.80)$$
+Persistence entropy measures dispersion of topological feature lifetimes:
+
+$$E(D) = -\sum_j p_j \ln p_j, \quad p_j = \frac{d_j - b_j}{\sum_i (d_i - b_i)}$$
+
+Continuous Morlet Wavelet scaleogram energy across scales $s \in [2, 64]$ trading days yields Wavelet Shannon Spectral Entropy:
+
+$$H_{wav}(t) = -\sum_k \tilde{P}_k(t) \ln \tilde{P}_k(t), \quad \tilde{P}_k(t) = \frac{|W(s_k, t)|^2}{\sum_j |W(s_j, t)|^2}$$
+
+### 6. Log-Periodic Power Law Singularity (LPPLS) Subordination Model
+
+$$\mathbb{E}[\ln P_t] = A + B (t_c - t)^m + C_1 (t_c - t)^m \cos(\omega \ln(t_c - t)) + C_2 (t_c - t)^m \sin(\omega \ln(t_c - t))$$
+
+Filimonov & Sornette (2013) subordination solves linear parameters $\boldsymbol{\beta} = [A, B, C_1, C_2]^T$ in closed form via normal equations $\boldsymbol{\beta} = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{y}$ inside bounded L-BFGS-B optimization over nonlinear parameters $(t_c, m, \omega)$. Fits are validated under Sornette's 5 filtering conditions ($0.1 \le m \le 0.9$, $4.8 \le \omega \le 13.0$, $B < 0$, damping $D \ge 0.8$, $R^2 \ge 0.60$).
+Multi-scale LPPLS Bubble Confidence Indicator:
+
+$$CI(t) = \frac{1}{N_{windows}} \sum_{w \in \{60, 90, 125, 180, 250\}} \mathbf{1}_{\{\text{Fit}_w \text{ valid}\}} \in [0, 1]$$
+
+### 7. Global Liquidity Index & Dual-Condition Conjoint Exuberance
+
+Global Liquidity Index ($ Trillion USD) combining U.S. M2 money stock and Fed balance sheet assets with authentic publication lags (+10d for M2, +1d for WALCL):
+
+$$\text{GLI}_t = \frac{M2_t + CB_t}{1,000}$$
+
+$$\text{Mom}_{\text{Liq}}(t) = \Delta_{\text{YoY}} M2_t - \text{SMA}_{60}(\Delta_{\text{YoY}} M2_t)$$
+
+Conjoint Tech Exuberance Signal activates when macro liquidity decoupling and statistical singularities co-occur:
+
+$$\text{Condition}_{Macro} = (\Delta_{\text{YoY}} M2 < \text{SMA}_{60}(\Delta_{\text{YoY}} M2) \lor \text{Mom}_{\text{Liq}} < 0 \lor \Delta_{\text{YoY}} M2 < 0) \land \left(\frac{\text{XLK}}{\text{SPY}} > \text{SMA}_{50}\left(\frac{\text{XLK}}{\text{SPY}}\right) \land \Delta_{20d}\left(\frac{\text{XLK}}{\text{SPY}}\right) > 0\right)$$
+
+$$\text{Condition}_{Stat} = (\text{BSADF}_t > 1.45 \lor \text{BSADF}_t \ge P_{90}(\text{BSADF})) \lor (CI(t) \ge 0.50 \lor CI(t) \ge P_{90}(CI))$$
+
+$$\text{Tech\_Exuberance\_Signal} = \text{Condition}_{Macro} \land \text{Condition}_{Stat}$$
 
 ---
 
@@ -228,10 +270,10 @@ python -m http.server 8000 --directory dist/
 
 ### 5. Run the Automated Test Suite
 
-Executes all 76 automated unit, integration, numerical parity, module alias, and anti-synthetic tests:
+Executes all 105 automated unit, integration, numerical parity, module alias, and anti-synthetic tests:
 
 ```bash
-# Run all 76 tests
+# Run all 105 tests
 ./.venv/bin/pytest tests/ -v
 
 # Run Mahalanobis and Tab 6 normalization tests specifically
@@ -258,6 +300,15 @@ graphify update .
 ## 📋 Changelog
 
 All notable changes to this project are documented in this section adhering to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and [Semantic Versioning (SemVer)](https://semver.org/).
+
+### [v3.1.0] - 2026-10-05
+
+#### Added
+- **Global Liquidity & Central Bank ETL Engine**: Authentic FRED ingestion of U.S. M2 (`M2SL`, +10d lag) and Fed Assets (`WALCL`, +1d lag) spliced with historical monetary base (`BOGMBASE`), generating `Global_Liquidity_Index` (\$T) and `Liquidity_Momentum`.
+- **Log-Periodic Power Law Singularity (LPPLS) Engine**: Filimonov & Sornette (2013) subordination algorithm with closed-form normal equations OLS, bounded L-BFGS-B optimization, Sornette 5 constraints, and multi-scale rolling confidence indicator $CI(t) \in [0, 1]$.
+- **Tab 7 ("Tech Exuberance Score")**: Synchronized 4-subplot dual-runtime dashboard tab in NiceGUI and WebAssembly, evaluating macro liquidity decoupling against microstructural mathematical singularities with illuminated highlight spans.
+- **Topological Data Analysis & Wavelet Revision**: Exact Bubenik (2015) persistence landscape $L_2$ norm, persistence entropy $E(D)$, and pure-NumPy Morlet Wavelet spectral Shannon entropy.
+- **Automated Verification Expansion**: Test suite expanded to **105 automated tests passing with 100% success rate**.
 
 ### [v3.0.0] - 2026-09-03
 

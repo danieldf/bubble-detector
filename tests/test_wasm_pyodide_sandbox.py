@@ -32,6 +32,7 @@ from bubble_detector.ui.panel_dashboard import (
     build_sentiment_vol_fig,
     build_sector_health_fig,
     build_mahalanobis_fig,
+    build_tech_exuberance_fig,
     HORIZON_OPTION_1_ID,
     HORIZON_OPTION_2_ID,
     HORIZON_METADATA,
@@ -190,9 +191,9 @@ def test_wasm_full_script_pyodide_execution(monkeypatch, tmp_path):
     assert len(tmpl.sidebar) >= 3
     assert len(tmpl.main) >= 6
 
-    # Verify 6 plotly panes
+    # Verify 7 plotly panes
     tabs = globs["dashboard_tabs"]
-    assert len(tabs) == 6
+    assert len(tabs) == 7
     for pane in tabs.objects:
         fig = pane.object
         assert len(fig.data) > 0, "Tab figure has 0 traces"
@@ -249,6 +250,7 @@ def test_all_6_plotly_figures_have_traces():
         ("Sentiment", build_sentiment_vol_fig),
         ("Sector Health", build_sector_health_fig),
         ("Mahalanobis", build_mahalanobis_fig),
+        ("Tech Exuberance", build_tech_exuberance_fig),
     ]
 
     for name, builder in builders:

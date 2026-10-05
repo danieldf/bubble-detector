@@ -100,7 +100,12 @@ class DataIngestor:
             try:
                 cached_df = pl.read_parquet(cache_file)
                 # Verify that cache contains essential columns and no NaNs
-                if len(cached_df) > 0 and "SPY" in cached_df.columns and "Shiller_CAPE" in cached_df.columns:
+                if (
+                    len(cached_df) > 0
+                    and "SPY" in cached_df.columns
+                    and "Shiller_CAPE" in cached_df.columns
+                    and "Global_Liquidity_Index" in cached_df.columns
+                ):
                     return cached_df
             except Exception as e:
                 logger.warning(f"Failed to read cache {cache_file}: {e}. Re-fetching data.")
@@ -407,6 +412,7 @@ class DataIngestor:
             pl.Series("GDP_Provenance", ["REAL"] * len(joined)),
             pl.Series("MarginDebt_Provenance", ["REAL"] * len(joined)),
             pl.Series("Housing_Provenance", ["REAL"] * len(joined)),
+            pl.Series("Liquidity_Provenance", ["REAL"] * len(joined)),
             pl.Series("Is_Synthetic_Fallback", [False] * len(joined)),
         ])
 

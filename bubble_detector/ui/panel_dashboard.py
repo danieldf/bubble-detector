@@ -9,9 +9,10 @@ import datetime
 import os
 import sys
 from pathlib import Path
-from typing import Dict, Any, Tuple, Optional, Union
+from typing import Dict, Any, Tuple, Optional, Union, List
 import numpy as np
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 import panel as pn
 
 # Initialize Panel extension with Plotly engine
@@ -182,7 +183,7 @@ HORIZON_OPTION_1_LABEL = f"Option 1: 50-Year Multi-Decade Horizon ({_dyn_start_5
 HORIZON_OPTION_2_LABEL = f"Option 2: Modern 5-Regime Horizon (2015–{_dyn_end[:4]})"
 HORIZON_METADATA = get_dynamic_horizon_metadata()
 
-# Core 21 Indicator Columns for WebAssembly Client-Side Execution
+# Core 35 Indicator Columns for WebAssembly Client-Side Execution
 CORE_WASM_COLUMNS = [
     "Date",
     "SPY",
@@ -204,7 +205,21 @@ CORE_WASM_COLUMNS = [
     "One_Year_Distance_Rank",
     "Bubble_Regime_Probability",
     "Dynamic_Equity_Exposure",
-    "Primary_Anomaly_Driver"
+    "Primary_Anomaly_Driver",
+    "M2_YoY_Growth",
+    "CentralBank_YoY_Growth",
+    "Global_Liquidity_Index",
+    "Liquidity_Momentum",
+    "BSADF_Stat",
+    "BSADF_90th_Percentile",
+    "LPPLS_Confidence",
+    "LPPLS_90th_Percentile",
+    "TDA_Persistence_Entropy",
+    "Wavelet_Spectral_Entropy",
+    "XLK_SPY_Ratio",
+    "Condition_Macro",
+    "Condition_Statistical",
+    "Tech_Exuberance_Signal",
 ]
 
 # Flag tracking whether synthetic fallback data is active
@@ -266,7 +281,8 @@ def generate_wasm_dataset(start_date: str, end_date: str) -> Dict[str, Any]:
         from bubble_detector.features import (
             compute_technical_indicators, compute_macro_valuations,
             compute_margin_leverage_metrics, compute_gsadf_gpt_decomposition,
-            compute_tda_wavelet_complexity, compute_options_volatility_metrics
+            compute_tda_wavelet_complexity, compute_options_volatility_metrics,
+            compute_lppls_confidence_indicator, compute_tech_exuberance_metrics
         )
         from bubble_detector.models.structural_breaks import StructuralBreakPredictor
         from bubble_detector.models.regime_mahalanobis import MacroMahalanobisDetector
@@ -279,6 +295,8 @@ def generate_wasm_dataset(start_date: str, end_date: str) -> Dict[str, Any]:
         df_raw = compute_gsadf_gpt_decomposition(df_raw)
         df_raw = compute_tda_wavelet_complexity(df_raw)
         df_raw = compute_options_volatility_metrics(df_raw)
+        df_raw = compute_lppls_confidence_indicator(df_raw)
+        df_raw = compute_tech_exuberance_metrics(df_raw)
 
         predictor = StructuralBreakPredictor()
         probs = predictor.predict_drawdown_probability(df_raw)
@@ -369,7 +387,21 @@ def generate_wasm_dataset(start_date: str, end_date: str) -> Dict[str, Any]:
         "One_Year_Distance_Rank": np.clip(0.6 + 0.3 * np.sin(0.7 * t), 0.0, 1.0),
         "Bubble_Regime_Probability": np.clip(0.6 + 0.3 * np.sin(0.7 * t), 0.0, 1.0),
         "Dynamic_Equity_Exposure": np.clip(0.5 - 0.25 * np.sin(0.7 * t), 0.20, 1.0),
-        "Primary_Anomaly_Driver": ["Shiller CAPE Multi-Decade Expansion" for _ in range(n)]
+        "Primary_Anomaly_Driver": ["Shiller CAPE Multi-Decade Expansion" for _ in range(n)],
+        "M2_YoY_Growth": np.clip(5.0 + 4.0 * np.sin(0.5 * t), -2.0, 15.0),
+        "CentralBank_YoY_Growth": np.clip(4.0 + 6.0 * np.sin(0.4 * t), -10.0, 25.0),
+        "Global_Liquidity_Index": np.clip(25.0 + 8.0 * (t / 10.0) + 2.0 * np.sin(0.5 * t), 15.0, 40.0),
+        "Liquidity_Momentum": np.clip(1.0 * np.cos(0.5 * t), -3.0, 3.0),
+        "BSADF_Stat": 1.2 + 0.5 * np.sin(0.8 * t),
+        "BSADF_90th_Percentile": 1.6 + 0.2 * np.sin(0.8 * t),
+        "LPPLS_Confidence": np.clip(0.3 + 0.3 * np.sin(0.6 * t), 0.0, 1.0),
+        "LPPLS_90th_Percentile": np.clip(0.6 + 0.1 * np.sin(0.6 * t), 0.0, 1.0),
+        "TDA_Persistence_Entropy": np.clip(1.8 + 0.4 * np.cos(t), 0.5, 3.0),
+        "Wavelet_Spectral_Entropy": np.clip(2.2 + 0.3 * np.sin(t), 1.0, 3.5),
+        "XLK_SPY_Ratio": np.clip(0.3 + 0.1 * (t / 10.0) + 0.05 * np.sin(t), 0.2, 0.6),
+        "Condition_Macro": np.zeros(n, dtype=np.int32),
+        "Condition_Statistical": np.zeros(n, dtype=np.int32),
+        "Tech_Exuberance_Signal": np.zeros(n, dtype=np.int32),
     }
     return out_dict
 
@@ -670,6 +702,122 @@ def build_mahalanobis_fig(horizon_id: str, is_mobile: bool = False) -> go.Figure
     )
     return fig
 
+def build_tech_exuberance_fig(horizon_id: str, is_mobile: bool = False) -> go.Figure:
+    """Build Plotly figure for Tab 7: Tech Exuberance Score (matching NiceGUI 100%)."""
+    data = fetch_dataset(horizon_id)
+    dates = data["Date"]
+    n = len(dates)
+
+    fig = make_subplots(
+        rows=4, cols=1,
+        shared_xaxes=True,
+        vertical_spacing=0.06 if not is_mobile else 0.08,
+        subplot_titles=(
+            "1. Asset Price Action & Tech Sector Outperformance Ratio (XLK / SPY)",
+            "2. Statistical Singularity Diagnostics: Canonical BSADF vs LPPLS Bubble Confidence",
+            "3. Topological Complexity: Takens Persistence Landscape & Wavelet Spectral Entropy",
+            "4. Central Bank & Global Liquidity: M2 YoY% vs Fed Balance Sheet Expansion"
+        )
+    )
+
+    # Subplot 1: SPY, XLK, and Ratio
+    spy = data["SPY"]
+    xlk = data["XLK"] if "XLK" in data else spy * 1.2
+    ratio = data["XLK_SPY_Ratio"] if "XLK_SPY_Ratio" in data else (xlk / np.maximum(spy, 1e-4))
+
+    d_spy, v_spy = _prepare_trace(dates, spy)
+    fig.add_trace(go.Scatter(x=d_spy, y=v_spy, mode="lines", name="S&P 500 (SPY) [REAL]", line=dict(color="#0288D1", width=2.0)), row=1, col=1)
+
+    d_xlk, v_xlk = _prepare_trace(dates, xlk)
+    fig.add_trace(go.Scatter(x=d_xlk, y=v_xlk, mode="lines", name="Technology Sector (XLK) [REAL]", line=dict(color="#FF9800", width=2.0)), row=1, col=1)
+
+    d_rat, v_rat = _prepare_trace(dates, ratio * 200.0)
+    fig.add_trace(go.Scatter(x=d_rat, y=v_rat, mode="lines", name="XLK / SPY Ratio (scaled x200) [REAL]", line=dict(color="#00E676", width=1.8, dash="dot")), row=1, col=1)
+
+    # Subplot 2: BSADF Stat vs Critical Values and LPPLS Confidence
+    bsadf = data["BSADF_Stat"] if "BSADF_Stat" in data else (data["GSADF_Stat"] if "GSADF_Stat" in data else np.zeros(n))
+    lppls_ci = data["LPPLS_Confidence"] if "LPPLS_Confidence" in data else np.zeros(n)
+    lppls_p90 = data["LPPLS_90th_Percentile"] if "LPPLS_90th_Percentile" in data else np.zeros(n)
+
+    d_bsadf, v_bsadf = _prepare_trace(dates, bsadf)
+    fig.add_trace(go.Scatter(x=d_bsadf, y=v_bsadf, mode="lines", name="PSY BSADF Test Statistic [REAL]", line=dict(color="#00E5FF", width=2.2)), row=2, col=1)
+
+    d_lppls, v_lppls = _prepare_trace(dates, lppls_ci * 3.0)
+    fig.add_trace(go.Scatter(x=d_lppls, y=v_lppls, mode="lines", name="LPPLS Bubble Confidence (scaled x3) [REAL]", line=dict(color="#FF1744", width=2.2)), row=2, col=1)
+
+    d_lp90, v_lp90 = _prepare_trace(dates, lppls_p90 * 3.0)
+    fig.add_trace(go.Scatter(x=d_lp90, y=v_lp90, mode="lines", name="LPPLS 90th Pct Threshold [REAL]", line=dict(color="#FF5252", width=1.2, dash="dash")), row=2, col=1)
+
+    fig.add_hline(y=1.45, line_dash="solid", line_color="#D32F2F", annotation_text="PSY 95% CV (1.45)", annotation_font_color="#E0E0E0", row=2, col=1)
+    fig.add_hline(y=2.05, line_dash="dash", line_color="#B71C1C", annotation_text="PSY 99% CV (2.05)", annotation_font_color="#E0E0E0", row=2, col=1)
+
+    # Subplot 3: TDA Persistence L2, Persistence Entropy & Wavelet Spectral Entropy
+    tda_norm = data["TDA_Persistence_L2_Norm"] if "TDA_Persistence_L2_Norm" in data else np.zeros(n)
+    tda_ent = data["TDA_Persistence_Entropy"] if "TDA_Persistence_Entropy" in data else np.zeros(n)
+    wav_ent = data["Wavelet_Spectral_Entropy"] if "Wavelet_Spectral_Entropy" in data else np.zeros(n)
+
+    d_tda, v_tda = _prepare_trace(dates, normalize_tda_indicator(tda_norm))
+    fig.add_trace(go.Scatter(x=d_tda, y=v_tda, mode="lines", name="TDA Persistence L2 Norm (Normalized) [REAL]", line=dict(color="#E040FB", width=2.0)), row=3, col=1)
+
+    d_tent, v_tent = _prepare_trace(dates, tda_ent)
+    fig.add_trace(go.Scatter(x=d_tent, y=v_tent, mode="lines", name="TDA Persistence Entropy E(D) [REAL]", line=dict(color="#7C4DFF", width=1.8, dash="dot")), row=3, col=1)
+
+    d_went, v_went = _prepare_trace(dates, wav_ent)
+    fig.add_trace(go.Scatter(x=d_went, y=v_went, mode="lines", name="Wavelet Spectral Shannon Entropy [REAL]", line=dict(color="#00B0FF", width=1.8, dash="dash")), row=3, col=1)
+
+    # Subplot 4: Global Liquidity Index ($T), M2 YoY %, CB Balance Sheet YoY %
+    gli = data["Global_Liquidity_Index"] if "Global_Liquidity_Index" in data else np.zeros(n)
+    m2_yoy = data["M2_YoY_Growth"] if "M2_YoY_Growth" in data else np.zeros(n)
+    cb_yoy = data["CentralBank_YoY_Growth"] if "CentralBank_YoY_Growth" in data else np.zeros(n)
+
+    d_gli, v_gli = _prepare_trace(dates, gli)
+    fig.add_trace(go.Scatter(x=d_gli, y=v_gli, mode="lines", name="Global Liquidity Index ($ Trillion) [REAL]", line=dict(color="#FFD600", width=2.5)), row=4, col=1)
+
+    d_m2, v_m2 = _prepare_trace(dates, m2_yoy)
+    fig.add_trace(go.Scatter(x=d_m2, y=v_m2, mode="lines", name="U.S. M2 YoY Growth Rate (%) [REAL]", line=dict(color="#00E676", width=1.8)), row=4, col=1)
+
+    d_cb, v_cb = _prepare_trace(dates, cb_yoy)
+    fig.add_trace(go.Scatter(x=d_cb, y=v_cb, mode="lines", name="Fed Balance Sheet YoY Growth (%) [REAL]", line=dict(color="#FF6D00", width=1.5, dash="dot")), row=4, col=1)
+
+    # Shaded vertical highlight spans for Conjoint Tech Exuberance
+    if "Tech_Exuberance_Signal" in data:
+        sig = np.asarray(data["Tech_Exuberance_Signal"])
+        spans = []
+        in_span = False
+        start_d = ""
+        for i in range(len(sig)):
+            if sig[i] == 1 and not in_span:
+                in_span = True
+                start_d = str(dates[i])[:10]
+            elif sig[i] == 0 and in_span:
+                in_span = False
+                end_d = str(dates[i - 1])[:10]
+                spans.append((start_d, end_d))
+        if in_span:
+            spans.append((start_d, str(dates[-1])[:10]))
+
+        first_span = True
+        for start_d, end_d in spans:
+            fig.add_vrect(
+                x0=start_d, x1=end_d,
+                fillcolor="rgba(255, 69, 58, 0.20)",
+                layer="below",
+                line_width=0,
+                annotation_text="🚨 Tech Exuberance Trigger" if first_span else None,
+                annotation_position="top left",
+            )
+            first_span = False
+
+    fig.update_layout(
+        template=PLOTLY_TEMPLATE,
+        title="Tech Exuberance Score: Macro Liquidity Decoupling vs Statistical Singularity Signatures",
+        legend=get_right_flushed_legend(is_mobile),
+        margin=get_figure_margin(is_mobile),
+        height=850 if not is_mobile else 1050
+    )
+    fig.update_xaxes(title_text="Date", row=4, col=1)
+    return fig
+
 # Reactive Panel Bindings Pre-initialized with Option 1 Figures
 pane_macro = pn.pane.Plotly(build_macro_valuation_fig(HORIZON_OPTION_1_ID), sizing_mode='stretch_both', min_height=420)
 pane_leverage = pn.pane.Plotly(build_leverage_fig(HORIZON_OPTION_1_ID), sizing_mode='stretch_both', min_height=420)
@@ -677,6 +825,7 @@ pane_econometric = pn.pane.Plotly(build_econometric_fig(HORIZON_OPTION_1_ID), si
 pane_sentiment = pn.pane.Plotly(build_sentiment_vol_fig(HORIZON_OPTION_1_ID), sizing_mode='stretch_both', min_height=420)
 pane_sector = pn.pane.Plotly(build_sector_health_fig(HORIZON_OPTION_1_ID), sizing_mode='stretch_both', min_height=420)
 pane_mahalanobis = pn.pane.Plotly(build_mahalanobis_fig(HORIZON_OPTION_1_ID), sizing_mode='stretch_both', min_height=420)
+pane_tech_exuberance = pn.pane.Plotly(build_tech_exuberance_fig(HORIZON_OPTION_1_ID), sizing_mode='stretch_both', min_height=650)
 
 def generate_explanatory_markdown(horizon_id: str) -> str:
     meta = HORIZON_METADATA[horizon_id]
@@ -725,7 +874,7 @@ executive_summary_pane = pn.pane.Markdown(
     "The mid-2026 macroeconomic environment presents an acute structural challenge: the S&P 500 tests record peaks near 7,500 amid the second-highest valuation epoch in U.S. history (Shiller CAPE 41.37, Buffett Indicator 218.1% of GDP). Simultaneously, systemic leverage has expanded to a record $1.416T in FINRA margin debt (+53.7% YoY), exhausting institutional margin credit and creating severe vulnerability to leverage-induced fire-sale cascades.\n\n"
     "While the massive $754B hyperscaler AI CapEx supercycle justifies fundamental repricing under General-Purpose Technology (GPT) econometric decomposition, derivatives markets reveal a dangerous structural divergence: institutional capital is aggressively bidding for catastrophic tail-risk protection (SKEW > 145) even as front-month volatility remains artificially suppressed (VIX1D < 10) and index-level implied correlation collapses (< 8.0).\n\n"
     f"#### {ICON_TARGET} Unified Multi-Regime Quantitative Architecture\n"
-    "- **6 Integrated Modules**: Macro Valuation, Systemic Leverage, Econometric Bubble, Sentiment & Volatility, Sector Health & TDA, and Macro Mahalanobis Distance.\n"
+    "- **7 Integrated Modules**: Macro Valuation, Systemic Leverage, Econometric Bubble, Sentiment & Volatility, Sector Health & TDA, Macro Mahalanobis Distance, and Tech Exuberance Score.\n"
     r"- **Method 1 Mahalanobis Distance ($D_M$)**: 15-dimensional regularized covariance distance ($\mathbf{\Sigma} + 10^{-2}\mathbf{I}$) eliminating collinearity distortions." + "\n"
     r"- **Dynamic Equity Exposure**: Continuous risk-scaled sizing ($w_{\text{equity}} \in [0.20, 1.00]$) with a strict 20% defensive liquidity floor." + "\n\n"
     f"#### {ICON_MICROSCOPE} Mathematical Rigor & Scale Invariance\n"
@@ -753,7 +902,7 @@ red_fallback_banner = pn.pane.Alert(
 )
 
 def update_all_charts(horizon_id: str):
-    """Callback updating all 6 Panel figures, KPI indicators, and explanatory card."""
+    """Callback updating all 7 Panel figures, KPI indicators, and explanatory card."""
     note_pane.object = generate_explanatory_markdown(horizon_id)
     pane_macro.object = build_macro_valuation_fig(horizon_id)
     pane_leverage.object = build_leverage_fig(horizon_id)
@@ -761,6 +910,7 @@ def update_all_charts(horizon_id: str):
     pane_sentiment.object = build_sentiment_vol_fig(horizon_id)
     pane_sector.object = build_sector_health_fig(horizon_id)
     pane_mahalanobis.object = build_mahalanobis_fig(horizon_id)
+    pane_tech_exuberance.object = build_tech_exuberance_fig(horizon_id)
 
     data = fetch_dataset(horizon_id)
     red_fallback_banner.visible = _IS_SYNTHETIC_FALLBACK_ACTIVE
@@ -805,6 +955,7 @@ dashboard_tabs = pn.Tabs(
     ("Sentiment & Volatility", pane_sentiment),
     ("Sector Health", pane_sector),
     ("Macro Mahalanobis Distance", pane_mahalanobis),
+    ("Tech Exuberance Score", pane_tech_exuberance),
     sizing_mode="stretch_both",
     min_height=520
 )

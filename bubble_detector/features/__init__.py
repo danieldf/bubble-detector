@@ -52,12 +52,16 @@ from .leverage import compute_margin_leverage_metrics
 from .econometric import compute_gsadf_gpt_decomposition
 from .topology import compute_tda_wavelet_complexity
 from .options_vol import compute_options_volatility_metrics
+from .lppls_model import calibrate_lppls_filimonov, compute_lppls_confidence_indicator
+from .tech_exuberance import compute_tech_exuberance_metrics, compute_exuberance_spans
 from .utils import normalize_tda_indicator, calculate_adf_stat, takens_embedding, lttb_downsample
 
 # Canonical aliases for agent accessibility and backward compatibility
 from . import leverage as margin_leverage
 from . import options_vol as options_volatility
 from . import technicals as technical
+from . import lppls_model
+from . import tech_exuberance
 
 __all__ = [
     "compute_technical_indicators",
@@ -66,6 +70,10 @@ __all__ = [
     "compute_gsadf_gpt_decomposition",
     "compute_tda_wavelet_complexity",
     "compute_options_volatility_metrics",
+    "calibrate_lppls_filimonov",
+    "compute_lppls_confidence_indicator",
+    "compute_tech_exuberance_metrics",
+    "compute_exuberance_spans",
     "normalize_tda_indicator",
     "calculate_adf_stat",
     "takens_embedding",
@@ -73,4 +81,6 @@ __all__ = [
     "margin_leverage",
     "options_volatility",
     "technical",
+    "lppls_model",
+    "tech_exuberance",
 ]

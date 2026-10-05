@@ -33,9 +33,11 @@
 * `technicals.py`: Moving Averages (MA20/50/200), RSI (14-day), Bollinger Bands (20-day, 2 std dev), 20-day rolling volatility.
 * `macro_valuation.py`: Shiller CAPE (41.37), Payout-Adjusted CAPE (P-CAPE), Buffett Indicator (218.1% GDP), and Z-score metrics.
 * `leverage.py`: FINRA Margin Debt YoY growth, velocity, and excess debt capacity ("Margin Credit Exhaustion Score").
-* `econometric.py`: PSY procedure (GSADF t-statistic) with GPT fundamental decomposition to filter out false positive bubble signals on AI CapEx ($754B).
-* `topology.py`: Takens delay coordinate embedding, Topological Data Analysis (TDA) persistence landscape $L_2$ norm, and Morlet wavelet scaleogram complexity score.
+* `econometric.py`: PSY procedure (GSADF / BSADF t-statistic) with dynamic AIC lag selection ($k \in \{0, 1\}$), exact OLS standard errors, continuous expanding supremum grid search, and GPT fundamental decomposition.
+* `topology.py`: Takens delay coordinate embedding, Topological Data Analysis (TDA) Bubenik (2015) persistence landscape $L_2$ norm, persistence entropy $E(D)$, and pure-NumPy Morlet wavelet scaleogram spectral Shannon entropy.
 * `options_vol.py`: VIX contango term structure slope, CBOE SKEW index tail risk alert (>145), Dispersion (DSPX) vs Implied Correlation (COR3M), and OVX / VIX cross-asset volatility ratio.
+* `lppls_model.py`: Pure-NumPy/SciPy Filimonov & Sornette (2013) subordination algorithm with closed-form normal equations OLS, bounded L-BFGS-B optimization, Sornette 5 constraints, and multi-scale rolling confidence indicator $CI(t) \in [0, 1]$.
+* `tech_exuberance.py`: Dual-condition exuberance engine integrating Macro Decoupling (M2 deceleration & tech surge) and Microstructural Statistical Singularities (BSADF/LPPLS extremes).
 * `utils.py`: Centralized pure-mathematical utilities providing `normalize_tda_indicator` (dynamic re-scaling to $[0.80, 7.00]$), `calculate_adf_stat`, and `takens_embedding`.
 
 ## 5. Machine Learning Model (`structural_breaks.py`):
@@ -55,19 +57,20 @@
 
 ## 7. Interactive Dashboards & Dual-Runtime Architecture:
 
-* **Server-Side NiceGUI Application (`dashboard.py`)**: Powered by FastAPI and Polars multithreaded vectorized execution, featuring 6 interactive tabs:
+* **Server-Side NiceGUI Application (`dashboard.py`)**: Powered by FastAPI and Polars multithreaded vectorized execution, featuring 7 interactive tabs:
   1. Macro Valuation Dashboard
   2. Systemic Leverage Dashboard
   3. Econometric Bubble Dashboard
   4. Sentiment & Volatility Dashboard
   5. Sector-Specific Health Dashboard
   6. Macro Mahalanobis Distance Dashboard
+  7. Tech Exuberance Score Dashboard
 * **Client-Side WebAssembly Application (`panel_dashboard.py` / `build/index.html`)**: Compiled via HoloViz Panel and Pyodide, executing 100% in-browser with zero server requirements.
 * *Runtime Unicode Emoji Rendering:* Uses ASCII-safe `chr()` string identifiers (`chr(0x1F3DB)`, `chr(0x1F3AF)`, `chr(0x1F4C5)`) to ensure authentic emoji rendering in browser WebAssembly sandboxes without unquoted escape artifacts (`U0001f3db️`).
 
 ## 8. Data Red Team Remediation & Institutional Hardening:
 
-* **Item 1 (Real Point-in-Time Data Provenance & ETL)**: Replaced synthetic proxies with verified institutional datasets: Robert Shiller's `ie_data.xls` (1871–present monthly S&P prices, earnings, dividends, CPI, CAPE), FRED macroeconomic series with publication lags (GDP quarterly +60d, M2 weekly +14d), FINRA margin debt with +25d reporting lag, and CBOE VXO daily (1986–present). Staged datasets packaged into `data/provenance/`.
+* **Item 1 (Real Point-in-Time Data Provenance & ETL)**: Replaced synthetic proxies with verified institutional datasets: Robert Shiller's `ie_data.xls` (1871–present monthly S&P prices, earnings, dividends, CPI, CAPE), FRED macroeconomic series with publication lags (GDP quarterly +60d, M2 monthly +10d, Fed Balance Sheet weekly +1d spliced continuously with historical BOGMBASE), FINRA margin debt with +21d reporting lag, and CBOE VXO daily (1986–present). Staged datasets packaged into `data/provenance/`.
 * **Item 2 (Continuous Splicing Cliff Elimination)**: Replaced unadjusted price anchoring with continuous backward return compounding ($P_{t-1} = P_t \times S_{t-1} / S_t$). Eliminates the 53% SPY jump in Jan 1993, 100% XLK jump in Dec 1998, and VXO/VIX seams, guaranteeing single-day returns across transitions stay strictly $< 3\%$.
 * **Item 3 (Signed Mahalanobis Sizing & Vector $b$)**: Upgraded isotropic Mahalanobis distance to signed projection $s_t = \mathbf{b}^\top \mathbf{\Sigma}^{-1} (\mathbf{z}_t - \mathbf{\mu})$ where $\mathbf{b} \in \{+1, -1\}^K$ encodes overvaluation vs undervaluation. Eliminates disastrous crash-trough de-risking, maintaining high equity exposure ($w_{\text{equity}} \ge 0.80$) during market bottoms.
 * **Item 4 (Probability Calibration & Historical Peak Validation Table)**: Walk-forward purged calibration with Brier score verification and Expected Calibration Error (ECE $< 0.10$). Implemented comprehensive event study validation table across 8 historical crashes (1929, 1973, 1987, 2000, 2007, 2018, 2020, 2022).
@@ -78,7 +81,7 @@
 
 ## 9. Comprehensive Verification Suite:
 
-* Full automated test suite expanded to **76 automated unit, numerical parity, module alias, anti-synthetic provenance regression, and integration tests passing with 100% success rate** (`pytest tests/ -v`).
+* Full automated test suite expanded to **105 automated unit, numerical parity, module alias, anti-synthetic provenance regression, and integration tests passing with 100% success rate** (`pytest tests/ -v`).
 * Dedicated anti-synthetic regression suite (`tests/test_no_gaussian_bumps.py`) certifying zero analytical Gaussian curves or synthetic bell shapes in `bubble_detector/data/`.
 * Module alias compatibility suite (`tests/test_module_aliases.py`) ensuring canonical import paths (`margin_leverage`, `options_volatility`, `technical`, `ui.theme`) operate with bitwise parity.
 * Parity test suite (`tests/test_full_indicator_parity.py`) guaranteeing bitwise and numerical parity across Python and Pyodide WebAssembly environments.

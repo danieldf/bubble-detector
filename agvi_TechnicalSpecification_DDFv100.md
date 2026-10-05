@@ -57,6 +57,7 @@ The `NiceGUI` and `Plotly` implementation will generate dedicated dashboard tabs
 4. **Sentiment & Volatility Dashboard:** Displaying the VIX term structure (contango/backwardation), SKEW index anomalies, and cross-asset volatility (OVX for Energy, VXN for Tech).
 5. **Sector-Specific Health Dashboard:** Highlighting the Price-to-Income and Price-to-Rent housing metrics, alongside AI, Tech (XLK), and TDA Geometric Complexity.
 6. **Macro Mahalanobis Distance Dashboard:** Multi-dimensional regularized covariance distance ($D_M$) integrating all 15 systemic indicators, empirical crash probability $P_{\\text{bubble}}$, continuous dynamic equity exposure $w_{\\text{equity}}$, and benchmark overlays.
+7. **Tech Exuberance Score Dashboard:** Synchronized 4-subplot dual-condition engine tracking Macro Liquidity Decoupling (M2 YoY deceleration, Liquidity Momentum, XLK/SPY ratio) and Microstructural Mathematical Singularities (Recursive BSADF, LPPLS Confidence Indicator, Bubenik L2 Norm, Wavelet Spectral Entropy) with illuminated conjoint trigger spans.
 
 ### 5.2. UI/UX & Accessibility Specifications
 - **WCAG 2.2 AA Contrast:** All text elements must achieve a minimum contrast ratio of 4.5:1 against their backgrounds (3:1 for large text and graphical components) across both light and dark themes.
