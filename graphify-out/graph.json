@@ -94,7 +94,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 19,
-      "community_name": "ShillerETL",
+      "community_name": "test_data_provenance.py",
       "file_type": "code",
       "norm_label": "shilleretl",
       "source_file": "bubble_detector/data/etl_shiller.py",
@@ -107,7 +107,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 23,
-      "community_name": "test_data_provenance.py",
+      "community_name": "stage_provenance.py",
       "file_type": "code",
       "norm_label": "finraetl",
       "source_file": "bubble_detector/data/etl_finra.py",
@@ -425,18 +425,6 @@
       "source_location": "L59"
     },
     {
-      "id": "tests_test_mahalanobis_test_full_pipeline_polars_integration",
-      "label": "test_full_pipeline_polars_integration()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_mahalanobis.py",
-      "file_type": "code",
-      "norm_label": "test_full_pipeline_polars_integration()",
-      "source_file": "tests/test_mahalanobis.py",
-      "source_location": "L84"
-    },
-    {
       "id": "tests_test_mahalanobis_test_mahalanobis_distance_non_negative",
       "label": "test_mahalanobis_distance_non_negative()",
       "_callable": true,
@@ -458,7 +446,7 @@
       "file_type": "code",
       "norm_label": "test_mahalanobis_no_early_rank_singularity()",
       "source_file": "tests/test_mahalanobis.py",
-      "source_location": "L248"
+      "source_location": "L252"
     },
     {
       "id": "tests_test_mahalanobis_test_regime_probability_bounds",
@@ -531,30 +519,6 @@
       "norm_label": "create_presentation()",
       "source_file": "generate_deck.py",
       "source_location": "L24"
-    },
-    {
-      "id": "bubble_detector_ui_components_create_cta_banner",
-      "label": "create_cta_banner()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "code",
-      "norm_label": "create_cta_banner()",
-      "source_file": "bubble_detector/ui/components.py",
-      "source_location": "L37"
-    },
-    {
-      "id": "bubble_detector_ui_components_create_ios_card",
-      "label": "create_ios_card()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "code",
-      "norm_label": "create_ios_card()",
-      "source_file": "bubble_detector/ui/components.py",
-      "source_location": "L76"
     },
     {
       "id": "bubble_detector_ui_dashboard_build_econometric_chart",
@@ -641,18 +605,6 @@
       "source_location": "L356"
     },
     {
-      "id": "bubble_detector_ui_dashboard_create_app",
-      "label": "create_app()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "code",
-      "norm_label": "create_app()",
-      "source_file": "bubble_detector/ui/dashboard.py",
-      "source_location": "L500"
-    },
-    {
       "id": "bubble_detector_ui_dashboard_dashboardstate_get_palette",
       "label": ".get_palette()",
       "_callable": true,
@@ -675,18 +627,6 @@
       "norm_label": ".get_plotly_template()",
       "source_file": "bubble_detector/ui/dashboard.py",
       "source_location": "L132"
-    },
-    {
-      "id": "bubble_detector_ui_dashboard_dashboardstate_toggle_theme",
-      "label": ".toggle_theme()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "code",
-      "norm_label": ".toggle_theme()",
-      "source_file": "bubble_detector/ui/dashboard.py",
-      "source_location": "L127"
     },
     {
       "id": "bubble_detector_ui_dashboard_get_right_flushed_legend",
@@ -725,30 +665,6 @@
       "source_location": "L467"
     },
     {
-      "id": "tests_test_full_indicator_parity_test_all_indicators_numerical_parity",
-      "label": "test_all_indicators_numerical_parity()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "code",
-      "norm_label": "test_all_indicators_numerical_parity()",
-      "source_file": "tests/test_full_indicator_parity.py",
-      "source_location": "L34"
-    },
-    {
-      "id": "tests_test_full_indicator_parity_test_wasm_fallback_numerical_parity",
-      "label": "test_wasm_fallback_numerical_parity()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "code",
-      "norm_label": "test_wasm_fallback_numerical_parity()",
-      "source_file": "tests/test_full_indicator_parity.py",
-      "source_location": "L72"
-    },
-    {
       "id": "tests_test_integration_test_full_system_integration",
       "label": "test_full_system_integration()",
       "_callable": true,
@@ -759,18 +675,6 @@
       "norm_label": "test_full_system_integration()",
       "source_file": "tests/test_integration.py",
       "source_location": "L9"
-    },
-    {
-      "id": "tests_test_mahalanobis_test_all_tabs_legends_right_flushed",
-      "label": "test_all_tabs_legends_right_flushed()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "code",
-      "norm_label": "test_all_tabs_legends_right_flushed()",
-      "source_file": "tests/test_mahalanobis.py",
-      "source_location": "L204"
     },
     {
       "id": "tests_test_mahalanobis_test_tab6_all_traces_finite_and_bounded",
@@ -795,30 +699,6 @@
       "norm_label": "test_tab6_figure_traces_and_right_flushed_legend()",
       "source_file": "tests/test_mahalanobis.py",
       "source_location": "L113"
-    },
-    {
-      "id": "tests_test_mahalanobis_test_tda_normalization_tabs_5_and_6",
-      "label": "test_tda_normalization_tabs_5_and_6()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "code",
-      "norm_label": "test_tda_normalization_tabs_5_and_6()",
-      "source_file": "tests/test_mahalanobis.py",
-      "source_location": "L168"
-    },
-    {
-      "id": "tests_test_wasm_parquet_parity_test_wasm_loads_exact_parquet_dataset",
-      "label": "test_wasm_loads_exact_parquet_dataset()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "code",
-      "norm_label": "test_wasm_loads_exact_parquet_dataset()",
-      "source_file": "tests/test_wasm_parquet_parity.py",
-      "source_location": "L13"
     },
     {
       "id": "bubble_detector_features_utils_lttb_downsample",
@@ -881,18 +761,6 @@
       "source_location": "L77"
     },
     {
-      "id": "tests_test_ui_ux_wasm_optimizations_test_responsive_legend_layout_logic",
-      "label": "test_responsive_legend_layout_logic()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 18,
-      "community_name": "test_ui_ux_wasm_optimizations.py",
-      "file_type": "code",
-      "norm_label": "test_responsive_legend_layout_logic()",
-      "source_file": "tests/test_ui_ux_wasm_optimizations.py",
-      "source_location": "L204"
-    },
-    {
       "id": "tests_test_ui_ux_wasm_optimizations_test_service_worker_file_validity",
       "label": "test_service_worker_file_validity()",
       "_callable": true,
@@ -922,7 +790,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 19,
-      "community_name": "ShillerETL",
+      "community_name": "test_data_provenance.py",
       "file_type": "code",
       "norm_label": "get_shiller_data()",
       "source_file": "bubble_detector/data/etl_shiller.py",
@@ -934,7 +802,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 19,
-      "community_name": "ShillerETL",
+      "community_name": "test_data_provenance.py",
       "file_type": "code",
       "norm_label": "parse_shiller_excel()",
       "source_file": "bubble_detector/data/etl_shiller.py",
@@ -946,7 +814,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 19,
-      "community_name": "ShillerETL",
+      "community_name": "test_data_provenance.py",
       "file_type": "code",
       "norm_label": ".fetch_and_stage()",
       "source_file": "bubble_detector/data/etl_shiller.py",
@@ -958,7 +826,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 19,
-      "community_name": "ShillerETL",
+      "community_name": "test_data_provenance.py",
       "file_type": "code",
       "norm_label": ".get_daily_interpolated()",
       "source_file": "bubble_detector/data/etl_shiller.py",
@@ -970,11 +838,23 @@
       "_callable": true,
       "_origin": "ast",
       "community": 19,
-      "community_name": "ShillerETL",
+      "community_name": "test_data_provenance.py",
       "file_type": "code",
       "norm_label": ".__init__()",
       "source_file": "bubble_detector/data/etl_shiller.py",
       "source_location": "L143"
+    },
+    {
+      "id": "tests_test_data_provenance_test_fred_publication_lags",
+      "label": "test_fred_publication_lags()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "test_data_provenance.py",
+      "file_type": "code",
+      "norm_label": "test_fred_publication_lags()",
+      "source_file": "tests/test_data_provenance.py",
+      "source_location": "L40"
     },
     {
       "id": "tests_test_data_provenance_test_shiller_provenance_schema_and_bounds",
@@ -982,71 +862,59 @@
       "_callable": true,
       "_origin": "ast",
       "community": 19,
-      "community_name": "ShillerETL",
+      "community_name": "test_data_provenance.py",
       "file_type": "code",
       "norm_label": "test_shiller_provenance_schema_and_bounds()",
       "source_file": "tests/test_data_provenance.py",
       "source_location": "L16"
     },
     {
-      "id": "bubble_detector_ui_panel_dashboard_generate_wasm_dataset",
-      "label": "generate_wasm_dataset()",
+      "id": "bubble_detector_ui_components_create_cta_banner",
+      "label": "create_cta_banner()",
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "generate_wasm_dataset",
+      "community_name": "create_app",
       "file_type": "code",
-      "norm_label": "generate_wasm_dataset()",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L234"
+      "norm_label": "create_cta_banner()",
+      "source_file": "bubble_detector/ui/components.py",
+      "source_location": "L37"
     },
     {
-      "id": "tests_test_features_test_tda_wasm_parity",
-      "label": "test_tda_wasm_parity()",
+      "id": "bubble_detector_ui_components_create_ios_card",
+      "label": "create_ios_card()",
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "generate_wasm_dataset",
+      "community_name": "create_app",
       "file_type": "code",
-      "norm_label": "test_tda_wasm_parity()",
-      "source_file": "tests/test_features.py",
-      "source_location": "L65"
+      "norm_label": "create_ios_card()",
+      "source_file": "bubble_detector/ui/components.py",
+      "source_location": "L76"
     },
     {
-      "id": "tests_test_wasm_pyodide_sandbox_test_date_horizon_selector_robust_against_year_shift",
-      "label": "test_date_horizon_selector_robust_against_year_shift()",
+      "id": "bubble_detector_ui_dashboard_create_app",
+      "label": "create_app()",
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "generate_wasm_dataset",
+      "community_name": "create_app",
       "file_type": "code",
-      "norm_label": "test_date_horizon_selector_robust_against_year_shift()",
-      "source_file": "tests/test_wasm_pyodide_sandbox.py",
-      "source_location": "L125"
+      "norm_label": "create_app()",
+      "source_file": "bubble_detector/ui/dashboard.py",
+      "source_location": "L500"
     },
     {
-      "id": "tests_test_wasm_pyodide_sandbox_test_wasm_pyodide_json_memfs_loading",
-      "label": "test_wasm_pyodide_json_memfs_loading()",
+      "id": "bubble_detector_ui_dashboard_dashboardstate_toggle_theme",
+      "label": ".toggle_theme()",
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "generate_wasm_dataset",
+      "community_name": "create_app",
       "file_type": "code",
-      "norm_label": "test_wasm_pyodide_json_memfs_loading()",
-      "source_file": "tests/test_wasm_pyodide_sandbox.py",
-      "source_location": "L74"
-    },
-    {
-      "id": "tests_test_wasm_pyodide_sandbox_test_wasm_pyodide_pure_numpy_fallback",
-      "label": "test_wasm_pyodide_pure_numpy_fallback()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "generate_wasm_dataset",
-      "file_type": "code",
-      "norm_label": "test_wasm_pyodide_pure_numpy_fallback()",
-      "source_file": "tests/test_wasm_pyodide_sandbox.py",
-      "source_location": "L101"
+      "norm_label": ".toggle_theme()",
+      "source_file": "bubble_detector/ui/dashboard.py",
+      "source_location": "L127"
     },
     {
       "id": "bubble_detector_ui_postprocess_wasm_postprocess_wasm_content",
@@ -1054,7 +922,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 20,
-      "community_name": "postprocess_wasm_content",
+      "community_name": "test_wasm_pyodide_sandbox.py",
       "file_type": "code",
       "norm_label": "postprocess_wasm_content()",
       "source_file": "bubble_detector/ui/postprocess_wasm.py",
@@ -1066,7 +934,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 20,
-      "community_name": "postprocess_wasm_content",
+      "community_name": "test_wasm_pyodide_sandbox.py",
       "file_type": "code",
       "norm_label": "postprocess_wasm_html()",
       "source_file": "bubble_detector/ui/postprocess_wasm.py",
@@ -1078,11 +946,35 @@
       "_callable": true,
       "_origin": "ast",
       "community": 20,
-      "community_name": "postprocess_wasm_content",
+      "community_name": "test_wasm_pyodide_sandbox.py",
       "file_type": "code",
       "norm_label": "apply_postprocessing()",
       "source_file": "tests/test_wasm_pyodide_sandbox.py",
       "source_location": "L285"
+    },
+    {
+      "id": "tests_test_wasm_pyodide_sandbox_test_date_horizon_selector_robust_against_year_shift",
+      "label": "test_date_horizon_selector_robust_against_year_shift()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "test_wasm_pyodide_sandbox.py",
+      "file_type": "code",
+      "norm_label": "test_date_horizon_selector_robust_against_year_shift()",
+      "source_file": "tests/test_wasm_pyodide_sandbox.py",
+      "source_location": "L125"
+    },
+    {
+      "id": "tests_test_wasm_pyodide_sandbox_test_dist_index_html_on_disk",
+      "label": "test_dist_index_html_on_disk()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "test_wasm_pyodide_sandbox.py",
+      "file_type": "code",
+      "norm_label": "test_dist_index_html_on_disk()",
+      "source_file": "tests/test_wasm_pyodide_sandbox.py",
+      "source_location": "L306"
     },
     {
       "id": "tests_test_wasm_pyodide_sandbox_test_dist_index_html_postprocessing_idempotence",
@@ -1090,11 +982,83 @@
       "_callable": true,
       "_origin": "ast",
       "community": 20,
-      "community_name": "postprocess_wasm_content",
+      "community_name": "test_wasm_pyodide_sandbox.py",
       "file_type": "code",
       "norm_label": "test_dist_index_html_postprocessing_idempotence()",
       "source_file": "tests/test_wasm_pyodide_sandbox.py",
       "source_location": "L290"
+    },
+    {
+      "id": "tests_test_wasm_pyodide_sandbox_test_json_datasets_staging",
+      "label": "test_json_datasets_staging()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "test_wasm_pyodide_sandbox.py",
+      "file_type": "code",
+      "norm_label": "test_json_datasets_staging()",
+      "source_file": "tests/test_wasm_pyodide_sandbox.py",
+      "source_location": "L44"
+    },
+    {
+      "id": "tests_test_wasm_pyodide_sandbox_test_template_and_cards_reconstruction",
+      "label": "test_template_and_cards_reconstruction()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "test_wasm_pyodide_sandbox.py",
+      "file_type": "code",
+      "norm_label": "test_template_and_cards_reconstruction()",
+      "source_file": "tests/test_wasm_pyodide_sandbox.py",
+      "source_location": "L263"
+    },
+    {
+      "id": "tests_test_wasm_pyodide_sandbox_test_wasm_full_script_pure_numpy_fallback_execution",
+      "label": "test_wasm_full_script_pure_numpy_fallback_execution()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "test_wasm_pyodide_sandbox.py",
+      "file_type": "code",
+      "norm_label": "test_wasm_full_script_pure_numpy_fallback_execution()",
+      "source_file": "tests/test_wasm_pyodide_sandbox.py",
+      "source_location": "L210"
+    },
+    {
+      "id": "tests_test_wasm_pyodide_sandbox_test_wasm_full_script_pyodide_execution",
+      "label": "test_wasm_full_script_pyodide_execution()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "test_wasm_pyodide_sandbox.py",
+      "file_type": "code",
+      "norm_label": "test_wasm_full_script_pyodide_execution()",
+      "source_file": "tests/test_wasm_pyodide_sandbox.py",
+      "source_location": "L152"
+    },
+    {
+      "id": "tests_test_wasm_pyodide_sandbox_test_wasm_pyodide_json_memfs_loading",
+      "label": "test_wasm_pyodide_json_memfs_loading()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "test_wasm_pyodide_sandbox.py",
+      "file_type": "code",
+      "norm_label": "test_wasm_pyodide_json_memfs_loading()",
+      "source_file": "tests/test_wasm_pyodide_sandbox.py",
+      "source_location": "L74"
+    },
+    {
+      "id": "tests_test_wasm_pyodide_sandbox_test_wasm_pyodide_pure_numpy_fallback",
+      "label": "test_wasm_pyodide_pure_numpy_fallback()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "test_wasm_pyodide_sandbox.py",
+      "file_type": "code",
+      "norm_label": "test_wasm_pyodide_pure_numpy_fallback()",
+      "source_file": "tests/test_wasm_pyodide_sandbox.py",
+      "source_location": "L101"
     },
     {
       "id": "tests_test_no_gaussian_bumps_test_authentic_cboe_vxo_black_monday",
@@ -1318,7 +1282,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 23,
-      "community_name": "test_data_provenance.py",
+      "community_name": "stage_provenance.py",
       "file_type": "code",
       "norm_label": ".fetch_and_stage()",
       "source_file": "bubble_detector/data/etl_finra.py",
@@ -1330,7 +1294,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 23,
-      "community_name": "test_data_provenance.py",
+      "community_name": "stage_provenance.py",
       "file_type": "code",
       "norm_label": ".get_daily_interpolated()",
       "source_file": "bubble_detector/data/etl_finra.py",
@@ -1342,7 +1306,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 23,
-      "community_name": "test_data_provenance.py",
+      "community_name": "stage_provenance.py",
       "file_type": "code",
       "norm_label": ".__init__()",
       "source_file": "bubble_detector/data/etl_finra.py",
@@ -1354,7 +1318,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 23,
-      "community_name": "test_data_provenance.py",
+      "community_name": "stage_provenance.py",
       "file_type": "code",
       "norm_label": "get_finra_margin_debt()",
       "source_file": "bubble_detector/data/etl_finra.py",
@@ -1366,11 +1330,35 @@
       "_callable": true,
       "_origin": "ast",
       "community": 23,
-      "community_name": "test_data_provenance.py",
+      "community_name": "stage_provenance.py",
       "file_type": "code",
       "norm_label": "parse_finra_margin_debt_series()",
       "source_file": "bubble_detector/data/etl_finra.py",
       "source_location": "L72"
+    },
+    {
+      "id": "stage_provenance_stage_all",
+      "label": "stage_all()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "stage_provenance.py",
+      "file_type": "code",
+      "norm_label": "stage_all()",
+      "source_file": "stage_provenance.py",
+      "source_location": "L148"
+    },
+    {
+      "id": "stage_provenance_sync_parquet_to_json",
+      "label": "sync_parquet_to_json()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "stage_provenance.py",
+      "file_type": "code",
+      "norm_label": "sync_parquet_to_json()",
+      "source_file": "stage_provenance.py",
+      "source_location": "L106"
     },
     {
       "id": "tests_test_data_provenance_test_finra_margin_publication_lag",
@@ -1378,23 +1366,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 23,
-      "community_name": "test_data_provenance.py",
+      "community_name": "stage_provenance.py",
       "file_type": "code",
       "norm_label": "test_finra_margin_publication_lag()",
       "source_file": "tests/test_data_provenance.py",
       "source_location": "L61"
-    },
-    {
-      "id": "tests_test_data_provenance_test_fred_publication_lags",
-      "label": "test_fred_publication_lags()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "test_data_provenance.py",
-      "file_type": "code",
-      "norm_label": "test_fred_publication_lags()",
-      "source_file": "tests/test_data_provenance.py",
-      "source_location": "L40"
     },
     {
       "id": "bubble_detector_data_etl_fred_fredetl_fetch_and_stage",
@@ -1541,6 +1517,18 @@
       "source_location": "L81"
     },
     {
+      "id": "bubble_detector_ui_dashboard_dashboardstate_init",
+      "label": ".__init__()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 25,
+      "community_name": "DataIngestor",
+      "file_type": "code",
+      "norm_label": ".__init__()",
+      "source_file": "bubble_detector/ui/dashboard.py",
+      "source_location": "L66"
+    },
+    {
       "id": "tests_test_date_horizons_ingestor",
       "label": "ingestor()",
       "_callable": true,
@@ -1563,6 +1551,18 @@
       "norm_label": "test_dashboard_state_horizon_switching()",
       "source_file": "tests/test_date_horizons.py",
       "source_location": "L75"
+    },
+    {
+      "id": "tests_test_features_sample_df",
+      "label": "sample_df()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 25,
+      "community_name": "DataIngestor",
+      "file_type": "code",
+      "norm_label": "sample_df()",
+      "source_file": "tests/test_features.py",
+      "source_location": "L16"
     },
     {
       "id": "tests_test_ingestor_ingestor",
@@ -1706,7 +1706,7 @@
       "file_type": "code",
       "norm_label": "compute_lppls_confidence_indicator()",
       "source_file": "bubble_detector/features/lppls_model.py",
-      "source_location": "L192"
+      "source_location": "L230"
     },
     {
       "id": "tests_test_lppls_rigor_test_lppls_confidence_indicator_pipeline",
@@ -1719,6 +1719,18 @@
       "norm_label": "test_lppls_confidence_indicator_pipeline()",
       "source_file": "tests/test_lppls_rigor.py",
       "source_location": "L57"
+    },
+    {
+      "id": "tests_test_lppls_rigor_test_lppls_historical_bubble_detection",
+      "label": "test_lppls_historical_bubble_detection()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "compute_lppls_confidence_indicator",
+      "file_type": "code",
+      "norm_label": "test_lppls_historical_bubble_detection()",
+      "source_file": "tests/test_lppls_rigor.py",
+      "source_location": "L85"
     },
     {
       "id": "tests_test_lppls_rigor_test_lppls_parameter_recovery_synthetic",
@@ -1743,42 +1755,6 @@
       "norm_label": "test_lppls_sornette_filtering_bounds()",
       "source_file": "tests/test_lppls_rigor.py",
       "source_location": "L44"
-    },
-    {
-      "id": "bubble_detector_features_options_vol_compute_options_volatility_metrics",
-      "label": "compute_options_volatility_metrics()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 28,
-      "community_name": "compute_options_volatility_metrics",
-      "file_type": "code",
-      "norm_label": "compute_options_volatility_metrics()",
-      "source_file": "bubble_detector/features/options_vol.py",
-      "source_location": "L49"
-    },
-    {
-      "id": "tests_test_features_test_compute_options_volatility_metrics",
-      "label": "test_compute_options_volatility_metrics()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 28,
-      "community_name": "compute_options_volatility_metrics",
-      "file_type": "code",
-      "norm_label": "test_compute_options_volatility_metrics()",
-      "source_file": "tests/test_features.py",
-      "source_location": "L59"
-    },
-    {
-      "id": "tests_test_module_aliases_test_options_volatility_alias_parity",
-      "label": "test_options_volatility_alias_parity()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 28,
-      "community_name": "compute_options_volatility_metrics",
-      "file_type": "code",
-      "norm_label": "test_options_volatility_alias_parity()",
-      "source_file": "tests/test_module_aliases.py",
-      "source_location": "L53"
     },
     {
       "id": "bubble_detector_features_topology_compute_morlet_wavelet_energy_and_entropy",
@@ -1853,30 +1829,6 @@
       "source_location": "L48"
     },
     {
-      "id": "tests_test_psy_ripser_integrity_test_canonical_monthly_gsadf_dotcom_spike",
-      "label": "test_canonical_monthly_gsadf_dotcom_spike()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "compute_tda_wavelet_complexity",
-      "file_type": "code",
-      "norm_label": "test_canonical_monthly_gsadf_dotcom_spike()",
-      "source_file": "tests/test_psy_ripser_integrity.py",
-      "source_location": "L15"
-    },
-    {
-      "id": "tests_test_psy_ripser_integrity_test_ripser_persistence_landscapes_causal",
-      "label": "test_ripser_persistence_landscapes_causal()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "compute_tda_wavelet_complexity",
-      "file_type": "code",
-      "norm_label": "test_ripser_persistence_landscapes_causal()",
-      "source_file": "tests/test_psy_ripser_integrity.py",
-      "source_location": "L43"
-    },
-    {
       "id": "tests_test_tda_wavelet_rigor_test_bubenik_l2_norm_and_persistence_entropy",
       "label": "test_bubenik_l2_norm_and_persistence_entropy()",
       "_callable": true,
@@ -1897,6 +1849,18 @@
       "community_name": "compute_tda_wavelet_complexity",
       "file_type": "code",
       "norm_label": "test_morlet_wavelet_scaleogram_and_spectral_entropy()",
+      "source_file": "tests/test_tda_wavelet_rigor.py",
+      "source_location": "L69"
+    },
+    {
+      "id": "tests_test_tda_wavelet_rigor_test_persistence_entropy_herding_collapse",
+      "label": "test_persistence_entropy_herding_collapse()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "compute_tda_wavelet_complexity",
+      "file_type": "code",
+      "norm_label": "test_persistence_entropy_herding_collapse()",
       "source_file": "tests/test_tda_wavelet_rigor.py",
       "source_location": "L48"
     },
@@ -1922,7 +1886,7 @@
       "file_type": "code",
       "norm_label": "test_tda_wavelet_complexity_full_pipeline()",
       "source_file": "tests/test_tda_wavelet_rigor.py",
-      "source_location": "L64"
+      "source_location": "L85"
     },
     {
       "id": "bubble_detector_features_leverage_compute_margin_leverage_metrics",
@@ -1959,6 +1923,18 @@
       "norm_label": "test_margin_leverage_alias_parity()",
       "source_file": "tests/test_module_aliases.py",
       "source_location": "L35"
+    },
+    {
+      "id": "tests_test_module_aliases_test_options_volatility_alias_parity",
+      "label": "test_options_volatility_alias_parity()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 30,
+      "community_name": "compute_margin_leverage_metrics",
+      "file_type": "code",
+      "norm_label": "test_options_volatility_alias_parity()",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L53"
     },
     {
       "id": "bubble_detector_data_etl_vxo_get_vxo_data",
@@ -2033,6 +2009,18 @@
       "source_location": "L82"
     },
     {
+      "id": "bubble_detector_features_tech_exuberance_compute_tech_exuberance_metrics",
+      "label": "compute_tech_exuberance_metrics()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 32,
+      "community_name": "compute_technical_indicators",
+      "file_type": "code",
+      "norm_label": "compute_tech_exuberance_metrics()",
+      "source_file": "bubble_detector/features/tech_exuberance.py",
+      "source_location": "L41"
+    },
+    {
       "id": "bubble_detector_features_technicals_compute_technical_indicators",
       "label": "compute_technical_indicators()",
       "_callable": true,
@@ -2043,6 +2031,30 @@
       "norm_label": "compute_technical_indicators()",
       "source_file": "bubble_detector/features/technicals.py",
       "source_location": "L46"
+    },
+    {
+      "id": "bubble_detector_ui_dashboard_dashboardstate_load_data",
+      "label": ".load_data()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 32,
+      "community_name": "compute_technical_indicators",
+      "file_type": "code",
+      "norm_label": ".load_data()",
+      "source_file": "bubble_detector/ui/dashboard.py",
+      "source_location": "L80"
+    },
+    {
+      "id": "stage_provenance_precompile_wasm_parquet_datasets",
+      "label": "precompile_wasm_parquet_datasets()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 32,
+      "community_name": "compute_technical_indicators",
+      "file_type": "code",
+      "norm_label": "precompile_wasm_parquet_datasets()",
+      "source_file": "stage_provenance.py",
+      "source_location": "L31"
     },
     {
       "id": "tests_test_features_test_compute_technical_indicators",
@@ -2069,12 +2081,36 @@
       "source_location": "L72"
     },
     {
+      "id": "bubble_detector_ui_panel_dashboard_build_tech_exuberance_fig",
+      "label": "build_tech_exuberance_fig()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 33,
+      "community_name": "build_tech_exuberance_fig",
+      "file_type": "code",
+      "norm_label": "build_tech_exuberance_fig()",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L705"
+    },
+    {
+      "id": "bubble_detector_ui_panel_dashboard_fetch_dataset",
+      "label": "fetch_dataset()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 33,
+      "community_name": "build_tech_exuberance_fig",
+      "file_type": "code",
+      "norm_label": "fetch_dataset()",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L421"
+    },
+    {
       "id": "tests_test_wasm_tech_exuberance_test_pane_tech_exuberance_in_dashboard_tabs",
       "label": "test_pane_tech_exuberance_in_dashboard_tabs()",
       "_callable": true,
       "_origin": "ast",
       "community": 33,
-      "community_name": "test_wasm_tech_exuberance.py",
+      "community_name": "build_tech_exuberance_fig",
       "file_type": "code",
       "norm_label": "test_pane_tech_exuberance_in_dashboard_tabs()",
       "source_file": "tests/test_wasm_tech_exuberance.py",
@@ -2086,7 +2122,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 33,
-      "community_name": "test_wasm_tech_exuberance.py",
+      "community_name": "build_tech_exuberance_fig",
       "file_type": "code",
       "norm_label": "test_precompile_wasm_parquet_datasets()",
       "source_file": "tests/test_wasm_tech_exuberance.py",
@@ -2098,7 +2134,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 33,
-      "community_name": "test_wasm_tech_exuberance.py",
+      "community_name": "build_tech_exuberance_fig",
       "file_type": "code",
       "norm_label": "test_tech_exuberance_columns_in_core_wasm()",
       "source_file": "tests/test_wasm_tech_exuberance.py",
@@ -2110,7 +2146,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 33,
-      "community_name": "test_wasm_tech_exuberance.py",
+      "community_name": "build_tech_exuberance_fig",
       "file_type": "code",
       "norm_label": "test_tech_exuberance_fig_structure_desktop()",
       "source_file": "tests/test_wasm_tech_exuberance.py",
@@ -2122,7 +2158,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 33,
-      "community_name": "test_wasm_tech_exuberance.py",
+      "community_name": "build_tech_exuberance_fig",
       "file_type": "code",
       "norm_label": "test_tech_exuberance_fig_structure_mobile()",
       "source_file": "tests/test_wasm_tech_exuberance.py",
@@ -2170,23 +2206,35 @@
       "_callable": true,
       "_origin": "ast",
       "community": 35,
-      "community_name": "test_features.py",
+      "community_name": "generate_wasm_dataset",
       "file_type": "code",
       "norm_label": "compute_macro_valuations()",
       "source_file": "bubble_detector/features/macro_valuation.py",
       "source_location": "L47"
     },
     {
-      "id": "tests_test_features_sample_df",
-      "label": "sample_df()",
+      "id": "bubble_detector_features_options_vol_compute_options_volatility_metrics",
+      "label": "compute_options_volatility_metrics()",
       "_callable": true,
       "_origin": "ast",
       "community": 35,
-      "community_name": "test_features.py",
+      "community_name": "generate_wasm_dataset",
       "file_type": "code",
-      "norm_label": "sample_df()",
-      "source_file": "tests/test_features.py",
-      "source_location": "L16"
+      "norm_label": "compute_options_volatility_metrics()",
+      "source_file": "bubble_detector/features/options_vol.py",
+      "source_location": "L49"
+    },
+    {
+      "id": "bubble_detector_ui_panel_dashboard_generate_wasm_dataset",
+      "label": "generate_wasm_dataset()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 35,
+      "community_name": "generate_wasm_dataset",
+      "file_type": "code",
+      "norm_label": "generate_wasm_dataset()",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L234"
     },
     {
       "id": "tests_test_features_test_compute_macro_valuations",
@@ -2194,11 +2242,59 @@
       "_callable": true,
       "_origin": "ast",
       "community": 35,
-      "community_name": "test_features.py",
+      "community_name": "generate_wasm_dataset",
       "file_type": "code",
       "norm_label": "test_compute_macro_valuations()",
       "source_file": "tests/test_features.py",
       "source_location": "L28"
+    },
+    {
+      "id": "tests_test_features_test_compute_options_volatility_metrics",
+      "label": "test_compute_options_volatility_metrics()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 35,
+      "community_name": "generate_wasm_dataset",
+      "file_type": "code",
+      "norm_label": "test_compute_options_volatility_metrics()",
+      "source_file": "tests/test_features.py",
+      "source_location": "L59"
+    },
+    {
+      "id": "tests_test_features_test_tda_wasm_parity",
+      "label": "test_tda_wasm_parity()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 35,
+      "community_name": "generate_wasm_dataset",
+      "file_type": "code",
+      "norm_label": "test_tda_wasm_parity()",
+      "source_file": "tests/test_features.py",
+      "source_location": "L65"
+    },
+    {
+      "id": "tests_test_mahalanobis_test_full_pipeline_polars_integration",
+      "label": "test_full_pipeline_polars_integration()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 35,
+      "community_name": "generate_wasm_dataset",
+      "file_type": "code",
+      "norm_label": "test_full_pipeline_polars_integration()",
+      "source_file": "tests/test_mahalanobis.py",
+      "source_location": "L84"
+    },
+    {
+      "id": "tests_test_models_processed_df",
+      "label": "processed_df()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 35,
+      "community_name": "generate_wasm_dataset",
+      "file_type": "code",
+      "norm_label": "processed_df()",
+      "source_file": "tests/test_models.py",
+      "source_location": "L17"
     },
     {
       "id": "bubble_detector_ui_panel_dashboard_get_current_date",
@@ -2237,112 +2333,40 @@
       "source_location": "L70"
     },
     {
-      "id": "bubble_detector_features_tech_exuberance_compute_tech_exuberance_metrics",
-      "label": "compute_tech_exuberance_metrics()",
+      "id": "tests_test_full_indicator_parity_test_all_indicators_numerical_parity",
+      "label": "test_all_indicators_numerical_parity()",
       "_callable": true,
       "_origin": "ast",
       "community": 38,
-      "community_name": "stage_provenance.py",
+      "community_name": "test_full_indicator_parity.py",
       "file_type": "code",
-      "norm_label": "compute_tech_exuberance_metrics()",
-      "source_file": "bubble_detector/features/tech_exuberance.py",
-      "source_location": "L41"
+      "norm_label": "test_all_indicators_numerical_parity()",
+      "source_file": "tests/test_full_indicator_parity.py",
+      "source_location": "L48"
     },
     {
-      "id": "stage_provenance_precompile_wasm_parquet_datasets",
-      "label": "precompile_wasm_parquet_datasets()",
+      "id": "tests_test_full_indicator_parity_test_wasm_fallback_numerical_parity",
+      "label": "test_wasm_fallback_numerical_parity()",
       "_callable": true,
       "_origin": "ast",
       "community": 38,
-      "community_name": "stage_provenance.py",
+      "community_name": "test_full_indicator_parity.py",
       "file_type": "code",
-      "norm_label": "precompile_wasm_parquet_datasets()",
-      "source_file": "stage_provenance.py",
-      "source_location": "L31"
+      "norm_label": "test_wasm_fallback_numerical_parity()",
+      "source_file": "tests/test_full_indicator_parity.py",
+      "source_location": "L86"
     },
     {
-      "id": "stage_provenance_stage_all",
-      "label": "stage_all()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 38,
-      "community_name": "stage_provenance.py",
-      "file_type": "code",
-      "norm_label": "stage_all()",
-      "source_file": "stage_provenance.py",
-      "source_location": "L148"
-    },
-    {
-      "id": "stage_provenance_sync_parquet_to_json",
-      "label": "sync_parquet_to_json()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 38,
-      "community_name": "stage_provenance.py",
-      "file_type": "code",
-      "norm_label": "sync_parquet_to_json()",
-      "source_file": "stage_provenance.py",
-      "source_location": "L106"
-    },
-    {
-      "id": "bubble_detector_features_econometric_compute_gsadf_gpt_decomposition",
-      "label": "compute_gsadf_gpt_decomposition()",
+      "id": "tests_test_wasm_parquet_parity_test_wasm_loads_exact_parquet_dataset",
+      "label": "test_wasm_loads_exact_parquet_dataset()",
       "_callable": true,
       "_origin": "ast",
       "community": 39,
-      "community_name": "compute_gsadf_gpt_decomposition",
+      "community_name": "test_wasm_parquet_parity.py",
       "file_type": "code",
-      "norm_label": "compute_gsadf_gpt_decomposition()",
-      "source_file": "bubble_detector/features/econometric.py",
-      "source_location": "L172"
-    },
-    {
-      "id": "tests_test_features_test_compute_gsadf_gpt_decomposition",
-      "label": "test_compute_gsadf_gpt_decomposition()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 39,
-      "community_name": "compute_gsadf_gpt_decomposition",
-      "file_type": "code",
-      "norm_label": "test_compute_gsadf_gpt_decomposition()",
-      "source_file": "tests/test_features.py",
-      "source_location": "L42"
-    },
-    {
-      "id": "tests_test_models_processed_df",
-      "label": "processed_df()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 39,
-      "community_name": "compute_gsadf_gpt_decomposition",
-      "file_type": "code",
-      "norm_label": "processed_df()",
-      "source_file": "tests/test_models.py",
-      "source_location": "L17"
-    },
-    {
-      "id": "tests_test_models_test_predict_drawdown_probability",
-      "label": "test_predict_drawdown_probability()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 39,
-      "community_name": "compute_gsadf_gpt_decomposition",
-      "file_type": "code",
-      "norm_label": "test_predict_drawdown_probability()",
-      "source_file": "tests/test_models.py",
-      "source_location": "L35"
-    },
-    {
-      "id": "tests_test_models_test_structural_break_predictor_walk_forward",
-      "label": "test_structural_break_predictor_walk_forward()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 39,
-      "community_name": "compute_gsadf_gpt_decomposition",
-      "file_type": "code",
-      "norm_label": "test_structural_break_predictor_walk_forward()",
-      "source_file": "tests/test_models.py",
-      "source_location": "L27"
+      "norm_label": "test_wasm_loads_exact_parquet_dataset()",
+      "source_file": "tests/test_wasm_parquet_parity.py",
+      "source_location": "L13"
     },
     {
       "id": "bubble_detector_data_date_horizons_get_current_date",
@@ -2417,143 +2441,11 @@
       "source_location": "L65"
     },
     {
-      "id": "tests_test_wasm_pyodide_sandbox_test_wasm_full_script_pyodide_execution",
-      "label": "test_wasm_full_script_pyodide_execution()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 42,
-      "community_name": "test_wasm_full_script_pyodide_execution",
-      "file_type": "code",
-      "norm_label": "test_wasm_full_script_pyodide_execution()",
-      "source_file": "tests/test_wasm_pyodide_sandbox.py",
-      "source_location": "L152"
-    },
-    {
-      "id": "tests_test_wasm_pyodide_sandbox_test_wasm_full_script_pure_numpy_fallback_execution",
-      "label": "test_wasm_full_script_pure_numpy_fallback_execution()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 43,
-      "community_name": "test_wasm_full_script_pure_numpy_fallback_execution",
-      "file_type": "code",
-      "norm_label": "test_wasm_full_script_pure_numpy_fallback_execution()",
-      "source_file": "tests/test_wasm_pyodide_sandbox.py",
-      "source_location": "L210"
-    },
-    {
-      "id": "tests_test_wasm_pyodide_sandbox_test_template_and_cards_reconstruction",
-      "label": "test_template_and_cards_reconstruction()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 44,
-      "community_name": "test_template_and_cards_reconstruction",
-      "file_type": "code",
-      "norm_label": "test_template_and_cards_reconstruction()",
-      "source_file": "tests/test_wasm_pyodide_sandbox.py",
-      "source_location": "L263"
-    },
-    {
-      "id": "tests_test_wasm_pyodide_sandbox_test_dist_index_html_on_disk",
-      "label": "test_dist_index_html_on_disk()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 45,
-      "community_name": "test_dist_index_html_on_disk",
-      "file_type": "code",
-      "norm_label": "test_dist_index_html_on_disk()",
-      "source_file": "tests/test_wasm_pyodide_sandbox.py",
-      "source_location": "L306"
-    },
-    {
-      "id": "bubble_detector_ui_panel_dashboard_precompile_wasm_parquet_datasets",
-      "label": "precompile_wasm_parquet_datasets()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 46,
-      "community_name": "precompile_wasm_parquet_datasets",
-      "file_type": "code",
-      "norm_label": "precompile_wasm_parquet_datasets()",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L228"
-    },
-    {
-      "id": "bubble_detector_ui_dashboard_dashboardstate_init",
-      "label": ".__init__()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 47,
-      "community_name": ".load_data",
-      "file_type": "code",
-      "norm_label": ".__init__()",
-      "source_file": "bubble_detector/ui/dashboard.py",
-      "source_location": "L66"
-    },
-    {
-      "id": "bubble_detector_ui_dashboard_dashboardstate_load_data",
-      "label": ".load_data()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 47,
-      "community_name": ".load_data",
-      "file_type": "code",
-      "norm_label": ".load_data()",
-      "source_file": "bubble_detector/ui/dashboard.py",
-      "source_location": "L80"
-    },
-    {
-      "id": "tests_test_wasm_pyodide_sandbox_test_json_datasets_staging",
-      "label": "test_json_datasets_staging()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 48,
-      "community_name": "test_json_datasets_staging",
-      "file_type": "code",
-      "norm_label": "test_json_datasets_staging()",
-      "source_file": "tests/test_wasm_pyodide_sandbox.py",
-      "source_location": "L44"
-    },
-    {
-      "id": "bubble_detector_ui_panel_dashboard_build_econometric_fig",
-      "label": "build_econometric_fig()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "panel_dashboard.py",
-      "file_type": "code",
-      "norm_label": "build_econometric_fig()",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L547"
-    },
-    {
-      "id": "bubble_detector_ui_panel_dashboard_build_leverage_fig",
-      "label": "build_leverage_fig()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "panel_dashboard.py",
-      "file_type": "code",
-      "norm_label": "build_leverage_fig()",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L524"
-    },
-    {
-      "id": "bubble_detector_ui_panel_dashboard_build_macro_valuation_fig",
-      "label": "build_macro_valuation_fig()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "panel_dashboard.py",
-      "file_type": "code",
-      "norm_label": "build_macro_valuation_fig()",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L495"
-    },
-    {
       "id": "bubble_detector_ui_panel_dashboard_build_mahalanobis_fig",
       "label": "build_mahalanobis_fig()",
       "_callable": true,
       "_origin": "ast",
-      "community": 5,
+      "community": 46,
       "community_name": "panel_dashboard.py",
       "file_type": "code",
       "norm_label": "build_mahalanobis_fig()",
@@ -2565,7 +2457,7 @@
       "label": "build_sector_health_fig()",
       "_callable": true,
       "_origin": "ast",
-      "community": 5,
+      "community": 46,
       "community_name": "panel_dashboard.py",
       "file_type": "code",
       "norm_label": "build_sector_health_fig()",
@@ -2573,47 +2465,11 @@
       "source_location": "L601"
     },
     {
-      "id": "bubble_detector_ui_panel_dashboard_build_sentiment_vol_fig",
-      "label": "build_sentiment_vol_fig()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "panel_dashboard.py",
-      "file_type": "code",
-      "norm_label": "build_sentiment_vol_fig()",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L575"
-    },
-    {
-      "id": "bubble_detector_ui_panel_dashboard_build_tech_exuberance_fig",
-      "label": "build_tech_exuberance_fig()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "panel_dashboard.py",
-      "file_type": "code",
-      "norm_label": "build_tech_exuberance_fig()",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L705"
-    },
-    {
-      "id": "bubble_detector_ui_panel_dashboard_fetch_dataset",
-      "label": "fetch_dataset()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "panel_dashboard.py",
-      "file_type": "code",
-      "norm_label": "fetch_dataset()",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L421"
-    },
-    {
       "id": "bubble_detector_ui_panel_dashboard_generate_explanatory_markdown",
       "label": "generate_explanatory_markdown()",
       "_callable": true,
       "_origin": "ast",
-      "community": 5,
+      "community": 46,
       "community_name": "panel_dashboard.py",
       "file_type": "code",
       "norm_label": "generate_explanatory_markdown()",
@@ -2621,35 +2477,11 @@
       "source_location": "L830"
     },
     {
-      "id": "bubble_detector_ui_panel_dashboard_get_figure_margin",
-      "label": "get_figure_margin()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "panel_dashboard.py",
-      "file_type": "code",
-      "norm_label": "get_figure_margin()",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L478"
-    },
-    {
-      "id": "bubble_detector_ui_panel_dashboard_get_right_flushed_legend",
-      "label": "get_right_flushed_legend()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "panel_dashboard.py",
-      "file_type": "code",
-      "norm_label": "get_right_flushed_legend()",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L452"
-    },
-    {
       "id": "bubble_detector_ui_panel_dashboard_lttb_downsample",
       "label": "lttb_downsample()",
       "_callable": true,
       "_origin": "ast",
-      "community": 5,
+      "community": 46,
       "community_name": "panel_dashboard.py",
       "file_type": "code",
       "norm_label": "lttb_downsample()",
@@ -2661,7 +2493,7 @@
       "label": "normalize_tda_indicator()",
       "_callable": true,
       "_origin": "ast",
-      "community": 5,
+      "community": 46,
       "community_name": "panel_dashboard.py",
       "file_type": "code",
       "norm_label": "normalize_tda_indicator()",
@@ -2669,11 +2501,23 @@
       "source_location": "L115"
     },
     {
+      "id": "bubble_detector_ui_panel_dashboard_precompile_wasm_parquet_datasets",
+      "label": "precompile_wasm_parquet_datasets()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 46,
+      "community_name": "panel_dashboard.py",
+      "file_type": "code",
+      "norm_label": "precompile_wasm_parquet_datasets()",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L228"
+    },
+    {
       "id": "bubble_detector_ui_panel_dashboard_prepare_trace",
       "label": "_prepare_trace()",
       "_callable": true,
       "_origin": "ast",
-      "community": 5,
+      "community": 46,
       "community_name": "panel_dashboard.py",
       "file_type": "code",
       "norm_label": "_prepare_trace()",
@@ -2685,7 +2529,7 @@
       "label": "update_all_charts()",
       "_callable": true,
       "_origin": "ast",
-      "community": 5,
+      "community": 46,
       "community_name": "panel_dashboard.py",
       "file_type": "code",
       "norm_label": "update_all_charts()",
@@ -2693,14 +2537,122 @@
       "source_location": "L904"
     },
     {
-      "id": "tests_test_wasm_pyodide_sandbox_test_all_6_plotly_figures_have_traces",
-      "label": "test_all_6_plotly_figures_have_traces()",
+      "id": "tests_test_mahalanobis_test_tda_normalization_tabs_5_and_6",
+      "label": "test_tda_normalization_tabs_5_and_6()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 46,
+      "community_name": "panel_dashboard.py",
+      "file_type": "code",
+      "norm_label": "test_tda_normalization_tabs_5_and_6()",
+      "source_file": "tests/test_mahalanobis.py",
+      "source_location": "L168"
+    },
+    {
+      "id": "bubble_detector_ui_panel_dashboard_build_econometric_fig",
+      "label": "build_econometric_fig()",
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "panel_dashboard.py",
+      "community_name": "test_all_tabs_legends_right_flushed",
       "file_type": "code",
-      "norm_label": "test_all_6_plotly_figures_have_traces()",
+      "norm_label": "build_econometric_fig()",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L547"
+    },
+    {
+      "id": "bubble_detector_ui_panel_dashboard_build_leverage_fig",
+      "label": "build_leverage_fig()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "test_all_tabs_legends_right_flushed",
+      "file_type": "code",
+      "norm_label": "build_leverage_fig()",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L524"
+    },
+    {
+      "id": "bubble_detector_ui_panel_dashboard_build_macro_valuation_fig",
+      "label": "build_macro_valuation_fig()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "test_all_tabs_legends_right_flushed",
+      "file_type": "code",
+      "norm_label": "build_macro_valuation_fig()",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L495"
+    },
+    {
+      "id": "bubble_detector_ui_panel_dashboard_build_sentiment_vol_fig",
+      "label": "build_sentiment_vol_fig()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "test_all_tabs_legends_right_flushed",
+      "file_type": "code",
+      "norm_label": "build_sentiment_vol_fig()",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L575"
+    },
+    {
+      "id": "bubble_detector_ui_panel_dashboard_get_figure_margin",
+      "label": "get_figure_margin()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "test_all_tabs_legends_right_flushed",
+      "file_type": "code",
+      "norm_label": "get_figure_margin()",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L478"
+    },
+    {
+      "id": "bubble_detector_ui_panel_dashboard_get_right_flushed_legend",
+      "label": "get_right_flushed_legend()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "test_all_tabs_legends_right_flushed",
+      "file_type": "code",
+      "norm_label": "get_right_flushed_legend()",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L452"
+    },
+    {
+      "id": "tests_test_mahalanobis_test_all_tabs_legends_right_flushed",
+      "label": "test_all_tabs_legends_right_flushed()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "test_all_tabs_legends_right_flushed",
+      "file_type": "code",
+      "norm_label": "test_all_tabs_legends_right_flushed()",
+      "source_file": "tests/test_mahalanobis.py",
+      "source_location": "L204"
+    },
+    {
+      "id": "tests_test_ui_ux_wasm_optimizations_test_responsive_legend_layout_logic",
+      "label": "test_responsive_legend_layout_logic()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "test_all_tabs_legends_right_flushed",
+      "file_type": "code",
+      "norm_label": "test_responsive_legend_layout_logic()",
+      "source_file": "tests/test_ui_ux_wasm_optimizations.py",
+      "source_location": "L204"
+    },
+    {
+      "id": "tests_test_wasm_pyodide_sandbox_test_all_7_plotly_figures_have_traces",
+      "label": "test_all_7_plotly_figures_have_traces()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "test_all_tabs_legends_right_flushed",
+      "file_type": "code",
+      "norm_label": "test_all_7_plotly_figures_have_traces()",
       "source_file": "tests/test_wasm_pyodide_sandbox.py",
       "source_location": "L244"
     },
@@ -2787,6 +2739,30 @@
       "norm_label": "._prepare_data()",
       "source_file": "bubble_detector/models/structural_breaks.py",
       "source_location": "L125"
+    },
+    {
+      "id": "tests_test_models_test_predict_drawdown_probability",
+      "label": "test_predict_drawdown_probability()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "StructuralBreakPredictor",
+      "file_type": "code",
+      "norm_label": "test_predict_drawdown_probability()",
+      "source_file": "tests/test_models.py",
+      "source_location": "L35"
+    },
+    {
+      "id": "tests_test_models_test_structural_break_predictor_walk_forward",
+      "label": "test_structural_break_predictor_walk_forward()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "StructuralBreakPredictor",
+      "file_type": "code",
+      "norm_label": "test_structural_break_predictor_walk_forward()",
+      "source_file": "tests/test_models.py",
+      "source_location": "L27"
     },
     {
       "id": "tests_test_models_test_structural_breaks_embargo_no_lookahead",
@@ -2938,11 +2914,23 @@
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "test_bsadf_rigor.py",
+      "community_name": "compute_gsadf_gpt_decomposition",
       "file_type": "code",
       "norm_label": "calculate_adf_stat()",
       "source_file": "bubble_detector/features/econometric.py",
       "source_location": "L64"
+    },
+    {
+      "id": "bubble_detector_features_econometric_compute_gsadf_gpt_decomposition",
+      "label": "compute_gsadf_gpt_decomposition()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "compute_gsadf_gpt_decomposition",
+      "file_type": "code",
+      "norm_label": "compute_gsadf_gpt_decomposition()",
+      "source_file": "bubble_detector/features/econometric.py",
+      "source_location": "L185"
     },
     {
       "id": "bubble_detector_features_econometric_compute_wild_bootstrap_critical_values",
@@ -2950,11 +2938,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "test_bsadf_rigor.py",
+      "community_name": "compute_gsadf_gpt_decomposition",
       "file_type": "code",
       "norm_label": "compute_wild_bootstrap_critical_values()",
       "source_file": "bubble_detector/features/econometric.py",
-      "source_location": "L143"
+      "source_location": "L156"
     },
     {
       "id": "tests_test_bsadf_rigor_test_adf_lag_selection_k0_vs_k1",
@@ -2962,7 +2950,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "test_bsadf_rigor.py",
+      "community_name": "compute_gsadf_gpt_decomposition",
       "file_type": "code",
       "norm_label": "test_adf_lag_selection_k0_vs_k1()",
       "source_file": "tests/test_bsadf_rigor.py",
@@ -2974,7 +2962,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "test_bsadf_rigor.py",
+      "community_name": "compute_gsadf_gpt_decomposition",
       "file_type": "code",
       "norm_label": "test_adf_stat_explosive_vs_stationary()",
       "source_file": "tests/test_bsadf_rigor.py",
@@ -2986,11 +2974,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "test_bsadf_rigor.py",
+      "community_name": "compute_gsadf_gpt_decomposition",
       "file_type": "code",
       "norm_label": "test_recursive_backward_supremum_grid()",
       "source_file": "tests/test_bsadf_rigor.py",
-      "source_location": "L63"
+      "source_location": "L80"
     },
     {
       "id": "tests_test_bsadf_rigor_test_wild_bootstrap_critical_value_bounds",
@@ -2998,11 +2986,47 @@
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "test_bsadf_rigor.py",
+      "community_name": "compute_gsadf_gpt_decomposition",
       "file_type": "code",
       "norm_label": "test_wild_bootstrap_critical_value_bounds()",
       "source_file": "tests/test_bsadf_rigor.py",
-      "source_location": "L105"
+      "source_location": "L122"
+    },
+    {
+      "id": "tests_test_features_test_compute_gsadf_gpt_decomposition",
+      "label": "test_compute_gsadf_gpt_decomposition()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "compute_gsadf_gpt_decomposition",
+      "file_type": "code",
+      "norm_label": "test_compute_gsadf_gpt_decomposition()",
+      "source_file": "tests/test_features.py",
+      "source_location": "L42"
+    },
+    {
+      "id": "tests_test_psy_ripser_integrity_test_canonical_monthly_gsadf_dotcom_spike",
+      "label": "test_canonical_monthly_gsadf_dotcom_spike()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "compute_gsadf_gpt_decomposition",
+      "file_type": "code",
+      "norm_label": "test_canonical_monthly_gsadf_dotcom_spike()",
+      "source_file": "tests/test_psy_ripser_integrity.py",
+      "source_location": "L15"
+    },
+    {
+      "id": "tests_test_psy_ripser_integrity_test_ripser_persistence_landscapes_causal",
+      "label": "test_ripser_persistence_landscapes_causal()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "compute_gsadf_gpt_decomposition",
+      "file_type": "code",
+      "norm_label": "test_ripser_persistence_landscapes_causal()",
+      "source_file": "tests/test_psy_ripser_integrity.py",
+      "source_location": "L43"
     },
     {
       "id": "bubble_detector_init",
@@ -3058,17 +3082,6 @@
       "norm_label": "ndarray",
       "source_file": "",
       "source_location": ""
-    },
-    {
-      "id": "bubble_detector_models_structural_breaks",
-      "label": "structural_breaks.py",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_mahalanobis.py",
-      "file_type": "code",
-      "norm_label": "structural_breaks.py",
-      "source_file": "bubble_detector/models/structural_breaks.py",
-      "source_location": "L1"
     },
     {
       "id": "tests_test_leakage_elimination",
@@ -3247,17 +3260,6 @@
       "source_location": "L408"
     },
     {
-      "id": "bubble_detector_models_structural_breaks_rationale_1",
-      "label": "Structural Break Machine Learning Classifier & Probability Calibration Module.\u2026",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_mahalanobis.py",
-      "file_type": "rationale",
-      "norm_label": "structural break machine learning classifier & probability calibration module....",
-      "source_file": "bubble_detector/models/structural_breaks.py",
-      "source_location": "L1"
-    },
-    {
       "id": "tests_test_leakage_elimination_rationale_1",
       "label": "Unit tests for Leakage Eradication & Multicollinearity Reduction.",
       "_origin": "ast",
@@ -3313,7 +3315,7 @@
       "source_location": "L20"
     },
     {
-      "id": "tests_test_mahalanobis_rationale_249",
+      "id": "tests_test_mahalanobis_rationale_253",
       "label": "Verify that early rows (0..30) do not artificially peg at the 12.0 crisis\u2026",
       "_origin": "ast",
       "community": 1,
@@ -3321,18 +3323,7 @@
       "file_type": "rationale",
       "norm_label": "verify that early rows (0..30) do not artificially peg at the 12.0 crisis...",
       "source_file": "tests/test_mahalanobis.py",
-      "source_location": "L249"
-    },
-    {
-      "id": "tests_test_mahalanobis_rationale_85",
-      "label": "End-to-end integration test of MacroMahalanobisDetector on market dataset.",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "test_mahalanobis.py",
-      "file_type": "rationale",
-      "norm_label": "end-to-end integration test of macromahalanobisdetector on market dataset.",
-      "source_file": "tests/test_mahalanobis.py",
-      "source_location": "L85"
+      "source_location": "L253"
     },
     {
       "id": "tests_test_signed_mahalanobis_rationale_1",
@@ -4235,17 +4226,6 @@
       "source_location": "L304"
     },
     {
-      "id": "bubble_detector_ui_components",
-      "label": "components.py",
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "code",
-      "norm_label": "components.py",
-      "source_file": "bubble_detector/ui/components.py",
-      "source_location": "L1"
-    },
-    {
       "id": "bubble_detector_ui_dashboard",
       "label": "dashboard.py",
       "_origin": "ast",
@@ -4268,50 +4248,6 @@
       "source_location": ""
     },
     {
-      "id": "bubble_detector_ui_init",
-      "label": "ui/__init__.py",
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "code",
-      "norm_label": "ui/__init__.py",
-      "source_file": "bubble_detector/ui/__init__.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "exception",
-      "label": "Exception",
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "code",
-      "norm_label": "exception",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "tests_test_full_indicator_parity",
-      "label": "test_full_indicator_parity.py",
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "code",
-      "norm_label": "test_full_indicator_parity.py",
-      "source_file": "tests/test_full_indicator_parity.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "tests_test_full_indicator_parity_py_parametrize",
-      "label": "parametrize",
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "code",
-      "norm_label": "parametrize",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
       "id": "tests_test_integration",
       "label": "test_integration.py",
       "_origin": "ast",
@@ -4323,61 +4259,6 @@
       "source_location": "L1"
     },
     {
-      "id": "tests_test_wasm_parquet_parity",
-      "label": "test_wasm_parquet_parity.py",
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "code",
-      "norm_label": "test_wasm_parquet_parity.py",
-      "source_file": "tests/test_wasm_parquet_parity.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "tests_test_wasm_parquet_parity_py_parametrize",
-      "label": "parametrize",
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "code",
-      "norm_label": "parametrize",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "bubble_detector_ui_components_rationale_1",
-      "label": "UI Accessible Components & iOS 13+ Design System Module.\u2026",
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "ui accessible components & ios 13+ design system module....",
-      "source_file": "bubble_detector/ui/components.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "bubble_detector_ui_components_rationale_41",
-      "label": "Render a high-impact Call-To-Action (CTA) section with heavy typography and\u2026",
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "render a high-impact call-to-action (cta) section with heavy typography and...",
-      "source_file": "bubble_detector/ui/components.py",
-      "source_location": "L41"
-    },
-    {
-      "id": "bubble_detector_ui_components_rationale_77",
-      "label": "Create an iOS 13+ inset card container with subtle elevation, rounded corners,\u2026",
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "create an ios 13+ inset card container with subtle elevation, rounded corners,...",
-      "source_file": "bubble_detector/ui/components.py",
-      "source_location": "L77"
-    },
-    {
       "id": "bubble_detector_ui_dashboard_rationale_1",
       "label": "NiceGUI Interactive Dashboard for Market Bubble Detection System.\u2026",
       "_origin": "ast",
@@ -4387,17 +4268,6 @@
       "norm_label": "nicegui interactive dashboard for market bubble detection system....",
       "source_file": "bubble_detector/ui/dashboard.py",
       "source_location": "L1"
-    },
-    {
-      "id": "bubble_detector_ui_dashboard_rationale_128",
-      "label": "Toggle between light and dark theme modes.",
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "toggle between light and dark theme modes.",
-      "source_file": "bubble_detector/ui/dashboard.py",
-      "source_location": "L128"
     },
     {
       "id": "bubble_detector_ui_dashboard_rationale_139",
@@ -4510,17 +4380,6 @@
       "source_location": "L468"
     },
     {
-      "id": "bubble_detector_ui_dashboard_rationale_501",
-      "label": "Create and initialize full NiceGUI application.",
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "create and initialize full nicegui application.",
-      "source_file": "bubble_detector/ui/dashboard.py",
-      "source_location": "L501"
-    },
-    {
       "id": "bubble_detector_ui_dashboard_rationale_64",
       "label": "Central state manager for dataset, feature engine, model, horizon selection,\u2026",
       "_origin": "ast",
@@ -4530,50 +4389,6 @@
       "norm_label": "central state manager for dataset, feature engine, model, horizon selection,...",
       "source_file": "bubble_detector/ui/dashboard.py",
       "source_location": "L64"
-    },
-    {
-      "id": "bubble_detector_ui_init_rationale_1",
-      "label": "User Interface & Presentation Layer Subpackage.\u2026",
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "user interface & presentation layer subpackage....",
-      "source_file": "bubble_detector/ui/__init__.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "tests_test_full_indicator_parity_rationale_1",
-      "label": "Comprehensive Parity Test: Verifies 100% Numerical Parity across all 15\u2026",
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "comprehensive parity test: verifies 100% numerical parity across all 15...",
-      "source_file": "tests/test_full_indicator_parity.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "tests_test_full_indicator_parity_rationale_35",
-      "label": "Assert that every single indicator across all 5 tabs in the WebAssembly app is\u2026",
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "assert that every single indicator across all 5 tabs in the webassembly app is...",
-      "source_file": "tests/test_full_indicator_parity.py",
-      "source_location": "L35"
-    },
-    {
-      "id": "tests_test_full_indicator_parity_rationale_73",
-      "label": "Rigorously test the Pyodide WebAssembly fallback branch by mocking out\u2026",
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "rigorously test the pyodide webassembly fallback branch by mocking out...",
-      "source_file": "tests/test_full_indicator_parity.py",
-      "source_location": "L73"
     },
     {
       "id": "tests_test_integration_rationale_1",
@@ -4607,50 +4422,6 @@
       "norm_label": "verify that all 8 traces plotted on tab 6 have 0 nans and fall cleanly within...",
       "source_file": "tests/test_mahalanobis.py",
       "source_location": "L153"
-    },
-    {
-      "id": "tests_test_mahalanobis_rationale_169",
-      "label": "Verify that TDA Geometric Complexity on BOTH Tab 5 and Tab 6 spans the 0 to 7\u2026",
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "verify that tda geometric complexity on both tab 5 and tab 6 spans the 0 to 7...",
-      "source_file": "tests/test_mahalanobis.py",
-      "source_location": "L169"
-    },
-    {
-      "id": "tests_test_mahalanobis_rationale_205",
-      "label": "Verify that ALL tabs 1 to 6 in both NiceGUI and WASM use right-flushed vertical\u2026",
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "verify that all tabs 1 to 6 in both nicegui and wasm use right-flushed vertical...",
-      "source_file": "tests/test_mahalanobis.py",
-      "source_location": "L205"
-    },
-    {
-      "id": "tests_test_wasm_parquet_parity_rationale_1",
-      "label": "Unit tests for WebAssembly Parquet Parity and Zero-Mathematical-Drift Loading.",
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "unit tests for webassembly parquet parity and zero-mathematical-drift loading.",
-      "source_file": "tests/test_wasm_parquet_parity.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "tests_test_wasm_parquet_parity_rationale_14",
-      "label": "Asserts Pyodide WebAssembly dataset matches NiceGUI dataset with zero\u2026",
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "asserts pyodide webassembly dataset matches nicegui dataset with zero...",
-      "source_file": "tests/test_wasm_parquet_parity.py",
-      "source_location": "L14"
     },
     {
       "id": "bubble_detector_features_utils_py_any",
@@ -4730,17 +4501,6 @@
       "source_location": "L184"
     },
     {
-      "id": "tests_test_ui_ux_wasm_optimizations_rationale_205",
-      "label": "Verify desktop vs mobile legend orientations and margin allocations.",
-      "_origin": "ast",
-      "community": 18,
-      "community_name": "test_ui_ux_wasm_optimizations.py",
-      "file_type": "rationale",
-      "norm_label": "verify desktop vs mobile legend orientations and margin allocations.",
-      "source_file": "tests/test_ui_ux_wasm_optimizations.py",
-      "source_location": "L205"
-    },
-    {
       "id": "tests_test_ui_ux_wasm_optimizations_rationale_30",
       "label": "Assert that downsampling a 13,045-point series to 1,000 points strictly retains\u2026",
       "_origin": "ast",
@@ -4778,7 +4538,7 @@
       "label": "etl_shiller.py",
       "_origin": "ast",
       "community": 19,
-      "community_name": "ShillerETL",
+      "community_name": "test_data_provenance.py",
       "file_type": "code",
       "norm_label": "etl_shiller.py",
       "source_file": "bubble_detector/data/etl_shiller.py",
@@ -4789,7 +4549,7 @@
       "label": "DataFrame",
       "_origin": "ast",
       "community": 19,
-      "community_name": "ShillerETL",
+      "community_name": "test_data_provenance.py",
       "file_type": "code",
       "norm_label": "dataframe",
       "source_file": "",
@@ -4800,18 +4560,29 @@
       "label": "Path",
       "_origin": "ast",
       "community": 19,
-      "community_name": "ShillerETL",
+      "community_name": "test_data_provenance.py",
       "file_type": "code",
       "norm_label": "path",
       "source_file": "",
       "source_location": ""
     },
     {
+      "id": "tests_test_data_provenance",
+      "label": "test_data_provenance.py",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "test_data_provenance.py",
+      "file_type": "code",
+      "norm_label": "test_data_provenance.py",
+      "source_file": "tests/test_data_provenance.py",
+      "source_location": "L1"
+    },
+    {
       "id": "bubble_detector_data_etl_shiller_rationale_1",
       "label": "Robert Shiller Monthly ie_data ETL & Point-in-Time Provenance Ingestor\u2026",
       "_origin": "ast",
       "community": 19,
-      "community_name": "ShillerETL",
+      "community_name": "test_data_provenance.py",
       "file_type": "rationale",
       "norm_label": "robert shiller monthly ie_data etl & point-in-time provenance ingestor...",
       "source_file": "bubble_detector/data/etl_shiller.py",
@@ -4822,7 +4593,7 @@
       "label": "ETL Pipeline for Robert Shiller's monthly S&P Composite and CAPE dataset.",
       "_origin": "ast",
       "community": 19,
-      "community_name": "ShillerETL",
+      "community_name": "test_data_provenance.py",
       "file_type": "rationale",
       "norm_label": "etl pipeline for robert shiller's monthly s&p composite and cape dataset.",
       "source_file": "bubble_detector/data/etl_shiller.py",
@@ -4833,7 +4604,7 @@
       "label": "Fetch Shiller data, parse real workbook and cache to parquet.",
       "_origin": "ast",
       "community": 19,
-      "community_name": "ShillerETL",
+      "community_name": "test_data_provenance.py",
       "file_type": "rationale",
       "norm_label": "fetch shiller data, parse real workbook and cache to parquet.",
       "source_file": "bubble_detector/data/etl_shiller.py",
@@ -4844,7 +4615,7 @@
       "label": "Interpolate monthly Shiller series to daily business days with strictly causal\u2026",
       "_origin": "ast",
       "community": 19,
-      "community_name": "ShillerETL",
+      "community_name": "test_data_provenance.py",
       "file_type": "rationale",
       "norm_label": "interpolate monthly shiller series to daily business days with strictly causal...",
       "source_file": "bubble_detector/data/etl_shiller.py",
@@ -4855,7 +4626,7 @@
       "label": "Public helper to obtain daily point-in-time Shiller valuation metrics.",
       "_origin": "ast",
       "community": 19,
-      "community_name": "ShillerETL",
+      "community_name": "test_data_provenance.py",
       "file_type": "rationale",
       "norm_label": "public helper to obtain daily point-in-time shiller valuation metrics.",
       "source_file": "bubble_detector/data/etl_shiller.py",
@@ -4866,84 +4637,139 @@
       "label": "Parse authentic Robert Shiller ie_data.xls spreadsheet directly into a clean\u2026",
       "_origin": "ast",
       "community": 19,
-      "community_name": "ShillerETL",
+      "community_name": "test_data_provenance.py",
       "file_type": "rationale",
       "norm_label": "parse authentic robert shiller ie_data.xls spreadsheet directly into a clean...",
       "source_file": "bubble_detector/data/etl_shiller.py",
       "source_location": "L59"
     },
     {
+      "id": "tests_test_data_provenance_rationale_1",
+      "label": "Unit tests for Institutional Data Provenance & Publication Lags (Shiller, FRED,\u2026",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "test_data_provenance.py",
+      "file_type": "rationale",
+      "norm_label": "unit tests for institutional data provenance & publication lags (shiller, fred,...",
+      "source_file": "tests/test_data_provenance.py",
+      "source_location": "L1"
+    },
+    {
       "id": "tests_test_data_provenance_rationale_17",
       "label": "Asserts real Shiller data spans 1871-present with valid CAPE, earnings, and\u2026",
       "_origin": "ast",
       "community": 19,
-      "community_name": "ShillerETL",
+      "community_name": "test_data_provenance.py",
       "file_type": "rationale",
       "norm_label": "asserts real shiller data spans 1871-present with valid cape, earnings, and...",
       "source_file": "tests/test_data_provenance.py",
       "source_location": "L17"
     },
     {
-      "id": "bubble_detector_ui_panel_dashboard_rationale_235",
-      "label": "Generate high-speed financial time series dataset for Pyodide WebAssembly.\u2026",
+      "id": "tests_test_data_provenance_rationale_41",
+      "label": "Asserts GDP and Case-Shiller releases are strictly point-in-time lagged by >=\u2026",
       "_origin": "ast",
-      "community": 2,
-      "community_name": "generate_wasm_dataset",
+      "community": 19,
+      "community_name": "test_data_provenance.py",
       "file_type": "rationale",
-      "norm_label": "generate high-speed financial time series dataset for pyodide webassembly....",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L235"
+      "norm_label": "asserts gdp and case-shiller releases are strictly point-in-time lagged by >=...",
+      "source_file": "tests/test_data_provenance.py",
+      "source_location": "L41"
     },
     {
-      "id": "tests_test_features_rationale_66",
-      "label": "Verify 100% numerical parity for TDA Persistence L2 Norm between WASM app and\u2026",
+      "id": "bubble_detector_ui_components",
+      "label": "components.py",
       "_origin": "ast",
       "community": 2,
-      "community_name": "generate_wasm_dataset",
-      "file_type": "rationale",
-      "norm_label": "verify 100% numerical parity for tda persistence l2 norm between wasm app and...",
-      "source_file": "tests/test_features.py",
-      "source_location": "L66"
+      "community_name": "create_app",
+      "file_type": "code",
+      "norm_label": "components.py",
+      "source_file": "bubble_detector/ui/components.py",
+      "source_location": "L1"
     },
     {
-      "id": "tests_test_wasm_pyodide_sandbox_rationale_102",
-      "label": "Verify pure NumPy fallback operates with zero dependencies when neither parquet\u2026",
+      "id": "bubble_detector_ui_init",
+      "label": "ui/__init__.py",
       "_origin": "ast",
       "community": 2,
-      "community_name": "generate_wasm_dataset",
-      "file_type": "rationale",
-      "norm_label": "verify pure numpy fallback operates with zero dependencies when neither parquet...",
-      "source_file": "tests/test_wasm_pyodide_sandbox.py",
-      "source_location": "L102"
+      "community_name": "create_app",
+      "file_type": "code",
+      "norm_label": "ui/__init__.py",
+      "source_file": "bubble_detector/ui/__init__.py",
+      "source_location": "L1"
     },
     {
-      "id": "tests_test_wasm_pyodide_sandbox_rationale_126",
-      "label": "Verify candidate dataset selection correctly maps 50-year rolling horizons to\u2026",
+      "id": "bubble_detector_ui_components_rationale_1",
+      "label": "UI Accessible Components & iOS 13+ Design System Module.\u2026",
       "_origin": "ast",
       "community": 2,
-      "community_name": "generate_wasm_dataset",
+      "community_name": "create_app",
       "file_type": "rationale",
-      "norm_label": "verify candidate dataset selection correctly maps 50-year rolling horizons to...",
-      "source_file": "tests/test_wasm_pyodide_sandbox.py",
-      "source_location": "L126"
+      "norm_label": "ui accessible components & ios 13+ design system module....",
+      "source_file": "bubble_detector/ui/components.py",
+      "source_location": "L1"
     },
     {
-      "id": "tests_test_wasm_pyodide_sandbox_rationale_75",
-      "label": "Simulate Pyodide MEMFS where polars and bubble_detector are unavailable, and\u2026",
+      "id": "bubble_detector_ui_components_rationale_41",
+      "label": "Render a high-impact Call-To-Action (CTA) section with heavy typography and\u2026",
       "_origin": "ast",
       "community": 2,
-      "community_name": "generate_wasm_dataset",
+      "community_name": "create_app",
       "file_type": "rationale",
-      "norm_label": "simulate pyodide memfs where polars and bubble_detector are unavailable, and...",
-      "source_file": "tests/test_wasm_pyodide_sandbox.py",
-      "source_location": "L75"
+      "norm_label": "render a high-impact call-to-action (cta) section with heavy typography and...",
+      "source_file": "bubble_detector/ui/components.py",
+      "source_location": "L41"
+    },
+    {
+      "id": "bubble_detector_ui_components_rationale_77",
+      "label": "Create an iOS 13+ inset card container with subtle elevation, rounded corners,\u2026",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "create_app",
+      "file_type": "rationale",
+      "norm_label": "create an ios 13+ inset card container with subtle elevation, rounded corners,...",
+      "source_file": "bubble_detector/ui/components.py",
+      "source_location": "L77"
+    },
+    {
+      "id": "bubble_detector_ui_dashboard_rationale_128",
+      "label": "Toggle between light and dark theme modes.",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "create_app",
+      "file_type": "rationale",
+      "norm_label": "toggle between light and dark theme modes.",
+      "source_file": "bubble_detector/ui/dashboard.py",
+      "source_location": "L128"
+    },
+    {
+      "id": "bubble_detector_ui_dashboard_rationale_501",
+      "label": "Create and initialize full NiceGUI application.",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "create_app",
+      "file_type": "rationale",
+      "norm_label": "create and initialize full nicegui application.",
+      "source_file": "bubble_detector/ui/dashboard.py",
+      "source_location": "L501"
+    },
+    {
+      "id": "bubble_detector_ui_init_rationale_1",
+      "label": "User Interface & Presentation Layer Subpackage.\u2026",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "create_app",
+      "file_type": "rationale",
+      "norm_label": "user interface & presentation layer subpackage....",
+      "source_file": "bubble_detector/ui/__init__.py",
+      "source_location": "L1"
     },
     {
       "id": "bubble_detector_ui_postprocess_wasm",
       "label": "postprocess_wasm.py",
       "_origin": "ast",
       "community": 20,
-      "community_name": "postprocess_wasm_content",
+      "community_name": "test_wasm_pyodide_sandbox.py",
       "file_type": "code",
       "norm_label": "postprocess_wasm.py",
       "source_file": "bubble_detector/ui/postprocess_wasm.py",
@@ -4954,18 +4780,29 @@
       "label": "Path",
       "_origin": "ast",
       "community": 20,
-      "community_name": "postprocess_wasm_content",
+      "community_name": "test_wasm_pyodide_sandbox.py",
       "file_type": "code",
       "norm_label": "path",
       "source_file": "",
       "source_location": ""
     },
     {
+      "id": "tests_test_wasm_pyodide_sandbox",
+      "label": "test_wasm_pyodide_sandbox.py",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "test_wasm_pyodide_sandbox.py",
+      "file_type": "code",
+      "norm_label": "test_wasm_pyodide_sandbox.py",
+      "source_file": "tests/test_wasm_pyodide_sandbox.py",
+      "source_location": "L1"
+    },
+    {
       "id": "bubble_detector_ui_postprocess_wasm_rationale_1",
       "label": "Post-Processing Utility for Panel WebAssembly Compiled Artifacts\u2026",
       "_origin": "ast",
       "community": 20,
-      "community_name": "postprocess_wasm_content",
+      "community_name": "test_wasm_pyodide_sandbox.py",
       "file_type": "rationale",
       "norm_label": "post-processing utility for panel webassembly compiled artifacts...",
       "source_file": "bubble_detector/ui/postprocess_wasm.py",
@@ -4976,7 +4813,7 @@
       "label": "Apply post-processing transformations to the compiled Panel WebAssembly HTML\u2026",
       "_origin": "ast",
       "community": 20,
-      "community_name": "postprocess_wasm_content",
+      "community_name": "test_wasm_pyodide_sandbox.py",
       "file_type": "rationale",
       "norm_label": "apply post-processing transformations to the compiled panel webassembly html...",
       "source_file": "bubble_detector/ui/postprocess_wasm.py",
@@ -4987,18 +4824,84 @@
       "label": "Apply post-processing transformations to the HTML content string. Pure\u2026",
       "_origin": "ast",
       "community": 20,
-      "community_name": "postprocess_wasm_content",
+      "community_name": "test_wasm_pyodide_sandbox.py",
       "file_type": "rationale",
       "norm_label": "apply post-processing transformations to the html content string. pure...",
       "source_file": "bubble_detector/ui/postprocess_wasm.py",
       "source_location": "L38"
     },
     {
+      "id": "tests_test_wasm_pyodide_sandbox_rationale_1",
+      "label": "Unit tests for WebAssembly Pyodide Sandbox Isolation, End-to-End Execution, and\u2026",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "test_wasm_pyodide_sandbox.py",
+      "file_type": "rationale",
+      "norm_label": "unit tests for webassembly pyodide sandbox isolation, end-to-end execution, and...",
+      "source_file": "tests/test_wasm_pyodide_sandbox.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_test_wasm_pyodide_sandbox_rationale_102",
+      "label": "Verify pure NumPy fallback operates with zero dependencies when neither parquet\u2026",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "test_wasm_pyodide_sandbox.py",
+      "file_type": "rationale",
+      "norm_label": "verify pure numpy fallback operates with zero dependencies when neither parquet...",
+      "source_file": "tests/test_wasm_pyodide_sandbox.py",
+      "source_location": "L102"
+    },
+    {
+      "id": "tests_test_wasm_pyodide_sandbox_rationale_126",
+      "label": "Verify candidate dataset selection correctly maps 50-year rolling horizons to\u2026",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "test_wasm_pyodide_sandbox.py",
+      "file_type": "rationale",
+      "norm_label": "verify candidate dataset selection correctly maps 50-year rolling horizons to...",
+      "source_file": "tests/test_wasm_pyodide_sandbox.py",
+      "source_location": "L126"
+    },
+    {
+      "id": "tests_test_wasm_pyodide_sandbox_rationale_153",
+      "label": "End-to-end execution of bubble_detector/ui/panel_dashboard.py under total\u2026",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "test_wasm_pyodide_sandbox.py",
+      "file_type": "rationale",
+      "norm_label": "end-to-end execution of bubble_detector/ui/panel_dashboard.py under total...",
+      "source_file": "tests/test_wasm_pyodide_sandbox.py",
+      "source_location": "L153"
+    },
+    {
+      "id": "tests_test_wasm_pyodide_sandbox_rationale_211",
+      "label": "End-to-end execution of panel_dashboard.py under total package isolation in an\u2026",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "test_wasm_pyodide_sandbox.py",
+      "file_type": "rationale",
+      "norm_label": "end-to-end execution of panel_dashboard.py under total package isolation in an...",
+      "source_file": "tests/test_wasm_pyodide_sandbox.py",
+      "source_location": "L211"
+    },
+    {
+      "id": "tests_test_wasm_pyodide_sandbox_rationale_264",
+      "label": "Verify Executive Summary, Horizon Specifications Card, and FastListTemplate.",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "test_wasm_pyodide_sandbox.py",
+      "file_type": "rationale",
+      "norm_label": "verify executive summary, horizon specifications card, and fastlisttemplate.",
+      "source_file": "tests/test_wasm_pyodide_sandbox.py",
+      "source_location": "L264"
+    },
+    {
       "id": "tests_test_wasm_pyodide_sandbox_rationale_286",
       "label": "Helper delegating to the production WebAssembly postprocessing engine.",
       "_origin": "ast",
       "community": 20,
-      "community_name": "postprocess_wasm_content",
+      "community_name": "test_wasm_pyodide_sandbox.py",
       "file_type": "rationale",
       "norm_label": "helper delegating to the production webassembly postprocessing engine.",
       "source_file": "tests/test_wasm_pyodide_sandbox.py",
@@ -5009,11 +4912,44 @@
       "label": "Verify that postprocessing is completely idempotent and never creates nested\u2026",
       "_origin": "ast",
       "community": 20,
-      "community_name": "postprocess_wasm_content",
+      "community_name": "test_wasm_pyodide_sandbox.py",
       "file_type": "rationale",
       "norm_label": "verify that postprocessing is completely idempotent and never creates nested...",
       "source_file": "tests/test_wasm_pyodide_sandbox.py",
       "source_location": "L291"
+    },
+    {
+      "id": "tests_test_wasm_pyodide_sandbox_rationale_307",
+      "label": "Verify that dist/index.html exists on disk and contains exactly one error\u2026",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "test_wasm_pyodide_sandbox.py",
+      "file_type": "rationale",
+      "norm_label": "verify that dist/index.html exists on disk and contains exactly one error...",
+      "source_file": "tests/test_wasm_pyodide_sandbox.py",
+      "source_location": "L307"
+    },
+    {
+      "id": "tests_test_wasm_pyodide_sandbox_rationale_45",
+      "label": "Verify that 21-column JSON datasets are created within strict payload size\u2026",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "test_wasm_pyodide_sandbox.py",
+      "file_type": "rationale",
+      "norm_label": "verify that 21-column json datasets are created within strict payload size...",
+      "source_file": "tests/test_wasm_pyodide_sandbox.py",
+      "source_location": "L45"
+    },
+    {
+      "id": "tests_test_wasm_pyodide_sandbox_rationale_75",
+      "label": "Simulate Pyodide MEMFS where polars and bubble_detector are unavailable, and\u2026",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "test_wasm_pyodide_sandbox.py",
+      "file_type": "rationale",
+      "norm_label": "simulate pyodide memfs where polars and bubble_detector are unavailable, and...",
+      "source_file": "tests/test_wasm_pyodide_sandbox.py",
+      "source_location": "L75"
     },
     {
       "id": "tests_test_no_gaussian_bumps",
@@ -5251,7 +5187,7 @@
       "label": "etl_finra.py",
       "_origin": "ast",
       "community": 23,
-      "community_name": "test_data_provenance.py",
+      "community_name": "stage_provenance.py",
       "file_type": "code",
       "norm_label": "etl_finra.py",
       "source_file": "bubble_detector/data/etl_finra.py",
@@ -5262,7 +5198,7 @@
       "label": "DataFrame",
       "_origin": "ast",
       "community": 23,
-      "community_name": "test_data_provenance.py",
+      "community_name": "stage_provenance.py",
       "file_type": "code",
       "norm_label": "dataframe",
       "source_file": "",
@@ -5273,21 +5209,21 @@
       "label": "Path",
       "_origin": "ast",
       "community": 23,
-      "community_name": "test_data_provenance.py",
+      "community_name": "stage_provenance.py",
       "file_type": "code",
       "norm_label": "path",
       "source_file": "",
       "source_location": ""
     },
     {
-      "id": "tests_test_data_provenance",
-      "label": "test_data_provenance.py",
+      "id": "stage_provenance",
+      "label": "stage_provenance.py",
       "_origin": "ast",
       "community": 23,
-      "community_name": "test_data_provenance.py",
+      "community_name": "stage_provenance.py",
       "file_type": "code",
-      "norm_label": "test_data_provenance.py",
-      "source_file": "tests/test_data_provenance.py",
+      "norm_label": "stage_provenance.py",
+      "source_file": "stage_provenance.py",
       "source_location": "L1"
     },
     {
@@ -5295,7 +5231,7 @@
       "label": "FINRA & NYSE Margin Debt Point-in-Time ETL Module.\u2026",
       "_origin": "ast",
       "community": 23,
-      "community_name": "test_data_provenance.py",
+      "community_name": "stage_provenance.py",
       "file_type": "rationale",
       "norm_label": "finra & nyse margin debt point-in-time etl module....",
       "source_file": "bubble_detector/data/etl_finra.py",
@@ -5306,7 +5242,7 @@
       "label": "ETL Pipeline for FINRA & NYSE margin debt with strict publication lag\u2026",
       "_origin": "ast",
       "community": 23,
-      "community_name": "test_data_provenance.py",
+      "community_name": "stage_provenance.py",
       "file_type": "rationale",
       "norm_label": "etl pipeline for finra & nyse margin debt with strict publication lag...",
       "source_file": "bubble_detector/data/etl_finra.py",
@@ -5317,7 +5253,7 @@
       "label": "Stage FINRA margin debt dataset to parquet.",
       "_origin": "ast",
       "community": 23,
-      "community_name": "test_data_provenance.py",
+      "community_name": "stage_provenance.py",
       "file_type": "rationale",
       "norm_label": "stage finra margin debt dataset to parquet.",
       "source_file": "bubble_detector/data/etl_finra.py",
@@ -5328,7 +5264,7 @@
       "label": "Interpolate margin debt to daily business days, guaranteeing the mandatory\u2026",
       "_origin": "ast",
       "community": 23,
-      "community_name": "test_data_provenance.py",
+      "community_name": "stage_provenance.py",
       "file_type": "rationale",
       "norm_label": "interpolate margin debt to daily business days, guaranteeing the mandatory...",
       "source_file": "bubble_detector/data/etl_finra.py",
@@ -5339,7 +5275,7 @@
       "label": "Public helper to obtain daily point-in-time FINRA margin debt data.",
       "_origin": "ast",
       "community": 23,
-      "community_name": "test_data_provenance.py",
+      "community_name": "stage_provenance.py",
       "file_type": "rationale",
       "norm_label": "public helper to obtain daily point-in-time finra margin debt data.",
       "source_file": "bubble_detector/data/etl_finra.py",
@@ -5350,40 +5286,40 @@
       "label": "Parse authentic FINRA margin debt statistics workbook and combine with NYSE\u2026",
       "_origin": "ast",
       "community": 23,
-      "community_name": "test_data_provenance.py",
+      "community_name": "stage_provenance.py",
       "file_type": "rationale",
       "norm_label": "parse authentic finra margin debt statistics workbook and combine with nyse...",
       "source_file": "bubble_detector/data/etl_finra.py",
       "source_location": "L73"
     },
     {
-      "id": "tests_test_data_provenance_rationale_1",
-      "label": "Unit tests for Institutional Data Provenance & Publication Lags (Shiller, FRED,\u2026",
+      "id": "stage_provenance_rationale_1",
+      "label": "Provenance Data Staging & WebAssembly Binary Pre-Compilation Pipeline.\u2026",
       "_origin": "ast",
       "community": 23,
-      "community_name": "test_data_provenance.py",
+      "community_name": "stage_provenance.py",
       "file_type": "rationale",
-      "norm_label": "unit tests for institutional data provenance & publication lags (shiller, fred,...",
-      "source_file": "tests/test_data_provenance.py",
+      "norm_label": "provenance data staging & webassembly binary pre-compilation pipeline....",
+      "source_file": "stage_provenance.py",
       "source_location": "L1"
     },
     {
-      "id": "tests_test_data_provenance_rationale_41",
-      "label": "Asserts GDP and Case-Shiller releases are strictly point-in-time lagged by >=\u2026",
+      "id": "stage_provenance_rationale_107",
+      "label": "Convert existing staged Parquet datasets into clean JSON tables for WebAssembly\u2026",
       "_origin": "ast",
       "community": 23,
-      "community_name": "test_data_provenance.py",
+      "community_name": "stage_provenance.py",
       "file_type": "rationale",
-      "norm_label": "asserts gdp and case-shiller releases are strictly point-in-time lagged by >=...",
-      "source_file": "tests/test_data_provenance.py",
-      "source_location": "L41"
+      "norm_label": "convert existing staged parquet datasets into clean json tables for webassembly...",
+      "source_file": "stage_provenance.py",
+      "source_location": "L107"
     },
     {
       "id": "tests_test_data_provenance_rationale_62",
       "label": "Asserts margin debt data incorporates mandatory 3-week reporting lag.",
       "_origin": "ast",
       "community": 23,
-      "community_name": "test_data_provenance.py",
+      "community_name": "stage_provenance.py",
       "file_type": "rationale",
       "norm_label": "asserts margin debt data incorporates mandatory 3-week reporting lag.",
       "source_file": "tests/test_data_provenance.py",
@@ -5577,6 +5513,17 @@
       "source_location": ""
     },
     {
+      "id": "tests_test_features_py_fixture",
+      "label": "fixture",
+      "_origin": "ast",
+      "community": 25,
+      "community_name": "DataIngestor",
+      "file_type": "code",
+      "norm_label": "fixture",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "tests_test_ingestor",
       "label": "test_ingestor.py",
       "_origin": "ast",
@@ -5742,6 +5689,17 @@
       "source_location": "L1"
     },
     {
+      "id": "bubble_detector_features_macro_valuation",
+      "label": "macro_valuation.py",
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "features/__init__.py",
+      "file_type": "code",
+      "norm_label": "macro_valuation.py",
+      "source_file": "bubble_detector/features/macro_valuation.py",
+      "source_location": "L1"
+    },
+    {
       "id": "bubble_detector_features_utils",
       "label": "utils.py",
       "_origin": "ast",
@@ -5772,6 +5730,17 @@
       "file_type": "rationale",
       "norm_label": "quantitative feature engineering & mathematical signal processing subpackage....",
       "source_file": "bubble_detector/features/__init__.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "bubble_detector_features_macro_valuation_rationale_1",
+      "label": "Macroeconomic Valuation & Long-Horizon Equilibrium Module.\u2026",
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "features/__init__.py",
+      "file_type": "rationale",
+      "norm_label": "macroeconomic valuation & long-horizon equilibrium module....",
+      "source_file": "bubble_detector/features/macro_valuation.py",
       "source_location": "L1"
     },
     {
@@ -5885,7 +5854,7 @@
       "source_location": "L1"
     },
     {
-      "id": "bubble_detector_features_lppls_model_rationale_198",
+      "id": "bubble_detector_features_lppls_model_rationale_236",
       "label": "Computes rolling multi-scale LPPLS Bubble Confidence Indicator CI(t) in [0.0,\u2026",
       "_origin": "ast",
       "community": 27,
@@ -5893,7 +5862,7 @@
       "file_type": "rationale",
       "norm_label": "computes rolling multi-scale lppls bubble confidence indicator ci(t) in [0.0,...",
       "source_file": "bubble_detector/features/lppls_model.py",
-      "source_location": "L198"
+      "source_location": "L236"
     },
     {
       "id": "bubble_detector_features_lppls_model_rationale_71",
@@ -5951,33 +5920,33 @@
       "source_location": "L58"
     },
     {
+      "id": "tests_test_lppls_rigor_rationale_86",
+      "label": "Asserts LPPLS model elevates bubble confidence (CI >= 0.60) during the climax\u2026",
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "compute_lppls_confidence_indicator",
+      "file_type": "rationale",
+      "norm_label": "asserts lppls model elevates bubble confidence (ci >= 0.60) during the climax...",
+      "source_file": "tests/test_lppls_rigor.py",
+      "source_location": "L86"
+    },
+    {
       "id": "bubble_detector_features_options_vol",
       "label": "options_vol.py",
       "_origin": "ast",
       "community": 28,
-      "community_name": "compute_options_volatility_metrics",
+      "community_name": "options_vol.py",
       "file_type": "code",
       "norm_label": "options_vol.py",
       "source_file": "bubble_detector/features/options_vol.py",
       "source_location": "L1"
     },
     {
-      "id": "bubble_detector_features_options_vol_py_dataframe",
-      "label": "DataFrame",
-      "_origin": "ast",
-      "community": 28,
-      "community_name": "compute_options_volatility_metrics",
-      "file_type": "code",
-      "norm_label": "dataframe",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
       "id": "bubble_detector_features_options_volatility",
       "label": "options_volatility.py",
       "_origin": "ast",
       "community": 28,
-      "community_name": "compute_options_volatility_metrics",
+      "community_name": "options_vol.py",
       "file_type": "code",
       "norm_label": "options_volatility.py",
       "source_file": "bubble_detector/features/options_volatility.py",
@@ -5988,44 +5957,22 @@
       "label": "Options Market Microstructure & Volatility Behavioral Dynamics Module.\u2026",
       "_origin": "ast",
       "community": 28,
-      "community_name": "compute_options_volatility_metrics",
+      "community_name": "options_vol.py",
       "file_type": "rationale",
       "norm_label": "options market microstructure & volatility behavioral dynamics module....",
       "source_file": "bubble_detector/features/options_vol.py",
       "source_location": "L1"
-    },
-    {
-      "id": "bubble_detector_features_options_vol_rationale_50",
-      "label": "Compute VIX term structure slope, SKEW tail-risk alert, dispersion index, and\u2026",
-      "_origin": "ast",
-      "community": 28,
-      "community_name": "compute_options_volatility_metrics",
-      "file_type": "rationale",
-      "norm_label": "compute vix term structure slope, skew tail-risk alert, dispersion index, and...",
-      "source_file": "bubble_detector/features/options_vol.py",
-      "source_location": "L50"
     },
     {
       "id": "bubble_detector_features_options_volatility_rationale_1",
       "label": "Options Market Microstructure & Volatility Behavioral Dynamics Module.\u2026",
       "_origin": "ast",
       "community": 28,
-      "community_name": "compute_options_volatility_metrics",
+      "community_name": "options_vol.py",
       "file_type": "rationale",
       "norm_label": "options market microstructure & volatility behavioral dynamics module....",
       "source_file": "bubble_detector/features/options_volatility.py",
       "source_location": "L1"
-    },
-    {
-      "id": "tests_test_module_aliases_rationale_54",
-      "label": "Verify options_volatility module function matches canonical implementation.",
-      "_origin": "ast",
-      "community": 28,
-      "community_name": "compute_options_volatility_metrics",
-      "file_type": "rationale",
-      "norm_label": "verify options_volatility module function matches canonical implementation.",
-      "source_file": "tests/test_module_aliases.py",
-      "source_location": "L54"
     },
     {
       "id": "bubble_detector_features_topology",
@@ -6059,17 +6006,6 @@
       "norm_label": "ndarray",
       "source_file": "",
       "source_location": ""
-    },
-    {
-      "id": "tests_test_psy_ripser_integrity",
-      "label": "test_psy_ripser_integrity.py",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "compute_tda_wavelet_complexity",
-      "file_type": "code",
-      "norm_label": "test_psy_ripser_integrity.py",
-      "source_file": "tests/test_psy_ripser_integrity.py",
-      "source_location": "L1"
     },
     {
       "id": "tests_test_tda_wavelet_rigor",
@@ -6149,39 +6085,6 @@
       "source_location": "L77"
     },
     {
-      "id": "tests_test_psy_ripser_integrity_rationale_1",
-      "label": "Unit tests for Canonical PSY/GSADF Recursive Sub-windows and Vietoris-Rips\u2026",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "compute_tda_wavelet_complexity",
-      "file_type": "rationale",
-      "norm_label": "unit tests for canonical psy/gsadf recursive sub-windows and vietoris-rips...",
-      "source_file": "tests/test_psy_ripser_integrity.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "tests_test_psy_ripser_integrity_rationale_16",
-      "label": "Asserts recursive GSADF on monthly P/D crosses 99% bootstrap critical value\u2026",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "compute_tda_wavelet_complexity",
-      "file_type": "rationale",
-      "norm_label": "asserts recursive gsadf on monthly p/d crosses 99% bootstrap critical value...",
-      "source_file": "tests/test_psy_ripser_integrity.py",
-      "source_location": "L16"
-    },
-    {
-      "id": "tests_test_psy_ripser_integrity_rationale_44",
-      "label": "Asserts persistent homology computed via ripser/topology engine uses strictly\u2026",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "compute_tda_wavelet_complexity",
-      "file_type": "rationale",
-      "norm_label": "asserts persistent homology computed via ripser/topology engine uses strictly...",
-      "source_file": "tests/test_psy_ripser_integrity.py",
-      "source_location": "L44"
-    },
-    {
       "id": "tests_test_tda_wavelet_rigor_rationale_1",
       "label": "Unit tests for TDA & Continuous Wavelet Transform Rigor (Bubenik L2,\u2026",
       "_origin": "ast",
@@ -6216,6 +6119,17 @@
     },
     {
       "id": "tests_test_tda_wavelet_rigor_rationale_49",
+      "label": "Asserts persistence entropy E(D) drops sharply when market herding collapses\u2026",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "compute_tda_wavelet_complexity",
+      "file_type": "rationale",
+      "norm_label": "asserts persistence entropy e(d) drops sharply when market herding collapses...",
+      "source_file": "tests/test_tda_wavelet_rigor.py",
+      "source_location": "L49"
+    },
+    {
+      "id": "tests_test_tda_wavelet_rigor_rationale_70",
       "label": "Verifies pure-NumPy Morlet wavelet transform computes non-negative scaleogram\u2026",
       "_origin": "ast",
       "community": 29,
@@ -6223,10 +6137,10 @@
       "file_type": "rationale",
       "norm_label": "verifies pure-numpy morlet wavelet transform computes non-negative scaleogram...",
       "source_file": "tests/test_tda_wavelet_rigor.py",
-      "source_location": "L49"
+      "source_location": "L70"
     },
     {
-      "id": "tests_test_tda_wavelet_rigor_rationale_65",
+      "id": "tests_test_tda_wavelet_rigor_rationale_86",
       "label": "Asserts compute_tda_wavelet_complexity executes end-to-end and outputs all 4\u2026",
       "_origin": "ast",
       "community": 29,
@@ -6234,7 +6148,7 @@
       "file_type": "rationale",
       "norm_label": "asserts compute_tda_wavelet_complexity executes end-to-end and outputs all 4...",
       "source_file": "tests/test_tda_wavelet_rigor.py",
-      "source_location": "L65"
+      "source_location": "L86"
     },
     {
       "id": "bubble_detector_features_leverage",
@@ -6267,6 +6181,17 @@
       "file_type": "code",
       "norm_label": "margin_leverage.py",
       "source_file": "bubble_detector/features/margin_leverage.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_test_module_aliases",
+      "label": "test_module_aliases.py",
+      "_origin": "ast",
+      "community": 30,
+      "community_name": "compute_margin_leverage_metrics",
+      "file_type": "code",
+      "norm_label": "test_module_aliases.py",
+      "source_file": "tests/test_module_aliases.py",
       "source_location": "L1"
     },
     {
@@ -6303,6 +6228,17 @@
       "source_location": "L1"
     },
     {
+      "id": "tests_test_module_aliases_rationale_1",
+      "label": "Unit tests for canonical module aliases and backward compatibility bindings.\u2026",
+      "_origin": "ast",
+      "community": 30,
+      "community_name": "compute_margin_leverage_metrics",
+      "file_type": "rationale",
+      "norm_label": "unit tests for canonical module aliases and backward compatibility bindings....",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L1"
+    },
+    {
       "id": "tests_test_module_aliases_rationale_36",
       "label": "Verify margin_leverage module function matches canonical implementation.",
       "_origin": "ast",
@@ -6312,6 +6248,17 @@
       "norm_label": "verify margin_leverage module function matches canonical implementation.",
       "source_file": "tests/test_module_aliases.py",
       "source_location": "L36"
+    },
+    {
+      "id": "tests_test_module_aliases_rationale_54",
+      "label": "Verify options_volatility module function matches canonical implementation.",
+      "_origin": "ast",
+      "community": 30,
+      "community_name": "compute_margin_leverage_metrics",
+      "file_type": "rationale",
+      "norm_label": "verify options_volatility module function matches canonical implementation.",
+      "source_file": "tests/test_module_aliases.py",
+      "source_location": "L54"
     },
     {
       "id": "bubble_detector_data_etl_vxo",
@@ -6435,6 +6382,17 @@
       "source_location": "L1"
     },
     {
+      "id": "bubble_detector_features_technicals",
+      "label": "technicals.py",
+      "_origin": "ast",
+      "community": 32,
+      "community_name": "compute_technical_indicators",
+      "file_type": "code",
+      "norm_label": "technicals.py",
+      "source_file": "bubble_detector/features/technicals.py",
+      "source_location": "L1"
+    },
+    {
       "id": "bubble_detector_features_technicals_py_dataframe",
       "label": "DataFrame",
       "_origin": "ast",
@@ -6446,15 +6404,15 @@
       "source_location": ""
     },
     {
-      "id": "tests_test_module_aliases",
-      "label": "test_module_aliases.py",
+      "id": "bubble_detector_features_tech_exuberance_rationale_42",
+      "label": "Computes tech outperformance ratio (XLK / SPY), Macro Condition, Statistical\u2026",
       "_origin": "ast",
       "community": 32,
       "community_name": "compute_technical_indicators",
-      "file_type": "code",
-      "norm_label": "test_module_aliases.py",
-      "source_file": "tests/test_module_aliases.py",
-      "source_location": "L1"
+      "file_type": "rationale",
+      "norm_label": "computes tech outperformance ratio (xlk / spy), macro condition, statistical...",
+      "source_file": "bubble_detector/features/tech_exuberance.py",
+      "source_location": "L42"
     },
     {
       "id": "bubble_detector_features_technical_rationale_1",
@@ -6465,6 +6423,17 @@
       "file_type": "rationale",
       "norm_label": "technical indicators & momentum oscillators module....",
       "source_file": "bubble_detector/features/technical.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "bubble_detector_features_technicals_rationale_1",
+      "label": "Technical Indicators & Momentum Oscillators Module.\u2026",
+      "_origin": "ast",
+      "community": 32,
+      "community_name": "compute_technical_indicators",
+      "file_type": "rationale",
+      "norm_label": "technical indicators & momentum oscillators module....",
+      "source_file": "bubble_detector/features/technicals.py",
       "source_location": "L1"
     },
     {
@@ -6479,15 +6448,26 @@
       "source_location": "L53"
     },
     {
-      "id": "tests_test_module_aliases_rationale_1",
-      "label": "Unit tests for canonical module aliases and backward compatibility bindings.\u2026",
+      "id": "bubble_detector_ui_dashboard_rationale_81",
+      "label": "Fetch and process full dataset pipeline for selected date horizon.",
       "_origin": "ast",
       "community": 32,
       "community_name": "compute_technical_indicators",
       "file_type": "rationale",
-      "norm_label": "unit tests for canonical module aliases and backward compatibility bindings....",
-      "source_file": "tests/test_module_aliases.py",
-      "source_location": "L1"
+      "norm_label": "fetch and process full dataset pipeline for selected date horizon.",
+      "source_file": "bubble_detector/ui/dashboard.py",
+      "source_location": "L81"
+    },
+    {
+      "id": "stage_provenance_rationale_32",
+      "label": "Pre-compile production Parquet and lightweight clean JSON datasets for client-\u2026",
+      "_origin": "ast",
+      "community": 32,
+      "community_name": "compute_technical_indicators",
+      "file_type": "rationale",
+      "norm_label": "pre-compile production parquet and lightweight clean json datasets for client-...",
+      "source_file": "stage_provenance.py",
+      "source_location": "L32"
     },
     {
       "id": "tests_test_module_aliases_rationale_73",
@@ -6505,18 +6485,29 @@
       "label": "test_wasm_tech_exuberance.py",
       "_origin": "ast",
       "community": 33,
-      "community_name": "test_wasm_tech_exuberance.py",
+      "community_name": "build_tech_exuberance_fig",
       "file_type": "code",
       "norm_label": "test_wasm_tech_exuberance.py",
       "source_file": "tests/test_wasm_tech_exuberance.py",
       "source_location": "L1"
     },
     {
+      "id": "bubble_detector_ui_panel_dashboard_rationale_706",
+      "label": "Build Plotly figure for Tab 7: Tech Exuberance Score (matching NiceGUI 100%).",
+      "_origin": "ast",
+      "community": 33,
+      "community_name": "build_tech_exuberance_fig",
+      "file_type": "rationale",
+      "norm_label": "build plotly figure for tab 7: tech exuberance score (matching nicegui 100%).",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L706"
+    },
+    {
       "id": "tests_test_wasm_tech_exuberance_rationale_1",
       "label": "Unit tests for WebAssembly Tab 7: Tech Exuberance Score & Parity Engine.\u2026",
       "_origin": "ast",
       "community": 33,
-      "community_name": "test_wasm_tech_exuberance.py",
+      "community_name": "build_tech_exuberance_fig",
       "file_type": "rationale",
       "norm_label": "unit tests for webassembly tab 7: tech exuberance score & parity engine....",
       "source_file": "tests/test_wasm_tech_exuberance.py",
@@ -6527,7 +6518,7 @@
       "label": "Precompile WASM Parquet and JSON datasets to ensure up-to-date parquet/json\u2026",
       "_origin": "ast",
       "community": 33,
-      "community_name": "test_wasm_tech_exuberance.py",
+      "community_name": "build_tech_exuberance_fig",
       "file_type": "rationale",
       "norm_label": "precompile wasm parquet and json datasets to ensure up-to-date parquet/json...",
       "source_file": "tests/test_wasm_tech_exuberance.py",
@@ -6538,7 +6529,7 @@
       "label": "Verify desktop construction of Tab 7 figure with 4 subplots and all expected\u2026",
       "_origin": "ast",
       "community": 33,
-      "community_name": "test_wasm_tech_exuberance.py",
+      "community_name": "build_tech_exuberance_fig",
       "file_type": "rationale",
       "norm_label": "verify desktop construction of tab 7 figure with 4 subplots and all expected...",
       "source_file": "tests/test_wasm_tech_exuberance.py",
@@ -6549,7 +6540,7 @@
       "label": "Verify mobile construction with responsive horizontal legend and tight margins.",
       "_origin": "ast",
       "community": 33,
-      "community_name": "test_wasm_tech_exuberance.py",
+      "community_name": "build_tech_exuberance_fig",
       "file_type": "rationale",
       "norm_label": "verify mobile construction with responsive horizontal legend and tight margins.",
       "source_file": "tests/test_wasm_tech_exuberance.py",
@@ -6560,7 +6551,7 @@
       "label": "Verify all required Tab 7 columns are registered in CORE_WASM_COLUMNS.",
       "_origin": "ast",
       "community": 33,
-      "community_name": "test_wasm_tech_exuberance.py",
+      "community_name": "build_tech_exuberance_fig",
       "file_type": "rationale",
       "norm_label": "verify all required tab 7 columns are registered in core_wasm_columns.",
       "source_file": "tests/test_wasm_tech_exuberance.py",
@@ -6571,7 +6562,7 @@
       "label": "Verify Tab 7 is bound to dashboard_tabs with title 'Tech Exuberance Score'.",
       "_origin": "ast",
       "community": 33,
-      "community_name": "test_wasm_tech_exuberance.py",
+      "community_name": "build_tech_exuberance_fig",
       "file_type": "rationale",
       "norm_label": "verify tab 7 is bound to dashboard_tabs with title 'tech exuberance score'.",
       "source_file": "tests/test_wasm_tech_exuberance.py",
@@ -6666,22 +6657,22 @@
       "source_location": "L80"
     },
     {
-      "id": "bubble_detector_features_macro_valuation",
-      "label": "macro_valuation.py",
-      "_origin": "ast",
-      "community": 35,
-      "community_name": "test_features.py",
-      "file_type": "code",
-      "norm_label": "macro_valuation.py",
-      "source_file": "bubble_detector/features/macro_valuation.py",
-      "source_location": "L1"
-    },
-    {
       "id": "bubble_detector_features_macro_valuation_py_dataframe",
       "label": "DataFrame",
       "_origin": "ast",
       "community": 35,
-      "community_name": "test_features.py",
+      "community_name": "generate_wasm_dataset",
+      "file_type": "code",
+      "norm_label": "dataframe",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "bubble_detector_features_options_vol_py_dataframe",
+      "label": "DataFrame",
+      "_origin": "ast",
+      "community": 35,
+      "community_name": "generate_wasm_dataset",
       "file_type": "code",
       "norm_label": "dataframe",
       "source_file": "",
@@ -6692,54 +6683,109 @@
       "label": "test_features.py",
       "_origin": "ast",
       "community": 35,
-      "community_name": "test_features.py",
+      "community_name": "generate_wasm_dataset",
       "file_type": "code",
       "norm_label": "test_features.py",
       "source_file": "tests/test_features.py",
       "source_location": "L1"
     },
     {
-      "id": "tests_test_features_py_fixture",
+      "id": "tests_test_models",
+      "label": "test_models.py",
+      "_origin": "ast",
+      "community": 35,
+      "community_name": "generate_wasm_dataset",
+      "file_type": "code",
+      "norm_label": "test_models.py",
+      "source_file": "tests/test_models.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_test_models_py_fixture",
       "label": "fixture",
       "_origin": "ast",
       "community": 35,
-      "community_name": "test_features.py",
+      "community_name": "generate_wasm_dataset",
       "file_type": "code",
       "norm_label": "fixture",
       "source_file": "",
       "source_location": ""
     },
     {
-      "id": "bubble_detector_features_macro_valuation_rationale_1",
-      "label": "Macroeconomic Valuation & Long-Horizon Equilibrium Module.\u2026",
-      "_origin": "ast",
-      "community": 35,
-      "community_name": "test_features.py",
-      "file_type": "rationale",
-      "norm_label": "macroeconomic valuation & long-horizon equilibrium module....",
-      "source_file": "bubble_detector/features/macro_valuation.py",
-      "source_location": "L1"
-    },
-    {
       "id": "bubble_detector_features_macro_valuation_rationale_48",
       "label": "Compute Shiller CAPE, Payout-Adjusted CAPE (P-CAPE), and Buffett Indicator\u2026",
       "_origin": "ast",
       "community": 35,
-      "community_name": "test_features.py",
+      "community_name": "generate_wasm_dataset",
       "file_type": "rationale",
       "norm_label": "compute shiller cape, payout-adjusted cape (p-cape), and buffett indicator...",
       "source_file": "bubble_detector/features/macro_valuation.py",
       "source_location": "L48"
     },
     {
+      "id": "bubble_detector_features_options_vol_rationale_50",
+      "label": "Compute VIX term structure slope, SKEW tail-risk alert, dispersion index, and\u2026",
+      "_origin": "ast",
+      "community": 35,
+      "community_name": "generate_wasm_dataset",
+      "file_type": "rationale",
+      "norm_label": "compute vix term structure slope, skew tail-risk alert, dispersion index, and...",
+      "source_file": "bubble_detector/features/options_vol.py",
+      "source_location": "L50"
+    },
+    {
+      "id": "bubble_detector_ui_panel_dashboard_rationale_235",
+      "label": "Generate high-speed financial time series dataset for Pyodide WebAssembly.\u2026",
+      "_origin": "ast",
+      "community": 35,
+      "community_name": "generate_wasm_dataset",
+      "file_type": "rationale",
+      "norm_label": "generate high-speed financial time series dataset for pyodide webassembly....",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L235"
+    },
+    {
       "id": "tests_test_features_rationale_1",
       "label": "Unit tests for Feature Engineering Modules (technicals, macro valuations,\u2026",
       "_origin": "ast",
       "community": 35,
-      "community_name": "test_features.py",
+      "community_name": "generate_wasm_dataset",
       "file_type": "rationale",
       "norm_label": "unit tests for feature engineering modules (technicals, macro valuations,...",
       "source_file": "tests/test_features.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_test_features_rationale_66",
+      "label": "Verify 100% numerical parity for TDA Persistence L2 Norm between WASM app and\u2026",
+      "_origin": "ast",
+      "community": 35,
+      "community_name": "generate_wasm_dataset",
+      "file_type": "rationale",
+      "norm_label": "verify 100% numerical parity for tda persistence l2 norm between wasm app and...",
+      "source_file": "tests/test_features.py",
+      "source_location": "L66"
+    },
+    {
+      "id": "tests_test_mahalanobis_rationale_85",
+      "label": "End-to-end integration test of MacroMahalanobisDetector on market dataset.",
+      "_origin": "ast",
+      "community": 35,
+      "community_name": "generate_wasm_dataset",
+      "file_type": "rationale",
+      "norm_label": "end-to-end integration test of macromahalanobisdetector on market dataset.",
+      "source_file": "tests/test_mahalanobis.py",
+      "source_location": "L85"
+    },
+    {
+      "id": "tests_test_models_rationale_1",
+      "label": "Unit tests for StructuralBreakPredictor machine learning module.",
+      "_origin": "ast",
+      "community": 35,
+      "community_name": "generate_wasm_dataset",
+      "file_type": "rationale",
+      "norm_label": "unit tests for structuralbreakpredictor machine learning module.",
+      "source_file": "tests/test_models.py",
       "source_location": "L1"
     },
     {
@@ -6851,114 +6897,114 @@
       "source_location": "L54"
     },
     {
-      "id": "stage_provenance",
-      "label": "stage_provenance.py",
+      "id": "exception",
+      "label": "Exception",
       "_origin": "ast",
       "community": 38,
-      "community_name": "stage_provenance.py",
+      "community_name": "test_full_indicator_parity.py",
       "file_type": "code",
-      "norm_label": "stage_provenance.py",
-      "source_file": "stage_provenance.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "bubble_detector_features_tech_exuberance_rationale_42",
-      "label": "Computes tech outperformance ratio (XLK / SPY), Macro Condition, Statistical\u2026",
-      "_origin": "ast",
-      "community": 38,
-      "community_name": "stage_provenance.py",
-      "file_type": "rationale",
-      "norm_label": "computes tech outperformance ratio (xlk / spy), macro condition, statistical...",
-      "source_file": "bubble_detector/features/tech_exuberance.py",
-      "source_location": "L42"
-    },
-    {
-      "id": "stage_provenance_rationale_1",
-      "label": "Provenance Data Staging & WebAssembly Binary Pre-Compilation Pipeline.\u2026",
-      "_origin": "ast",
-      "community": 38,
-      "community_name": "stage_provenance.py",
-      "file_type": "rationale",
-      "norm_label": "provenance data staging & webassembly binary pre-compilation pipeline....",
-      "source_file": "stage_provenance.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "stage_provenance_rationale_107",
-      "label": "Convert existing staged Parquet datasets into clean JSON tables for WebAssembly\u2026",
-      "_origin": "ast",
-      "community": 38,
-      "community_name": "stage_provenance.py",
-      "file_type": "rationale",
-      "norm_label": "convert existing staged parquet datasets into clean json tables for webassembly...",
-      "source_file": "stage_provenance.py",
-      "source_location": "L107"
-    },
-    {
-      "id": "stage_provenance_rationale_32",
-      "label": "Pre-compile production Parquet and lightweight clean JSON datasets for client-\u2026",
-      "_origin": "ast",
-      "community": 38,
-      "community_name": "stage_provenance.py",
-      "file_type": "rationale",
-      "norm_label": "pre-compile production parquet and lightweight clean json datasets for client-...",
-      "source_file": "stage_provenance.py",
-      "source_location": "L32"
-    },
-    {
-      "id": "bubble_detector_features_econometric_py_dataframe",
-      "label": "DataFrame",
-      "_origin": "ast",
-      "community": 39,
-      "community_name": "compute_gsadf_gpt_decomposition",
-      "file_type": "code",
-      "norm_label": "dataframe",
+      "norm_label": "exception",
       "source_file": "",
       "source_location": ""
     },
     {
-      "id": "tests_test_models",
-      "label": "test_models.py",
+      "id": "tests_test_full_indicator_parity",
+      "label": "test_full_indicator_parity.py",
       "_origin": "ast",
-      "community": 39,
-      "community_name": "compute_gsadf_gpt_decomposition",
+      "community": 38,
+      "community_name": "test_full_indicator_parity.py",
       "file_type": "code",
-      "norm_label": "test_models.py",
-      "source_file": "tests/test_models.py",
+      "norm_label": "test_full_indicator_parity.py",
+      "source_file": "tests/test_full_indicator_parity.py",
       "source_location": "L1"
     },
     {
-      "id": "tests_test_models_py_fixture",
-      "label": "fixture",
+      "id": "tests_test_full_indicator_parity_py_parametrize",
+      "label": "parametrize",
       "_origin": "ast",
-      "community": 39,
-      "community_name": "compute_gsadf_gpt_decomposition",
+      "community": 38,
+      "community_name": "test_full_indicator_parity.py",
       "file_type": "code",
-      "norm_label": "fixture",
+      "norm_label": "parametrize",
       "source_file": "",
       "source_location": ""
     },
     {
-      "id": "bubble_detector_features_econometric_rationale_178",
-      "label": "Computes canonical recursive expanding-window Backward Supremum ADF (BSADF)\u2026",
+      "id": "tests_test_full_indicator_parity_rationale_1",
+      "label": "Comprehensive Parity Test: Verifies 100% Numerical Parity across all 15\u2026",
       "_origin": "ast",
-      "community": 39,
-      "community_name": "compute_gsadf_gpt_decomposition",
+      "community": 38,
+      "community_name": "test_full_indicator_parity.py",
       "file_type": "rationale",
-      "norm_label": "computes canonical recursive expanding-window backward supremum adf (bsadf)...",
-      "source_file": "bubble_detector/features/econometric.py",
-      "source_location": "L178"
+      "norm_label": "comprehensive parity test: verifies 100% numerical parity across all 15...",
+      "source_file": "tests/test_full_indicator_parity.py",
+      "source_location": "L1"
     },
     {
-      "id": "tests_test_models_rationale_1",
-      "label": "Unit tests for StructuralBreakPredictor machine learning module.",
+      "id": "tests_test_full_indicator_parity_rationale_49",
+      "label": "Assert that every single indicator across all 7 tabs in the WebAssembly app is\u2026",
+      "_origin": "ast",
+      "community": 38,
+      "community_name": "test_full_indicator_parity.py",
+      "file_type": "rationale",
+      "norm_label": "assert that every single indicator across all 7 tabs in the webassembly app is...",
+      "source_file": "tests/test_full_indicator_parity.py",
+      "source_location": "L49"
+    },
+    {
+      "id": "tests_test_full_indicator_parity_rationale_87",
+      "label": "Rigorously test the Pyodide WebAssembly fallback branch by mocking out\u2026",
+      "_origin": "ast",
+      "community": 38,
+      "community_name": "test_full_indicator_parity.py",
+      "file_type": "rationale",
+      "norm_label": "rigorously test the pyodide webassembly fallback branch by mocking out...",
+      "source_file": "tests/test_full_indicator_parity.py",
+      "source_location": "L87"
+    },
+    {
+      "id": "tests_test_wasm_parquet_parity",
+      "label": "test_wasm_parquet_parity.py",
       "_origin": "ast",
       "community": 39,
-      "community_name": "compute_gsadf_gpt_decomposition",
-      "file_type": "rationale",
-      "norm_label": "unit tests for structuralbreakpredictor machine learning module.",
-      "source_file": "tests/test_models.py",
+      "community_name": "test_wasm_parquet_parity.py",
+      "file_type": "code",
+      "norm_label": "test_wasm_parquet_parity.py",
+      "source_file": "tests/test_wasm_parquet_parity.py",
       "source_location": "L1"
+    },
+    {
+      "id": "tests_test_wasm_parquet_parity_py_parametrize",
+      "label": "parametrize",
+      "_origin": "ast",
+      "community": 39,
+      "community_name": "test_wasm_parquet_parity.py",
+      "file_type": "code",
+      "norm_label": "parametrize",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "tests_test_wasm_parquet_parity_rationale_1",
+      "label": "Unit tests for WebAssembly Parquet Parity and Zero-Mathematical-Drift Loading.",
+      "_origin": "ast",
+      "community": 39,
+      "community_name": "test_wasm_parquet_parity.py",
+      "file_type": "rationale",
+      "norm_label": "unit tests for webassembly parquet parity and zero-mathematical-drift loading.",
+      "source_file": "tests/test_wasm_parquet_parity.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_test_wasm_parquet_parity_rationale_14",
+      "label": "Asserts Pyodide WebAssembly dataset matches NiceGUI dataset with zero\u2026",
+      "_origin": "ast",
+      "community": 39,
+      "community_name": "test_wasm_parquet_parity.py",
+      "file_type": "rationale",
+      "norm_label": "asserts pyodide webassembly dataset matches nicegui dataset with zero...",
+      "source_file": "tests/test_wasm_parquet_parity.py",
+      "source_location": "L14"
     },
     {
       "id": "bubble_detector_config",
@@ -7024,17 +7070,6 @@
       "file_type": "code",
       "norm_label": "data/__init__.py",
       "source_file": "bubble_detector/data/__init__.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "bubble_detector_features_technicals",
-      "label": "technicals.py",
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "config.py",
-      "file_type": "code",
-      "norm_label": "technicals.py",
-      "source_file": "bubble_detector/features/technicals.py",
       "source_location": "L1"
     },
     {
@@ -7167,17 +7202,6 @@
       "file_type": "rationale",
       "norm_label": "point-in-time data ingestion & multi-decade horizon subpackage....",
       "source_file": "bubble_detector/data/__init__.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "bubble_detector_features_technicals_rationale_1",
-      "label": "Technical Indicators & Momentum Oscillators Module.\u2026",
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "config.py",
-      "file_type": "rationale",
-      "norm_label": "technical indicators & momentum oscillators module....",
-      "source_file": "bubble_detector/features/technicals.py",
       "source_location": "L1"
     },
     {
@@ -7319,87 +7343,10 @@
       "source_location": "L1"
     },
     {
-      "id": "tests_test_wasm_pyodide_sandbox_rationale_153",
-      "label": "End-to-end execution of bubble_detector/ui/panel_dashboard.py under total\u2026",
-      "_origin": "ast",
-      "community": 42,
-      "community_name": "test_wasm_full_script_pyodide_execution",
-      "file_type": "rationale",
-      "norm_label": "end-to-end execution of bubble_detector/ui/panel_dashboard.py under total...",
-      "source_file": "tests/test_wasm_pyodide_sandbox.py",
-      "source_location": "L153"
-    },
-    {
-      "id": "tests_test_wasm_pyodide_sandbox_rationale_211",
-      "label": "End-to-end execution of panel_dashboard.py under total package isolation in an\u2026",
-      "_origin": "ast",
-      "community": 43,
-      "community_name": "test_wasm_full_script_pure_numpy_fallback_execution",
-      "file_type": "rationale",
-      "norm_label": "end-to-end execution of panel_dashboard.py under total package isolation in an...",
-      "source_file": "tests/test_wasm_pyodide_sandbox.py",
-      "source_location": "L211"
-    },
-    {
-      "id": "tests_test_wasm_pyodide_sandbox_rationale_264",
-      "label": "Verify Executive Summary, Horizon Specifications Card, and FastListTemplate.",
-      "_origin": "ast",
-      "community": 44,
-      "community_name": "test_template_and_cards_reconstruction",
-      "file_type": "rationale",
-      "norm_label": "verify executive summary, horizon specifications card, and fastlisttemplate.",
-      "source_file": "tests/test_wasm_pyodide_sandbox.py",
-      "source_location": "L264"
-    },
-    {
-      "id": "tests_test_wasm_pyodide_sandbox_rationale_307",
-      "label": "Verify that dist/index.html exists on disk and contains exactly one error\u2026",
-      "_origin": "ast",
-      "community": 45,
-      "community_name": "test_dist_index_html_on_disk",
-      "file_type": "rationale",
-      "norm_label": "verify that dist/index.html exists on disk and contains exactly one error...",
-      "source_file": "tests/test_wasm_pyodide_sandbox.py",
-      "source_location": "L307"
-    },
-    {
-      "id": "bubble_detector_ui_panel_dashboard_rationale_229",
-      "label": "Pre-compile production Parquet and lightweight clean JSON datasets for\u2026",
-      "_origin": "ast",
-      "community": 46,
-      "community_name": "precompile_wasm_parquet_datasets",
-      "file_type": "rationale",
-      "norm_label": "pre-compile production parquet and lightweight clean json datasets for...",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L229"
-    },
-    {
-      "id": "bubble_detector_ui_dashboard_rationale_81",
-      "label": "Fetch and process full dataset pipeline for selected date horizon.",
-      "_origin": "ast",
-      "community": 47,
-      "community_name": ".load_data",
-      "file_type": "rationale",
-      "norm_label": "fetch and process full dataset pipeline for selected date horizon.",
-      "source_file": "bubble_detector/ui/dashboard.py",
-      "source_location": "L81"
-    },
-    {
-      "id": "tests_test_wasm_pyodide_sandbox_rationale_45",
-      "label": "Verify that 21-column JSON datasets are created within strict payload size\u2026",
-      "_origin": "ast",
-      "community": 48,
-      "community_name": "test_json_datasets_staging",
-      "file_type": "rationale",
-      "norm_label": "verify that 21-column json datasets are created within strict payload size...",
-      "source_file": "tests/test_wasm_pyodide_sandbox.py",
-      "source_location": "L45"
-    },
-    {
       "id": "bubble_detector_ui_panel_dashboard",
       "label": "panel_dashboard.py",
       "_origin": "ast",
-      "community": 5,
+      "community": 46,
       "community_name": "panel_dashboard.py",
       "file_type": "code",
       "norm_label": "panel_dashboard.py",
@@ -7407,21 +7354,10 @@
       "source_location": "L1"
     },
     {
-      "id": "bubble_detector_ui_panel_dashboard_py_figure",
-      "label": "Figure",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "panel_dashboard.py",
-      "file_type": "code",
-      "norm_label": "figure",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
       "id": "bubble_detector_ui_panel_dashboard_py_ndarray",
       "label": "ndarray",
       "_origin": "ast",
-      "community": 5,
+      "community": 46,
       "community_name": "panel_dashboard.py",
       "file_type": "code",
       "norm_label": "ndarray",
@@ -7429,21 +7365,10 @@
       "source_location": ""
     },
     {
-      "id": "tests_test_wasm_pyodide_sandbox",
-      "label": "test_wasm_pyodide_sandbox.py",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "panel_dashboard.py",
-      "file_type": "code",
-      "norm_label": "test_wasm_pyodide_sandbox.py",
-      "source_file": "tests/test_wasm_pyodide_sandbox.py",
-      "source_location": "L1"
-    },
-    {
       "id": "bubble_detector_ui_panel_dashboard_rationale_1",
       "label": "Panel (HoloViz) Enterprise WebAssembly Dashboard for Market Bubble Detection.\u2026",
       "_origin": "ast",
-      "community": 5,
+      "community": 46,
       "community_name": "panel_dashboard.py",
       "file_type": "rationale",
       "norm_label": "panel (holoviz) enterprise webassembly dashboard for market bubble detection....",
@@ -7451,32 +7376,21 @@
       "source_location": "L1"
     },
     {
-      "id": "bubble_detector_ui_panel_dashboard_rationale_453",
-      "label": "Return standard legend configuration for Panel WASM (desktop right-flushed vs\u2026",
+      "id": "bubble_detector_ui_panel_dashboard_rationale_229",
+      "label": "Pre-compile production Parquet and lightweight clean JSON datasets for\u2026",
       "_origin": "ast",
-      "community": 5,
+      "community": 46,
       "community_name": "panel_dashboard.py",
       "file_type": "rationale",
-      "norm_label": "return standard legend configuration for panel wasm (desktop right-flushed vs...",
+      "norm_label": "pre-compile production parquet and lightweight clean json datasets for...",
       "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L453"
-    },
-    {
-      "id": "bubble_detector_ui_panel_dashboard_rationale_479",
-      "label": "Return responsive figure margins.",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "panel_dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "return responsive figure margins.",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L479"
+      "source_location": "L229"
     },
     {
       "id": "bubble_detector_ui_panel_dashboard_rationale_487",
       "label": "Decimate time series via pure NumPy LTTB, or take compact 2-point proxy during\u2026",
       "_origin": "ast",
-      "community": 5,
+      "community": 46,
       "community_name": "panel_dashboard.py",
       "file_type": "rationale",
       "norm_label": "decimate time series via pure numpy lttb, or take compact 2-point proxy during...",
@@ -7484,54 +7398,10 @@
       "source_location": "L487"
     },
     {
-      "id": "bubble_detector_ui_panel_dashboard_rationale_496",
-      "label": "Build Plotly figure for Macro Valuation Dashboard (matching NiceGUI 100%).",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "panel_dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "build plotly figure for macro valuation dashboard (matching nicegui 100%).",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L496"
-    },
-    {
-      "id": "bubble_detector_ui_panel_dashboard_rationale_525",
-      "label": "Build Plotly figure for Systemic Leverage Dashboard (matching NiceGUI 100%).",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "panel_dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "build plotly figure for systemic leverage dashboard (matching nicegui 100%).",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L525"
-    },
-    {
-      "id": "bubble_detector_ui_panel_dashboard_rationale_548",
-      "label": "Build Plotly figure for Econometric Bubble Dashboard (matching NiceGUI 100%).",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "panel_dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "build plotly figure for econometric bubble dashboard (matching nicegui 100%).",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L548"
-    },
-    {
-      "id": "bubble_detector_ui_panel_dashboard_rationale_576",
-      "label": "Build Plotly figure for Sentiment & Volatility Dashboard (matching NiceGUI\u2026",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "panel_dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "build plotly figure for sentiment & volatility dashboard (matching nicegui...",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L576"
-    },
-    {
       "id": "bubble_detector_ui_panel_dashboard_rationale_602",
       "label": "Build Plotly figure for Sector Health Dashboard (matching NiceGUI 100%).",
       "_origin": "ast",
-      "community": 5,
+      "community": 46,
       "community_name": "panel_dashboard.py",
       "file_type": "rationale",
       "norm_label": "build plotly figure for sector health dashboard (matching nicegui 100%).",
@@ -7542,7 +7412,7 @@
       "id": "bubble_detector_ui_panel_dashboard_rationale_628",
       "label": "Build Plotly figure for Macro Mahalanobis Distance Dashboard (matching NiceGUI\u2026",
       "_origin": "ast",
-      "community": 5,
+      "community": 46,
       "community_name": "panel_dashboard.py",
       "file_type": "rationale",
       "norm_label": "build plotly figure for macro mahalanobis distance dashboard (matching nicegui...",
@@ -7550,21 +7420,10 @@
       "source_location": "L628"
     },
     {
-      "id": "bubble_detector_ui_panel_dashboard_rationale_706",
-      "label": "Build Plotly figure for Tab 7: Tech Exuberance Score (matching NiceGUI 100%).",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "panel_dashboard.py",
-      "file_type": "rationale",
-      "norm_label": "build plotly figure for tab 7: tech exuberance score (matching nicegui 100%).",
-      "source_file": "bubble_detector/ui/panel_dashboard.py",
-      "source_location": "L706"
-    },
-    {
       "id": "bubble_detector_ui_panel_dashboard_rationale_905",
       "label": "Callback updating all 7 Panel figures, KPI indicators, and explanatory card.",
       "_origin": "ast",
-      "community": 5,
+      "community": 46,
       "community_name": "panel_dashboard.py",
       "file_type": "rationale",
       "norm_label": "callback updating all 7 panel figures, kpi indicators, and explanatory card.",
@@ -7572,26 +7431,136 @@
       "source_location": "L905"
     },
     {
-      "id": "tests_test_wasm_pyodide_sandbox_rationale_1",
-      "label": "Unit tests for WebAssembly Pyodide Sandbox Isolation, End-to-End Execution, and\u2026",
+      "id": "tests_test_mahalanobis_rationale_169",
+      "label": "Verify that TDA Geometric Complexity on BOTH Tab 5 and Tab 6 spans the 0 to 7\u2026",
       "_origin": "ast",
-      "community": 5,
+      "community": 46,
       "community_name": "panel_dashboard.py",
       "file_type": "rationale",
-      "norm_label": "unit tests for webassembly pyodide sandbox isolation, end-to-end execution, and...",
-      "source_file": "tests/test_wasm_pyodide_sandbox.py",
-      "source_location": "L1"
+      "norm_label": "verify that tda geometric complexity on both tab 5 and tab 6 spans the 0 to 7...",
+      "source_file": "tests/test_mahalanobis.py",
+      "source_location": "L169"
+    },
+    {
+      "id": "bubble_detector_ui_panel_dashboard_py_figure",
+      "label": "Figure",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "test_all_tabs_legends_right_flushed",
+      "file_type": "code",
+      "norm_label": "figure",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "bubble_detector_ui_panel_dashboard_rationale_453",
+      "label": "Return standard legend configuration for Panel WASM (desktop right-flushed vs\u2026",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "test_all_tabs_legends_right_flushed",
+      "file_type": "rationale",
+      "norm_label": "return standard legend configuration for panel wasm (desktop right-flushed vs...",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L453"
+    },
+    {
+      "id": "bubble_detector_ui_panel_dashboard_rationale_479",
+      "label": "Return responsive figure margins.",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "test_all_tabs_legends_right_flushed",
+      "file_type": "rationale",
+      "norm_label": "return responsive figure margins.",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L479"
+    },
+    {
+      "id": "bubble_detector_ui_panel_dashboard_rationale_496",
+      "label": "Build Plotly figure for Macro Valuation Dashboard (matching NiceGUI 100%).",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "test_all_tabs_legends_right_flushed",
+      "file_type": "rationale",
+      "norm_label": "build plotly figure for macro valuation dashboard (matching nicegui 100%).",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L496"
+    },
+    {
+      "id": "bubble_detector_ui_panel_dashboard_rationale_525",
+      "label": "Build Plotly figure for Systemic Leverage Dashboard (matching NiceGUI 100%).",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "test_all_tabs_legends_right_flushed",
+      "file_type": "rationale",
+      "norm_label": "build plotly figure for systemic leverage dashboard (matching nicegui 100%).",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L525"
+    },
+    {
+      "id": "bubble_detector_ui_panel_dashboard_rationale_548",
+      "label": "Build Plotly figure for Econometric Bubble Dashboard (matching NiceGUI 100%).",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "test_all_tabs_legends_right_flushed",
+      "file_type": "rationale",
+      "norm_label": "build plotly figure for econometric bubble dashboard (matching nicegui 100%).",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L548"
+    },
+    {
+      "id": "bubble_detector_ui_panel_dashboard_rationale_576",
+      "label": "Build Plotly figure for Sentiment & Volatility Dashboard (matching NiceGUI\u2026",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "test_all_tabs_legends_right_flushed",
+      "file_type": "rationale",
+      "norm_label": "build plotly figure for sentiment & volatility dashboard (matching nicegui...",
+      "source_file": "bubble_detector/ui/panel_dashboard.py",
+      "source_location": "L576"
+    },
+    {
+      "id": "tests_test_mahalanobis_rationale_205",
+      "label": "Verify that ALL tabs 1 to 7 in both NiceGUI and WASM use right-flushed vertical\u2026",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "test_all_tabs_legends_right_flushed",
+      "file_type": "rationale",
+      "norm_label": "verify that all tabs 1 to 7 in both nicegui and wasm use right-flushed vertical...",
+      "source_file": "tests/test_mahalanobis.py",
+      "source_location": "L205"
+    },
+    {
+      "id": "tests_test_ui_ux_wasm_optimizations_rationale_205",
+      "label": "Verify desktop vs mobile legend orientations and margin allocations.",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "test_all_tabs_legends_right_flushed",
+      "file_type": "rationale",
+      "norm_label": "verify desktop vs mobile legend orientations and margin allocations.",
+      "source_file": "tests/test_ui_ux_wasm_optimizations.py",
+      "source_location": "L205"
     },
     {
       "id": "tests_test_wasm_pyodide_sandbox_rationale_245",
-      "label": "Verify all 6 Plotly figures construct successfully with non-empty traces.",
+      "label": "Verify all 7 Plotly figures construct successfully with non-empty traces.",
       "_origin": "ast",
       "community": 5,
-      "community_name": "panel_dashboard.py",
+      "community_name": "test_all_tabs_legends_right_flushed",
       "file_type": "rationale",
-      "norm_label": "verify all 6 plotly figures construct successfully with non-empty traces.",
+      "norm_label": "verify all 7 plotly figures construct successfully with non-empty traces.",
       "source_file": "tests/test_wasm_pyodide_sandbox.py",
       "source_location": "L245"
+    },
+    {
+      "id": "bubble_detector_models_structural_breaks",
+      "label": "structural_breaks.py",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "StructuralBreakPredictor",
+      "file_type": "code",
+      "norm_label": "structural_breaks.py",
+      "source_file": "bubble_detector/models/structural_breaks.py",
+      "source_location": "L1"
     },
     {
       "id": "bubble_detector_models_structural_breaks_py_any",
@@ -7647,6 +7616,17 @@
       "norm_label": "raised when machine learning or statistical regime estimation fails. triggered...",
       "source_file": "bubble_detector/config.py",
       "source_location": "L83"
+    },
+    {
+      "id": "bubble_detector_models_structural_breaks_rationale_1",
+      "label": "Structural Break Machine Learning Classifier & Probability Calibration Module.\u2026",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "StructuralBreakPredictor",
+      "file_type": "rationale",
+      "norm_label": "structural break machine learning classifier & probability calibration module....",
+      "source_file": "bubble_detector/models/structural_breaks.py",
+      "source_location": "L1"
     },
     {
       "id": "bubble_detector_models_structural_breaks_rationale_126",
@@ -8030,18 +8010,29 @@
       "label": "econometric.py",
       "_origin": "ast",
       "community": 9,
-      "community_name": "test_bsadf_rigor.py",
+      "community_name": "compute_gsadf_gpt_decomposition",
       "file_type": "code",
       "norm_label": "econometric.py",
       "source_file": "bubble_detector/features/econometric.py",
       "source_location": "L1"
     },
     {
+      "id": "bubble_detector_features_econometric_py_dataframe",
+      "label": "DataFrame",
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "compute_gsadf_gpt_decomposition",
+      "file_type": "code",
+      "norm_label": "dataframe",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "bubble_detector_features_econometric_py_ndarray",
       "label": "ndarray",
       "_origin": "ast",
       "community": 9,
-      "community_name": "test_bsadf_rigor.py",
+      "community_name": "compute_gsadf_gpt_decomposition",
       "file_type": "code",
       "norm_label": "ndarray",
       "source_file": "",
@@ -8052,10 +8043,21 @@
       "label": "test_bsadf_rigor.py",
       "_origin": "ast",
       "community": 9,
-      "community_name": "test_bsadf_rigor.py",
+      "community_name": "compute_gsadf_gpt_decomposition",
       "file_type": "code",
       "norm_label": "test_bsadf_rigor.py",
       "source_file": "tests/test_bsadf_rigor.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_test_psy_ripser_integrity",
+      "label": "test_psy_ripser_integrity.py",
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "compute_gsadf_gpt_decomposition",
+      "file_type": "code",
+      "norm_label": "test_psy_ripser_integrity.py",
+      "source_file": "tests/test_psy_ripser_integrity.py",
       "source_location": "L1"
     },
     {
@@ -8063,29 +8065,40 @@
       "label": "Econometric Bubble Detection Module (Canonical PSY & GSADF).\u2026",
       "_origin": "ast",
       "community": 9,
-      "community_name": "test_bsadf_rigor.py",
+      "community_name": "compute_gsadf_gpt_decomposition",
       "file_type": "rationale",
       "norm_label": "econometric bubble detection module (canonical psy & gsadf)....",
       "source_file": "bubble_detector/features/econometric.py",
       "source_location": "L1"
     },
     {
-      "id": "bubble_detector_features_econometric_rationale_148",
+      "id": "bubble_detector_features_econometric_rationale_161",
       "label": "Compute wild bootstrap critical values (95% and 99%) under the null hypothesis\u2026",
       "_origin": "ast",
       "community": 9,
-      "community_name": "test_bsadf_rigor.py",
+      "community_name": "compute_gsadf_gpt_decomposition",
       "file_type": "rationale",
       "norm_label": "compute wild bootstrap critical values (95% and 99%) under the null hypothesis...",
       "source_file": "bubble_detector/features/econometric.py",
-      "source_location": "L148"
+      "source_location": "L161"
+    },
+    {
+      "id": "bubble_detector_features_econometric_rationale_191",
+      "label": "Computes canonical recursive expanding-window Backward Supremum ADF (BSADF)\u2026",
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "compute_gsadf_gpt_decomposition",
+      "file_type": "rationale",
+      "norm_label": "computes canonical recursive expanding-window backward supremum adf (bsadf)...",
+      "source_file": "bubble_detector/features/econometric.py",
+      "source_location": "L191"
     },
     {
       "id": "bubble_detector_features_econometric_rationale_65",
       "label": "Calculate Augmented Dickey-Fuller t-statistic for right-tailed explosive root\u2026",
       "_origin": "ast",
       "community": 9,
-      "community_name": "test_bsadf_rigor.py",
+      "community_name": "compute_gsadf_gpt_decomposition",
       "file_type": "rationale",
       "norm_label": "calculate augmented dickey-fuller t-statistic for right-tailed explosive root...",
       "source_file": "bubble_detector/features/econometric.py",
@@ -8096,29 +8109,29 @@
       "label": "Unit tests for Econometric Rigor: Canonical PSY (2015) Recursive BSADF & GPT\u2026",
       "_origin": "ast",
       "community": 9,
-      "community_name": "test_bsadf_rigor.py",
+      "community_name": "compute_gsadf_gpt_decomposition",
       "file_type": "rationale",
       "norm_label": "unit tests for econometric rigor: canonical psy (2015) recursive bsadf & gpt...",
       "source_file": "tests/test_bsadf_rigor.py",
       "source_location": "L1"
     },
     {
-      "id": "tests_test_bsadf_rigor_rationale_106",
+      "id": "tests_test_bsadf_rigor_rationale_123",
       "label": "Verifies Rademacher wild bootstrap critical values remain within empirical\u2026",
       "_origin": "ast",
       "community": 9,
-      "community_name": "test_bsadf_rigor.py",
+      "community_name": "compute_gsadf_gpt_decomposition",
       "file_type": "rationale",
       "norm_label": "verifies rademacher wild bootstrap critical values remain within empirical...",
       "source_file": "tests/test_bsadf_rigor.py",
-      "source_location": "L106"
+      "source_location": "L123"
     },
     {
       "id": "tests_test_bsadf_rigor_rationale_18",
       "label": "Asserts right-tailed ADF t-statistic is strongly positive for explosive series\u2026",
       "_origin": "ast",
       "community": 9,
-      "community_name": "test_bsadf_rigor.py",
+      "community_name": "compute_gsadf_gpt_decomposition",
       "file_type": "rationale",
       "norm_label": "asserts right-tailed adf t-statistic is strongly positive for explosive series...",
       "source_file": "tests/test_bsadf_rigor.py",
@@ -8129,22 +8142,55 @@
       "label": "Asserts calculate_adf_stat properly handles explicit lag orders (k=0, k=1) and\u2026",
       "_origin": "ast",
       "community": 9,
-      "community_name": "test_bsadf_rigor.py",
+      "community_name": "compute_gsadf_gpt_decomposition",
       "file_type": "rationale",
       "norm_label": "asserts calculate_adf_stat properly handles explicit lag orders (k=0, k=1) and...",
       "source_file": "tests/test_bsadf_rigor.py",
       "source_location": "L46"
     },
     {
-      "id": "tests_test_bsadf_rigor_rationale_64",
+      "id": "tests_test_bsadf_rigor_rationale_81",
       "label": "Asserts compute_gsadf_gpt_decomposition performs backward supremum across the\u2026",
       "_origin": "ast",
       "community": 9,
-      "community_name": "test_bsadf_rigor.py",
+      "community_name": "compute_gsadf_gpt_decomposition",
       "file_type": "rationale",
       "norm_label": "asserts compute_gsadf_gpt_decomposition performs backward supremum across the...",
       "source_file": "tests/test_bsadf_rigor.py",
-      "source_location": "L64"
+      "source_location": "L81"
+    },
+    {
+      "id": "tests_test_psy_ripser_integrity_rationale_1",
+      "label": "Unit tests for Canonical PSY/GSADF Recursive Sub-windows and Vietoris-Rips\u2026",
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "compute_gsadf_gpt_decomposition",
+      "file_type": "rationale",
+      "norm_label": "unit tests for canonical psy/gsadf recursive sub-windows and vietoris-rips...",
+      "source_file": "tests/test_psy_ripser_integrity.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_test_psy_ripser_integrity_rationale_16",
+      "label": "Asserts recursive GSADF on monthly P/D crosses 99% bootstrap critical value\u2026",
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "compute_gsadf_gpt_decomposition",
+      "file_type": "rationale",
+      "norm_label": "asserts recursive gsadf on monthly p/d crosses 99% bootstrap critical value...",
+      "source_file": "tests/test_psy_ripser_integrity.py",
+      "source_location": "L16"
+    },
+    {
+      "id": "tests_test_psy_ripser_integrity_rationale_44",
+      "label": "Asserts persistent homology computed via ripser/topology engine uses strictly\u2026",
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "compute_gsadf_gpt_decomposition",
+      "file_type": "rationale",
+      "norm_label": "asserts persistent homology computed via ripser/topology engine uses strictly...",
+      "source_file": "tests/test_psy_ripser_integrity.py",
+      "source_location": "L44"
     },
     {
       "id": "_agents_rules_graphify_query_rule",
@@ -9105,7 +9151,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bubble_detector/features/econometric.py",
-      "source_location": "L223",
+      "source_location": "L236",
       "weight": 1.0
     },
     {
@@ -9117,7 +9163,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bubble_detector/features/econometric.py",
-      "source_location": "L162",
+      "source_location": "L175",
       "weight": 1.0
     },
     {
@@ -9129,7 +9175,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bubble_detector/features/lppls_model.py",
-      "source_location": "L239",
+      "source_location": "L279",
       "weight": 1.0
     },
     {
@@ -10761,7 +10807,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_bsadf_rigor.py",
-      "source_location": "L82",
+      "source_location": "L99",
       "weight": 1.0
     },
     {
@@ -10773,7 +10819,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_bsadf_rigor.py",
-      "source_location": "L107",
+      "source_location": "L124",
       "weight": 1.0
     },
     {
@@ -10977,7 +11023,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_full_indicator_parity.py",
-      "source_location": "L46",
+      "source_location": "L60",
       "weight": 1.0
     },
     {
@@ -10989,7 +11035,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_full_indicator_parity.py",
-      "source_location": "L82",
+      "source_location": "L96",
       "weight": 1.0
     },
     {
@@ -11077,6 +11123,18 @@
       "weight": 1.0
     },
     {
+      "source": "tests_test_lppls_rigor_test_lppls_historical_bubble_detection",
+      "target": "bubble_detector_features_lppls_model_compute_lppls_confidence_indicator",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_lppls_rigor.py",
+      "source_location": "L105",
+      "weight": 1.0
+    },
+    {
       "source": "tests_test_lppls_rigor_test_lppls_parameter_recovery_synthetic",
       "target": "bubble_detector_features_lppls_model_calibrate_lppls_filimonov",
       "relation": "calls",
@@ -11109,7 +11167,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_mahalanobis.py",
-      "source_location": "L224",
+      "source_location": "L226",
       "weight": 1.0
     },
     {
@@ -11121,7 +11179,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_mahalanobis.py",
-      "source_location": "L228",
+      "source_location": "L230",
       "weight": 1.0
     },
     {
@@ -11133,7 +11191,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_mahalanobis.py",
-      "source_location": "L229",
+      "source_location": "L231",
       "weight": 1.0
     },
     {
@@ -11145,7 +11203,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_mahalanobis.py",
-      "source_location": "L230",
+      "source_location": "L232",
       "weight": 1.0
     },
     {
@@ -11157,7 +11215,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_mahalanobis.py",
-      "source_location": "L231",
+      "source_location": "L233",
       "weight": 1.0
     },
     {
@@ -11169,7 +11227,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_mahalanobis.py",
-      "source_location": "L232",
+      "source_location": "L234",
       "weight": 1.0
     },
     {
@@ -11181,36 +11239,12 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_mahalanobis.py",
-      "source_location": "L233",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_mahalanobis_test_all_tabs_legends_right_flushed",
-      "target": "bubble_detector_ui_panel_dashboard_build_macro_valuation_fig",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "tests/test_mahalanobis.py",
-      "source_location": "L234",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_mahalanobis_test_all_tabs_legends_right_flushed",
-      "target": "bubble_detector_ui_panel_dashboard_build_leverage_fig",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "tests/test_mahalanobis.py",
       "source_location": "L235",
       "weight": 1.0
     },
     {
       "source": "tests_test_mahalanobis_test_all_tabs_legends_right_flushed",
-      "target": "bubble_detector_ui_panel_dashboard_build_econometric_fig",
+      "target": "bubble_detector_ui_dashboard_build_tech_exuberance_chart",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -11222,7 +11256,7 @@
     },
     {
       "source": "tests_test_mahalanobis_test_all_tabs_legends_right_flushed",
-      "target": "bubble_detector_ui_panel_dashboard_build_sentiment_vol_fig",
+      "target": "bubble_detector_ui_panel_dashboard_build_macro_valuation_fig",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -11234,7 +11268,7 @@
     },
     {
       "source": "tests_test_mahalanobis_test_all_tabs_legends_right_flushed",
-      "target": "bubble_detector_ui_panel_dashboard_build_sector_health_fig",
+      "target": "bubble_detector_ui_panel_dashboard_build_leverage_fig",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -11246,7 +11280,7 @@
     },
     {
       "source": "tests_test_mahalanobis_test_all_tabs_legends_right_flushed",
-      "target": "bubble_detector_ui_panel_dashboard_build_mahalanobis_fig",
+      "target": "bubble_detector_ui_panel_dashboard_build_econometric_fig",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -11254,6 +11288,54 @@
       "context": "call",
       "source_file": "tests/test_mahalanobis.py",
       "source_location": "L239",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_mahalanobis_test_all_tabs_legends_right_flushed",
+      "target": "bubble_detector_ui_panel_dashboard_build_sentiment_vol_fig",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_mahalanobis.py",
+      "source_location": "L240",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_mahalanobis_test_all_tabs_legends_right_flushed",
+      "target": "bubble_detector_ui_panel_dashboard_build_sector_health_fig",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_mahalanobis.py",
+      "source_location": "L241",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_mahalanobis_test_all_tabs_legends_right_flushed",
+      "target": "bubble_detector_ui_panel_dashboard_build_mahalanobis_fig",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_mahalanobis.py",
+      "source_location": "L242",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_mahalanobis_test_all_tabs_legends_right_flushed",
+      "target": "bubble_detector_ui_panel_dashboard_build_tech_exuberance_fig",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_mahalanobis.py",
+      "source_location": "L243",
       "weight": 1.0
     },
     {
@@ -11409,7 +11491,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_mahalanobis.py",
-      "source_location": "L252",
+      "source_location": "L256",
       "weight": 1.0
     },
     {
@@ -11853,7 +11935,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_tda_wavelet_rigor.py",
-      "source_location": "L57",
+      "source_location": "L78",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_tda_wavelet_rigor_test_persistence_entropy_herding_collapse",
+      "target": "bubble_detector_features_topology_compute_persistence_landscape_and_entropy",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "tests/test_tda_wavelet_rigor.py",
+      "source_location": "L56",
       "weight": 1.0
     },
     {
@@ -11877,7 +11971,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "tests/test_tda_wavelet_rigor.py",
-      "source_location": "L74",
+      "source_location": "L95",
       "weight": 1.0
     },
     {
@@ -12189,7 +12283,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "tests/test_full_indicator_parity.py",
-      "source_location": "L33",
+      "source_location": "L47",
       "weight": 1.0
     },
     {
@@ -12201,7 +12295,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "tests/test_full_indicator_parity.py",
-      "source_location": "L71",
+      "source_location": "L85",
       "weight": 1.0
     },
     {
@@ -14678,6 +14772,18 @@
     },
     {
       "source": "tests_test_mahalanobis",
+      "target": "bubble_detector_ui_dashboard_build_tech_exuberance_chart",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_mahalanobis.py",
+      "source_location": "L206",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_mahalanobis",
       "target": "bubble_detector_ui_panel_dashboard_build_econometric_fig",
       "relation": "imports",
       "_origin": "ast",
@@ -14685,7 +14791,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "tests/test_mahalanobis.py",
-      "source_location": "L215",
+      "source_location": "L216",
       "weight": 1.0
     },
     {
@@ -14697,7 +14803,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "tests/test_mahalanobis.py",
-      "source_location": "L215",
+      "source_location": "L216",
       "weight": 1.0
     },
     {
@@ -14709,7 +14815,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "tests/test_mahalanobis.py",
-      "source_location": "L215",
+      "source_location": "L216",
       "weight": 1.0
     },
     {
@@ -14721,7 +14827,19 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "tests/test_mahalanobis.py",
-      "source_location": "L215",
+      "source_location": "L216",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_mahalanobis",
+      "target": "bubble_detector_ui_panel_dashboard_build_tech_exuberance_fig",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/test_mahalanobis.py",
+      "source_location": "L216",
       "weight": 1.0
     },
     {
@@ -17025,7 +17143,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "bubble_detector/features/econometric.py",
-      "source_location": "L172",
+      "source_location": "L185",
       "weight": 1.0
     },
     {
@@ -17049,7 +17167,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "bubble_detector/features/lppls_model.py",
-      "source_location": "L192",
+      "source_location": "L230",
       "weight": 1.0
     },
     {
@@ -17787,7 +17905,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bubble_detector/features/econometric.py",
-      "source_location": "L143",
+      "source_location": "L156",
       "weight": 1.0
     },
     {
@@ -17798,7 +17916,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bubble_detector/features/econometric.py",
-      "source_location": "L172",
+      "source_location": "L185",
       "weight": 1.0
     },
     {
@@ -17831,7 +17949,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bubble_detector/features/lppls_model.py",
-      "source_location": "L192",
+      "source_location": "L230",
       "weight": 1.0
     },
     {
@@ -19239,7 +19357,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_bsadf_rigor.py",
-      "source_location": "L105",
+      "source_location": "L122",
       "weight": 1.0
     },
     {
@@ -19272,7 +19390,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_bsadf_rigor.py",
-      "source_location": "L63",
+      "source_location": "L80",
       "weight": 1.0
     },
     {
@@ -19470,7 +19588,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_full_indicator_parity.py",
-      "source_location": "L34",
+      "source_location": "L48",
       "weight": 1.0
     },
     {
@@ -19481,7 +19599,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_full_indicator_parity.py",
-      "source_location": "L72",
+      "source_location": "L86",
       "weight": 1.0
     },
     {
@@ -19617,6 +19735,17 @@
       "weight": 1.0
     },
     {
+      "source": "tests_test_lppls_rigor",
+      "target": "tests_test_lppls_rigor_test_lppls_historical_bubble_detection",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_lppls_rigor.py",
+      "source_location": "L85",
+      "weight": 1.0
+    },
+    {
       "source": "tests_test_mahalanobis",
       "target": "tests_test_mahalanobis_test_tab6_figure_traces_and_right_flushed_legend",
       "relation": "contains",
@@ -19679,7 +19808,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_mahalanobis.py",
-      "source_location": "L248",
+      "source_location": "L252",
       "weight": 1.0
     },
     {
@@ -20036,7 +20165,7 @@
     },
     {
       "source": "tests_test_tda_wavelet_rigor",
-      "target": "tests_test_tda_wavelet_rigor_test_morlet_wavelet_scaleogram_and_spectral_entropy",
+      "target": "tests_test_tda_wavelet_rigor_test_persistence_entropy_herding_collapse",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -20047,13 +20176,24 @@
     },
     {
       "source": "tests_test_tda_wavelet_rigor",
+      "target": "tests_test_tda_wavelet_rigor_test_morlet_wavelet_scaleogram_and_spectral_entropy",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_tda_wavelet_rigor.py",
+      "source_location": "L69",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_tda_wavelet_rigor",
       "target": "tests_test_tda_wavelet_rigor_test_tda_wavelet_complexity_full_pipeline",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_tda_wavelet_rigor.py",
-      "source_location": "L64",
+      "source_location": "L85",
       "weight": 1.0
     },
     {
@@ -20278,7 +20418,7 @@
     },
     {
       "source": "tests_test_wasm_pyodide_sandbox",
-      "target": "tests_test_wasm_pyodide_sandbox_test_all_6_plotly_figures_have_traces",
+      "target": "tests_test_wasm_pyodide_sandbox_test_all_7_plotly_figures_have_traces",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -21564,25 +21704,25 @@
       "weight": 1.0
     },
     {
-      "source": "bubble_detector_features_econometric_rationale_148",
+      "source": "bubble_detector_features_econometric_rationale_161",
       "target": "bubble_detector_features_econometric_compute_wild_bootstrap_critical_values",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bubble_detector/features/econometric.py",
-      "source_location": "L148",
+      "source_location": "L161",
       "weight": 1.0
     },
     {
-      "source": "bubble_detector_features_econometric_rationale_178",
+      "source": "bubble_detector_features_econometric_rationale_191",
       "target": "bubble_detector_features_econometric_compute_gsadf_gpt_decomposition",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bubble_detector/features/econometric.py",
-      "source_location": "L178",
+      "source_location": "L191",
       "weight": 1.0
     },
     {
@@ -21641,14 +21781,14 @@
       "weight": 1.0
     },
     {
-      "source": "bubble_detector_features_lppls_model_rationale_198",
+      "source": "bubble_detector_features_lppls_model_rationale_236",
       "target": "bubble_detector_features_lppls_model_compute_lppls_confidence_indicator",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bubble_detector/features/lppls_model.py",
-      "source_location": "L198",
+      "source_location": "L236",
       "weight": 1.0
     },
     {
@@ -22719,14 +22859,14 @@
       "weight": 1.0
     },
     {
-      "source": "tests_test_bsadf_rigor_rationale_106",
+      "source": "tests_test_bsadf_rigor_rationale_123",
       "target": "tests_test_bsadf_rigor_test_wild_bootstrap_critical_value_bounds",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_bsadf_rigor.py",
-      "source_location": "L106",
+      "source_location": "L123",
       "weight": 1.0
     },
     {
@@ -22752,14 +22892,14 @@
       "weight": 1.0
     },
     {
-      "source": "tests_test_bsadf_rigor_rationale_64",
+      "source": "tests_test_bsadf_rigor_rationale_81",
       "target": "tests_test_bsadf_rigor_test_recursive_backward_supremum_grid",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_bsadf_rigor.py",
-      "source_location": "L64",
+      "source_location": "L81",
       "weight": 1.0
     },
     {
@@ -22906,25 +23046,25 @@
       "weight": 1.0
     },
     {
-      "source": "tests_test_full_indicator_parity_rationale_35",
+      "source": "tests_test_full_indicator_parity_rationale_49",
       "target": "tests_test_full_indicator_parity_test_all_indicators_numerical_parity",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_full_indicator_parity.py",
-      "source_location": "L35",
+      "source_location": "L49",
       "weight": 1.0
     },
     {
-      "source": "tests_test_full_indicator_parity_rationale_73",
+      "source": "tests_test_full_indicator_parity_rationale_87",
       "target": "tests_test_full_indicator_parity_test_wasm_fallback_numerical_parity",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_full_indicator_parity.py",
-      "source_location": "L73",
+      "source_location": "L87",
       "weight": 1.0
     },
     {
@@ -23071,6 +23211,17 @@
       "weight": 1.0
     },
     {
+      "source": "tests_test_lppls_rigor_rationale_86",
+      "target": "tests_test_lppls_rigor_test_lppls_historical_bubble_detection",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_lppls_rigor.py",
+      "source_location": "L86",
+      "weight": 1.0
+    },
+    {
       "source": "tests_test_mahalanobis_rationale_1",
       "target": "tests_test_mahalanobis",
       "relation": "rationale_for",
@@ -23137,14 +23288,14 @@
       "weight": 1.0
     },
     {
-      "source": "tests_test_mahalanobis_rationale_249",
+      "source": "tests_test_mahalanobis_rationale_253",
       "target": "tests_test_mahalanobis_test_mahalanobis_no_early_rank_singularity",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_mahalanobis.py",
-      "source_location": "L249",
+      "source_location": "L253",
       "weight": 1.0
     },
     {
@@ -23490,7 +23641,7 @@
     },
     {
       "source": "tests_test_tda_wavelet_rigor_rationale_49",
-      "target": "tests_test_tda_wavelet_rigor_test_morlet_wavelet_scaleogram_and_spectral_entropy",
+      "target": "tests_test_tda_wavelet_rigor_test_persistence_entropy_herding_collapse",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -23500,14 +23651,25 @@
       "weight": 1.0
     },
     {
-      "source": "tests_test_tda_wavelet_rigor_rationale_65",
+      "source": "tests_test_tda_wavelet_rigor_rationale_70",
+      "target": "tests_test_tda_wavelet_rigor_test_morlet_wavelet_scaleogram_and_spectral_entropy",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_tda_wavelet_rigor.py",
+      "source_location": "L70",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_test_tda_wavelet_rigor_rationale_86",
       "target": "tests_test_tda_wavelet_rigor_test_tda_wavelet_complexity_full_pipeline",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "tests/test_tda_wavelet_rigor.py",
-      "source_location": "L65",
+      "source_location": "L86",
       "weight": 1.0
     },
     {
@@ -23732,7 +23894,7 @@
     },
     {
       "source": "tests_test_wasm_pyodide_sandbox_rationale_245",
-      "target": "tests_test_wasm_pyodide_sandbox_test_all_6_plotly_figures_have_traces",
+      "target": "tests_test_wasm_pyodide_sandbox_test_all_7_plotly_figures_have_traces",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -23918,7 +24080,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "tests/test_full_indicator_parity.py",
-      "source_location": "L81",
+      "source_location": "L95",
       "weight": 1.0
     },
     {
@@ -23934,7 +24096,7 @@
       "weight": 1.0
     },
     {
-      "source": "tests_test_wasm_pyodide_sandbox_test_all_6_plotly_figures_have_traces",
+      "source": "tests_test_wasm_pyodide_sandbox_test_all_7_plotly_figures_have_traces",
       "target": "bubble_detector_ui_panel_dashboard_build_macro_valuation_fig",
       "relation": "indirect_call",
       "_origin": "ast",
@@ -23946,7 +24108,7 @@
       "weight": 1.0
     },
     {
-      "source": "tests_test_wasm_pyodide_sandbox_test_all_6_plotly_figures_have_traces",
+      "source": "tests_test_wasm_pyodide_sandbox_test_all_7_plotly_figures_have_traces",
       "target": "bubble_detector_ui_panel_dashboard_build_leverage_fig",
       "relation": "indirect_call",
       "_origin": "ast",
@@ -23958,7 +24120,7 @@
       "weight": 1.0
     },
     {
-      "source": "tests_test_wasm_pyodide_sandbox_test_all_6_plotly_figures_have_traces",
+      "source": "tests_test_wasm_pyodide_sandbox_test_all_7_plotly_figures_have_traces",
       "target": "bubble_detector_ui_panel_dashboard_build_econometric_fig",
       "relation": "indirect_call",
       "_origin": "ast",
@@ -23970,7 +24132,7 @@
       "weight": 1.0
     },
     {
-      "source": "tests_test_wasm_pyodide_sandbox_test_all_6_plotly_figures_have_traces",
+      "source": "tests_test_wasm_pyodide_sandbox_test_all_7_plotly_figures_have_traces",
       "target": "bubble_detector_ui_panel_dashboard_build_sentiment_vol_fig",
       "relation": "indirect_call",
       "_origin": "ast",
@@ -23982,7 +24144,7 @@
       "weight": 1.0
     },
     {
-      "source": "tests_test_wasm_pyodide_sandbox_test_all_6_plotly_figures_have_traces",
+      "source": "tests_test_wasm_pyodide_sandbox_test_all_7_plotly_figures_have_traces",
       "target": "bubble_detector_ui_panel_dashboard_build_sector_health_fig",
       "relation": "indirect_call",
       "_origin": "ast",
@@ -23994,7 +24156,7 @@
       "weight": 1.0
     },
     {
-      "source": "tests_test_wasm_pyodide_sandbox_test_all_6_plotly_figures_have_traces",
+      "source": "tests_test_wasm_pyodide_sandbox_test_all_7_plotly_figures_have_traces",
       "target": "bubble_detector_ui_panel_dashboard_build_mahalanobis_fig",
       "relation": "indirect_call",
       "_origin": "ast",
@@ -24006,7 +24168,7 @@
       "weight": 1.0
     },
     {
-      "source": "tests_test_wasm_pyodide_sandbox_test_all_6_plotly_figures_have_traces",
+      "source": "tests_test_wasm_pyodide_sandbox_test_all_7_plotly_figures_have_traces",
       "target": "bubble_detector_ui_panel_dashboard_build_tech_exuberance_fig",
       "relation": "indirect_call",
       "_origin": "ast",
@@ -24102,7 +24264,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.95,
       "source_file": "tests/test_full_indicator_parity.py",
-      "source_location": "L40",
+      "source_location": "L54",
       "weight": 0.8
     },
     {
@@ -24845,5 +25007,5 @@
       "source_file": "finra.png"
     }
   ],
-  "built_at_commit": "dff2e7acd6236f1a870b4480ccfebfebe4d81dde"
+  "built_at_commit": "73052c211009e19410847778c8957b6a216c01f1"
 }

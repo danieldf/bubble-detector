@@ -27,13 +27,27 @@ INDICATORS_TO_CHECK = [
     "TDA_Persistence_L2_Norm",
     "Mahalanobis_Distance",
     "Bubble_Regime_Probability",
-    "Dynamic_Equity_Exposure"
+    "Dynamic_Equity_Exposure",
+    "M2_YoY_Growth",
+    "CentralBank_YoY_Growth",
+    "Global_Liquidity_Index",
+    "Liquidity_Momentum",
+    "BSADF_Stat",
+    "BSADF_90th_Percentile",
+    "LPPLS_Confidence",
+    "LPPLS_90th_Percentile",
+    "TDA_Persistence_Entropy",
+    "Wavelet_Spectral_Entropy",
+    "XLK_SPY_Ratio",
+    "Condition_Macro",
+    "Condition_Statistical",
+    "Tech_Exuberance_Signal",
 ]
 
 @pytest.mark.parametrize("horizon_id", ["option_1", "option_2"])
 def test_all_indicators_numerical_parity(horizon_id):
     """
-    Assert that every single indicator across all 5 tabs in the WebAssembly app
+    Assert that every single indicator across all 7 tabs in the WebAssembly app
     is 100% numerically identical to the NiceGUI app with zero data drift.
     """
     # 1. Load dataset via NiceGUI pipeline

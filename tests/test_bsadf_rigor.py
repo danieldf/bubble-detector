@@ -45,7 +45,7 @@ def test_adf_stat_explosive_vs_stationary():
 def test_adf_lag_selection_k0_vs_k1():
     """
     Asserts calculate_adf_stat properly handles explicit lag orders (k=0, k=1)
-    and automatic AIC selection without crashing or producing NaNs.
+    and automatic AIC selection correctly selects k=1 when serial correlation is present.
     """
     np.random.seed(123)
     p = np.exp(np.cumsum(np.random.randn(50) * 0.02) + 4.0)
@@ -58,6 +58,23 @@ def test_adf_lag_selection_k0_vs_k1():
     assert not np.isnan(stat_k0)
     assert not np.isnan(stat_k1)
     assert np.isfinite(stat_auto)
+
+    # Autocorrelated differences: dy_t = 0.45 * dy_{t-1} + eps_t
+    np.random.seed(42)
+    n = 45
+    eps = np.random.randn(n) * 0.01
+    dy = np.zeros(n)
+    for t in range(1, n):
+        dy[t] = 0.45 * dy[t-1] + eps[t]
+    y_ar1 = np.cumsum(dy) + 4.0
+    p_ar1 = np.exp(y_ar1)
+
+    stat_ar_auto = calculate_adf_stat(p_ar1, lag_order=None)
+    stat_ar_k1 = calculate_adf_stat(p_ar1, lag_order=1)
+    # When significant serial correlation is present, AIC selects k=1
+    assert np.isclose(stat_ar_auto, stat_ar_k1), (
+        f"AIC should select k=1 for AR(1) differences, got {stat_ar_auto} vs k1={stat_ar_k1}"
+    )
 
 
 def test_recursive_backward_supremum_grid():

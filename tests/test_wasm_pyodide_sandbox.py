@@ -241,8 +241,8 @@ def test_wasm_full_script_pure_numpy_fallback_execution(monkeypatch, tmp_path):
     for pane in tabs.objects:
         assert len(pane.object.data) > 0
 
-def test_all_6_plotly_figures_have_traces():
-    """Verify all 6 Plotly figures construct successfully with non-empty traces."""
+def test_all_7_plotly_figures_have_traces():
+    """Verify all 7 Plotly figures construct successfully with non-empty traces."""
     builders = [
         ("Macro Valuation", build_macro_valuation_fig),
         ("Leverage", build_leverage_fig),

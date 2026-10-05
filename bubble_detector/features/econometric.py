@@ -131,8 +131,21 @@ def calculate_adf_stat(series: np.ndarray, lag_order: Optional[int] = None) -> f
         if lag_order == 1:
             return t_stat_1
 
-        # AIC comparison: AIC = N * ln(SSE / N) + 2 * p
-        aic_0 = n_k0 * np.log(max(sse_0 / n_k0, 1e-12)) + 4.0
+        # AIC comparison on the COMMON truncated sample (n_k1 = n - 2):
+        # To eliminate sample-size bias where N * ln(SSE/N) artificially favors k=0,
+        # evaluate both k=0 and k=1 models on the identical effective sample dy_target:
+        y_bar1 = np.mean(y_lag1)
+        dy_bar1 = np.mean(dy_target)
+        ss_yy1 = np.sum((y_lag1 - y_bar1) ** 2)
+        if ss_yy1 > 1e-9:
+            gamma_0_com = float(np.sum((y_lag1 - y_bar1) * (dy_target - dy_bar1)) / ss_yy1)
+            mu_0_com = float(dy_bar1 - gamma_0_com * y_bar1)
+            res_0_com = dy_target - (mu_0_com + gamma_0_com * y_lag1)
+            sse_0_com = float(np.sum(res_0_com ** 2))
+        else:
+            sse_0_com = sse_0
+
+        aic_0 = n_k1 * np.log(max(sse_0_com / n_k1, 1e-12)) + 4.0
         aic_1 = n_k1 * np.log(max(sse_1 / n_k1, 1e-12)) + 6.0
 
         return t_stat_1 if aic_1 < aic_0 else t_stat_0

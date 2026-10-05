@@ -89,13 +89,17 @@ def calibrate_lppls_filimonov(
         Fitted parameters (tc, m, omega, A, B, C1, C2, C, R2, damping, is_valid).
     """
     n = len(log_prices)
-    if n < 30:
+    # Require at least 30 observations and positive net growth over lookback window
+    # (upward-accelerating bubble B < 0 strictly requires P_t > P_{t-w})
+    if n < 30 or log_prices[-1] <= log_prices[0]:
         return {"is_valid": False, "R2": 0.0, "damping": 0.0}
 
     t = np.arange(n, dtype=np.float64)
     y = np.asarray(log_prices, dtype=np.float64)
     y_mean = np.mean(y)
     ss_tot = float(np.sum((y - y_mean) ** 2))
+    if ss_tot < 1e-12:
+        return {"is_valid": False, "R2": 0.0, "damping": 0.0}
 
     bounds = [
         (n + tc_offset_bounds[0], n + tc_offset_bounds[1]),
@@ -110,29 +114,55 @@ def calibrate_lppls_filimonov(
     best_res = None
     best_sse = 1e12
 
-    for x0 in starts:
-        def objective(params: np.ndarray) -> float:
-            tc, m, omega = params
-            dt = tc - t
-            if np.any(dt <= 0.1):
-                return 1e9
-            dt_m = dt ** m
-            w_ln = omega * np.log(dt)
-            X = np.column_stack([np.ones(n, dtype=np.float64), dt_m, dt_m * np.cos(w_ln), dt_m * np.sin(w_ln)])
-            try:
-                XtX = X.T @ X
-                XtY = X.T @ y
-                beta = np.linalg.solve(XtX, XtY)
-                res = y - X @ beta
-                return float(np.sum(res ** 2))
-            except Exception:
-                return 1e9
+    # Preallocate design matrix buffer to eliminate inner-loop memory allocations
+    X = np.empty((n, 4), dtype=np.float64)
+    X[:, 0] = 1.0
 
+    def objective(params: np.ndarray) -> float:
+        tc, m, omega = params
+        dt = tc - t
+        if np.any(dt <= 0.1):
+            return 1e9
+        dt_m = dt ** m
+        w_ln = omega * np.log(dt)
+        X[:, 1] = dt_m
+        X[:, 2] = dt_m * np.cos(w_ln)
+        X[:, 3] = dt_m * np.sin(w_ln)
         try:
-            opt_res = minimize(objective, x0, bounds=bounds, method="L-BFGS-B", options={"maxiter": 40, "ftol": 1e-4})
+            XtX = X.T @ X
+            XtY = X.T @ y
+            beta = np.linalg.solve(XtX, XtY)
+            res = y - X @ beta
+            return float(np.sum(res ** 2))
+        except Exception:
+            return 1e9
+
+    for x0 in starts:
+        try:
+            opt_res = minimize(objective, x0, bounds=bounds, method="L-BFGS-B", options={"maxiter": 35, "ftol": 1e-4})
             if opt_res.fun < best_sse:
                 best_sse = opt_res.fun
                 best_res = opt_res
+                # Quick check if candidate solution satisfies canonical constraints
+                tc_c, m_c, omega_c = opt_res.x
+                dt_c = tc_c - t
+                dt_mc = dt_c ** m_c
+                w_lnc = omega_c * np.log(dt_c)
+                X[:, 1] = dt_mc
+                X[:, 2] = dt_mc * np.cos(w_lnc)
+                X[:, 3] = dt_mc * np.sin(w_lnc)
+                beta_c = np.linalg.solve(X.T @ X, X.T @ y)
+                if (beta_c[1] < 0.0 and
+                    m_bounds[0] <= m_c <= m_bounds[1] and
+                    omega_bounds[0] <= omega_c <= omega_bounds[1]):
+                    C_cand = float(np.sqrt(beta_c[2] ** 2 + beta_c[3] ** 2))
+                    damp_cand = float((m_c * abs(beta_c[1])) / (omega_c * max(C_cand, 1e-9)))
+                    r2_cand = float(1.0 - (opt_res.fun / max(ss_tot, 1e-9)))
+                    rel_cand = float(C_cand / max(abs(beta_c[1]), 1e-9))
+                    n_osc_cand = float((omega_c / (2.0 * np.pi)) * np.log(tc_c / max(tc_c - (n - 1), 1e-5)))
+                    if damp_cand >= 0.80 and r2_cand >= 0.60 and rel_cand >= 0.025 and n_osc_cand >= 1.2:
+                        # Primary start found valid canonical LPPLS fit; early termination
+                        break
         except Exception:
             pass
 
@@ -144,7 +174,9 @@ def calibrate_lppls_filimonov(
     dt = tc - t
     dt_m = dt ** m
     w_ln = omega * np.log(dt)
-    X = np.column_stack([np.ones(n, dtype=np.float64), dt_m, dt_m * np.cos(w_ln), dt_m * np.sin(w_ln)])
+    X[:, 1] = dt_m
+    X[:, 2] = dt_m * np.cos(w_ln)
+    X[:, 3] = dt_m * np.sin(w_ln)
     try:
         XtX = X.T @ X
         XtY = X.T @ y
@@ -156,17 +188,23 @@ def calibrate_lppls_filimonov(
         r2 = float(1.0 - (sse / max(ss_tot, 1e-9)))
         damping = float((m * np.abs(B)) / (omega * max(C, 1e-9)))
 
-        # Sornette canonical filtering constraints
-        n_osc = float((omega / (2.0 * np.pi)) * np.log(tc / max(tc - (n - 1), 1e-5)))
-        rel_osc = float(C / max(abs(B), 1e-9))
-
+        # Canonical Sornette (1999, 2013) filtering constraints
+        # 1. Sub-linear acceleration exponent m in [0.1, 0.9]
         c1 = m_bounds[0] <= m <= m_bounds[1]
+        # 2. Angular log-periodic frequency omega in [4.8, 13.0]
         c2 = omega_bounds[0] <= omega <= omega_bounds[1]
-        c3 = B < -0.05
+        # 3. Super-exponential price growth toward singularity: B < 0
+        c3 = B < 0.0
+        # 4. Monotonicity damping condition: D = (m * |B|) / (omega * C) >= 0.80
         c4 = damping >= 0.80
+        # 5. Fit quality: R^2 >= 0.60
         c5 = r2 >= 0.60
-        c6 = n_osc >= 2.0
-        c7 = rel_osc >= 0.03
+        # 6. Minimum log-periodic oscillations (n_osc >= 1.2 across lookback window)
+        n_osc = float((omega / (2.0 * np.pi)) * np.log(tc / max(tc - (n - 1), 1e-5)))
+        c6 = n_osc >= 1.2
+        # 7. Relative oscillation amplitude (rel_osc = C / |B| >= 0.025 to rule out non-oscillating trends)
+        rel_osc = float(C / max(abs(B), 1e-9))
+        c7 = rel_osc >= 0.025
 
         is_valid = bool(c1 and c2 and c3 and c4 and c5 and c6 and c7)
 
@@ -235,10 +273,12 @@ def compute_lppls_confidence_indicator(
         for w in windows:
             if i >= w:
                 eval_count += 1
-                slice_log_p = log_p[i - w : i + 1]
-                fit = calibrate_lppls_filimonov(slice_log_p)
-                if fit.get("is_valid", False):
-                    valid_count += 1
+                # Upward bubble acceleration strictly requires net price gain over lookback window
+                if log_p[i] > log_p[i - w]:
+                    slice_log_p = log_p[i - w : i + 1]
+                    fit = calibrate_lppls_filimonov(slice_log_p)
+                    if fit.get("is_valid", False):
+                        valid_count += 1
 
         score = float(valid_count / eval_count) if eval_count > 0 else 0.0
         confidence[i] = score
@@ -250,9 +290,9 @@ def compute_lppls_confidence_indicator(
     if n > min_w:
         confidence[:min_w] = confidence[min_w]
 
-    # Causal 252-day rolling 90th percentile
+    # Strictly causal 252-day rolling 90th percentile
     ci_series = pd.Series(confidence)
-    ci_90th = ci_series.rolling(252, min_periods=min_w).quantile(0.90).bfill().to_numpy().astype(np.float32)
+    ci_90th = ci_series.rolling(252, min_periods=1).quantile(0.90).fillna(0.0).to_numpy().astype(np.float32)
 
     # Threshold and active signal
     active_flag = (confidence >= 0.50).astype(np.int32)

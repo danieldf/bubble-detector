@@ -72,8 +72,9 @@ def compute_tech_exuberance_metrics(df: pl.DataFrame) -> pl.DataFrame:
         ratio = np.ones(n, dtype=np.float64)
 
     s_ratio = pd.Series(ratio)
-    ratio_sma50 = s_ratio.rolling(50, min_periods=5).mean().bfill()
-    ratio_d20 = s_ratio - s_ratio.shift(20).bfill()
+    # Strictly causal rolling window statistics (min_periods=1) with zero lookahead bias
+    ratio_sma50 = s_ratio.rolling(50, min_periods=1).mean()
+    ratio_d20 = (s_ratio - s_ratio.shift(20)).fillna(0.0)
 
     tech_outperformance = (s_ratio > ratio_sma50) & (ratio_d20 > 0.0)
 
@@ -83,13 +84,12 @@ def compute_tech_exuberance_metrics(df: pl.DataFrame) -> pl.DataFrame:
     else:
         m2_yoy = pd.Series(np.zeros(n))
 
+    m2_sma60 = m2_yoy.rolling(60, min_periods=1).mean()
     if "Liquidity_Momentum" in df_pd.columns:
         liq_mom = df_pd["Liquidity_Momentum"]
     else:
-        m2_sma60 = m2_yoy.rolling(60, min_periods=5).mean().bfill()
         liq_mom = m2_yoy - m2_sma60
 
-    m2_sma60 = m2_yoy.rolling(60, min_periods=5).mean().bfill()
     m2_slowing = (m2_yoy < m2_sma60) | (liq_mom < 0.0) | (m2_yoy < 0.0)
 
     cond_macro = (m2_slowing & tech_outperformance).astype(np.int32).to_numpy()
@@ -105,7 +105,7 @@ def compute_tech_exuberance_metrics(df: pl.DataFrame) -> pl.DataFrame:
     if "BSADF_90th_Percentile" in df_pd.columns:
         bsadf_p90 = df_pd["BSADF_90th_Percentile"].to_numpy()
     else:
-        bsadf_p90 = pd.Series(bsadf_stat).rolling(252, min_periods=20).quantile(0.90).bfill().to_numpy()
+        bsadf_p90 = pd.Series(bsadf_stat).rolling(252, min_periods=1).quantile(0.90).fillna(0.0).to_numpy()
 
     if "LPPLS_Confidence" in df_pd.columns:
         lppls_ci = df_pd["LPPLS_Confidence"].to_numpy()
@@ -115,7 +115,7 @@ def compute_tech_exuberance_metrics(df: pl.DataFrame) -> pl.DataFrame:
     if "LPPLS_90th_Percentile" in df_pd.columns:
         lppls_p90 = df_pd["LPPLS_90th_Percentile"].to_numpy()
     else:
-        lppls_p90 = pd.Series(lppls_ci).rolling(252, min_periods=20).quantile(0.90).bfill().to_numpy()
+        lppls_p90 = pd.Series(lppls_ci).rolling(252, min_periods=1).quantile(0.90).fillna(0.0).to_numpy()
 
     bsadf_extreme = (bsadf_stat > 1.45) | ((bsadf_stat >= 1.0) & (bsadf_stat >= bsadf_p90))
     lppls_extreme = (lppls_ci >= 0.50) | ((lppls_ci >= 0.20) & (lppls_ci >= lppls_p90))

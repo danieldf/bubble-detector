@@ -202,7 +202,7 @@ def test_tda_normalization_tabs_5_and_6():
 
 
 def test_all_tabs_legends_right_flushed():
-    """Verify that ALL tabs 1 to 6 in both NiceGUI and WASM use right-flushed vertical legends."""
+    """Verify that ALL tabs 1 to 7 in both NiceGUI and WASM use right-flushed vertical legends."""
     from bubble_detector.ui.dashboard import (
         DashboardState,
         build_macro_valuation_chart,
@@ -211,6 +211,7 @@ def test_all_tabs_legends_right_flushed():
         build_sentiment_vol_chart,
         build_sector_health_chart,
         build_mahalanobis_chart,
+        build_tech_exuberance_chart,
     )
     from bubble_detector.ui.panel_dashboard import (
         build_macro_valuation_fig,
@@ -219,6 +220,7 @@ def test_all_tabs_legends_right_flushed():
         build_sentiment_vol_fig,
         build_sector_health_fig,
         build_mahalanobis_fig,
+        build_tech_exuberance_fig,
     )
 
     state = DashboardState(load_data=False)
@@ -231,12 +233,14 @@ def test_all_tabs_legends_right_flushed():
         ("NiceGUI Tab 4", build_sentiment_vol_chart(state)),
         ("NiceGUI Tab 5", build_sector_health_chart(state)),
         ("NiceGUI Tab 6", build_mahalanobis_chart(state)),
+        ("NiceGUI Tab 7", build_tech_exuberance_chart(state)),
         ("WASM Tab 1", build_macro_valuation_fig("option_1")),
         ("WASM Tab 2", build_leverage_fig("option_1")),
         ("WASM Tab 3", build_econometric_fig("option_1")),
         ("WASM Tab 4", build_sentiment_vol_fig("option_1")),
         ("WASM Tab 5", build_sector_health_fig("option_1")),
         ("WASM Tab 6", build_mahalanobis_fig("option_1")),
+        ("WASM Tab 7", build_tech_exuberance_fig("option_1")),
     ]
 
     for label, fig in all_figs:

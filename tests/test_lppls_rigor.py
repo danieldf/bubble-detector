@@ -80,3 +80,30 @@ def test_lppls_confidence_indicator_pipeline():
     assert not np.isnan(p90).any()
     assert (p90 >= 0.0).all()
     assert (p90 <= 1.0).all()
+
+
+def test_lppls_historical_bubble_detection():
+    """
+    Asserts LPPLS model elevates bubble confidence (CI >= 0.60) during the
+    climax of the 1999-2000 Dot-Com speculative bubble.
+    """
+    from bubble_detector.config import PROVENANCE_DIR
+    parquet_path = PROVENANCE_DIR / "market_data_50yr.parquet"
+    if not parquet_path.exists():
+        pytest.skip("market_data_50yr.parquet not available")
+
+    df = pl.read_parquet(parquet_path)
+    dates = [str(d)[:10] for d in df["Date"].to_list()]
+    
+    # Locate peak date near March 24, 2000
+    dotcom_indices = [i for i, d in enumerate(dates) if "2000-03" in d]
+    assert len(dotcom_indices) > 0, "Dot-Com 2000 dates not found in dataset"
+    peak_idx = dotcom_indices[-1]
+
+    # Evaluate slice around peak
+    slice_df = df.slice(max(0, peak_idx - 300), 320)
+    df_eval = compute_lppls_confidence_indicator(slice_df, target_col="XLK", windows=[60, 90, 125, 180, 250], step=2)
+    ci = df_eval["LPPLS_Confidence"].to_numpy()
+
+    # Peak confidence during Dot-Com top must reach at least 0.60 (60% multi-scale agreement)
+    assert np.max(ci) >= 0.60, f"Expected LPPLS confidence >= 0.60 during Dot-Com bubble top, got {np.max(ci)}"

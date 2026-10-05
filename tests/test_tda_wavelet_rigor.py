@@ -45,6 +45,27 @@ def test_bubenik_l2_norm_and_persistence_entropy():
     assert ent_empty == 0.0
 
 
+def test_persistence_entropy_herding_collapse():
+    """
+    Asserts persistence entropy E(D) drops sharply when market herding
+    collapses multi-dimensional phase space dispersion into a synchronized flow.
+    """
+    # Herding regime: One dominant topological component dominates persistence lifetimes
+    h0_herding = np.array([[0.0, 0.50], [0.0, 0.005], [0.0, 0.005]])
+    h1_herding = np.zeros((0, 2))
+    _, ent_herding = _compute_persistence_landscape_and_entropy(h0_herding, h1_herding)
+
+    # Dispersed stochastic regime: Multiple components with comparable lifetimes
+    h0_dispersed = np.array([[0.0, 0.20], [0.0, 0.20], [0.0, 0.20]])
+    h1_dispersed = np.zeros((0, 2))
+    _, ent_dispersed = _compute_persistence_landscape_and_entropy(h0_dispersed, h1_dispersed)
+
+    assert ent_herding < ent_dispersed, (
+        f"Expected entropy collapse during herding ({ent_herding:.4f}) vs dispersed ({ent_dispersed:.4f})"
+    )
+    assert ent_herding < 0.20, f"Herding entropy should be near 0, got {ent_herding:.4f}"
+
+
 def test_morlet_wavelet_scaleogram_and_spectral_entropy():
     """
     Verifies pure-NumPy Morlet wavelet transform computes non-negative scaleogram energy
