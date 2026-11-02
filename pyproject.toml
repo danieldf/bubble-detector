@@ -94,11 +94,11 @@ dependencies = [
     # Uvicorn: Ultra-fast ASGI web server implementation.
     "uvicorn>=0.28.0",
 
-    # HoloViz Panel: Interactive data exploration dashboard supporting Pyodide WASM.
-    "panel>=1.3.0",
+    # HoloViz Panel: Interactive data exploration dashboard supporting Pyodide WASM (pinned for schema parity).
+    "panel==1.9.4",
 
-    # Bokeh: Interactive web plotting engine powering Panel visualization widgets.
-    "bokeh>=3.3.0",
+    # Bokeh: Interactive web plotting engine powering Panel visualization widgets (pinned for schema parity).
+    "bokeh==3.9.2",
 
     # Param: Declarative Python programming framework governing reactive parameters.
     "param>=2.0.0",

@@ -304,7 +304,7 @@ def test_dist_index_html_postprocessing_idempotence():
     assert second_pass.count("Pre-loaded MEMFS dataset:") == 1
 
 def test_dist_index_html_on_disk():
-    """Verify that dist/index.html exists on disk and contains exactly one error boundary and preloader."""
+    """Verify that dist/index.html exists on disk, contains error boundary, preloader, version pins, and resilience bridge."""
     index_target = BASE_DIR / "dist" / "index.html"
     assert index_target.exists(), "dist/index.html must exist"
     content = index_target.read_text(encoding="utf-8")
@@ -314,3 +314,6 @@ def test_dist_index_html_on_disk():
     assert "pyodide.FS.writeFile(ds, t)" in content
     assert "document.body.classList.remove('pn-loading')" in content
     assert "Market Bubble Detector (WebAssembly Edition)" in content
+    assert "panel==" in content, "dist/index.html must have exact panel version pin"
+    assert "bokeh==" in content, "dist/index.html must have exact bokeh version pin"
+    assert "bokeh-panel-resilience-bridge" in content, "dist/index.html must contain resilience bridge"

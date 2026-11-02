@@ -991,6 +991,6 @@ template = pn.template.FastListTemplate(
 
 template.servable()
 
-if __name__ == "__main__" and "pyodide" not in sys.modules and "panel.io.pyodide" not in sys.modules:
+if __name__ == "__main__" and not os.environ.get("WASM_BUILD_PACKAGING") and "pyodide" not in sys.modules and "panel.io.pyodide" not in sys.modules and "BOKEH_RESOURCES" not in os.environ and "PANEL_CONVERT" not in os.environ:
     pn.serve(template, port=5006, show=False)
 

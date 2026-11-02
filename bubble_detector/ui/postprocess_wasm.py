@@ -39,9 +39,23 @@ def postprocess_wasm_content(content: str) -> str:
     Apply post-processing transformations to the HTML content string.
     Pure transformation with zero disk I/O, completely idempotent.
     """
-    # 1. Normalize wheel URLs
-    content = re.sub(r"'https://cdn\.holoviz\.org/panel/wheels/bokeh-[^']+\.whl'", "'bokeh'", content)
-    content = re.sub(r"'https://cdn\.holoviz\.org/panel/[^']+/panel-[^']+\.whl'", "'panel'", content)
+    # 0. Detect embedded Panel and Bokeh JavaScript bundle versions from <head>
+    m_panel = re.search(r"https://cdn\.holoviz\.org/panel/([0-9.]+)/dist/panel(?:\.min)?\.js", content)
+    panel_ver = m_panel.group(1) if m_panel else "1.9.4"
+
+    m_bokeh = re.search(r"https://cdn\.bokeh\.org/bokeh/release/bokeh-([0-9.]+)(?:\.min)?\.js", content)
+    bokeh_ver = m_bokeh.group(1) if m_bokeh else "3.9.2"
+
+    # 1. Normalize wheel URLs while strictly locking exact versions matching JS bundle
+    content = re.sub(r"'https://cdn\.holoviz\.org/panel/wheels/bokeh-[^']+\.whl'", f"'bokeh=={bokeh_ver}'", content)
+    content = re.sub(r"'https://cdn\.holoviz\.org/panel/[^']+/panel-[^']+\.whl'", f"'panel=={panel_ver}'", content)
+
+    # Normalize any unpinned or outdated micropip installations
+    content = re.sub(
+        r"micropip\.install\(\[\s*['\"]bokeh(?:==[^'\"]+)?['\"]\s*,\s*['\"]panel(?:==[^'\"]+)?['\"]",
+        f"micropip.install(['bokeh=={bokeh_ver}', 'panel=={panel_ver}'",
+        content
+    )
 
     # 2. Generic regex decoding for unicode escape sequences
     content = re.sub(r"\\+U0001([0-9a-fA-F]{4})", lambda m: chr(int("0001" + m.group(1), 16)), content)
@@ -71,6 +85,15 @@ def postprocess_wasm_content(content: str) -> str:
 
     # 4. Inject Progressive Checklist Styles & DOM Overlay for HTML documents
     if "<html" in content or "<body" in content or "</head>" in content:
+        if "bokeh-panel-resilience-bridge" not in content:
+            bridge_script = """<script id="bokeh-panel-resilience-bridge" type="text/javascript">
+(function(){function r(){if(window.Bokeh&&window.Bokeh.embed&&!window.Bokeh.embed._resilience_installed){const e=window.Bokeh.embed.embed_items;window.Bokeh.embed.embed_items=async function(d,i){function s(o){if(!o||typeof o!=='object')return;if(o.name==='panel.models.reactive_html.ReactiveHTML'&&o.attributes)delete o.attributes.external_resources;for(const k of Object.keys(o)){if(typeof o[k]==='object')s(o[k]);}}try{s(d);}catch(x){}return await e.apply(this,arguments);};window.Bokeh.embed._resilience_installed=true;}if(window.Bokeh&&window.Bokeh.Models){try{const m=window.Bokeh.Models.get('panel.models.reactive_html.ReactiveHTML');if(m&&typeof m.define==='function')m.define(({Any})=>({external_resources:[Any,[]]}));}catch(y){}}}if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',r);}else{r();}r();})();
+</script>"""
+            if "</head>" in content:
+                content = content.replace("</head>", bridge_script + "\n</head>")
+            else:
+                content = bridge_script + "\n" + content
+
         if "wasm-progressive-boot-style" not in content:
             styles = """<style id="wasm-progressive-boot-style">
 #wasm-splash-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#0F172A;color:#F8FAFC;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,sans-serif;transition:opacity .4s ease}
@@ -256,37 +279,37 @@ if (document.readyState === 'loading') {
     if "Pre-loaded MEMFS dataset:" not in content:
         # Check if full Panel convert main() signature is present
         if re.search(r'async function main\(\)\s*\{.*?await pyodide\.loadPackage\(', content, flags=re.DOTALL):
-            main_header = """async function main() {
-      try {
+            main_header = f"""async function main() {{
+      try {{
         if (typeof updateProgressChecklist === 'function') updateProgressChecklist('core', 'active', 'Initializing Pyodide WebAssembly runtime...');
         let pyodide = await loadPyodide();
-        if (typeof updateProgressChecklist === 'function') {
+        if (typeof updateProgressChecklist === 'function') {{
           updateProgressChecklist('core', 'done', '1. WebAssembly Core: Initialized');
           updateProgressChecklist('packages', 'active', 'Downloading mathematical engines...');
-        }
+        }}
         await pyodide.loadPackage("micropip");
         await pyodide.runPythonAsync(`
           import micropip
-          await micropip.install(['bokeh', 'panel', 'pyodide-http', 'plotly', 'numpy']);
+          await micropip.install(['bokeh=={bokeh_ver}', 'panel=={panel_ver}', 'pyodide-http', 'plotly', 'numpy']);
         `);
-        if (typeof updateProgressChecklist === 'function') {
+        if (typeof updateProgressChecklist === 'function') {{
           updateProgressChecklist('packages', 'done', '2. Mathematical Engines: Loaded');
           updateProgressChecklist('data', 'active', 'Pre-loading MEMFS datasets...');
-        }
-        for (const ds of ['market_data_50yr.json']) {
-          try {
+        }}
+        for (const ds of ['market_data_50yr.json']) {{
+          try {{
             let r = await fetch(ds);
-            if (r.ok) {
+            if (r.ok) {{
               let t = await r.text();
               pyodide.FS.writeFile(ds, t);
               console.log('Pre-loaded MEMFS dataset: ' + ds);
-            }
-          } catch(e) { console.warn('Could not pre-load ' + ds, e); }
-        }
-        if (typeof updateProgressChecklist === 'function') {
+            }}
+          }} catch(e) {{ console.warn('Could not pre-load ' + ds, e); }}
+        }}
+        if (typeof updateProgressChecklist === 'function') {{
           updateProgressChecklist('data', 'done', '3. Financial Datasets: Mounted (MEMFS)');
           updateProgressChecklist('render', 'active', 'Mounting interactive analytical suite...');
-        }"""
+        }}"""
 
             content = re.sub(
                 r'async function main\(\)\s*\{.*?await pyodide\.loadPackage\(\"micropip\"\);\s*await pyodide\.runPythonAsync\(`.*?`\);',

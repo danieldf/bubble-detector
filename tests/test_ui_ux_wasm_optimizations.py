@@ -214,3 +214,36 @@ def test_responsive_legend_layout_logic():
     assert leg_mobile["orientation"] == "h"
     assert leg_mobile["y"] < 0.0
     assert mar_mobile["r"] == 40
+
+
+def test_wasm_dependency_version_locking_and_resilience_bridge():
+    """
+    Verify that dist/index.html enforces strict Panel and Bokeh package version locking
+    and embeds the self-healing Bokeh/Panel deserialization resilience bridge to prevent
+    upstream schema drift crashes (e.g. ReactiveHTML.external_resources).
+    """
+    import re
+    index_path = BASE_DIR / "dist" / "index.html"
+    assert index_path.exists(), "dist/index.html must exist"
+    content = index_path.read_text(encoding="utf-8")
+
+    # Strict version pins
+    assert re.search(r"micropip\.install\(\[\s*[^\]]*?'panel==\d+\.\d+\.\d+'", content), (
+        "micropip.install must contain an exact pinned panel version (e.g. 'panel==1.9.4')"
+    )
+    assert re.search(r"micropip\.install\(\[\s*[^\]]*?'bokeh==\d+\.\d+\.\d+'", content), (
+        "micropip.install must contain an exact pinned bokeh version (e.g. 'bokeh==3.9.2')"
+    )
+
+    # Absence of unpinned bare names
+    assert not re.search(r"micropip\.install\(\[\s*[^\]]*?'panel'[,\]]", content), (
+        "Unpinned 'panel' package detected in micropip.install"
+    )
+    assert not re.search(r"micropip\.install\(\[\s*[^\]]*?'bokeh'[,\]]", content), (
+        "Unpinned 'bokeh' package detected in micropip.install"
+    )
+
+    # Resilience bridge presence
+    assert 'id="bokeh-panel-resilience-bridge"' in content, "Missing bokeh-panel-resilience-bridge script"
+    assert "external_resources" in content, "Resilience bridge must sanitize external_resources"
+

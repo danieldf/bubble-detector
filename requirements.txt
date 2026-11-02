@@ -82,10 +82,12 @@ uvicorn>=0.28.0
 
 # HoloViz Panel: High-level reactive visualization framework supporting Pyodide WebAssembly.
 # - Role: Powers the zero-install, client-side WebAssembly browser dashboard with identical numerical parity.
-panel>=1.3.0
+# - Pinned to 1.9.4 to guarantee 100% schema parity with Pyodide WebAssembly JS bundles.
+panel==1.9.4
 
 # Bokeh: Native plotting library and layout engine powering Panel reactive interactive widgets.
-bokeh>=3.3.0
+# - Pinned to 3.9.2 to guarantee 100% schema parity with HoloViz Panel 1.9.4 JS release.
+bokeh==3.9.2
 
 # Param: Declarative Python programming framework for reactive component parameters.
 param>=2.0.0
