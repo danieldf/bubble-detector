@@ -83,6 +83,38 @@ def postprocess_wasm_content(content: str) -> str:
     for k, v in replacements.items():
         content = content.replace(k, v)
 
+    # 3b. De-duplicate redundant Plotly layout templates in embedded Bokeh JSON (<120KB ceiling)
+    m_bokeh_json = re.search(r'(<script type="application/json" id="[^"]+">\s*)(.*?)(\s*</script>)', content, re.DOTALL)
+    if m_bokeh_json:
+        try:
+            import json
+            raw_json = m_bokeh_json.group(2)
+            data = json.loads(raw_json)
+
+            def clean_bokeh_templates(obj):
+                if isinstance(obj, dict):
+                    if obj.get("type") == "map" and "entries" in obj:
+                        new_entries = []
+                        for entry in obj["entries"]:
+                            if isinstance(entry, list) and len(entry) == 2 and entry[0] == "template":
+                                new_entries.append(["template", {"type": "map", "entries": []}])
+                            else:
+                                clean_bokeh_templates(entry)
+                                new_entries.append(entry)
+                        obj["entries"] = new_entries
+                    else:
+                        for v in obj.values():
+                            clean_bokeh_templates(v)
+                elif isinstance(obj, list):
+                    for item in obj:
+                        clean_bokeh_templates(item)
+
+            clean_bokeh_templates(data)
+            compact = json.dumps(data, separators=(",", ":"))
+            content = content[:m_bokeh_json.start()] + m_bokeh_json.group(1) + compact + m_bokeh_json.group(3) + content[m_bokeh_json.end():]
+        except Exception:
+            pass
+
     # 4. Inject Progressive Checklist Styles & DOM Overlay for HTML documents
     if "<html" in content or "<body" in content or "</head>" in content:
         if "bokeh-panel-resilience-bridge" not in content:
@@ -296,7 +328,7 @@ if (document.readyState === 'loading') {
           updateProgressChecklist('packages', 'done', '2. Mathematical Engines: Loaded');
           updateProgressChecklist('data', 'active', 'Pre-loading MEMFS datasets...');
         }}
-        for (const ds of ['market_data_50yr.json']) {{
+        for (const ds of ['market_data_50yr.json', 'market_data_modern.json']) {{
           try {{
             let r = await fetch(ds);
             if (r.ok) {{

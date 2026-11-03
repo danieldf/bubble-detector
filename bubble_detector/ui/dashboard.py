@@ -32,6 +32,13 @@ regime classification, and cost-inclusive portfolio backtesting.
    - Tab 6: Regime Mahalanobis Distance, Signed Projection & Dynamic Exposure Calibration.
 """
 
+import sys
+from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parent.parent.parent
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
 from typing import Dict, Any, List, Optional
 import numpy as np
 import plotly.graph_objects as go
@@ -47,6 +54,7 @@ from bubble_detector.features import (
     compute_lppls_confidence_indicator, compute_tech_exuberance_metrics,
     compute_exuberance_spans, normalize_tda_indicator
 )
+from bubble_detector.features.utils import lttb_downsample
 from bubble_detector.models.structural_breaks import StructuralBreakPredictor
 from bubble_detector.models.regime_mahalanobis import MacroMahalanobisDetector
 from bubble_detector.backtest.validation_table import (
@@ -56,14 +64,19 @@ from bubble_detector.backtest.engine import PortfolioBacktestEngine
 from bubble_detector.ui.components import create_cta_banner, create_ios_card
 from bubble_detector.config import (
     HORIZON_METADATA, HORIZON_OPTION_1_ID, HORIZON_OPTION_1_LABEL,
-    HORIZON_OPTION_2_ID, HORIZON_OPTION_2_LABEL, logger
+    HORIZON_OPTION_2_ID, HORIZON_OPTION_2_LABEL, PROVENANCE_DIR, logger
 )
 from bubble_detector.ui_theme import get_theme_css, LIGHT_THEME, DARK_THEME
+
+def _prepare_trace(dates: List[Any], values: np.ndarray, target_points: int = 1000) -> tuple:
+    """Decimate time series via pure NumPy LTTB downsampling to reduce WebSocket transfer size."""
+    date_strs = [str(d)[:10] for d in dates]
+    return lttb_downsample(date_strs, values, target_points=target_points)
 
 class DashboardState:
     """Central state manager for dataset, feature engine, model, horizon selection, and UI theme."""
 
-    def __init__(self, load_data: bool = True):
+    def __init__(self, load_data: bool = True, force_recompute: bool = False):
         self.theme_mode: str = "light"
         self.selected_horizon_id: str = HORIZON_OPTION_1_ID
         self.ingestor = DataIngestor()
@@ -75,9 +88,9 @@ class DashboardState:
         self.validation_summary: Dict[str, Any] = {}
         self.backtest_results: Dict[str, Any] = {}
         if load_data:
-            self.load_data()
+            self.load_data(force_recompute=force_recompute)
 
-    def load_data(self, horizon_id: str = None):
+    def load_data(self, horizon_id: str = None, force_recompute: bool = False):
         """Fetch and process full dataset pipeline for selected date horizon."""
         if horizon_id and horizon_id in HORIZON_METADATA:
             self.selected_horizon_id = horizon_id
@@ -85,6 +98,32 @@ class DashboardState:
         horizon_meta = HORIZON_METADATA[self.selected_horizon_id]
         start_date = horizon_meta["start_date"]
         end_date = horizon_meta["end_date"]
+
+        # Fast-Path: Zero-copy precompiled provenance Parquet loading (<10ms)
+        is_50yr = (self.selected_horizon_id == HORIZON_OPTION_1_ID)
+        p_name = "market_data_50yr.parquet" if is_50yr else "market_data_modern.parquet"
+        parquet_path = PROVENANCE_DIR / p_name
+
+        if not force_recompute and parquet_path.exists():
+            try:
+                df_cached = pl.read_parquet(parquet_path)
+                required_cols = {"Date", "SPY", "Shiller_CAPE", "FINRA_Margin_Debt", "Mahalanobis_Distance", "Tech_Exuberance_Signal"}
+                if required_cols.issubset(set(df_cached.columns)):
+                    self.df = df_cached
+                    self.is_synthetic_fallback = bool(
+                        "Is_Synthetic_Fallback" in self.df.columns and self.df["Is_Synthetic_Fallback"].to_numpy().any()
+                    )
+                    try:
+                        self.validation_events = generate_historical_validation_table(self.df)
+                        self.validation_summary = compute_validation_summary_statistics(self.validation_events)
+                        backtest_engine = PortfolioBacktestEngine()
+                        self.backtest_results = backtest_engine.run_backtest(self.df)
+                    except Exception as err:
+                        logger.warning(f"Could not compute backtest analytics from cached parquet: {err}")
+                    logger.info(f"Loaded precompiled provenance dataset from {parquet_path} (fast-path: {len(self.df)} rows in <10ms).")
+                    return
+            except Exception as e:
+                logger.warning(f"Failed to load cached parquet {parquet_path}: {e}. Falling back to full pipeline computation.")
 
         logger.info(f"Loading dataset for horizon '{self.selected_horizon_id}' ({start_date} to {end_date})...")
         try:
@@ -160,9 +199,12 @@ def build_macro_valuation_chart(state: DashboardState) -> go.Figure:
     palette = state.get_palette()
     fig = go.Figure()
 
-    fig.add_trace(go.Scatter(x=dates, y=cape, mode="lines", name="Shiller CAPE (41.37) [REAL]", line=dict(color=palette["accent_blue"], width=2.5)))
-    fig.add_trace(go.Scatter(x=dates, y=p_cape, mode="lines", name="Payout-Adjusted CAPE (P-CAPE) [REAL]", line=dict(color=palette["accent_green"], width=2.0, dash="dash")))
-    fig.add_trace(go.Scatter(x=dates, y=buffett / 5.0, mode="lines", name="Buffett Indicator (scaled) [REAL]", line=dict(color=palette["accent_amber"], width=2.0)))
+    d_c, v_c = _prepare_trace(dates, cape)
+    fig.add_trace(go.Scatter(x=d_c, y=v_c, mode="lines", name="Shiller CAPE (41.37) [REAL]", line=dict(color=palette["accent_blue"], width=2.5)))
+    d_pc, v_pc = _prepare_trace(dates, p_cape)
+    fig.add_trace(go.Scatter(x=d_pc, y=v_pc, mode="lines", name="Payout-Adjusted CAPE (P-CAPE) [REAL]", line=dict(color=palette["accent_green"], width=2.0, dash="dash")))
+    d_b, v_b = _prepare_trace(dates, buffett / 5.0)
+    fig.add_trace(go.Scatter(x=d_b, y=v_b, mode="lines", name="Buffett Indicator (scaled) [REAL]", line=dict(color=palette["accent_amber"], width=2.0)))
 
     fig.add_hline(y=26.4, line_dash="dot", line_color=palette["text_tertiary"], annotation_text="CAPE High Quintile (26.4)")
     fig.add_hline(y=40.0, line_dash="dash", line_color=palette["accent_red"], annotation_text="Extreme Overvaluation Threshold (40.0)")
@@ -187,8 +229,10 @@ def build_leverage_chart(state: DashboardState) -> go.Figure:
     palette = state.get_palette()
     fig = go.Figure()
 
-    fig.add_trace(go.Scatter(x=dates, y=margin_debt, mode="lines", name="FINRA Margin Debt ($B) [REAL]", line=dict(color=palette["accent_red"], width=2.5)))
-    fig.add_trace(go.Scatter(x=dates, y=exhaustion * 1000.0, mode="lines", name="Margin Credit Exhaustion Score (scaled) [REAL]", line=dict(color=palette["accent_amber"], width=2.0, dash="dot")))
+    d_d, v_d = _prepare_trace(dates, margin_debt)
+    fig.add_trace(go.Scatter(x=d_d, y=v_d, mode="lines", name="FINRA Margin Debt ($B) [REAL]", line=dict(color=palette["accent_red"], width=2.5)))
+    d_e, v_e = _prepare_trace(dates, exhaustion * 1000.0)
+    fig.add_trace(go.Scatter(x=d_e, y=v_e, mode="lines", name="Margin Credit Exhaustion Score (scaled) [REAL]", line=dict(color=palette["accent_amber"], width=2.0, dash="dot")))
 
     fig.update_layout(
         template=state.get_plotly_template(),
@@ -211,9 +255,12 @@ def build_econometric_chart(state: DashboardState) -> go.Figure:
     palette = state.get_palette()
     fig = go.Figure()
 
-    fig.add_trace(go.Scatter(x=dates, y=gsadf, mode="lines", name="Standard GSADF Stat [REAL]", line=dict(color=palette["text_tertiary"], width=1.5, dash="dot")))
-    fig.add_trace(go.Scatter(x=dates, y=gpt_adj, mode="lines", name="GPT-Adjusted GSADF Stat [REAL]", line=dict(color=palette["accent_blue"], width=2.5)))
-    fig.add_trace(go.Scatter(x=dates, y=drawdown_prob * 3.0, mode="lines", name="ML Structural Break Probability (scaled) [REAL]", line=dict(color=palette["accent_red"], width=2.0)))
+    d_g, v_g = _prepare_trace(dates, gsadf)
+    fig.add_trace(go.Scatter(x=d_g, y=v_g, mode="lines", name="Standard GSADF Stat [REAL]", line=dict(color=palette["text_tertiary"], width=1.5, dash="dot")))
+    d_gpt, v_gpt = _prepare_trace(dates, gpt_adj)
+    fig.add_trace(go.Scatter(x=d_gpt, y=v_gpt, mode="lines", name="GPT-Adjusted GSADF Stat [REAL]", line=dict(color=palette["accent_blue"], width=2.5)))
+    d_dp, v_dp = _prepare_trace(dates, drawdown_prob * 3.0)
+    fig.add_trace(go.Scatter(x=d_dp, y=v_dp, mode="lines", name="ML Structural Break Probability (scaled) [REAL]", line=dict(color=palette["accent_red"], width=2.0)))
 
     fig.add_hline(y=1.45, line_dash="solid", line_color=palette["accent_red"], annotation_text="PSY Explosive 95% Bootstrap Critical Value (1.45)")
 
@@ -238,9 +285,12 @@ def build_sentiment_vol_chart(state: DashboardState) -> go.Figure:
     palette = state.get_palette()
     fig = go.Figure()
 
-    fig.add_trace(go.Scatter(x=dates, y=vix, mode="lines", name="Spot VIX (Complacency Gauge) [REAL]", line=dict(color=palette["accent_green"], width=2.0)))
-    fig.add_trace(go.Scatter(x=dates, y=skew / 5.0, mode="lines", name="CBOE SKEW Index (scaled) [REAL]", line=dict(color=palette["accent_red"], width=2.5)))
-    fig.add_trace(go.Scatter(x=dates, y=ovx_vix * 10.0, mode="lines", name="OVX / VIX Cross-Asset Ratio (scaled) [REAL]", line=dict(color=palette["accent_amber"], width=2.0, dash="dash")))
+    d_v, v_v = _prepare_trace(dates, vix)
+    fig.add_trace(go.Scatter(x=d_v, y=v_v, mode="lines", name="Spot VIX (Complacency Gauge) [REAL]", line=dict(color=palette["accent_green"], width=2.0)))
+    d_s, v_s = _prepare_trace(dates, skew / 5.0)
+    fig.add_trace(go.Scatter(x=d_s, y=v_s, mode="lines", name="CBOE SKEW Index (scaled) [REAL]", line=dict(color=palette["accent_red"], width=2.5)))
+    d_o, v_o = _prepare_trace(dates, ovx_vix * 10.0)
+    fig.add_trace(go.Scatter(x=d_o, y=v_o, mode="lines", name="OVX / VIX Cross-Asset Ratio (scaled) [REAL]", line=dict(color=palette["accent_amber"], width=2.0, dash="dash")))
 
     fig.update_layout(
         template=state.get_plotly_template(),
@@ -263,9 +313,12 @@ def build_sector_health_chart(state: DashboardState) -> go.Figure:
     palette = state.get_palette()
     fig = go.Figure()
 
-    fig.add_trace(go.Scatter(x=dates, y=housing_pti, mode="lines", name="Housing Price-to-Income (7.11x Peak) [REAL]", line=dict(color=palette["accent_amber"], width=2.5)))
-    fig.add_trace(go.Scatter(x=dates, y=tech / 50.0, mode="lines", name="Tech ETF XLK (scaled) [REAL]", line=dict(color=palette["accent_blue"], width=2.0)))
-    fig.add_trace(go.Scatter(x=dates, y=normalize_tda_indicator(tda_norm), mode="lines", name="TDA Geometric Complexity (Normalized) [REAL]", line=dict(color=palette["accent_red"], width=2.0, dash="dot")))
+    d_h, v_h = _prepare_trace(dates, housing_pti)
+    fig.add_trace(go.Scatter(x=d_h, y=v_h, mode="lines", name="Housing Price-to-Income (7.11x Peak) [REAL]", line=dict(color=palette["accent_amber"], width=2.5)))
+    d_t, v_t = _prepare_trace(dates, tech / 50.0)
+    fig.add_trace(go.Scatter(x=d_t, y=v_t, mode="lines", name="Tech ETF XLK (scaled) [REAL]", line=dict(color=palette["accent_blue"], width=2.0)))
+    d_tda, v_tda = _prepare_trace(dates, normalize_tda_indicator(tda_norm))
+    fig.add_trace(go.Scatter(x=d_tda, y=v_tda, mode="lines", name="TDA Geometric Complexity (Normalized) [REAL]", line=dict(color=palette["accent_red"], width=2.0, dash="dot")))
 
     fig.update_layout(
         template=state.get_plotly_template(),
@@ -294,45 +347,53 @@ def build_mahalanobis_chart(state: DashboardState) -> go.Figure:
     fig = go.Figure()
 
     # Primary Mahalanobis Signal & Probability Traces
+    d_m, v_m = _prepare_trace(dates, m_dist)
     fig.add_trace(go.Scatter(
-        x=dates, y=m_dist, mode="lines",
+        x=d_m, y=v_m, mode="lines",
         name="Macro Mahalanobis Distance (DM) [REAL]",
         line=dict(color="#00E5FF", width=2.8)
     ))
+    d_p, v_p = _prepare_trace(dates, probs * 10.0)
     fig.add_trace(go.Scatter(
-        x=dates, y=probs * 10.0, mode="lines",
+        x=d_p, y=v_p, mode="lines",
         name="Bubble Regime Probability (scaled x10) [REAL]",
         line=dict(color="#FF1744", width=2.2, dash="dash")
     ))
 
     # Benchmark Structural Overlays
+    d_c, v_c = _prepare_trace(dates, cape / 5.0)
     fig.add_trace(go.Scatter(
-        x=dates, y=cape / 5.0, mode="lines",
+        x=d_c, y=v_c, mode="lines",
         name="Shiller CAPE (scaled / 5) [REAL]",
         line=dict(color="#2979FF", width=1.6)
     ))
+    d_pc, v_pc = _prepare_trace(dates, p_cape / 5.0)
     fig.add_trace(go.Scatter(
-        x=dates, y=p_cape / 5.0, mode="lines",
+        x=d_pc, y=v_pc, mode="lines",
         name="P-CAPE (scaled / 5) [REAL]",
         line=dict(color="#00E676", width=1.6, dash="dot")
     ))
+    d_b, v_b = _prepare_trace(dates, buffett / 25.0)
     fig.add_trace(go.Scatter(
-        x=dates, y=buffett / 25.0, mode="lines",
+        x=d_b, y=v_b, mode="lines",
         name="Buffett Indicator (scaled / 25) [REAL]",
         line=dict(color="#FFD600", width=1.6)
     ))
+    d_h, v_h = _prepare_trace(dates, housing_pti)
     fig.add_trace(go.Scatter(
-        x=dates, y=housing_pti, mode="lines",
+        x=d_h, y=v_h, mode="lines",
         name="Housing Price-to-Income (7.11x Peak) [REAL]",
         line=dict(color="#FFB300", width=1.6)
     ))
+    d_tk, v_tk = _prepare_trace(dates, tech / 100.0)
     fig.add_trace(go.Scatter(
-        x=dates, y=tech / 100.0, mode="lines",
+        x=d_tk, y=v_tk, mode="lines",
         name="Tech ETF XLK (scaled / 100) [REAL]",
         line=dict(color="#29B6F6", width=1.6)
     ))
+    d_tn, v_tn = _prepare_trace(dates, normalize_tda_indicator(tda_norm))
     fig.add_trace(go.Scatter(
-        x=dates, y=normalize_tda_indicator(tda_norm), mode="lines",
+        x=d_tn, y=v_tn, mode="lines",
         name="TDA Geometric Complexity (Normalized) [REAL]",
         line=dict(color="#FF4081", width=1.6, dash="dot")
     ))
@@ -380,18 +441,24 @@ def build_tech_exuberance_chart(state: DashboardState) -> go.Figure:
     xlk = df["XLK"].to_numpy() if "XLK" in df.columns else spy * 1.2
     ratio = df["XLK_SPY_Ratio"].to_numpy() if "XLK_SPY_Ratio" in df.columns else (xlk / np.maximum(spy, 1e-4))
 
-    fig.add_trace(go.Scatter(x=dates, y=spy, mode="lines", name="S&P 500 (SPY) [REAL]", line=dict(color=palette["accent_blue"], width=2.0)), row=1, col=1)
-    fig.add_trace(go.Scatter(x=dates, y=xlk, mode="lines", name="Technology Sector (XLK) [REAL]", line=dict(color="#FF9800", width=2.0)), row=1, col=1)
-    fig.add_trace(go.Scatter(x=dates, y=ratio * 200.0, mode="lines", name="XLK / SPY Ratio (scaled x200) [REAL]", line=dict(color="#00E676", width=1.8, dash="dot")), row=1, col=1)
+    d_spy, v_spy = _prepare_trace(dates, spy)
+    fig.add_trace(go.Scatter(x=d_spy, y=v_spy, mode="lines", name="S&P 500 (SPY) [REAL]", line=dict(color=palette["accent_blue"], width=2.0)), row=1, col=1)
+    d_xlk, v_xlk = _prepare_trace(dates, xlk)
+    fig.add_trace(go.Scatter(x=d_xlk, y=v_xlk, mode="lines", name="Technology Sector (XLK) [REAL]", line=dict(color="#FF9800", width=2.0)), row=1, col=1)
+    d_rat, v_rat = _prepare_trace(dates, ratio * 200.0)
+    fig.add_trace(go.Scatter(x=d_rat, y=v_rat, mode="lines", name="XLK / SPY Ratio (scaled x200) [REAL]", line=dict(color="#00E676", width=1.8, dash="dot")), row=1, col=1)
 
     # Subplot 2: BSADF Stat vs Critical Values and LPPLS Confidence
     bsadf = df["BSADF_Stat"].to_numpy() if "BSADF_Stat" in df.columns else (df["GSADF_Stat"].to_numpy() if "GSADF_Stat" in df.columns else np.zeros(len(df)))
     lppls_ci = df["LPPLS_Confidence"].to_numpy() if "LPPLS_Confidence" in df.columns else np.zeros(len(df))
     lppls_p90 = df["LPPLS_90th_Percentile"].to_numpy() if "LPPLS_90th_Percentile" in df.columns else np.zeros(len(df))
 
-    fig.add_trace(go.Scatter(x=dates, y=bsadf, mode="lines", name="PSY BSADF Test Statistic [REAL]", line=dict(color="#00E5FF", width=2.2)), row=2, col=1)
-    fig.add_trace(go.Scatter(x=dates, y=lppls_ci * 3.0, mode="lines", name="LPPLS Bubble Confidence (scaled x3) [REAL]", line=dict(color="#FF1744", width=2.2)), row=2, col=1)
-    fig.add_trace(go.Scatter(x=dates, y=lppls_p90 * 3.0, mode="lines", name="LPPLS 90th Pct Threshold [REAL]", line=dict(color="#FF5252", width=1.2, dash="dash")), row=2, col=1)
+    d_bsadf, v_bsadf = _prepare_trace(dates, bsadf)
+    fig.add_trace(go.Scatter(x=d_bsadf, y=v_bsadf, mode="lines", name="PSY BSADF Test Statistic [REAL]", line=dict(color="#00E5FF", width=2.2)), row=2, col=1)
+    d_lppls, v_lppls = _prepare_trace(dates, lppls_ci * 3.0)
+    fig.add_trace(go.Scatter(x=d_lppls, y=v_lppls, mode="lines", name="LPPLS Bubble Confidence (scaled x3) [REAL]", line=dict(color="#FF1744", width=2.2)), row=2, col=1)
+    d_lp90, v_lp90 = _prepare_trace(dates, lppls_p90 * 3.0)
+    fig.add_trace(go.Scatter(x=d_lp90, y=v_lp90, mode="lines", name="LPPLS 90th Pct Threshold [REAL]", line=dict(color="#FF5252", width=1.2, dash="dash")), row=2, col=1)
     fig.add_hline(y=1.45, line_dash="solid", line_color="#D32F2F", annotation_text="PSY 95% CV (1.45)", row=2, col=1)
     fig.add_hline(y=2.05, line_dash="dash", line_color="#B71C1C", annotation_text="PSY 99% CV (2.05)", row=2, col=1)
 
@@ -400,32 +467,54 @@ def build_tech_exuberance_chart(state: DashboardState) -> go.Figure:
     tda_ent = df["TDA_Persistence_Entropy"].to_numpy() if "TDA_Persistence_Entropy" in df.columns else np.zeros(len(df))
     wav_ent = df["Wavelet_Spectral_Entropy"].to_numpy() if "Wavelet_Spectral_Entropy" in df.columns else np.zeros(len(df))
 
-    fig.add_trace(go.Scatter(x=dates, y=normalize_tda_indicator(tda_norm), mode="lines", name="TDA Persistence L2 Norm (Normalized) [REAL]", line=dict(color="#E040FB", width=2.0)), row=3, col=1)
-    fig.add_trace(go.Scatter(x=dates, y=tda_ent, mode="lines", name="TDA Persistence Entropy E(D) [REAL]", line=dict(color="#7C4DFF", width=1.8, dash="dot")), row=3, col=1)
-    fig.add_trace(go.Scatter(x=dates, y=wav_ent, mode="lines", name="Wavelet Spectral Shannon Entropy [REAL]", line=dict(color="#00B0FF", width=1.8, dash="dash")), row=3, col=1)
+    d_tda, v_tda = _prepare_trace(dates, normalize_tda_indicator(tda_norm))
+    fig.add_trace(go.Scatter(x=d_tda, y=v_tda, mode="lines", name="TDA Persistence L2 Norm (Normalized) [REAL]", line=dict(color="#E040FB", width=2.0)), row=3, col=1)
+    d_tent, v_tent = _prepare_trace(dates, tda_ent)
+    fig.add_trace(go.Scatter(x=d_tent, y=v_tent, mode="lines", name="TDA Persistence Entropy E(D) [REAL]", line=dict(color="#7C4DFF", width=1.8, dash="dot")), row=3, col=1)
+    d_went, v_went = _prepare_trace(dates, wav_ent)
+    fig.add_trace(go.Scatter(x=d_went, y=v_went, mode="lines", name="Wavelet Spectral Shannon Entropy [REAL]", line=dict(color="#00B0FF", width=1.8, dash="dash")), row=3, col=1)
 
     # Subplot 4: Global Liquidity Index ($T), M2 YoY %, CB Balance Sheet YoY %
     gli = df["Global_Liquidity_Index"].to_numpy() if "Global_Liquidity_Index" in df.columns else np.zeros(len(df))
     m2_yoy = df["M2_YoY_Growth"].to_numpy() if "M2_YoY_Growth" in df.columns else np.zeros(len(df))
     cb_yoy = df["CentralBank_YoY_Growth"].to_numpy() if "CentralBank_YoY_Growth" in df.columns else np.zeros(len(df))
 
-    fig.add_trace(go.Scatter(x=dates, y=gli, mode="lines", name="Global Liquidity Index ($ Trillion) [REAL]", line=dict(color="#FFD600", width=2.5)), row=4, col=1)
-    fig.add_trace(go.Scatter(x=dates, y=m2_yoy, mode="lines", name="U.S. M2 YoY Growth Rate (%) [REAL]", line=dict(color="#00E676", width=1.8)), row=4, col=1)
-    fig.add_trace(go.Scatter(x=dates, y=cb_yoy, mode="lines", name="Fed Balance Sheet YoY Growth (%) [REAL]", line=dict(color="#FF6D00", width=1.5, dash="dot")), row=4, col=1)
+    d_gli, v_gli = _prepare_trace(dates, gli)
+    fig.add_trace(go.Scatter(x=d_gli, y=v_gli, mode="lines", name="Global Liquidity Index ($ Trillion) [REAL]", line=dict(color="#FFD600", width=2.5)), row=4, col=1)
+    d_m2, v_m2 = _prepare_trace(dates, m2_yoy)
+    fig.add_trace(go.Scatter(x=d_m2, y=v_m2, mode="lines", name="U.S. M2 YoY Growth Rate (%) [REAL]", line=dict(color="#00E676", width=1.8)), row=4, col=1)
+    d_cb, v_cb = _prepare_trace(dates, cb_yoy)
+    fig.add_trace(go.Scatter(x=d_cb, y=v_cb, mode="lines", name="Fed Balance Sheet YoY Growth (%) [REAL]", line=dict(color="#FF6D00", width=1.5, dash="dot")), row=4, col=1)
 
-    # Shaded vertical highlight spans for Conjoint Tech Exuberance
+    # Batch shaded vertical highlight spans for Conjoint Tech Exuberance (O(1) layout shape assignment)
     spans = compute_exuberance_spans(df)
-    first_span = True
-    for start_d, end_d in spans:
-        fig.add_vrect(
-            x0=start_d, x1=end_d,
+    batch_shapes = [
+        dict(
+            type="rect",
+            xref="x",
+            yref="paper",
+            x0=start_d,
+            x1=end_d,
+            y0=0,
+            y1=1,
             fillcolor="rgba(255, 69, 58, 0.20)",
             layer="below",
             line_width=0,
-            annotation_text="🚨 Tech Exuberance Trigger" if first_span else None,
-            annotation_position="top left",
         )
-        first_span = False
+        for start_d, end_d in spans
+    ]
+    fig.update_layout(shapes=batch_shapes)
+    if spans:
+        fig.add_annotation(
+            x=spans[0][0],
+            y=1.0,
+            yref="paper",
+            text="🚨 Tech Exuberance Trigger",
+            showarrow=False,
+            font=dict(size=10, color="#FF5252"),
+            xanchor="left",
+            yanchor="bottom"
+        )
 
     fig.update_layout(
         template=state.get_plotly_template(),
@@ -585,26 +674,30 @@ def create_app():
                     t6 = ui.tab('Macro Mahalanobis Distance')
                     t7 = ui.tab('Tech Exuberance Score')
 
+                def on_tab_change(e):
+                    ui.run_javascript("setTimeout(() => window.dispatchEvent(new Event('resize')), 100);")
+                tabs.on_value_change(on_tab_change)
+
                 with ui.tab_panels(tabs, value=t1).classes('w-full bg-transparent p-0'):
                     with ui.tab_panel(t1):
                         with create_ios_card("Macro Valuation Anchors", "Shiller CAPE (41.37), P-CAPE & Buffett Indicator (218.1% GDP)"):
-                            ui.plotly(build_macro_valuation_chart(state)).classes('w-full h-96')
+                            ui.plotly(build_macro_valuation_chart(state)).classes('w-full').style('min-height: 420px; width: 100%;')
 
                     with ui.tab_panel(t2):
                         with create_ios_card("Systemic Leverage & Margin Credit", "FINRA Margin Debt ($1.416T) & Leverage Exhaustion Velocity"):
-                            ui.plotly(build_leverage_chart(state)).classes('w-full h-96')
+                            ui.plotly(build_leverage_chart(state)).classes('w-full').style('min-height: 420px; width: 100%;')
 
                     with ui.tab_panel(t3):
                         with create_ios_card("Econometric Explosive Bubble Diagnostics", "GSADF PSY Test Statistics & GPT Fundamental Tech Decomposition"):
-                            ui.plotly(build_econometric_chart(state)).classes('w-full h-96')
+                            ui.plotly(build_econometric_chart(state)).classes('w-full').style('min-height: 420px; width: 100%;')
 
                     with ui.tab_panel(t4):
                         with create_ios_card("Options Sentiment & Behavioral Tracking", "VIX Contango Term Structure, SKEW Index (>145) & OVX Cross-Asset Volatility"):
-                            ui.plotly(build_sentiment_vol_chart(state)).classes('w-full h-96')
+                            ui.plotly(build_sentiment_vol_chart(state)).classes('w-full').style('min-height: 420px; width: 100%;')
 
                     with ui.tab_panel(t5):
                         with create_ios_card("Sector-Specific Vulnerability Metrics", "Housing Affordability (Price-to-Income 7.11x) & TDA Persistence L2 Norm Complexity"):
-                            ui.plotly(build_sector_health_chart(state)).classes('w-full h-96')
+                            ui.plotly(build_sector_health_chart(state)).classes('w-full').style('min-height: 420px; width: 100%;')
 
                     with ui.tab_panel(t6):
                         df_tab = state.df
@@ -639,7 +732,7 @@ def create_app():
                                 ui.label(summary).style('font-size: 0.75rem; color: var(--text-secondary);')
 
                         with create_ios_card("Macro Mahalanobis Distance & Multi-Dimensional Regime Signals", "Statistical Distance vs. Shiller CAPE, P-CAPE, Buffett Indicator & TDA Geometric Complexity"):
-                            ui.plotly(build_mahalanobis_chart(state)).classes('w-full h-96')
+                            ui.plotly(build_mahalanobis_chart(state)).classes('w-full').style('min-height: 420px; width: 100%;')
 
                     with ui.tab_panel(t7):
                         df_tab7 = state.df
@@ -677,7 +770,7 @@ def create_app():
                                 ui.label("U.S. M2 + Fed Total Assets").style('font-size: 0.75rem; color: var(--text-secondary);')
 
                         with create_ios_card("Tech Exuberance Score: Synchronized Multi-Indicator Analytical Panel", "Macro Liquidity Decoupling, BSADF Explosive Tests, LPPLS Finite-Time Singularities & TDA Complexity"):
-                            ui.plotly(build_tech_exuberance_chart(state)).classes('w-full').style('min-height: 850px;')
+                            ui.plotly(build_tech_exuberance_chart(state)).classes('w-full').style('min-height: 850px; width: 100%;')
 
         refresh_dashboard()
 

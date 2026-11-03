@@ -5,18 +5,6 @@
     "ast_hash": "74704117ab390aba7b2f5f1807ead6aa",
     "semantic_hash": "74704117ab390aba7b2f5f1807ead6aa"
   },
-  ".agents/rules/graphify.md": {
-    "mtime": 1784325389.9006376,
-    "seen": 1791230765.8007271,
-    "ast_hash": "f1e53ecc9194573d3c28fc116c743a2e",
-    "semantic_hash": "f1e53ecc9194573d3c28fc116c743a2e"
-  },
-  ".agents/workflows/graphify.md": {
-    "mtime": 1784325389.9010751,
-    "seen": 1791230765.800728,
-    "ast_hash": "0bc020d491fca99550c1ea3de0a5f862",
-    "semantic_hash": "0bc020d491fca99550c1ea3de0a5f862"
-  },
   "GEMINI.md": {
     "mtime": 1788480803.1013527,
     "seen": 1791230765.8007302,
@@ -144,9 +132,9 @@
     "semantic_hash": ""
   },
   "bubble_detector/ui/dashboard.py": {
-    "mtime": 1791229417.309817,
-    "seen": 1791230765.80071,
-    "ast_hash": "dcbd063c1042c99a1fa46154c31754a0",
+    "mtime": 1793667544.3583488,
+    "seen": 1793668574.60681,
+    "ast_hash": "32eb079e8ba6118da6a04f62f6870608",
     "semantic_hash": ""
   },
   "bubble_detector/ui_theme.py": {
@@ -234,9 +222,9 @@
     "semantic_hash": ""
   },
   "bubble_detector/ui/panel_dashboard.py": {
-    "mtime": 1793652765.4222908,
-    "seen": 1793659304.893387,
-    "ast_hash": "89b148339f07999a6777c467b38e47e3",
+    "mtime": 1793668298.198997,
+    "seen": 1793668574.6068108,
+    "ast_hash": "29c0d1e21098bb9bb42a5c28648f2947",
     "semantic_hash": ""
   },
   ".github/workflows/deploy.yml": {
@@ -401,8 +389,8 @@
     "semantic_hash": ""
   },
   "data/provenance/market_data_modern.json": {
-    "mtime": 1793659125.737923,
-    "seen": 1793659304.893429,
+    "mtime": 1793668515.654666,
+    "seen": 1793668574.606843,
     "ast_hash": "c0d4648d5dea83e1b7ef58b9a81bb60a",
     "semantic_hash": ""
   },
@@ -413,9 +401,9 @@
     "semantic_hash": ""
   },
   "bubble_detector/ui/postprocess_wasm.py": {
-    "mtime": 1793652825.0613866,
-    "seen": 1793659304.893387,
-    "ast_hash": "11e1396ba99cae128960b9147990c608",
+    "mtime": 1793668416.5416996,
+    "seen": 1793668574.6068108,
+    "ast_hash": "23c18a6eb136c3b7df8cd84c4287bcd1",
     "semantic_hash": ""
   },
   ".agents/rules/system_architecture.md": {
@@ -455,9 +443,9 @@
     "semantic_hash": ""
   },
   "sw.js": {
-    "mtime": 1788486149.754942,
-    "seen": 1791230765.800714,
-    "ast_hash": "8c36a6a17a8d030499c6d60084fc762e",
+    "mtime": 1793667701.053331,
+    "seen": 1793668574.60687,
+    "ast_hash": "38914227d66946761ccbdb5253f9c6c2",
     "semantic_hash": ""
   },
   "tests/test_ui_ux_wasm_optimizations.py": {

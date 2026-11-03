@@ -6,7 +6,8 @@ const CACHE_NAME = 'bubble-detector-wasm-v3.0.0';
 const PRECACHE_ASSETS = [
   './',
   'index.html',
-  'market_data_50yr.json'
+  'market_data_50yr.json',
+  'market_data_modern.json'
 ];
 
 self.addEventListener('install', (event) => {

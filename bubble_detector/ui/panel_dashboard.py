@@ -422,27 +422,6 @@ def fetch_dataset(horizon_id: str):
     if horizon_id in _DATASET_CACHE:
         return _DATASET_CACHE[horizon_id]
 
-    # Lazy-load Option 2 JSON dataset synchronously into Pyodide MEMFS only upon user selection
-    if horizon_id == HORIZON_OPTION_2_ID and ("pyodide" in sys.modules or "panel.io.pyodide" in sys.modules):
-        try:
-            import js
-            if not Path("market_data_modern.json").exists():
-                js.eval("""
-                    try {
-                        let xhr = new XMLHttpRequest();
-                        xhr.open('GET', 'market_data_modern.json', false);
-                        xhr.send(null);
-                        if (xhr.status === 200 || xhr.status === 0) {
-                            pyodide.FS.writeFile('market_data_modern.json', xhr.responseText);
-                            console.log('Synchronously lazy-loaded Option 2 dataset: market_data_modern.json');
-                        }
-                    } catch (e) {
-                        console.warn('Synchronous lazy-load failed for market_data_modern.json:', e);
-                    }
-                """)
-        except Exception:
-            pass
-
     meta = HORIZON_METADATA[horizon_id]
     data = generate_wasm_dataset(meta["start_date"], meta["end_date"])
     if not _IS_SYNTHETIC_FALLBACK_ACTIVE:
@@ -483,6 +462,19 @@ def get_figure_margin(is_mobile: bool = False) -> dict:
 
 PLOTLY_TEMPLATE = None if os.environ.get("WASM_BUILD_PACKAGING") == "1" else "plotly_dark"
 
+def _build_packaging_proxy_fig(title: str, is_mobile: bool = False) -> go.Figure:
+    """Generate ultra-compact 2-point proxy figure for build-time HTML bundling (WASM_BUILD_PACKAGING=1)."""
+    fig = go.Figure(
+        data=[go.Scatter(x=["2026-01-01", "2026-01-02"], y=[0.0, 1.0], mode="lines", name=f"{title} Proxy")],
+        layout=dict(
+            template=None,
+            title=title,
+            legend=get_right_flushed_legend(is_mobile),
+            margin=get_figure_margin(is_mobile)
+        )
+    )
+    return fig
+
 def _prepare_trace(dates, values, target_points: int = 1000) -> Tuple[list, np.ndarray]:
     """Decimate time series via pure NumPy LTTB, or take compact 2-point proxy during WASM_BUILD_PACKAGING."""
     if os.environ.get("WASM_BUILD_PACKAGING") == "1":
@@ -494,6 +486,8 @@ def _prepare_trace(dates, values, target_points: int = 1000) -> Tuple[list, np.n
 
 def build_macro_valuation_fig(horizon_id: str, is_mobile: bool = False) -> go.Figure:
     """Build Plotly figure for Macro Valuation Dashboard (matching NiceGUI 100%)."""
+    if os.environ.get("WASM_BUILD_PACKAGING") == "1":
+        return _build_packaging_proxy_fig("Macro Valuation Anchors", is_mobile)
     data = fetch_dataset(horizon_id)
     dates = data["Date"]
     cape = data["Shiller_CAPE"]
@@ -523,6 +517,8 @@ def build_macro_valuation_fig(horizon_id: str, is_mobile: bool = False) -> go.Fi
 
 def build_leverage_fig(horizon_id: str, is_mobile: bool = False) -> go.Figure:
     """Build Plotly figure for Systemic Leverage Dashboard (matching NiceGUI 100%)."""
+    if os.environ.get("WASM_BUILD_PACKAGING") == "1":
+        return _build_packaging_proxy_fig("Systemic Leverage", is_mobile)
     data = fetch_dataset(horizon_id)
     dates = data["Date"]
     margin_debt = data["FINRA_Margin_Debt"]
@@ -546,6 +542,8 @@ def build_leverage_fig(horizon_id: str, is_mobile: bool = False) -> go.Figure:
 
 def build_econometric_fig(horizon_id: str, is_mobile: bool = False) -> go.Figure:
     """Build Plotly figure for Econometric Bubble Dashboard (matching NiceGUI 100%)."""
+    if os.environ.get("WASM_BUILD_PACKAGING") == "1":
+        return _build_packaging_proxy_fig("Econometric Bubble Detection", is_mobile)
     data = fetch_dataset(horizon_id)
     dates = data["Date"]
     gsadf = data["GSADF_Stat"]
@@ -574,6 +572,8 @@ def build_econometric_fig(horizon_id: str, is_mobile: bool = False) -> go.Figure
 
 def build_sentiment_vol_fig(horizon_id: str, is_mobile: bool = False) -> go.Figure:
     """Build Plotly figure for Sentiment & Volatility Dashboard (matching NiceGUI 100%)."""
+    if os.environ.get("WASM_BUILD_PACKAGING") == "1":
+        return _build_packaging_proxy_fig("Options Market Sentiment", is_mobile)
     data = fetch_dataset(horizon_id)
     dates = data["Date"]
     vix = data["^VIX"]
@@ -600,6 +600,8 @@ def build_sentiment_vol_fig(horizon_id: str, is_mobile: bool = False) -> go.Figu
 
 def build_sector_health_fig(horizon_id: str, is_mobile: bool = False) -> go.Figure:
     """Build Plotly figure for Sector Health Dashboard (matching NiceGUI 100%)."""
+    if os.environ.get("WASM_BUILD_PACKAGING") == "1":
+        return _build_packaging_proxy_fig("Sector Health", is_mobile)
     data = fetch_dataset(horizon_id)
     dates = data["Date"]
     housing_pti = data["Housing_Price_to_Income"]
@@ -626,6 +628,8 @@ def build_sector_health_fig(horizon_id: str, is_mobile: bool = False) -> go.Figu
 
 def build_mahalanobis_fig(horizon_id: str, is_mobile: bool = False) -> go.Figure:
     """Build Plotly figure for Macro Mahalanobis Distance Dashboard (matching NiceGUI 100%)."""
+    if os.environ.get("WASM_BUILD_PACKAGING") == "1":
+        return _build_packaging_proxy_fig("Macro Mahalanobis Distance", is_mobile)
     data = fetch_dataset(horizon_id)
     dates = data["Date"]
     m_dist = data["Mahalanobis_Distance"]
@@ -704,6 +708,8 @@ def build_mahalanobis_fig(horizon_id: str, is_mobile: bool = False) -> go.Figure
 
 def build_tech_exuberance_fig(horizon_id: str, is_mobile: bool = False) -> go.Figure:
     """Build Plotly figure for Tab 7: Tech Exuberance Score (matching NiceGUI 100%)."""
+    if os.environ.get("WASM_BUILD_PACKAGING") == "1":
+        return _build_packaging_proxy_fig("Tech Exuberance Score", is_mobile)
     data = fetch_dataset(horizon_id)
     dates = data["Date"]
     n = len(dates)
@@ -796,17 +802,36 @@ def build_tech_exuberance_fig(horizon_id: str, is_mobile: bool = False) -> go.Fi
         if in_span:
             spans.append((start_d, str(dates[-1])[:10]))
 
-        first_span = True
-        for start_d, end_d in spans:
-            fig.add_vrect(
-                x0=start_d, x1=end_d,
+        if os.environ.get("WASM_BUILD_PACKAGING") == "1":
+            spans = spans[:1]
+
+        batch_shapes = [
+            dict(
+                type="rect",
+                xref="x",
+                yref="paper",
+                x0=start_d,
+                x1=end_d,
+                y0=0,
+                y1=1,
                 fillcolor="rgba(255, 69, 58, 0.20)",
                 layer="below",
                 line_width=0,
-                annotation_text="🚨 Tech Exuberance Trigger" if first_span else None,
-                annotation_position="top left",
             )
-            first_span = False
+            for start_d, end_d in spans
+        ]
+        fig.update_layout(shapes=batch_shapes)
+        if spans:
+            fig.add_annotation(
+                x=spans[0][0],
+                y=1.0,
+                yref="paper",
+                text="🚨 Tech Exuberance Trigger",
+                showarrow=False,
+                font=dict(size=10, color="#FF5252"),
+                xanchor="left",
+                yanchor="bottom"
+            )
 
     fig.update_layout(
         template=PLOTLY_TEMPLATE,
@@ -901,16 +926,24 @@ red_fallback_banner = pn.pane.Alert(
     visible=_IS_SYNTHETIC_FALLBACK_ACTIVE
 )
 
+_FIGURE_CACHE: Dict[Tuple[str, str], go.Figure] = {}
+
+def get_cached_or_build_fig(chart_id: str, horizon_id: str, builder_func) -> go.Figure:
+    key = (horizon_id, chart_id)
+    if key not in _FIGURE_CACHE:
+        _FIGURE_CACHE[key] = builder_func(horizon_id)
+    return _FIGURE_CACHE[key]
+
 def update_all_charts(horizon_id: str):
     """Callback updating all 7 Panel figures, KPI indicators, and explanatory card."""
     note_pane.object = generate_explanatory_markdown(horizon_id)
-    pane_macro.object = build_macro_valuation_fig(horizon_id)
-    pane_leverage.object = build_leverage_fig(horizon_id)
-    pane_econometric.object = build_econometric_fig(horizon_id)
-    pane_sentiment.object = build_sentiment_vol_fig(horizon_id)
-    pane_sector.object = build_sector_health_fig(horizon_id)
-    pane_mahalanobis.object = build_mahalanobis_fig(horizon_id)
-    pane_tech_exuberance.object = build_tech_exuberance_fig(horizon_id)
+    pane_macro.object = get_cached_or_build_fig("macro", horizon_id, build_macro_valuation_fig)
+    pane_leverage.object = get_cached_or_build_fig("leverage", horizon_id, build_leverage_fig)
+    pane_econometric.object = get_cached_or_build_fig("econometric", horizon_id, build_econometric_fig)
+    pane_sentiment.object = get_cached_or_build_fig("sentiment", horizon_id, build_sentiment_vol_fig)
+    pane_sector.object = get_cached_or_build_fig("sector", horizon_id, build_sector_health_fig)
+    pane_mahalanobis.object = get_cached_or_build_fig("mahalanobis", horizon_id, build_mahalanobis_fig)
+    pane_tech_exuberance.object = get_cached_or_build_fig("tech_exuberance", horizon_id, build_tech_exuberance_fig)
 
     data = fetch_dataset(horizon_id)
     red_fallback_banner.visible = _IS_SYNTHETIC_FALLBACK_ACTIVE
