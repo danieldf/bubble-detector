@@ -18,6 +18,7 @@ from bubble_detector.ui.panel_dashboard import (
     fetch_dataset,
     HORIZON_OPTION_1_ID,
     HORIZON_OPTION_2_ID,
+    HORIZON_OPTION_3_ID,
     CORE_WASM_COLUMNS,
     dashboard_tabs
 )
@@ -61,6 +62,18 @@ def test_tech_exuberance_fig_structure_mobile():
     # Check mobile legend orientation
     assert fig.layout.legend.orientation == "h"
     assert fig.layout.margin.r <= 60
+
+
+def test_tech_exuberance_fig_structure_option_3():
+    """Verify Option 3 (20-Year Horizon) Tab 7 figure construction with all expected traces."""
+    fig = build_tech_exuberance_fig(HORIZON_OPTION_3_ID, is_mobile=False)
+    assert fig is not None
+    assert len(fig.data) >= 10
+    trace_names = [t.name for t in fig.data if t.name]
+    assert any("S&P 500 (SPY)" in name for name in trace_names)
+    assert any("Technology Sector (XLK)" in name for name in trace_names)
+    assert any("PSY BSADF" in name for name in trace_names)
+    assert any("Global Liquidity Index" in name for name in trace_names)
 
 
 def test_tech_exuberance_columns_in_core_wasm():

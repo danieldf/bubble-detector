@@ -6,8 +6,17 @@ and Datasets across all 5 Tabs between NiceGUI and WebAssembly Applications.
 import pytest
 import numpy as np
 
-from bubble_detector.ui.dashboard import DashboardState
-from bubble_detector.ui.panel_dashboard import generate_wasm_dataset, HORIZON_METADATA
+from bubble_detector.ui.dashboard import (
+    DashboardState, build_macro_valuation_chart, build_leverage_chart,
+    build_econometric_chart, build_sentiment_vol_chart, build_sector_health_chart,
+    build_mahalanobis_chart, build_tech_exuberance_chart
+)
+from bubble_detector.ui.panel_dashboard import (
+    generate_wasm_dataset, HORIZON_METADATA,
+    build_macro_valuation_fig, build_leverage_fig,
+    build_econometric_fig, build_sentiment_vol_fig, build_sector_health_fig,
+    build_mahalanobis_fig, build_tech_exuberance_fig
+)
 
 INDICATORS_TO_CHECK = [
     "SPY",
@@ -44,7 +53,7 @@ INDICATORS_TO_CHECK = [
     "Tech_Exuberance_Signal",
 ]
 
-@pytest.mark.parametrize("horizon_id", ["option_1", "option_2"])
+@pytest.mark.parametrize("horizon_id", ["option_1", "option_2", "option_3"])
 def test_all_indicators_numerical_parity(horizon_id):
     """
     Assert that every single indicator across all 7 tabs in the WebAssembly app
@@ -82,7 +91,7 @@ def test_all_indicators_numerical_parity(horizon_id):
         )
 
 
-@pytest.mark.parametrize("horizon_id", ["option_1", "option_2"])
+@pytest.mark.parametrize("horizon_id", ["option_1", "option_2", "option_3"])
 def test_wasm_fallback_numerical_parity(horizon_id):
     """
     Rigorously test the Pyodide WebAssembly fallback branch by mocking out DataIngestor.
@@ -101,4 +110,38 @@ def test_wasm_fallback_numerical_parity(horizon_id):
         assert len(arr_fallback) > 0, f"Fallback array for '{col}' is empty"
         assert not np.isnan(arr_fallback).any(), f"Fallback array for '{col}' contains NaNs"
         assert not np.isinf(arr_fallback).any(), f"Fallback array for '{col}' contains Infs"
+
+
+@pytest.mark.parametrize("horizon_id", ["option_1", "option_2", "option_3"])
+def test_all_7_tabs_plot_trace_parity(horizon_id):
+    """
+    Rigorously assert 100% trace count, date alignment, and zero value discrepancy
+    across all 7 interactive dashboard tabs between NiceGUI and WASM.
+    """
+    state = DashboardState(load_data=False)
+    state.load_data(horizon_id)
+
+    charts_to_test = [
+        ("macro", build_macro_valuation_chart(state), build_macro_valuation_fig(horizon_id)),
+        ("leverage", build_leverage_chart(state), build_leverage_fig(horizon_id)),
+        ("econometric", build_econometric_chart(state), build_econometric_fig(horizon_id)),
+        ("sentiment", build_sentiment_vol_chart(state), build_sentiment_vol_fig(horizon_id)),
+        ("sector", build_sector_health_chart(state), build_sector_health_fig(horizon_id)),
+        ("mahalanobis", build_mahalanobis_chart(state), build_mahalanobis_fig(horizon_id)),
+        ("tech_exuberance", build_tech_exuberance_chart(state), build_tech_exuberance_fig(horizon_id)),
+    ]
+
+    for chart_name, nice_fig, wasm_fig in charts_to_test:
+        assert len(nice_fig.data) == len(wasm_fig.data), (
+            f"Trace count mismatch in {chart_name}: NiceGUI ({len(nice_fig.data)}) vs WASM ({len(wasm_fig.data)})"
+        )
+        for i, (n_tr, w_tr) in enumerate(zip(nice_fig.data, wasm_fig.data)):
+            n_x, n_y = list(n_tr.x), np.asarray(n_tr.y, dtype=np.float64)
+            w_x, w_y = list(w_tr.x), np.asarray(w_tr.y, dtype=np.float64)
+            assert len(n_x) == len(w_x), f"Length mismatch in {chart_name} trace {i}"
+            assert n_x == w_x, f"Downsampled dates mismatch in {chart_name} trace {i}"
+            np.testing.assert_allclose(
+                n_y, w_y, rtol=1e-4, atol=1e-4,
+                err_msg=f"Trace value drift in {chart_name} trace {i} ({n_tr.name})"
+            )
 

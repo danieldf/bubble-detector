@@ -30,7 +30,7 @@ ICON_WARNING = chr(0x26A0) + chr(0xFE0F)
 try:
     from bubble_detector.data.date_horizons import (
         get_current_date, get_dynamic_50yr_date_range,
-        HORIZON_OPTION_1_ID, HORIZON_OPTION_2_ID,
+        HORIZON_OPTION_1_ID, HORIZON_OPTION_2_ID, HORIZON_OPTION_3_ID,
         get_dynamic_horizon_metadata
     )
     from bubble_detector.features.utils import normalize_tda_indicator, lttb_downsample
@@ -66,6 +66,7 @@ except ImportError:
 
     HORIZON_OPTION_1_ID = "option_1"
     HORIZON_OPTION_2_ID = "option_2"
+    HORIZON_OPTION_3_ID = "option_3"
 
     def get_dynamic_horizon_metadata(today: Optional[Union[datetime.date, str]] = None) -> Dict[str, Dict[str, Any]]:
         curr = get_current_date(today)
@@ -81,6 +82,7 @@ except ImportError:
                 "regimes_count": 9,
                 "native_fidelity": "~92%",
                 "fidelity_status": "50-Year Multi-Decade Historical Spectrum [REAL + CONTINUOUS PROXY]",
+                "badge_color": "green",
                 "included_crashes": [
                     "1970s Stagflation & 1980–1982 Volcker Rate Shock (20% Fed Funds Rate)",
                     "1987 Black Monday Crash (-20.5% single-day drawdown)",
@@ -101,6 +103,7 @@ except ImportError:
                 "regimes_count": 5,
                 "native_fidelity": "100%",
                 "fidelity_status": "Native High-Fidelity Coverage [100% REAL]",
+                "badge_color": "blue",
                 "included_crashes": [
                     "2018 Volmageddon & Q4 QT Compression",
                     "2020 COVID-19 Flash Crash (VIX 82.7 Spike)",
@@ -109,6 +112,27 @@ except ImportError:
                     "2024–2026 AI CapEx Mega-Cap Rally (CAPE 41.37)"
                 ],
                 "description": "Provides 100% native real data integrity across all models and features with zero back-filling or proxy interpolation required."
+            },
+            HORIZON_OPTION_3_ID: {
+                "label": f"Option 3: 20-Year Global Crisis & Expansion Horizon (2006–{curr_year})",
+                "start_date": "2006-01-01",
+                "end_date": end_today,
+                "regimes_count": 8,
+                "native_fidelity": "100%",
+                "fidelity_status": "Native High-Fidelity 20-Year Multi-Crisis Spectrum [100% REAL]",
+                "badge_color": "purple",
+                "included_crashes": [
+                    "2006–2007 Subprime Housing Bubble Peak (Housing PTI ~7.0x)",
+                    "2007–2009 Global Financial Crisis & GFC Crash (-57% S&P Drawdown)",
+                    "2010 Flash Crash & Eurozone Sovereign Debt Dislocation",
+                    "2011 U.S. Sovereign Debt Downgrade (-16% S&P Correction)",
+                    "2015–2016 Energy Collapse & China Yuan Devaluation Shock",
+                    "2018 Volmageddon & Q4 Quantitative Tightening Compression",
+                    "2020 COVID-19 Flash Crash (VIX 82.69 Spike)",
+                    "2022 Central Bank Rate Tightening Shock & Tech Valuation Reset",
+                    "2024–2026 AI Infrastructure CapEx Mega-Cap Rally (CAPE 41.37)"
+                ],
+                "description": f"Encompasses a 20-year range (2006-01-01 to {end_today}) capturing 8 structural macroeconomic shocks from the Subprime Mortgage bubble and GFC through 2026 Generative AI exuberance with 100% native exchange-traded data."
             }
         }
 
@@ -239,14 +263,21 @@ def generate_wasm_dataset(start_date: str, end_date: str) -> Dict[str, Any]:
     """
     global _IS_SYNTHETIC_FALLBACK_ACTIVE
 
+    start_str = str(start_date).lower()
     try:
-        start_year = int(str(start_date)[:4])
+        start_year = int(start_str[:4])
     except (ValueError, TypeError):
         start_year = 2000
-    is_50yr = (start_year < 2000) or ("50yr" in str(start_date).lower()) or ("option_1" in str(start_date).lower())
 
-    ds_p_name = "market_data_50yr.parquet" if is_50yr else "market_data_modern.parquet"
-    ds_j_name = "market_data_50yr.json" if is_50yr else "market_data_modern.json"
+    if ("option_3" in start_str) or ("20yr" in start_str) or (start_year == 2006):
+        ds_prefix = "market_data_20yr"
+    elif ("option_1" in start_str) or ("50yr" in start_str) or (start_year < 2000):
+        ds_prefix = "market_data_50yr"
+    else:
+        ds_prefix = "market_data_modern"
+
+    ds_p_name = f"{ds_prefix}.parquet"
+    ds_j_name = f"{ds_prefix}.json"
 
     # Branch 1: Synchronous Parquet loading from local disk / test suite if polars is available
     parquet_candidates = [
@@ -408,10 +439,7 @@ def generate_wasm_dataset(start_date: str, end_date: str) -> Dict[str, Any]:
 # Horizon Selector Widget
 horizon_selector = pn.widgets.Select(
     label="Select Date Horizon",
-    options={
-        HORIZON_OPTION_1_LABEL: HORIZON_OPTION_1_ID,
-        HORIZON_OPTION_2_LABEL: HORIZON_OPTION_2_ID
-    },
+    options={meta["label"]: h_id for h_id, meta in HORIZON_METADATA.items()},
     value=HORIZON_OPTION_1_ID,
     sizing_mode="stretch_width"
 )
@@ -863,6 +891,13 @@ def generate_explanatory_markdown(horizon_id: str) -> str:
             "<li><b>⚡ Macro Spline & Historical Proxies</b>: Pre-1993 series anchored to S&P index levels, nominal GDP, and historical Shiller CAPE.</li>"
             "</ul>"
         )
+    elif horizon_id == HORIZON_OPTION_3_ID:
+        tradeoffs = (
+            "<ul>"
+            "<li><b>✔ 20-Year Global Crisis Horizon</b>: 100% real exchange data spanning GFC through 2026 AI expansion.</li>"
+            "<li><b>✔ Institutional Macro Resilience</b>: Captures 8 major market dislocations with zero proxy compounding.</li>"
+            "</ul>"
+        )
     else:
         tradeoffs = (
             "<ul>"
@@ -871,9 +906,11 @@ def generate_explanatory_markdown(horizon_id: str) -> str:
             "</ul>"
         )
 
+    badge_color = "#AB47BC" if meta.get("badge_color") == "purple" else ("#2E7D32" if meta.get("badge_color") == "green" else "#0288D1")
+
     return f"""
 ### {ICON_CALENDAR} Horizon Specification & Data Integrity: {meta['label']}
-**Native Feature Fidelity:** <span style="color:#0288D1; font-weight:bold;">{meta['native_fidelity']} ({meta['fidelity_status']})</span>  
+**Native Feature Fidelity:** <span style="color:{badge_color}; font-weight:bold;">{meta['native_fidelity']} ({meta['fidelity_status']})</span>  
 *Time Bounds:* <code>{meta['start_date']}</code> to <code>{meta['end_date']}</code> ({meta['regimes_count']} Historical Regimes)
 
 {meta['description']}

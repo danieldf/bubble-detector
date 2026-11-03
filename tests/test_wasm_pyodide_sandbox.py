@@ -48,8 +48,10 @@ def test_json_datasets_staging():
     for dir_path in [PROVENANCE_DIR, BASE_DIR / "build", BASE_DIR / "dist"]:
         p50 = dir_path / "market_data_50yr.json"
         p_mod = dir_path / "market_data_modern.json"
+        p20 = dir_path / "market_data_20yr.json"
         assert p50.exists(), f"Missing {p50}"
         assert p_mod.exists(), f"Missing {p_mod}"
+        assert p20.exists(), f"Missing {p20}"
 
         # Validate JSON content
         with open(p50, "r", encoding="utf-8") as f:

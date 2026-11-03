@@ -1,13 +1,14 @@
 // Standalone W3C Cache API Service Worker for WebAssembly Market Bubble Detector
 // Cache Name Version
-const CACHE_NAME = 'bubble-detector-wasm-v3.0.0';
+const CACHE_NAME = 'bubble-detector-wasm-v3.2.0';
 
 // Core static assets for initial pre-cache
 const PRECACHE_ASSETS = [
   './',
   'index.html',
   'market_data_50yr.json',
-  'market_data_modern.json'
+  'market_data_modern.json',
+  'market_data_20yr.json'
 ];
 
 self.addEventListener('install', (event) => {

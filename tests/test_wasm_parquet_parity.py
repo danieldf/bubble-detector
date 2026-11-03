@@ -9,7 +9,7 @@ import polars as pl
 from bubble_detector.ui.dashboard import DashboardState
 from bubble_detector.ui.panel_dashboard import generate_wasm_dataset, HORIZON_METADATA
 
-@pytest.mark.parametrize("horizon_id", ["option_1", "option_2"])
+@pytest.mark.parametrize("horizon_id", ["option_1", "option_2", "option_3"])
 def test_wasm_loads_exact_parquet_dataset(horizon_id):
     """
     Asserts Pyodide WebAssembly dataset matches NiceGUI dataset with zero discrepancy (max diff == 0.000000)

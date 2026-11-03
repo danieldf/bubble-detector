@@ -2,9 +2,9 @@
 
 [![Deploy WebAssembly Dashboard](https://github.com/danieldf/bubble-detector/actions/workflows/deploy.yml/badge.svg)](https://github.com/danieldf/bubble-detector/actions/workflows/deploy.yml)
 [![Live WebAssembly Dashboard](https://img.shields.io/badge/Live_Dashboard-GitHub_Pages-0288D1?style=flat&logo=github)](https://danieldf.github.io/bubble-detector/)
-[![Version](https://img.shields.io/badge/Version-v3.1.0-4CAF50?style=flat)](https://github.com/danieldf/bubble-detector/releases/tag/v3.1.0)
+[![Version](https://img.shields.io/badge/Version-v3.2.0-4CAF50?style=flat)](https://github.com/danieldf/bubble-detector/releases/tag/v3.2.0)
 [![Python Version](https://img.shields.io/badge/Python-3.11%2B%20%7C%203.14-blue?style=flat&logo=python)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/Tests-105%20Passed%20(100%25)-success?style=flat)](https://github.com/danieldf/bubble-detector/actions)
+[![Tests](https://img.shields.io/badge/Tests-116%20Passed%20(100%25)-success?style=flat)](https://github.com/danieldf/bubble-detector/actions)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey.svg)](LICENSE)
 
 An enterprise-grade quantitative econometric system, statistical distance classifier, and machine learning framework engineered to detect financial asset bubbles, diagnose non-linear macroeconomic regime shifts, quantify systemic distance from historical equilibrium, and dynamically adjust portfolio equity exposure with zero lookahead bias and institutional cost accounting.
@@ -33,6 +33,7 @@ $$\text{Start Date} = \text{Current Date} - 50 \text{ physical calendar years}$$
 | :--- | :--- | :--- | :--- | :--- |
 | **Option 1: Comprehensive 50-Year Multi-Decade Horizon** | Dynamic 50-year lookback (e.g. `1976-09-03` to `2026-09-03`) | **9 Historical Regimes** (~13,000 trading days) | Polars Parquet caching + continuous backward return compounding | 1970s Great Inflation & Volcker Rate Shock (20% Fed Funds), 1987 Black Monday, 1990 S&L Crisis & Recession, 2000 Dot-Com Tech Bubble & Crash, 2007–2009 Subprime GFC, 2018 Volmageddon & Q4 QT, 2020 COVID Flash Crash, 2022 Fed Rate Hikes, 2024–2026 AI CapEx Concentration |
 | **Option 2: Modern 5-Regime Native Horizon** | `2015-01-01` to current date | **5 Modern Regimes** (~3,000 trading days) | 100% Native High-Fidelity Exchange Feeds (SPY, XLK, CBOE VIX, FRED) | 2018 Volmageddon, 2020 COVID Crash & QE Rebound, 2020-2021 Liquidity Euphoria, 2022 Fed Rate Tightening, 2024–2026 AI Mega-Cap Supercycle |
+| **Option 3: 20-Year Global Crisis & Expansion Horizon** | `2006-01-01` to current date | **8 Historical Regimes** (~5,200 trading days) | Polars Parquet caching + continuous backward return compounding | 2007–2009 Subprime GFC, 2010 Euro Crisis & Flash Crash, 2011 U.S. Debt Downgrade, 2015–2016 Energy Crash, 2018 Volmageddon & Q4 QT, 2020 COVID Flash Crash, 2022 Fed Rate Tightening, 2024–2026 AI Mega-Cap Concentration |
 
 ---
 
@@ -258,22 +259,24 @@ Compiles the dashboard into zero-backend WebAssembly HTML/JS bundles:
 python stage_provenance.py
 
 # Compile to Pyodide WebAssembly target
-python -m panel convert bubble_detector/ui/panel_dashboard.py --to pyodide-worker --out dist/
+WASM_BUILD_PACKAGING=1 python -m panel convert bubble_detector/ui/panel_dashboard.py --to pyodide --requirements panel bokeh plotly numpy --out dist/
+mv dist/panel_dashboard.html dist/index.html
 
-# Post-process HTML bundle (injects MEMFS pre-loader and error boundary)
+# Post-process HTML bundle and synchronize build/ directory
 python bubble_detector/ui/postprocess_wasm.py
 
-# Serve client-side WASM locally
+# Serve client-side WASM locally (from dist/ or build/)
 python -m http.server 8000 --directory dist/
+# or: python -m http.server 8000 --directory build/
 ```
 *Access client-side WASM app at: `http://localhost:8000`*
 
 ### 5. Run the Automated Test Suite
 
-Executes all 105 automated unit, integration, numerical parity, module alias, and anti-synthetic tests:
+Executes all 116 automated unit, integration, numerical parity, module alias, and anti-synthetic tests:
 
 ```bash
-# Run all 105 tests
+# Run all 116 tests
 ./.venv/bin/pytest tests/ -v
 
 # Run Mahalanobis and Tab 6 normalization tests specifically
@@ -300,6 +303,25 @@ graphify update .
 ## 📋 Changelog
 
 All notable changes to this project are documented in this section adhering to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and [Semantic Versioning (SemVer)](https://semver.org/).
+
+### [v3.2.0] - 2026-11-03
+
+#### Added
+- **Option 3 Regime Horizon (20-Year Global Crisis Horizon, 2006–2026)** (`bubble_detector/data/date_horizons.py`):
+  - Standalone calendar-anchored 20-year horizon starting January 1, 2006, capturing 8 landmark regimes and crashes (Subprime GFC, Euro Debt Crisis, 2011 U.S. Debt Downgrade, 2015-16 Energy Crash, 2018 Volmageddon, 2020 COVID Flash Crash, 2022 Tech Drawdown, and 2024-2026 AI CapEx Concentration).
+  - Integrated institutional purple badge token (`#9C27B0`) and explanatory trade-off metadata across `HORIZON_METADATA`.
+- **Pre-Compiled 20-Year Data Provenance Artifacts** (`stage_provenance.py`):
+  - Ingestion and pre-compilation of `market_data_20yr.parquet` (827 KB) and compact `market_data_20yr.json` (1.3 MB) with adaptive decimal precision.
+- **Cross-Runtime Indicator & Trace Parity Suite** (`tests/test_full_indicator_parity.py`):
+  - Validated 100% numerical and visual parity across all 3 horizons and all 7 tabs between NiceGUI and HoloViz Panel WebAssembly runtimes.
+- **Automated Dual-Directory Distribution & Service Worker Cache Invalidation** (`bubble_detector/ui/postprocess_wasm.py`, `sw.js`):
+  - Automated synchronization (`sync_wasm_build_directories()`) guaranteeing identical post-processed bundles across both `dist/` and `build/`.
+  - Bumped Service Worker cache version to `bubble-detector-wasm-v3.2.0` across `sw.js`, `dist/sw.js`, and `build/sw.js` for immediate client-side cache busting.
+  - Test suite expanded to **116 automated tests passing with 100% success rate**.
+
+#### Changed
+- **Dynamic Multi-Horizon Dashboard Architecture**:
+  - Dynamically binds horizon controls from `HORIZON_METADATA` across NiceGUI and WebAssembly, replacing binary toggle logic with multi-horizon registry routing.
 
 ### [v3.1.0] - 2026-10-05
 

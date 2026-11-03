@@ -6,7 +6,7 @@ import pytest
 import datetime
 import polars as pl
 from bubble_detector.config import (
-    HORIZON_METADATA, HORIZON_OPTION_1_ID, HORIZON_OPTION_2_ID,
+    HORIZON_METADATA, HORIZON_OPTION_1_ID, HORIZON_OPTION_2_ID, HORIZON_OPTION_3_ID,
     get_dynamic_50yr_date_range, get_current_date
 )
 from bubble_detector.data.date_horizons import (
@@ -72,8 +72,28 @@ def test_option_2_modern_data_ingestion(ingestor):
     assert "SPY" in df.columns
     assert "Shiller_CAPE" in df.columns
 
+def test_option_3_20yr_data_ingestion(ingestor):
+    """Verify Option 3 (20-Year Global Crisis Horizon, 2006–2026) data ingestion (>5,000 rows, zero nulls)."""
+    meta = HORIZON_METADATA[HORIZON_OPTION_3_ID]
+    assert meta["start_date"] == "2006-01-01"
+    assert meta["regimes_count"] == 8
+    assert meta["native_fidelity"] == "100%"
+    assert meta["badge_color"] == "purple"
+
+    df = ingestor.fetch_market_data(start_date=meta["start_date"], end_date=meta["end_date"], use_cache=True)
+    assert isinstance(df, pl.DataFrame)
+    assert len(df) > 5000
+    assert "SPY" in df.columns
+    assert "XLK" in df.columns
+    assert "Shiller_CAPE" in df.columns
+    assert "Housing_Price_to_Income" in df.columns
+    assert "FINRA_Margin_Debt" in df.columns
+
+    for col in ["SPY", "XLK", "Shiller_CAPE", "Housing_Price_to_Income", "FINRA_Margin_Debt"]:
+        assert df[col].null_count() == 0, f"Null values detected in Option 3 column {col}"
+
 def test_dashboard_state_horizon_switching(tmp_path):
-    """Verify DashboardState properly switches between 50-year and modern horizons."""
+    """Verify DashboardState properly switches between 50-year, modern, and 20-year horizons."""
     state = DashboardState(load_data=False)
     state.ingestor = DataIngestor(cache_dir=tmp_path / "cache")
 
@@ -89,7 +109,15 @@ def test_dashboard_state_horizon_switching(tmp_path):
     assert "Drawdown_Probability" in state.df.columns
     len_opt2 = len(state.df)
 
-    # Option 1 (50 years) must have substantially more rows than Option 2 (~11 years)
-    assert len_opt1 > len_opt2
+    # Load Option 3 (20-Year Global Crisis)
+    state.load_data(horizon_id=HORIZON_OPTION_3_ID)
+    assert state.selected_horizon_id == HORIZON_OPTION_3_ID
+    assert "Drawdown_Probability" in state.df.columns
+    len_opt3 = len(state.df)
+
+    # Length hierarchy: 50-Year (~13k) > 20-Year (~5.4k) > Modern (~3.1k)
+    assert len_opt1 > len_opt3 > len_opt2
     assert len_opt1 > 10000
+    assert len_opt3 > 5000
+    assert len_opt2 > 2500
 

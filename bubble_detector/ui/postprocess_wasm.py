@@ -246,7 +246,7 @@ function initHashRouting() {
   function slugify(t) { return (t || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''); }
   function parseHash() { const params = new URLSearchParams(window.location.hash.replace(/^#/, '')); return { tab: params.get('tab'), horizon: params.get('horizon') }; }
   function getActiveTabSlug() { const a = document.querySelector('.bk-tab.bk-active, [role="tab"][aria-selected="true"], .tab.active'); return a && a.textContent ? slugify(a.textContent) : null; }
-  function getActiveHorizon() { const sel = document.querySelector('#sidebar select, .sidenav select, select.bk-input'); return (sel && sel.value && (sel.value.includes('Option 2') || sel.value === 'option_2')) ? 'option_2' : 'option_1'; }
+  function getActiveHorizon() { const sel = document.querySelector('#sidebar select, .sidenav select, select.bk-input'); if (!sel || !sel.value) return 'option_1'; if (sel.value.includes('Option 3') || sel.value === 'option_3') return 'option_3'; if (sel.value.includes('Option 2') || sel.value === 'option_2') return 'option_2'; return 'option_1'; }
   function updateUrlHash(t, h) {
     const newHash = '#tab=' + (t || getActiveTabSlug() || 'macro-valuation') + '&horizon=' + (h || getActiveHorizon() || 'option_1');
     if (window.location.hash !== newHash) history.pushState(null, '', newHash);
@@ -261,7 +261,7 @@ function initHashRouting() {
     if (state.horizon) {
       document.querySelectorAll('#sidebar select, .sidenav select, select.bk-input').forEach(sel => {
         for (let opt of sel.options) {
-          if (opt.value === state.horizon || (state.horizon === 'option_2' && opt.text.includes('Option 2')) || (state.horizon === 'option_1' && opt.text.includes('Option 1'))) {
+          if (opt.value === state.horizon || (state.horizon === 'option_3' && opt.text.includes('Option 3')) || (state.horizon === 'option_2' && opt.text.includes('Option 2')) || (state.horizon === 'option_1' && opt.text.includes('Option 1'))) {
             if (sel.value !== opt.value) { sel.value = opt.value; sel.dispatchEvent(new Event('change', { bubbles: true })); }
           }
         }
@@ -281,7 +281,8 @@ function initHashRouting() {
       if (!sel.dataset.hashBound) {
         sel.dataset.hashBound = 'true';
         sel.addEventListener('change', () => {
-          const hVal = (sel.value && sel.value.includes('Option 2')) || sel.value === 'option_2' ? 'option_2' : 'option_1';
+          const val = sel.value || '';
+          const hVal = (val.includes('Option 3') || val === 'option_3') ? 'option_3' : ((val.includes('Option 2') || val === 'option_2') ? 'option_2' : 'option_1');
           updateUrlHash(null, hVal);
         });
       }
@@ -328,7 +329,7 @@ if (document.readyState === 'loading') {
           updateProgressChecklist('packages', 'done', '2. Mathematical Engines: Loaded');
           updateProgressChecklist('data', 'active', 'Pre-loading MEMFS datasets...');
         }}
-        for (const ds of ['market_data_50yr.json', 'market_data_modern.json']) {{
+        for (const ds of ['market_data_50yr.json', 'market_data_modern.json', 'market_data_20yr.json']) {{
           try {{
             let r = await fetch(ds);
             if (r.ok) {{
@@ -376,7 +377,7 @@ if (document.readyState === 'loading') {
         else:
             # Fallback for minimal sample scripts in test harnesses
             minimal_block = """
-      for (const ds of ['market_data_50yr.json']) {
+      for (const ds of ['market_data_50yr.json', 'market_data_modern.json', 'market_data_20yr.json']) {
         try {
           let r = await fetch(ds);
           if (r.ok) {
@@ -424,5 +425,43 @@ def postprocess_wasm_html(html_path: Path = Path("dist/index.html")):
     print(f"Successfully postprocessed {html_path}")
 
 
+def sync_wasm_build_directories():
+    """
+    Ensure both `dist/` and `build/` directories have identical, up-to-date
+    artifacts, datasets, and service workers for local serving and deployment.
+    """
+    import shutil
+    dist_dir = Path("dist")
+    build_dir = Path("build")
+
+    if not dist_dir.exists():
+        return
+
+    postprocess_wasm_html(dist_dir / "index.html")
+
+    if build_dir.exists():
+        # Sync index.html, sw.js, and datasets to build/
+        if (dist_dir / "index.html").exists():
+            shutil.copy2(dist_dir / "index.html", build_dir / "index.html")
+            shutil.copy2(dist_dir / "index.html", build_dir / "panel_dashboard.html")
+        if (dist_dir / "sw.js").exists():
+            shutil.copy2(dist_dir / "sw.js", build_dir / "sw.js")
+        elif Path("sw.js").exists():
+            shutil.copy2(Path("sw.js"), build_dir / "sw.js")
+
+        for f in dist_dir.glob("market_data_*.*"):
+            shutil.copy2(f, build_dir / f.name)
+
+        # Remove obsolete worker script if present
+        obsolete_worker = build_dir / "panel_dashboard.js"
+        if obsolete_worker.exists():
+            try:
+                obsolete_worker.unlink()
+            except OSError:
+                pass
+
+        print(f"Successfully synchronized distribution assets from {dist_dir} to {build_dir}")
+
+
 if __name__ == "__main__":
-    postprocess_wasm_html()
+    sync_wasm_build_directories()

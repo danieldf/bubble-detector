@@ -122,19 +122,17 @@ from bubble_detector.data.date_horizons import (
     get_dynamic_50yr_date_range,
     HORIZON_OPTION_1_ID,
     HORIZON_OPTION_2_ID,
+    HORIZON_OPTION_3_ID,
+    HORIZON_OPTION_1_LABEL,
+    HORIZON_OPTION_1_START,
+    HORIZON_OPTION_2_LABEL,
+    HORIZON_OPTION_2_START,
+    HORIZON_OPTION_3_LABEL,
+    HORIZON_OPTION_3_START,
+    DEFAULT_START_DATE,
+    DEFAULT_END_DATE,
     get_dynamic_horizon_metadata,
 )
-
-# Evaluated defaults
-_dyn_start_50, _dyn_end = get_dynamic_50yr_date_range()
-DEFAULT_START_DATE = _dyn_start_50
-DEFAULT_END_DATE = _dyn_end
-
-HORIZON_OPTION_1_LABEL = f"Option 1: 50-Year Multi-Decade Horizon ({_dyn_start_50[:4]}–{_dyn_end[:4]})"
-HORIZON_OPTION_1_START = _dyn_start_50
-
-HORIZON_OPTION_2_LABEL = f"Option 2: Modern 5-Regime Horizon (2015–{_dyn_end[:4]})"
-HORIZON_OPTION_2_START = "2015-01-01"
 
 HORIZON_METADATA = get_dynamic_horizon_metadata()
 

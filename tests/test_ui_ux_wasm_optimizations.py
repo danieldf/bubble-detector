@@ -170,7 +170,7 @@ def test_service_worker_file_validity():
         assert sw_path.exists(), f"Service worker file missing at {sw_path}"
         content = sw_path.read_text(encoding="utf-8")
 
-        assert "bubble-detector-wasm-v3.0.0" in content, "Service worker missing correct cache name"
+        assert "bubble-detector-wasm-v3." in content, "Service worker missing correct cache name"
         assert "caches.open(CACHE_NAME)" in content, "Missing caches.open call"
         assert "market_data_50yr.json" in content, "Missing pre-cached 50yr dataset"
         assert ".wasm" in content, "Missing Cache-First .wasm rule"

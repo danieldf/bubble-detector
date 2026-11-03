@@ -21,12 +21,22 @@ and binary serialization of authentic macroeconomic and financial time series:
 """
 
 from pathlib import Path
-from bubble_detector.config import PROVENANCE_DIR, BASE_DIR, CACHE_DIR, logger
+from bubble_detector.config import (
+    PROVENANCE_DIR, BASE_DIR, CACHE_DIR, logger,
+    HORIZON_OPTION_1_ID, HORIZON_OPTION_2_ID, HORIZON_OPTION_3_ID, HORIZON_METADATA
+)
 from bubble_detector.data.etl_shiller import ShillerETL
 from bubble_detector.data.etl_fred import FredETL
 from bubble_detector.data.etl_finra import FinraETL
 from bubble_detector.data.etl_vxo import VxoETL
-from bubble_detector.ui.panel_dashboard import CORE_WASM_COLUMNS, HORIZON_OPTION_1_ID, HORIZON_OPTION_2_ID, HORIZON_METADATA
+from bubble_detector.ui.panel_dashboard import CORE_WASM_COLUMNS
+
+HIGH_PRECISION_COLS = {
+    "TDA_Persistence_L2_Norm",
+    "Drawdown_Probability",
+    "Wavelet_Spectral_Entropy",
+    "CentralBank_YoY_Growth",
+}
 
 def precompile_wasm_parquet_datasets():
     """
@@ -54,7 +64,13 @@ def precompile_wasm_parquet_datasets():
     PROVENANCE_DIR.mkdir(parents=True, exist_ok=True)
     ingestor = DataIngestor()
 
-    for horizon_id in [HORIZON_OPTION_1_ID, HORIZON_OPTION_2_ID]:
+    horizon_targets = [
+        (HORIZON_OPTION_1_ID, "market_data_50yr.parquet", "market_data_50yr.json"),
+        (HORIZON_OPTION_2_ID, "market_data_modern.parquet", "market_data_modern.json"),
+        (HORIZON_OPTION_3_ID, "market_data_20yr.parquet", "market_data_20yr.json"),
+    ]
+
+    for horizon_id, out_name_parquet, out_name_json in horizon_targets:
         meta = HORIZON_METADATA[horizon_id]
         s_dt, e_dt = meta["start_date"], meta["end_date"]
         df = ingestor.fetch_market_data(start_date=s_dt, end_date=e_dt)
@@ -74,14 +90,11 @@ def precompile_wasm_parquet_datasets():
         detector = MacroMahalanobisDetector()
         df = detector.process(df)
 
-        out_name_parquet = "market_data_50yr.parquet" if horizon_id == HORIZON_OPTION_1_ID else "market_data_modern.parquet"
-        out_name_json = "market_data_50yr.json" if horizon_id == HORIZON_OPTION_1_ID else "market_data_modern.json"
-
         # Write Parquet artifacts
         for target_dir in [build_dir, PROVENANCE_DIR, dist_dir]:
             df.write_parquet(target_dir / out_name_parquet)
 
-        # Build clean, lightweight JSON table for MEMFS pre-loading (21 core columns)
+        # Build clean, full-precision JSON table for MEMFS pre-loading (21 core columns)
         target_cols = [c for c in CORE_WASM_COLUMNS if c in df.columns]
         json_dict = {}
         for col in target_cols:
@@ -94,7 +107,8 @@ def precompile_wasm_parquet_datasets():
                 json_dict[col] = [int(v) if (v is not None and not np.isnan(v)) else 0 for v in vals]
             else:
                 vals = df[col].to_list()
-                json_dict[col] = [round(float(v), 4) if (v is not None and not np.isnan(v)) else 0.0 for v in vals]
+                dec = 6 if col in HIGH_PRECISION_COLS else 4
+                json_dict[col] = [round(float(v), dec) if (v is not None and not np.isnan(v)) else 0.0 for v in vals]
 
         for target_dir in [build_dir, PROVENANCE_DIR, dist_dir]:
             with open(target_dir / out_name_json, "w", encoding="utf-8") as f:
@@ -118,6 +132,7 @@ def sync_parquet_to_json():
     mapping = [
         ("market_data_50yr.parquet", "market_data_50yr.json"),
         ("market_data_modern.parquet", "market_data_modern.json"),
+        ("market_data_20yr.parquet", "market_data_20yr.json"),
     ]
     for p_name, j_name in mapping:
         p_path = PROVENANCE_DIR / p_name
@@ -137,7 +152,8 @@ def sync_parquet_to_json():
                     json_dict[col] = [int(v) if (v is not None and not np.isnan(v)) else 0 for v in vals]
                 else:
                     vals = df[col].to_list()
-                    json_dict[col] = [round(float(v), 4) if (v is not None and not np.isnan(v)) else 0.0 for v in vals]
+                    dec = 6 if col in HIGH_PRECISION_COLS else 4
+                    json_dict[col] = [round(float(v), dec) if (v is not None and not np.isnan(v)) else 0.0 for v in vals]
             for target_dir in [build_dir, PROVENANCE_DIR, dist_dir]:
                 with open(target_dir / j_name, "w", encoding="utf-8") as f:
                     json.dump(json_dict, f, separators=(',', ':'))

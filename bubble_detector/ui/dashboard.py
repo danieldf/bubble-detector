@@ -64,7 +64,8 @@ from bubble_detector.backtest.engine import PortfolioBacktestEngine
 from bubble_detector.ui.components import create_cta_banner, create_ios_card
 from bubble_detector.config import (
     HORIZON_METADATA, HORIZON_OPTION_1_ID, HORIZON_OPTION_1_LABEL,
-    HORIZON_OPTION_2_ID, HORIZON_OPTION_2_LABEL, PROVENANCE_DIR, logger
+    HORIZON_OPTION_2_ID, HORIZON_OPTION_2_LABEL,
+    HORIZON_OPTION_3_ID, HORIZON_OPTION_3_LABEL, PROVENANCE_DIR, logger
 )
 from bubble_detector.ui_theme import get_theme_css, LIGHT_THEME, DARK_THEME
 
@@ -100,8 +101,12 @@ class DashboardState:
         end_date = horizon_meta["end_date"]
 
         # Fast-Path: Zero-copy precompiled provenance Parquet loading (<10ms)
-        is_50yr = (self.selected_horizon_id == HORIZON_OPTION_1_ID)
-        p_name = "market_data_50yr.parquet" if is_50yr else "market_data_modern.parquet"
+        horizon_parquet_map = {
+            HORIZON_OPTION_1_ID: "market_data_50yr.parquet",
+            HORIZON_OPTION_2_ID: "market_data_modern.parquet",
+            HORIZON_OPTION_3_ID: "market_data_20yr.parquet",
+        }
+        p_name = horizon_parquet_map.get(self.selected_horizon_id, "market_data_modern.parquet")
         parquet_path = PROVENANCE_DIR / p_name
 
         if not force_recompute and parquet_path.exists():
@@ -562,8 +567,12 @@ def render_horizon_explanatory_note(state: DashboardState):
         with ui.row().classes('w-full justify-between items-center mb-2 flex-wrap gap-2'):
             with ui.row().classes('items-center gap-2'):
                 ui.label(meta["label"]).style('font-size: 1.1rem; font-weight: 700; color: var(--text-primary);')
-                badge_bg = 'rgba(76, 175, 80, 0.15)' if meta['badge_color'] == 'green' else 'rgba(33, 150, 243, 0.15)'
-                badge_fg = '#2E7D32' if meta['badge_color'] == 'green' else '#1565C0'
+                if meta['badge_color'] == 'green':
+                    badge_bg, badge_fg = 'rgba(76, 175, 80, 0.15)', '#2E7D32'
+                elif meta['badge_color'] == 'purple':
+                    badge_bg, badge_fg = 'rgba(156, 39, 176, 0.15)', '#7B1FA2'
+                else:
+                    badge_bg, badge_fg = 'rgba(33, 150, 243, 0.15)', '#1565C0'
                 ui.label(meta["fidelity_status"]).style(
                     f'background-color: {badge_bg}; color: {badge_fg}; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 6px;'
                 )
@@ -582,6 +591,9 @@ def render_horizon_explanatory_note(state: DashboardState):
                 if state.selected_horizon_id == HORIZON_OPTION_1_ID:
                     ui.label("✔ 50-Year Multi-Decade Horizon: Spans 9 major historical regimes with real Shiller & FRED data.").style('font-size: 0.83rem; color: var(--text-secondary);')
                     ui.label("⚡ Continuous Backward Compounding: Pre-1993 series seamlessly anchored to S&P index with zero cliff drops.").style('font-size: 0.83rem; color: var(--text-secondary);')
+                elif state.selected_horizon_id == HORIZON_OPTION_3_ID:
+                    ui.label("✔ 20-Year Global Crisis Horizon: 100% real exchange data spanning GFC through 2026 AI expansion.").style('font-size: 0.83rem; color: var(--text-secondary);')
+                    ui.label("✔ Institutional Macro Resilience: Captures 8 major market dislocations with zero proxy compounding.").style('font-size: 0.83rem; color: var(--text-secondary);')
                 else:
                     ui.label("✔ 100% Native High-Frequency Data: All features strictly measured from real market feeds.").style('font-size: 0.83rem; color: var(--text-secondary);')
                     ui.label("✔ Zero Proxy Imputation: Best suited for immediate tactical parameter tuning.").style('font-size: 0.83rem; color: var(--text-secondary);')
@@ -637,10 +649,7 @@ def create_app():
 
             with ui.row().classes('items-center gap-3'):
                 ui.select(
-                    options={
-                        HORIZON_OPTION_1_ID: HORIZON_OPTION_1_LABEL,
-                        HORIZON_OPTION_2_ID: HORIZON_OPTION_2_LABEL
-                    },
+                    options={h_id: meta["label"] for h_id, meta in HORIZON_METADATA.items()},
                     value=state.selected_horizon_id,
                     on_change=on_horizon_change
                 ).classes('w-96').style(

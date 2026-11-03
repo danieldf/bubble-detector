@@ -310,20 +310,22 @@ The platform compiles directly into Pyodide WebAssembly bundles, executing 100% 
 
 ```bash
 # Compile dashboard to Pyodide WASM bundle
-python -m panel convert bubble_detector/ui/panel_dashboard.py --to pyodide --requirements panel bokeh plotly numpy --out build/
+WASM_BUILD_PACKAGING=1 python -m panel convert bubble_detector/ui/panel_dashboard.py --to pyodide --requirements panel bokeh plotly numpy --out dist/
+mv dist/panel_dashboard.html dist/index.html
 
-# Synchronize index.html for static hosting
-cp build/panel_dashboard.html build/index.html
+# Post-process HTML bundle and synchronize build/ directory
+python bubble_detector/ui/postprocess_wasm.py
 
 # Test client-side distribution locally
-python -m http.server 8000 --directory build/
+python -m http.server 8000 --directory dist/
+# or: python -m http.server 8000 --directory build/
 ```
 - **Access URL**: `http://localhost:8000`
 - **Live Production Deployment**: [https://danieldf.github.io/bubble-detector/](https://danieldf.github.io/bubble-detector/)
 
 ### 8.5. Automated Test Suite & Numerical Parity Verification
 
-The quantitative integrity of all indicators, econometric tests, and machine learning models is enforced by an automated test suite comprising 37 tests with a mandatory 100% pass rate:
+The quantitative integrity of all indicators, econometric tests, and machine learning models is enforced by an automated test suite comprising 116 tests with a mandatory 100% pass rate:
 
 ```bash
 # Execute full test suite
@@ -348,6 +350,26 @@ graphify update .
 ## 9. Changelog and Version History
 
 All notable technical updates to this research specification and software implementation are versioned in accordance with [Semantic Versioning (SemVer v2.0.0)](https://semver.org/):
+
+### [v3.2.0] - 2026-11-03
+
+- **Option 3 Regime Horizon (20-Year Global Crisis Horizon, 2006–2026)**:
+  - Calendar-anchored 20-year lookback covering 8 major regimes and crises (2007–2009 Subprime GFC, 2010 Euro Crisis, 2011 U.S. Debt Downgrade, 2015-16 Energy Crash, 2018 Volmageddon, 2020 COVID Flash Crash, 2022 Tech Drawdown, and 2024-2026 AI CapEx Concentration).
+  - Pre-compiled datasets (`market_data_20yr.parquet` and `market_data_20yr.json`) with adaptive decimal precision.
+- **Cross-Runtime Indicator & Trace Parity Suite**:
+  - Verified 100% numerical and visual parity across NiceGUI and WebAssembly across all 3 horizons and all 7 tabs.
+- **Distribution Synchronization & Client-Side Cache Invalidation**:
+  - Automated dual-directory synchronization (`dist/` and `build/`) in `postprocess_wasm.py`.
+  - Bumped Service Worker cache version to `bubble-detector-wasm-v3.2.0` for automatic cache invalidation and instantaneous asset updates on client browsers.
+  - Test suite expanded to **116 automated tests passing with 100% success rate**.
+
+### [v3.1.0] - 2026-10-05
+
+- **Tab 7 Tech Exuberance Score & LPPLS Singularity Model**:
+  - Added Tab 7 to dual runtimes evaluating macro liquidity decoupling against microstructural mathematical singularities.
+  - Implemented Filimonov & Sornette (2013) Log-Periodic Power Law Singularity (LPPLS) model with Sornette 5 constraints.
+  - Implemented Global Liquidity ETL with FRED M2 and Fed Balance Sheet splicing.
+  - Test suite expanded to 105 automated tests.
 
 ### [v3.0.0] - 2026-09-03
 

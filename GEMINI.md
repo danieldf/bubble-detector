@@ -20,11 +20,11 @@ Rules:
 ### 2. Architectural Blueprint & Directory Layout
 ```text
 bubble_detector/
-├── __init__.py           # Version definition (v3.0.0) and top-level exports
+├── __init__.py           # Version definition (v3.2.0) and top-level exports
 ├── config.py             # Global constants, paths, logging (RotatingFileHandler), custom exceptions
 ├── ui_theme.py           # WCAG 2.2 AA contrast engine, Apple human interface styling, 8px rhythm
 ├── data/                 # Ground-truth point-in-time ETL pipelines and multi-decade horizon anchoring
-│   ├── date_horizons.py  # Standalone calendar-anchored 50-year range (1976–2026, 13,045 trading days)
+│   ├── date_horizons.py  # Dynamic calendar-anchored 3-horizon suite (50yr, Modern, and 20yr Global Crisis)
 │   ├── etl_shiller.py    # Shiller ie_data.xls (1871–present) monthly S&P prices, CAPE, real earnings
 │   ├── etl_fred.py       # FRED Nominal GDP, Case-Shiller HPI, Real Household Income (+60d publication lag)
 │   ├── etl_finra.py      # FINRA & NYSE Customer Margin Debt (1959–present, +21d publication lag)
@@ -48,7 +48,7 @@ bubble_detector/
 │   ├── engine.py         # 15 bps turnover friction, 4.0% cash yield, 2% deadband, Sortino ratio
 │   └── validation_table.py # 8-event historical crash validation table (100% warning hit rate, 66.5d lead)
 └── ui/                   # Dual-runtime responsive visualization dashboards
-    ├── dashboard.py      # NiceGUI server-side interactive 6-tab dashboard
+    ├── dashboard.py      # NiceGUI server-side interactive 7-tab dashboard
     ├── panel_dashboard.py# HoloViz Panel Pyodide WebAssembly client-side dashboard (100% parity)
     ├── components.py     # iOS 13+ cards, typography tokens, CTA banners, WCAG 2.2 AA containers
     ├── theme.py          # Canonical alias module exporting UI design system tokens and WCAG contrast algorithms
@@ -79,7 +79,7 @@ bubble_detector/
   ```bash
   ./.venv/bin/pytest tests/ -v
   ```
-  Expected result: **76 passed tests (100% pass rate)**.
+  Expected result: **116 passed tests (100% pass rate)**.
 - Anti-synthetic regression verification:
   ```bash
   ./.venv/bin/pytest tests/test_no_gaussian_bumps.py -v

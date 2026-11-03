@@ -5,6 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2026-11-03
+
+### Added
+- **Option 3 Regime Horizon (20-Year Global Crisis Horizon, 2006–2026)** (`bubble_detector/data/date_horizons.py`):
+  - Added standalone calendar-anchored 20-year horizon starting January 1, 2006, encompassing 8 major historical regimes and crises:
+    - 2007-2009 Subprime Housing Crisis & Great Financial Crisis Crash
+    - 2010 European Sovereign Debt Crisis & Flash Crash
+    - 2011 U.S. Debt Downgrade & Debt Ceiling Crisis
+    - 2015-2016 Global Growth Slowdown & Energy Crash
+    - 2018 Volmageddon & Q4 QT Liquidity Compression
+    - 2020 COVID-19 Flash Crash (VIX 82.7 Spike)
+    - 2022 Fed Rate Tightening & Tech Drawdown
+    - 2024-2026 AI CapEx Mega-Cap Rally (CAPE 41.37)
+  - Registered institutional purple badge token (`#9C27B0`), full crash annotations, and metadata across `HORIZON_METADATA`.
+- **Pre-Compiled 20-Year Data Provenance Artifacts** (`stage_provenance.py`):
+  - Generated `market_data_20yr.parquet` (827 KB) and `market_data_20yr.json` (1.3 MB) with adaptive decimal precision (6 decimals for sensitive topological/volatility features, 4 decimals for price/indicator series).
+  - Staged across `data/provenance/`, `dist/`, and `build/`.
+- **Automated Dual-Directory Build & Cache Synchronization** (`bubble_detector/ui/postprocess_wasm.py`):
+  - Implemented `sync_wasm_build_directories()` ensuring identical, up-to-date postprocessed bundles, datasets, and service workers across both `dist/` and `build/`.
+  - Upgraded Service Worker cache version to `bubble-detector-wasm-v3.2.0` in `sw.js`, `dist/sw.js`, and `build/sw.js` for automatic cache invalidation and instantaneous asset refresh on client browsers.
+  - Injected Pyodide MEMFS pre-loader routines for `market_data_20yr.json` and deep-link URL hash routing (`#horizon=option_3`).
+- **Comprehensive Cross-Runtime Indicator & Trace Parity Suite**:
+  - `tests/test_full_indicator_parity.py`: Validated 100% numerical and visual parity across all 3 horizons (Option 1, Option 2, Option 3) and all 7 tabs between NiceGUI and HoloViz Panel WebAssembly.
+  - `tests/test_wasm_parquet_parity.py`: Confirmed identical data column signatures and values loaded by the WASM data engine.
+  - Full automated test suite expanded to **116 passed tests (100% pass rate)**.
+
+### Changed
+- **Dynamic Multi-Horizon Dashboard Architecture**:
+  - Replaced legacy binary toggle logic (`is_50yr`) with dynamic horizon registry mapping in `bubble_detector/ui/dashboard.py` and `bubble_detector/ui/panel_dashboard.py`.
+  - Synchronized dropdown selectors dynamically from `HORIZON_METADATA` with seamless reactive data updating across all 7 tabs.
+
 ## [3.1.0] - 2026-10-05
 
 ### Added
