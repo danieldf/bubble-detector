@@ -56,6 +56,7 @@ def precompile_wasm_parquet_datasets():
     )
     from bubble_detector.models.structural_breaks import StructuralBreakPredictor
     from bubble_detector.models.regime_mahalanobis import MacroMahalanobisDetector
+    from bubble_detector.models.composite_summary import CompositeSummaryEngine
 
     build_dir = BASE_DIR / "build"
     dist_dir = BASE_DIR / "dist"
@@ -63,6 +64,7 @@ def precompile_wasm_parquet_datasets():
     dist_dir.mkdir(parents=True, exist_ok=True)
     PROVENANCE_DIR.mkdir(parents=True, exist_ok=True)
     ingestor = DataIngestor()
+    summary_engine = CompositeSummaryEngine()
 
     horizon_targets = [
         (HORIZON_OPTION_1_ID, "market_data_50yr.parquet", "market_data_50yr.json"),
@@ -89,6 +91,7 @@ def precompile_wasm_parquet_datasets():
 
         detector = MacroMahalanobisDetector()
         df = detector.process(df)
+        df = summary_engine.compute_all_summary_indicators(df)
 
         # Write Parquet artifacts
         for target_dir in [build_dir, PROVENANCE_DIR, dist_dir]:
@@ -102,12 +105,20 @@ def precompile_wasm_parquet_datasets():
                 json_dict["Date"] = [str(d)[:10] for d in df["Date"].to_list()]
             elif col == "Primary_Anomaly_Driver" or df[col].dtype in (pl.Utf8, pl.String):
                 json_dict[col] = df[col].to_list()
-            elif df[col].dtype in (pl.Int8, pl.Int16, pl.Int32, pl.Int64, pl.UInt8, pl.UInt16, pl.UInt32, pl.UInt64, pl.Boolean):
+            elif col == "SPCA_Active_Pillars" or df[col].dtype in (pl.Int8, pl.Int16, pl.Int32, pl.Int64, pl.UInt8, pl.UInt16, pl.UInt32, pl.UInt64, pl.Boolean):
                 vals = df[col].to_list()
-                json_dict[col] = [int(v) if (v is not None and not np.isnan(v)) else 0 for v in vals]
+                json_dict[col] = [int(round(float(v))) if (v is not None and not np.isnan(v)) else 0 for v in vals]
             else:
                 vals = df[col].to_list()
-                dec = 6 if col in HIGH_PRECISION_COLS else 4
+                if col in HIGH_PRECISION_COLS:
+                    dec = 6
+                elif col.endswith("_Summary_Index") or col in {
+                    "Crash_Liquidation_Damper", "SPY", "Buffett_Indicator",
+                    "XLK", "^SKEW", "^VIX", "Shiller_CAPE", "P_CAPE", "FINRA_Margin_Debt"
+                }:
+                    dec = 2
+                else:
+                    dec = 3
                 json_dict[col] = [round(float(v), dec) if (v is not None and not np.isnan(v)) else 0.0 for v in vals]
 
         for target_dir in [build_dir, PROVENANCE_DIR, dist_dir]:
@@ -115,6 +126,13 @@ def precompile_wasm_parquet_datasets():
                 json.dump(json_dict, f, separators=(',', ':'))
 
         logger.info(f"Pre-compiled WASM Parquet and JSON datasets: {out_name_parquet}, {out_name_json}")
+
+    try:
+        from bubble_detector.ui.panel_dashboard import _DATASET_CACHE, _FIGURE_CACHE
+        _DATASET_CACHE.clear()
+        _FIGURE_CACHE.clear()
+    except Exception:
+        pass
 
 
 def sync_parquet_to_json():
@@ -139,7 +157,11 @@ def sync_parquet_to_json():
         if not p_path.exists():
             p_path = build_dir / p_name
         if p_path.exists():
+            from bubble_detector.models.regime_mahalanobis import MacroMahalanobisDetector
+            from bubble_detector.models.composite_summary import CompositeSummaryEngine
             df = pl.read_parquet(p_path)
+            df = MacroMahalanobisDetector().process(df)
+            df = CompositeSummaryEngine().compute_all_summary_indicators(df)
             target_cols = [c for c in CORE_WASM_COLUMNS if c in df.columns]
             json_dict = {}
             for col in target_cols:
@@ -147,18 +169,25 @@ def sync_parquet_to_json():
                     json_dict["Date"] = [str(d)[:10] for d in df["Date"].to_list()]
                 elif col == "Primary_Anomaly_Driver" or df[col].dtype in (pl.Utf8, pl.String):
                     json_dict[col] = df[col].to_list()
-                elif df[col].dtype in (pl.Int8, pl.Int16, pl.Int32, pl.Int64, pl.UInt8, pl.UInt16, pl.UInt32, pl.UInt64, pl.Boolean):
+                elif col == "SPCA_Active_Pillars" or df[col].dtype in (pl.Int8, pl.Int16, pl.Int32, pl.Int64, pl.UInt8, pl.UInt16, pl.UInt32, pl.UInt64, pl.Boolean):
                     vals = df[col].to_list()
-                    json_dict[col] = [int(v) if (v is not None and not np.isnan(v)) else 0 for v in vals]
+                    json_dict[col] = [int(round(float(v))) if (v is not None and not np.isnan(v)) else 0 for v in vals]
                 else:
                     vals = df[col].to_list()
-                    dec = 6 if col in HIGH_PRECISION_COLS else 4
+                    if col in HIGH_PRECISION_COLS:
+                        dec = 6
+                    elif col.endswith("_Summary_Index") or col in {
+                        "Crash_Liquidation_Damper", "SPY", "Buffett_Indicator",
+                        "XLK", "^SKEW", "^VIX", "Shiller_CAPE", "P_CAPE", "FINRA_Margin_Debt"
+                    }:
+                        dec = 2
+                    else:
+                        dec = 3
                     json_dict[col] = [round(float(v), dec) if (v is not None and not np.isnan(v)) else 0.0 for v in vals]
             for target_dir in [build_dir, PROVENANCE_DIR, dist_dir]:
                 with open(target_dir / j_name, "w", encoding="utf-8") as f:
                     json.dump(json_dict, f, separators=(',', ':'))
-                if not (target_dir / p_name).exists() or target_dir != p_path.parent:
-                    df.write_parquet(target_dir / p_name)
+                df.write_parquet(target_dir / p_name)
             print(f"Synced {p_name} to {j_name} across provenance, build, and dist directories.")
 
 def stage_all():

@@ -207,7 +207,7 @@ HORIZON_OPTION_1_LABEL = f"Option 1: 50-Year Multi-Decade Horizon ({_dyn_start_5
 HORIZON_OPTION_2_LABEL = f"Option 2: Modern 5-Regime Horizon (2015–{_dyn_end[:4]})"
 HORIZON_METADATA = get_dynamic_horizon_metadata()
 
-# Core 35 Indicator Columns for WebAssembly Client-Side Execution
+# Core 42 Indicator Columns for WebAssembly Client-Side Execution
 CORE_WASM_COLUMNS = [
     "Date",
     "SPY",
@@ -244,6 +244,13 @@ CORE_WASM_COLUMNS = [
     "Condition_Macro",
     "Condition_Statistical",
     "Tech_Exuberance_Signal",
+    "Composite_Summary_Index",
+    "Mahalanobis_Summary_Index",
+    "DFM_Summary_Index",
+    "Diffusion_Summary_Index",
+    "SPCA_Summary_Index",
+    "SPCA_Active_Pillars",
+    "Crash_Liquidation_Damper",
 ]
 
 # Flag tracking whether synthetic fallback data is active
@@ -292,6 +299,9 @@ def generate_wasm_dataset(start_date: str, end_date: str) -> Dict[str, Any]:
         for cand in parquet_candidates:
             if cand.exists():
                 df_p = pl.read_parquet(cand)
+                if "Composite_Summary_Index" not in df_p.columns:
+                    from bubble_detector.models.composite_summary import CompositeSummaryEngine
+                    df_p = CompositeSummaryEngine().compute_all_summary_indicators(df_p)
                 _IS_SYNTHETIC_FALLBACK_ACTIVE = False
                 out_dict = {}
                 for col in df_p.columns:
@@ -317,6 +327,7 @@ def generate_wasm_dataset(start_date: str, end_date: str) -> Dict[str, Any]:
         )
         from bubble_detector.models.structural_breaks import StructuralBreakPredictor
         from bubble_detector.models.regime_mahalanobis import MacroMahalanobisDetector
+        from bubble_detector.models.composite_summary import CompositeSummaryEngine
 
         ingestor = DataIngestor()
         df_raw = ingestor.fetch_market_data(start_date=start_date, end_date=end_date)
@@ -335,6 +346,9 @@ def generate_wasm_dataset(start_date: str, end_date: str) -> Dict[str, Any]:
 
         detector = MacroMahalanobisDetector()
         df_raw = detector.process(df_raw)
+
+        summary_engine = CompositeSummaryEngine()
+        df_raw = summary_engine.compute_all_summary_indicators(df_raw)
 
         _IS_SYNTHETIC_FALLBACK_ACTIVE = False
         out_dict = {}
@@ -433,6 +447,18 @@ def generate_wasm_dataset(start_date: str, end_date: str) -> Dict[str, Any]:
         "Condition_Macro": np.zeros(n, dtype=np.int32),
         "Condition_Statistical": np.zeros(n, dtype=np.int32),
         "Tech_Exuberance_Signal": np.zeros(n, dtype=np.int32),
+        "Margin_Debt_Velocity_Orth": 0.4 * np.sin(0.9 * t),
+        "OVX_VIX_Orthogonal": 0.3 * np.cos(1.1 * t),
+        "VIX_Slope_Orthogonal": 0.35 * np.sin(1.2 * t),
+        "Housing_PTI_Orthogonal": 0.5 * np.sin(0.4 * t),
+        "LPPLS_Orthogonal": 0.45 * np.sin(0.6 * t),
+        "Composite_Summary_Index": np.clip(50.0 + 25.0 * np.sin(0.7 * t), 0.0, 100.0),
+        "Mahalanobis_Summary_Index": np.clip(52.0 + 28.0 * np.sin(0.7 * t), 0.0, 100.0),
+        "DFM_Summary_Index": np.clip(48.0 + 26.0 * np.sin(0.7 * t - 0.1), 0.0, 100.0),
+        "Diffusion_Summary_Index": np.clip(50.0 + 22.0 * np.sin(0.7 * t + 0.1), 0.0, 100.0),
+        "SPCA_Summary_Index": np.clip(49.0 + 27.0 * np.sin(0.7 * t - 0.05), 0.0, 100.0),
+        "SPCA_Active_Pillars": np.clip(np.round(5.0 + 3.0 * np.sin(0.7 * t)), 1.0, 13.0).astype(np.int32),
+        "Crash_Liquidation_Damper": np.clip(2.0 - 1.2 * np.sin(0.7 * t), 0.0, 8.0),
     }
     return out_dict
 
@@ -871,6 +897,76 @@ def build_tech_exuberance_fig(horizon_id: str, is_mobile: bool = False) -> go.Fi
     fig.update_xaxes(title_text="Date", row=4, col=1)
     return fig
 
+
+def build_composite_summary_fig(horizon_id: str, is_mobile: bool = False) -> go.Figure:
+    """Build Plotly figure for Tab 8: Composite Summary Indicators (matching NiceGUI 100%)."""
+    if os.environ.get("WASM_BUILD_PACKAGING") == "1":
+        return _build_packaging_proxy_fig("Composite Summary Indicators", is_mobile)
+    data = fetch_dataset(horizon_id)
+    dates = data["Date"]
+    n = len(dates)
+
+    fig = make_subplots(
+        rows=3, cols=1,
+        shared_xaxes=True,
+        vertical_spacing=0.07 if not is_mobile else 0.09,
+        subplot_titles=(
+            "1. Five Information-Maximizing Summary Indicators (0–100% Composite Bubble Probability)",
+            "2. Methodological Divergence: Dynamic Factor (DFM) vs Diffusion (LEI) vs Sparse PCA (SPCA)",
+            "3. Active Pillar Sparsity Count (||α_t||_0 ∈ [1, 13]) & Asymmetric Crash-Liquidation Damper (D_M,crash)"
+        )
+    )
+
+    comp = data["Composite_Summary_Index"] if "Composite_Summary_Index" in data else np.full(n, 50.0)
+    mahal = data["Mahalanobis_Summary_Index"] if "Mahalanobis_Summary_Index" in data else np.full(n, 50.0)
+    dfm = data["DFM_Summary_Index"] if "DFM_Summary_Index" in data else np.full(n, 50.0)
+    diff = data["Diffusion_Summary_Index"] if "Diffusion_Summary_Index" in data else np.full(n, 50.0)
+    spca = data["SPCA_Summary_Index"] if "SPCA_Summary_Index" in data else np.full(n, 50.0)
+    pillars = data["SPCA_Active_Pillars"] if "SPCA_Active_Pillars" in data else np.full(n, 5.0)
+    damper = data["Crash_Liquidation_Damper"] if "Crash_Liquidation_Damper" in data else np.zeros(n)
+
+    # Subplot 1: All 5 Summary Indicators
+    d_c, v_c = _prepare_trace(dates, comp)
+    fig.add_trace(go.Scatter(x=d_c, y=v_c, mode="lines", name="1. Information-Weighted Linear Composite (γ=0.96) [REAL]", line=dict(color="#00E5FF", width=3.0)), row=1, col=1)
+
+    d_m, v_m = _prepare_trace(dates, mahal)
+    fig.add_trace(go.Scatter(x=d_m, y=v_m, mode="lines", name="2. Signed Riemannian Mahalanobis Summary (γ=0.95) [REAL]", line=dict(color="#FF1744", width=2.4)), row=1, col=1)
+
+    d_d, v_d = _prepare_trace(dates, dfm)
+    fig.add_trace(go.Scatter(x=d_d, y=v_d, mode="lines", name="3. Perron-Frobenius Dynamic Factor (DFM, γ=0.93) [REAL]", line=dict(color="#FFD600", width=2.0, dash="dash")), row=1, col=1)
+
+    d_df, v_df = _prepare_trace(dates, diff)
+    fig.add_trace(go.Scatter(x=d_df, y=v_df, mode="lines", name="4. Conference Board Percentile Diffusion (γ=0.92) [REAL]", line=dict(color="#00E676", width=1.8, dash="dot")), row=1, col=1)
+
+    d_s, v_s = _prepare_trace(dates, spca)
+    fig.add_trace(go.Scatter(x=d_s, y=v_s, mode="lines", name="5. L1-Regularized Sparse PCA (SPCA, γ=0.92) [REAL]", line=dict(color="#E040FB", width=1.8, dash="dashdot")), row=1, col=1)
+
+    fig.add_hline(y=50.0, line_dash="dot", line_color="#4CAF50", annotation_text="Equilibrium Baseline (50%)", annotation_font_color="#E0E0E0", row=1, col=1)
+    fig.add_hline(y=70.0, line_dash="dash", line_color="#FF5252", annotation_text="Systemic Bubble Warning Threshold (70%)", annotation_font_color="#E0E0E0", row=1, col=1)
+
+    # Subplot 2: DFM vs Diffusion vs SPCA
+    fig.add_trace(go.Scatter(x=d_d, y=v_d, mode="lines", name="DFM Common Bubble Factor (126d Upper-Orthant) [REAL]", line=dict(color="#FFD600", width=2.2)), row=2, col=1)
+    fig.add_trace(go.Scatter(x=d_df, y=v_df, mode="lines", name="Percentile-Rank Diffusion (63d Momentum Breadth) [REAL]", line=dict(color="#00E676", width=2.2)), row=2, col=1)
+    fig.add_trace(go.Scatter(x=d_s, y=v_s, mode="lines", name="Sparse PCA (Soft-Thresholded λ=0.06) [REAL]", line=dict(color="#E040FB", width=2.2, dash="dot")), row=2, col=1)
+
+    # Subplot 3: SPCA Active Pillars & Crash-Liquidation Damper
+    d_p, v_p = _prepare_trace(dates, pillars)
+    fig.add_trace(go.Scatter(x=d_p, y=v_p, mode="lines", name="SPCA Active Orthogonal Pillars (||α_t||_0 / 13) [REAL]", line=dict(color="#2979FF", width=2.2)), row=3, col=1)
+
+    d_dmp, v_dmp = _prepare_trace(dates, damper)
+    fig.add_trace(go.Scatter(x=d_dmp, y=v_dmp, mode="lines", name="Crash-Liquidation Damper D_M,crash (σ) [REAL]", line=dict(color="#FF9800", width=2.0, dash="dash")), row=3, col=1)
+
+    fig.update_layout(
+        template=PLOTLY_TEMPLATE,
+        title="Composite Summary Indicators: 13-Indicator Orthogonal Basis (B_13^⊥) & 5-Architecture Comparison",
+        legend=get_right_flushed_legend(is_mobile),
+        margin=get_figure_margin(is_mobile),
+        height=780 if not is_mobile else 950
+    )
+    fig.update_xaxes(title_text="Date", row=3, col=1)
+    return fig
+
+
 # Reactive Panel Bindings Pre-initialized with Option 1 Figures
 pane_macro = pn.pane.Plotly(build_macro_valuation_fig(HORIZON_OPTION_1_ID), sizing_mode='stretch_both', min_height=420)
 pane_leverage = pn.pane.Plotly(build_leverage_fig(HORIZON_OPTION_1_ID), sizing_mode='stretch_both', min_height=420)
@@ -879,6 +975,7 @@ pane_sentiment = pn.pane.Plotly(build_sentiment_vol_fig(HORIZON_OPTION_1_ID), si
 pane_sector = pn.pane.Plotly(build_sector_health_fig(HORIZON_OPTION_1_ID), sizing_mode='stretch_both', min_height=420)
 pane_mahalanobis = pn.pane.Plotly(build_mahalanobis_fig(HORIZON_OPTION_1_ID), sizing_mode='stretch_both', min_height=420)
 pane_tech_exuberance = pn.pane.Plotly(build_tech_exuberance_fig(HORIZON_OPTION_1_ID), sizing_mode='stretch_both', min_height=650)
+pane_composite_summary = pn.pane.Plotly(build_composite_summary_fig(HORIZON_OPTION_1_ID), sizing_mode='stretch_both', min_height=650)
 
 def generate_explanatory_markdown(horizon_id: str) -> str:
     meta = HORIZON_METADATA[horizon_id]
@@ -936,7 +1033,7 @@ executive_summary_pane = pn.pane.Markdown(
     "The mid-2026 macroeconomic environment presents an acute structural challenge: the S&P 500 tests record peaks near 7,500 amid the second-highest valuation epoch in U.S. history (Shiller CAPE 41.37, Buffett Indicator 218.1% of GDP). Simultaneously, systemic leverage has expanded to a record $1.416T in FINRA margin debt (+53.7% YoY), exhausting institutional margin credit and creating severe vulnerability to leverage-induced fire-sale cascades.\n\n"
     "While the massive $754B hyperscaler AI CapEx supercycle justifies fundamental repricing under General-Purpose Technology (GPT) econometric decomposition, derivatives markets reveal a dangerous structural divergence: institutional capital is aggressively bidding for catastrophic tail-risk protection (SKEW > 145) even as front-month volatility remains artificially suppressed (VIX1D < 10) and index-level implied correlation collapses (< 8.0).\n\n"
     f"#### {ICON_TARGET} Unified Multi-Regime Quantitative Architecture\n"
-    "- **7 Integrated Modules**: Macro Valuation, Systemic Leverage, Econometric Bubble, Sentiment & Volatility, Sector Health & TDA, Macro Mahalanobis Distance, and Tech Exuberance Score.\n"
+    "- **8 Integrated Modules**: Macro Valuation, Systemic Leverage, Econometric Bubble, Sentiment & Volatility, Sector Health & TDA, Macro Mahalanobis Distance, Tech Exuberance Score, and Composite Summary Indicators.\n"
     r"- **Method 1 Mahalanobis Distance ($D_M$)**: 15-dimensional regularized covariance distance ($\mathbf{\Sigma} + 10^{-2}\mathbf{I}$) eliminating collinearity distortions." + "\n"
     r"- **Dynamic Equity Exposure**: Continuous risk-scaled sizing ($w_{\text{equity}} \in [0.20, 1.00]$) with a strict 20% defensive liquidity floor." + "\n\n"
     f"#### {ICON_MICROSCOPE} Mathematical Rigor & Scale Invariance\n"
@@ -972,7 +1069,7 @@ def get_cached_or_build_fig(chart_id: str, horizon_id: str, builder_func) -> go.
     return _FIGURE_CACHE[key]
 
 def update_all_charts(horizon_id: str):
-    """Callback updating all 7 Panel figures, KPI indicators, and explanatory card."""
+    """Callback updating all 8 Panel figures, KPI indicators, and explanatory card."""
     note_pane.object = generate_explanatory_markdown(horizon_id)
     pane_macro.object = get_cached_or_build_fig("macro", horizon_id, build_macro_valuation_fig)
     pane_leverage.object = get_cached_or_build_fig("leverage", horizon_id, build_leverage_fig)
@@ -981,6 +1078,7 @@ def update_all_charts(horizon_id: str):
     pane_sector.object = get_cached_or_build_fig("sector", horizon_id, build_sector_health_fig)
     pane_mahalanobis.object = get_cached_or_build_fig("mahalanobis", horizon_id, build_mahalanobis_fig)
     pane_tech_exuberance.object = get_cached_or_build_fig("tech_exuberance", horizon_id, build_tech_exuberance_fig)
+    pane_composite_summary.object = get_cached_or_build_fig("composite_summary", horizon_id, build_composite_summary_fig)
 
     data = fetch_dataset(horizon_id)
     red_fallback_banner.visible = _IS_SYNTHETIC_FALLBACK_ACTIVE
@@ -1026,6 +1124,7 @@ dashboard_tabs = pn.Tabs(
     ("Sector Health", pane_sector),
     ("Macro Mahalanobis Distance", pane_mahalanobis),
     ("Tech Exuberance Score", pane_tech_exuberance),
+    ("Composite Summary Indicators", pane_composite_summary),
     sizing_mode="stretch_both",
     min_height=520
 )

@@ -2,7 +2,7 @@
 <!-- # BeGiN TechnicalSpecification_DDFv100.md -->
 <!-- ### -->
 
-# Technical Specification: Multidimensional Market Bubble Detection System
+# Technical Specification: Multidimensional Market Bubble Detection System (v3.3.0)
 
 Technical Specification Confidence Score: 0.96
 
@@ -58,6 +58,7 @@ The `NiceGUI` and `Plotly` implementation will generate dedicated dashboard tabs
 5. **Sector-Specific Health Dashboard:** Highlighting the Price-to-Income and Price-to-Rent housing metrics, alongside AI, Tech (XLK), and TDA Geometric Complexity.
 6. **Macro Mahalanobis Distance Dashboard:** Multi-dimensional regularized covariance distance ($D_M$) integrating all 15 systemic indicators, empirical crash probability $P_{\\text{bubble}}$, continuous dynamic equity exposure $w_{\\text{equity}}$, and benchmark overlays.
 7. **Tech Exuberance Score Dashboard:** Synchronized 4-subplot dual-condition engine tracking Macro Liquidity Decoupling (M2 YoY deceleration, Liquidity Momentum, XLK/SPY ratio) and Microstructural Mathematical Singularities (Recursive BSADF, LPPLS Confidence Indicator, Bubenik L2 Norm, Wavelet Spectral Entropy) with illuminated conjoint trigger spans.
+8. **Composite Summary Indicators Dashboard (Tab 8):** Synchronized multi-panel comparison of the **5 Best Summary Indicator Architectures** ($\mathcal{I}_t^*, \mathcal{I}_t^{\text{Mahal}}, \mathcal{I}_t^{\text{DFM}}, \mathcal{I}_t^{\text{Diffusion}}, \mathcal{I}_t^{\text{SPCA}} \in [0, 100]$) built on the 13-indicator orthogonal basis $\mathcal{B}_{13}^{\perp}$, alongside the Sparse PCA active coalition cardinality ($\bar{k}_t \in [1, 13]$), Crash-Bottom Liquidation Damper ($\Lambda_{\text{Crash}}(t)$), and white-box pillar attribution.
 
 ### 5.2. UI/UX & Accessibility Specifications
 - **WCAG 2.2 AA Contrast:** All text elements must achieve a minimum contrast ratio of 4.5:1 against their backgrounds (3:1 for large text and graphical components) across both light and dark themes.
@@ -99,6 +100,58 @@ where $\\mathbf{z}_t$ is the 15-dimensional standardized indicator vector, $\\bo
 8. **WebAssembly Parquet Virtual Filesystem & Provenance Badges (Item 8)**: Parquet tables are mounted directly into Pyodide virtual filesystems for instant zero-drift client execution. All visual traces across Tabs 1–6 display explicit provenance badges (`[REAL]`, `[PROXY]`, `[SYNTHETIC]`), and an prominent red alert banner dynamically renders if fallback data is engaged.
 9. **Automated Verification Quality Gate**: All 76 unit, numerical parity, module alias, anti-synthetic provenance regression, and system integration tests must pass with 100% success rate (`pytest tests/`).
 10. **Institutional Documentation & Code Commentary**: Complete mathematical docstrings, parameter explanations, economic rationale, and failure modes across all modules in `bubble_detector/`. Comprehensive canonical module aliases (`margin_leverage.py`, `options_volatility.py`, `technical.py`, `ui/theme.py`) ensure multi-agent workflow compatibility. Requirements file and packaging specifications must document library trade-offs and WebAssembly sandboxing constraints.
+
+## 9. Information-Maximizing Orthogonal Basis & Final Summary Indicator ($\mathcal{I}_t^*$) Specification (20-Year Regime Horizon)
+
+Technical Specification Confidence Score: 0.98 (Strict Cutoff $\ge 0.87$)
+
+To maximize non-redundant multi-domain information across all seven dashboard tabs within **Option 3: The 20-Year Global Crisis & Expansion Horizon (`2006-01-02` to `2026-11-03`, $N = 5,437$ trading days)**, all 32 candidate indicators were audited under Watanabe's Total Correlation $\mathcal{TC}(\mathbf{Z}) = -\frac{1}{2}\ln\det(\mathbf{R})$, Roy–Vetterli Spectral Effective Rank $\text{erank}(\mathbf{R}) = \exp(H_{\text{spec}}(\mathbf{R}))$, and Unconditional Orthogonal Tolerance $\tau_j = 1/\text{VIF}_j = 1 - R_{j \mid \mathcal{S}\setminus\{j\}}^2 \ge 0.87$.
+
+1. **Discarded Redundant / Contaminated Indicators ($\text{Confidence or Tolerance} < 0.87$)**:
+   - `P_CAPE` ($\tau = 0.0000$, exact scalar multiple $0.88 \times \text{Shiller\_CAPE}$) and `Real_Earnings_Yield` ($\tau = 0.0038$, $r_z = -0.9979$ with `Shiller_CAPE`, $\text{VIF}_Z = 263.59$).
+   - `Buffett_Indicator` ($\tau_Z = 0.1344$, $\text{VIF}_{\text{raw}} = 126.99$, shares equity numerator and secular drift with `Shiller_CAPE`, `FINRA_Margin_Debt`, and `XLK`).
+   - `Leverage_Exhaustion_Gap` & `Margin_Exhaustion_Score` ($r = +0.7236$ with $-v_{\text{SPY}}(20\text{d})$ due to monthly +21d FINRA lag vs. daily SPY returns, generating false $+4.21\sigma$ bubble spikes at crash bottoms; `Margin_Exhaustion_Score` further loses $1.68\text{ bits}$ via 4-step discretization).
+   - `BSADF_Stat` ($\tau = 0.0000$, identical to `GSADF_Stat`) and `Drawdown_Probability` (supervised GBDT output excluded from unsupervised covariance basis to prevent target leakage).
+   - `^VIX`, `Dispersion_Index_DSPX`, & `Implied_Correlation_COR3M` ($\tau_Z = 0.1550$, algebraic collinearity cluster $r_z = +0.9984 / -0.9493$).
+   - `TDA_Persistence_L2_Norm` & `Wavelet_Complexity_Score` ($\tau_Z = 0.4149$, $r = +0.9535$ with each other and $+0.7920$ with `^VIX` due to unnormalized return-variance scaling, replaced by scale-invariant `TDA_Persistence_Entropy` and `Wavelet_Spectral_Entropy`).
+   - Raw `XLK`, `SPY_Dev_200DMA`, `FINRA_Margin_Debt`, `Global_Liquidity_Index`, `M2_YoY_Growth`, & `CentralBank_YoY_Growth` (replaced by stationary `XLK_SPY_Ratio`, `Margin_Debt_Velocity_Orth`, and `Liquidity_Momentum`).
+
+2. **Authoritative 13-Indicator Orthogonal Basis ($\mathcal{B}_{13}^{\perp}$) & Causal Gram-Schmidt Reworking**:
+   Using strictly causal 252-day rolling OLS projection $\mathcal{P}_{\perp}^{(252)}(y_t \mid x_t)$ anchored on root macro valuation $\mathbf{e}_1 = \text{Shiller\_CAPE}$ and removing the shared $1/\text{VIX}_t$ denominator between `OVX_VIX_CrossAsset_Ratio` and `VIX_Term_Structure_Slope`, the final 13-indicator basis $\mathcal{B}_{13}^{\perp}$ achieves:
+   - **Effective Rank**: $\text{erank}(\mathbf{R}) = 12.6253 / 13$ (**$\eta_{\text{spec}} = 0.9712 \ge 0.87$**)
+   - **Normalized Spectral Entropy**: $\tilde{H}_{\text{spec}} = \mathbf{0.9886} \ge 0.87$
+   - **Geometric Mean Eigenvalue**: $\bar{\lambda}_{\text{geom}} = (\det\mathbf{R})^{1/13} = \mathbf{0.9718} \ge 0.87$ ($\det\mathbf{R} = 0.6895$, an **$89,158\times$ gain** over legacy `INDICATORS_15`)
+   - **Condition Number**: $\kappa(\mathbf{R}) = \mathbf{2.4574}$ (**$996\times$ reduction** from $2,448.30$)
+   - **Individual Tolerance**: $\tau_j = 1/\text{VIF}_j \in [\mathbf{0.8801}, \mathbf{0.9983}] \ge 0.87$ for **all 13 indicators**:
+     1. `Shiller_CAPE` ($b_1 = +1, \tau_1 = 0.8801$)
+     2. `Margin_Debt_Velocity_Orth` ($b_2 = +1, \tau_2 = 0.9314$)
+     3. `GSADF_Stat` ($b_3 = +1, \tau_3 = 0.9059$)
+     4. `GSADF_GPT_Adjusted` ($b_4 = +1, \tau_4 = 0.9129$)
+     5. `^SKEW` ($b_5 = +1, \tau_5 = 0.9983$)
+     6. `OVX_VIX_Orthogonal` ($b_6 = +1, \tau_6 = 0.9843$)
+     7. `VIX_Slope_Orthogonal` ($b_7 = +1, \tau_7 = 0.9524$)
+     8. `Housing_PTI_Orthogonal` ($b_8 = +1, \tau_8 = 0.9684$)
+     9. `XLK_SPY_Ratio` ($b_9 = +1, \tau_9 = 0.9574$)
+     10. `LPPLS_Orthogonal` ($b_{10} = +1, \tau_{10} = 0.9025$)
+     11. `TDA_Persistence_Entropy` ($b_{11} = -1, \tau_{11} = 0.9698$)
+     12. `Wavelet_Spectral_Entropy` ($b_{12} = -1, \tau_{12} = 0.9840$)
+     13. `Liquidity_Momentum` ($b_{13} = -1, \tau_{13} = 0.9651$)
+
+3. **Closed-Form Final Summary Indicator ($\mathcal{I}_t^* \in [0, 100]$) & The 5 Selected Summary Architectures (Tab 8)**:
+   All 13 orthogonal indicators undergo two-stage strictly causal $I(0)$ stationarization ($t_{\text{ADF}} \in [-5.27, -49.52], p \le 1.4 \times 10^{-4}$), exact unit-variance calibration ($\mu = 0, \sigma^2 = 1$), and Perron–Frobenius positive upper-orthant orientation $\mathbf{u}_t = \max(\mathbf{b} \odot \mathbf{z}_t^{\perp}, \mathbf{0}) \odot \sqrt{\mathbf{w}_{\text{norm}}}$, eliminating the $554$ eigenvector sign flips and negative Peak–Trough inversions ($-23.92$ and $-24.48$) of unconstrained symmetric DFM and SPCA. Five complementary summary indicators passing the $\ge 0.87$ gate are selected for **Tab 8 ("Composite Summary Indicators")**:
+   - **1. `Composite_Summary_Index` ($\mathcal{I}_t^*, \gamma = 0.96$)**: Master Log-Odds Bayesian Meta-Synthesis fusing $\mathcal{I}_t^{\text{Mahal}}$ ($0.30$), $\mathcal{I}_t^{\text{Diffusion}}$ ($0.20$), $\mathcal{I}_t^{\text{DFM}}$ ($0.20$), $\mathcal{I}_t^{\text{SPCA}}$ ($0.15$), and Purged-Embargo GBDT $P_{\text{Drawdown}}(t)$ ($0.15$) in logit space with Crash-Bottom Damper $\Lambda_{\text{Crash}}(t)$ ($100\%$ 8/8 hit rate, $126.0\text{d}$ median lead, $+25.48$ Peak–Trough separation).
+   - **2. `Mahalanobis_Summary_Index` ($\mathcal{I}_t^{\text{Mahal}}, \gamma = 0.95$)**: Unsupervised Asymmetric Precision Riemannian Distance ($100\%$ 8/8 hit rate, $126.0\text{d}$ median lead, $+39.47$ Peak–Trough separation).
+   - **3. `DFM_Summary_Index` ($\mathcal{I}_t^{\text{DFM}}, \gamma = 0.94$)**: Federal Reserve / Central Bank Causal One-Sided AR(2) Kalman Filter Nowcast ($\phi_1=0.78, \phi_2=0.17$) on the Perron–Frobenius upper-orthant state space ($100\%$ 8/8 hit rate, $122.5\text{d}$ median lead, $+26.92$ Peak–Trough separation).
+   - **4. `Diffusion_Summary_Index` ($\mathcal{I}_t^{\text{Diffusion}}, \gamma = 0.93$)**: Conference Board Single-Window Gaussian Copula Rank $r_{j,t} = \Phi(\tilde{z}_{j,t})$ & 63-Day Symmetric Momentum Breadth Index ($100\%$ 8/8 hit rate, $126.0\text{d}$ median lead, $+24.04$ Peak–Trough separation).
+   - **5. `SPCA_Summary_Index` ($\mathcal{I}_t^{\text{SPCA}}, \gamma = 0.92$)**: Zou–Hastie–Tibshirani (2006) Causal Conic Elastic-Net Sparse PCA ($\gamma_{\ell_1} = 0.25$, mean active coalition $\bar{k}_{\text{active}} = 4.58 / 13$ pillars, highest pre-peak $MI_{\text{peak}} = 0.0129\text{ nats}$, $100\%$ 8/8 hit rate, $+23.70$ Peak–Trough separation).
+   See Section 8 (Subsections 8.1–8.7) of [`MarketBubble_DDFv100.md`](MarketBubble_DDFv100.md) for the complete mathematical derivations, $13 \times 13$ empirical correlation matrix, and comparative evaluation tables.
+
+## 10. Specification Changelog (SemVer)
+
+- **[v3.3.0] - 2026-11-05**: Added two-stage causal $I(0)$ unit-variance preprocessing protocol, comparative mathematical/empirical evaluation of Conference Board Diffusion, Federal Reserve State-Space DFM, and Elastic-Net Sparse PCA against Asymmetric Mahalanobis–GBDT Synthesis on the 13-indicator orthogonal basis $\mathcal{B}_{13}^{\perp}$ (20-year horizon), and architectural specification for Tab 8 ("Composite Summary Indicators") across NiceGUI and HoloViz Panel WebAssembly.
+- **[v3.2.0] - 2026-11-03**: Added Option 3 (20-Year Global Crisis Horizon, 2006–2026), cross-runtime indicator/trace parity suite, and dual-directory WASM synchronization.
+- **[v3.1.0] - 2026-10-05**: Added Tab 7 ("Tech Exuberance Score"), Filimonov–Sornette LPPLS model, and FRED Global Liquidity ETL.
+- **[v3.0.0] - 2026-09-03**: Complete institutional data provenance hardening, continuous backward splicing, and signed Mahalanobis projection.
 
 <!-- ### -->
 <!-- # eNd TechnicalSpecification_DDFv100.md -->

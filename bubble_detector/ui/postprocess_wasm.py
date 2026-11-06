@@ -398,6 +398,35 @@ if (document.readyState === 'loading') {
       }"""
             content = re.sub(r'await\s+pyodide\.runPythonAsync\(code\);?', minimal_block, content)
 
+    # 6. Idempotent AST docstring & comment minification of embedded Python code literal (<120KB ceiling)
+    m_code = re.search(r'(code = `)(.*?)(`\s*;?\s*await pyodide\.runPythonAsync)', content, re.DOTALL)
+    if m_code:
+        try:
+            import ast
+            raw_py = m_code.group(2).encode("utf-8").decode("unicode_escape")
+            tree = compile(raw_py, "<wasm>", "exec", flags=ast.PyCF_ONLY_AST | ast.PyCF_ALLOW_TOP_LEVEL_AWAIT)
+            for node in ast.walk(tree):
+                if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.Module)):
+                    if (
+                        node.body
+                        and isinstance(node.body[0], ast.Expr)
+                        and isinstance(node.body[0].value, ast.Constant)
+                        and isinstance(node.body[0].value.value, str)
+                        and len(node.body) > 1
+                    ):
+                        node.body.pop(0)
+            min_py = ast.unparse(tree)
+            escaped_py = (
+                min_py.replace("\\", "\\\\")
+                .replace("`", "\\`")
+                .replace("${", "\\${")
+                .replace("\n", "\\n")
+            )
+            content = content[: m_code.start(2)] + escaped_py + content[m_code.end(2) :]
+            content = re.sub(r"\n[ \t]+", "\n", content)
+        except Exception:
+            pass
+
     return content
 
 

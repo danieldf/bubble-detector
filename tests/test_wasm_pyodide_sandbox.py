@@ -193,9 +193,9 @@ def test_wasm_full_script_pyodide_execution(monkeypatch, tmp_path):
     assert len(tmpl.sidebar) >= 3
     assert len(tmpl.main) >= 6
 
-    # Verify 7 plotly panes
+    # Verify 8 plotly panes
     tabs = globs["dashboard_tabs"]
-    assert len(tabs) == 7
+    assert len(tabs) == 8
     for pane in tabs.objects:
         fig = pane.object
         assert len(fig.data) > 0, "Tab figure has 0 traces"

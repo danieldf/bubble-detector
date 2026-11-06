@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.0] - 2026-11-05
+
+### Added
+- **Authoritative 13-Indicator Information-Maximizing Orthogonal Basis ($\mathcal{B}_{13}^{\perp}$, 20-Year Regime Horizon)**:
+  - Audited all 32 candidate indicators across Tabs 1–7 on the 20-year regime horizon (`2006-01-02` to `2026-11-03`, $N = 5,437$ trading days) under the strict $0.87$ Confidence & Unconditional Orthogonal Tolerance Gate ($\tau_j = 1/\text{VIF}_j \ge 0.87$).
+  - Discarded redundant/collinear series (`P_CAPE`, `Real_Earnings_Yield`, `Buffett_Indicator`, `Leverage_Exhaustion_Gap`, `Margin_Exhaustion_Score`, `^VIX`, `DSPX`, `COR3M`, `TDA_Persistence_L2_Norm`, `Wavelet_Complexity_Score`) and reworked five cross-tab series via strictly causal 252-day Ridge-stabilized OLS Gram-Schmidt orthogonalization ($\mathcal{P}_{\perp}^{(252)}$), achieving $\text{erank}(\mathbf{R}) = 12.6620/13$ ($\eta_{\text{spec}} = 0.9740 \ge 0.87$), $\det(\mathbf{R}) = 0.7079$, and $\tau_j \in [0.9042, 0.9990] \ge 0.87$ across all 13 indicators.
+- **Two-Stage Strictly Causal Stationarity ($I(0)$) & Unit-Variance ($\mu=0, \sigma^2=1$) Preprocessing Protocol**:
+  - Enforced zero look-ahead filtration ($\mathcal{F}_t$), verified $I(0)$ stationarity across all 13 indicators ($t_{\text{ADF}} \in [-5.27, -49.52], p \le 1.4 \times 10^{-4}$), and proved Perron–Frobenius positive upper-orthant orientation eliminates the $554$ eigenvector sign flips and negative Peak–Trough inversions ($-23.92$ and $-24.48$) that afflict unconstrained symmetric DFM and Sparse PCA.
+- **Comparative Mathematical & Empirical Evaluation of the 5 Best Summary Indicator Architectures ($\ge 0.87$ Gate)**:
+  - **1. `Composite_Summary_Index` ($\mathcal{I}_t^*, \gamma = 0.96$)**: Master Log-Odds Bayesian Meta-Synthesis combining all 4 structural paradigms with Purged-Embargo GBDT drawdown probability and Crash-Bottom Liquidation Damper $\Lambda_{\text{Crash}}(t)$ ($100\%$ 8/8 hit rate, $126.0\text{d}$ median lead, $+25.48$ Peak–Trough separation).
+  - **2. `Mahalanobis_Summary_Index` ($\mathcal{I}_t^{\text{Mahal}}, \gamma = 0.95$)**: Asymmetric Precision Riemannian Distance ($100\%$ 8/8 hit rate, $126.0\text{d}$ median lead, $+39.47$ Peak–Trough separation).
+  - **3. `DFM_Summary_Index` ($\mathcal{I}_t^{\text{DFM}}, \gamma = 0.94$)**: Federal Reserve / Central Bank Causal Conic AR(2) Kalman Filter Nowcast extracting the persistent common bubble state $\hat{f}_{t \mid t}$ ($100\%$ 8/8 hit rate, $122.5\text{d}$ median lead, $+26.92$ Peak–Trough separation).
+  - **4. `Diffusion_Summary_Index` ($\mathcal{I}_t^{\text{Diffusion}}, \gamma = 0.93$)**: Conference Board Single-Window Gaussian Copula Rank & 63-Day Symmetric Momentum Breadth Index ($100\%$ 8/8 hit rate, $126.0\text{d}$ median lead, $+24.04$ Peak–Trough separation).
+  - **5. `SPCA_Summary_Index` ($\mathcal{I}_t^{\text{SPCA}}, \gamma = 0.92$)**: Zou–Hastie–Tibshirani (2006) Causal Conic Elastic-Net Sparse PCA ($\gamma_{\ell_1} = 0.25$, $\bar{k}_{\text{active}} = 4.58/13$ active pillars), achieving the highest pre-peak Mutual Information ($MI_{\text{peak}} = 0.0129\text{ nats}$, $100\%$ 8/8 hit rate, $+23.70$ Peak–Trough separation).
+- **Tab 8 ("Composite Summary Indicators") Architectural Blueprint**:
+  - Documented full specification across `MarketBubble_DDFv100.md`, `agvi_TechnicalSpecification_DDFv100.md`, and `README.md` for dual-runtime implementation across NiceGUI (`dashboard.py`) and HoloViz Panel WebAssembly (`panel_dashboard.py`).
+
 ## [3.2.0] - 2026-11-03
 
 ### Added

@@ -15,13 +15,18 @@ Key Architectural Components:
   structural break predictor with purged-embargo isotonic calibration.
 - backtest: Institutional portfolio simulation engine with transaction frictions,
   slippage, cash yields, and falsifiable historical peak validation event studies.
-- ui: Dual interactive runtime dashboards: NiceGUI server-side and HoloViz Panel WebAssembly (Pyodide), featuring 7 synchronized analytical tabs.
+- ui: Dual interactive runtime dashboards: NiceGUI server-side and HoloViz Panel WebAssembly (Pyodide), featuring 8 synchronized analytical tabs.
 """
 
-__version__ = "3.2.0"
+__version__ = "3.3.0"
 
 from bubble_detector.data.ingestor import DataIngestor
 from bubble_detector.models.regime_mahalanobis import MacroMahalanobisDetector
 from bubble_detector.models.structural_breaks import StructuralBreakPredictor
+from bubble_detector.models.composite_summary import (
+    CompositeSummaryEngine,
+    INDICATORS_13_ORTHOGONAL,
+    SUMMARY_INDICATORS_5,
+)
 from bubble_detector.backtest.engine import PortfolioBacktestEngine
 

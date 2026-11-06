@@ -20,7 +20,7 @@ Rules:
 ### 2. Architectural Blueprint & Directory Layout
 ```text
 bubble_detector/
-├── __init__.py           # Version definition (v3.2.0) and top-level exports
+├── __init__.py           # Version definition (v3.3.0) and top-level exports
 ├── config.py             # Global constants, paths, logging (RotatingFileHandler), custom exceptions
 ├── ui_theme.py           # WCAG 2.2 AA contrast engine, Apple human interface styling, 8px rhythm
 ├── data/                 # Ground-truth point-in-time ETL pipelines and multi-decade horizon anchoring
@@ -43,13 +43,14 @@ bubble_detector/
 │   └── technical.py      # Canonical alias module exporting compute_technical_indicators
 ├── models/               # Institutional statistical & machine learning regime classifiers
 │   ├── regime_mahalanobis.py # Regularized Signed Mahalanobis distance with direction vector b in {-1, +1}^15
-│   └── structural_breaks.py  # Purged-embargo walk-forward GBDT, isotonic probability calibration
+│   ├── structural_breaks.py  # Purged-embargo walk-forward GBDT, isotonic probability calibration
+│   └── composite_summary.py  # 13-indicator orthogonal basis (B_13^perp) & 5 summary indicators (Linear, Mahalanobis, DFM, Diffusion, SPCA)
 ├── backtest/             # Cost-inclusive portfolio simulation & Popperian falsification
 │   ├── engine.py         # 15 bps turnover friction, 4.0% cash yield, 2% deadband, Sortino ratio
 │   └── validation_table.py # 8-event historical crash validation table (100% warning hit rate, 66.5d lead)
 └── ui/                   # Dual-runtime responsive visualization dashboards
-    ├── dashboard.py      # NiceGUI server-side interactive 7-tab dashboard
-    ├── panel_dashboard.py# HoloViz Panel Pyodide WebAssembly client-side dashboard (100% parity)
+    ├── dashboard.py      # NiceGUI server-side interactive 8-tab dashboard
+    ├── panel_dashboard.py# HoloViz Panel Pyodide WebAssembly client-side 8-tab dashboard (100% parity)
     ├── components.py     # iOS 13+ cards, typography tokens, CTA banners, WCAG 2.2 AA containers
     ├── theme.py          # Canonical alias module exporting UI design system tokens and WCAG contrast algorithms
     └── postprocess_wasm.py # WebAssembly artifact post-processor (MEMFS loader, emoji sanitizer)
@@ -79,7 +80,7 @@ bubble_detector/
   ```bash
   ./.venv/bin/pytest tests/ -v
   ```
-  Expected result: **116 passed tests (100% pass rate)**.
+  Expected result: **122 passed tests (100% pass rate)**.
 - Anti-synthetic regression verification:
   ```bash
   ./.venv/bin/pytest tests/test_no_gaussian_bumps.py -v

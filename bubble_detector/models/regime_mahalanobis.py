@@ -266,9 +266,10 @@ class MacroMahalanobisDetector:
                 signed_score = float((diff @ inv_cov @ b) / denom)
                 signed_scores[i] = signed_score
 
-                # 3. Partition into Bubble (positive excursion) vs Crash (negative excursion)
-                u = np.maximum(diff, 0.0)   # expensive / bubble excursion
-                v = np.maximum(-diff, 0.0)  # crash / liquidation excursion
+                # 3. Partition into Bubble (positive excursion along b) vs Crash (negative excursion along b)
+                aligned_diff = diff * b
+                u = np.maximum(aligned_diff, 0.0)   # expensive / bubble excursion
+                v = np.maximum(-aligned_diff, 0.0)  # crash / liquidation excursion
 
                 dm_bubble[i] = np.sqrt(max(0.0, float(u @ inv_cov @ u)))
                 dm_crash[i] = np.sqrt(max(0.0, float(v @ inv_cov @ v)))

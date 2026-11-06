@@ -15,12 +15,12 @@ description: Institutional architecture, econometric guidelines, testing constra
 ## 2. Directory Layout & Key Modules
 - `bubble_detector/data/`: Ingestion, ETL pipelines, and date horizon logic (`date_horizons.py`, `etl_shiller.py`, `etl_fred.py`, `etl_finra.py`, `etl_vxo.py`, `ingestor.py`).
 - `bubble_detector/features/`: Indicators and feature extraction (`technicals.py`, `macro_valuation.py`, `leverage.py`, `econometric.py`, `topology.py`, `options_vol.py`, `utils.py`, with canonical aliases `margin_leverage.py`, `options_volatility.py`, `technical.py`).
-- `bubble_detector/models/`: Regime detection and predictive models (`regime_mahalanobis.py`, `structural_breaks.py`).
+- `bubble_detector/models/`: Regime detection, predictive models, and 13-indicator orthogonal composite summary engines (`regime_mahalanobis.py`, `structural_breaks.py`, `composite_summary.py`).
 - `bubble_detector/backtest/`: Backtest simulation and historical validation (`engine.py`, `validation_table.py`).
 - `bubble_detector/ui/`: Presentation and visualization (`dashboard.py`, `panel_dashboard.py`, `components.py`, `postprocess_wasm.py`, `ui_theme.py`, with canonical alias `theme.py`).
 
 ## 3. Execution & Verification Rules
 - **Virtualenv**: Use `./.venv/bin/python` and `./.venv/bin/pytest`.
 - **Command Execution**: Always run commands with `BypassSandbox: true` due to macOS Nix store dylib resolution.
-- **Verification Protocol**: Before submitting changes, run `./.venv/bin/pytest tests/ -v`. All 116 tests must pass with 100% success rate.
+- **Verification Protocol**: Before submitting changes, run `./.venv/bin/pytest tests/ -v`. All 122 tests must pass with 100% success rate.
 - **Knowledge Graph Synchronization**: Always execute `graphify update .` after code modifications.

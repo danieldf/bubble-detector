@@ -57,6 +57,7 @@ from bubble_detector.features import (
 from bubble_detector.features.utils import lttb_downsample
 from bubble_detector.models.structural_breaks import StructuralBreakPredictor
 from bubble_detector.models.regime_mahalanobis import MacroMahalanobisDetector
+from bubble_detector.models.composite_summary import CompositeSummaryEngine
 from bubble_detector.backtest.validation_table import (
     generate_historical_validation_table, compute_validation_summary_statistics
 )
@@ -83,6 +84,7 @@ class DashboardState:
         self.ingestor = DataIngestor()
         self.predictor = StructuralBreakPredictor()
         self.mahalanobis_detector = MacroMahalanobisDetector()
+        self.summary_engine = CompositeSummaryEngine()
         self.df: pl.DataFrame = pl.DataFrame()
         self.is_synthetic_fallback: bool = False
         self.validation_events: List[Dict[str, Any]] = []
@@ -112,7 +114,7 @@ class DashboardState:
         if not force_recompute and parquet_path.exists():
             try:
                 df_cached = pl.read_parquet(parquet_path)
-                required_cols = {"Date", "SPY", "Shiller_CAPE", "FINRA_Margin_Debt", "Mahalanobis_Distance", "Tech_Exuberance_Signal"}
+                required_cols = {"Date", "SPY", "Shiller_CAPE", "FINRA_Margin_Debt", "Mahalanobis_Distance", "Tech_Exuberance_Signal", "Composite_Summary_Index"}
                 if required_cols.issubset(set(df_cached.columns)):
                     self.df = df_cached
                     self.is_synthetic_fallback = bool(
@@ -155,7 +157,10 @@ class DashboardState:
         df_with_probs = df_raw.with_columns(pl.Series("Drawdown_Probability", probs))
 
         # Compute Method 1: Signed Macro Mahalanobis Distance & Directional Signal
-        self.df = self.mahalanobis_detector.process(df_with_probs)
+        df_mahal = self.mahalanobis_detector.process(df_with_probs)
+
+        # Compute 13-Indicator Orthogonal Basis & 5 Composite Summary Indicators (Tab 8)
+        self.df = self.summary_engine.compute_all_summary_indicators(df_mahal)
 
         # Compute Historical Peak Validation Table and Backtest Results
         try:
@@ -531,6 +536,76 @@ def build_tech_exuberance_chart(state: DashboardState) -> go.Figure:
     fig.update_xaxes(title_text="Date", row=4, col=1)
     return fig
 
+def build_composite_summary_chart(state: DashboardState) -> go.Figure:
+    """
+    Build Plotly figure for Tab 8: Composite Summary Indicators (matching Panel WASM 100%).
+    Features 3 synchronized stacked subplots comparing the 5 information-maximizing summary
+    architectures, methodological divergence (DFM vs Diffusion vs SPCA), and active pillar sparsity.
+    """
+    df = state.df
+    dates = df["Date"].to_list()
+    n = len(df)
+
+    fig = make_subplots(
+        rows=3, cols=1,
+        shared_xaxes=True,
+        vertical_spacing=0.07,
+        subplot_titles=(
+            "1. Five Information-Maximizing Summary Indicators (0–100% Composite Bubble Probability)",
+            "2. Methodological Divergence: Dynamic Factor (DFM) vs Diffusion (LEI) vs Sparse PCA (SPCA)",
+            "3. Active Pillar Sparsity Count (||α_t||_0 ∈ [1, 13]) & Asymmetric Crash-Liquidation Damper (D_M,crash)"
+        )
+    )
+
+    comp = df["Composite_Summary_Index"].to_numpy() if "Composite_Summary_Index" in df.columns else np.full(n, 50.0)
+    mahal = df["Mahalanobis_Summary_Index"].to_numpy() if "Mahalanobis_Summary_Index" in df.columns else np.full(n, 50.0)
+    dfm = df["DFM_Summary_Index"].to_numpy() if "DFM_Summary_Index" in df.columns else np.full(n, 50.0)
+    diff = df["Diffusion_Summary_Index"].to_numpy() if "Diffusion_Summary_Index" in df.columns else np.full(n, 50.0)
+    spca = df["SPCA_Summary_Index"].to_numpy() if "SPCA_Summary_Index" in df.columns else np.full(n, 50.0)
+    pillars = df["SPCA_Active_Pillars"].to_numpy() if "SPCA_Active_Pillars" in df.columns else np.full(n, 5.0)
+    damper = df["Crash_Liquidation_Damper"].to_numpy() if "Crash_Liquidation_Damper" in df.columns else np.zeros(n)
+
+    # Subplot 1: All 5 Summary Indicators
+    d_c, v_c = _prepare_trace(dates, comp)
+    fig.add_trace(go.Scatter(x=d_c, y=v_c, mode="lines", name="1. Information-Weighted Linear Composite (γ=0.96) [REAL]", line=dict(color="#00E5FF", width=3.0)), row=1, col=1)
+
+    d_m, v_m = _prepare_trace(dates, mahal)
+    fig.add_trace(go.Scatter(x=d_m, y=v_m, mode="lines", name="2. Signed Riemannian Mahalanobis Summary (γ=0.95) [REAL]", line=dict(color="#FF1744", width=2.4)), row=1, col=1)
+
+    d_d, v_d = _prepare_trace(dates, dfm)
+    fig.add_trace(go.Scatter(x=d_d, y=v_d, mode="lines", name="3. Perron-Frobenius Dynamic Factor (DFM, γ=0.93) [REAL]", line=dict(color="#FFD600", width=2.0, dash="dash")), row=1, col=1)
+
+    d_df, v_df = _prepare_trace(dates, diff)
+    fig.add_trace(go.Scatter(x=d_df, y=v_df, mode="lines", name="4. Conference Board Percentile Diffusion (γ=0.92) [REAL]", line=dict(color="#00E676", width=1.8, dash="dot")), row=1, col=1)
+
+    d_s, v_s = _prepare_trace(dates, spca)
+    fig.add_trace(go.Scatter(x=d_s, y=v_s, mode="lines", name="5. L1-Regularized Sparse PCA (SPCA, γ=0.92) [REAL]", line=dict(color="#E040FB", width=1.8, dash="dashdot")), row=1, col=1)
+
+    fig.add_hline(y=50.0, line_dash="dot", line_color="#4CAF50", annotation_text="Equilibrium Baseline (50%)", row=1, col=1)
+    fig.add_hline(y=70.0, line_dash="dash", line_color="#FF5252", annotation_text="Systemic Bubble Warning Threshold (70%)", row=1, col=1)
+
+    # Subplot 2: DFM vs Diffusion vs SPCA
+    fig.add_trace(go.Scatter(x=d_d, y=v_d, mode="lines", name="DFM Common Bubble Factor (126d Upper-Orthant) [REAL]", line=dict(color="#FFD600", width=2.2)), row=2, col=1)
+    fig.add_trace(go.Scatter(x=d_df, y=v_df, mode="lines", name="Percentile-Rank Diffusion (63d Momentum Breadth) [REAL]", line=dict(color="#00E676", width=2.2)), row=2, col=1)
+    fig.add_trace(go.Scatter(x=d_s, y=v_s, mode="lines", name="Sparse PCA (Soft-Thresholded λ=0.06) [REAL]", line=dict(color="#E040FB", width=2.2, dash="dot")), row=2, col=1)
+
+    # Subplot 3: SPCA Active Pillars & Crash-Liquidation Damper
+    d_p, v_p = _prepare_trace(dates, pillars)
+    fig.add_trace(go.Scatter(x=d_p, y=v_p, mode="lines", name="SPCA Active Orthogonal Pillars (||α_t||_0 / 13) [REAL]", line=dict(color="#2979FF", width=2.2)), row=3, col=1)
+
+    d_dmp, v_dmp = _prepare_trace(dates, damper)
+    fig.add_trace(go.Scatter(x=d_dmp, y=v_dmp, mode="lines", name="Crash-Liquidation Damper D_M,crash (σ) [REAL]", line=dict(color="#FF9800", width=2.0, dash="dash")), row=3, col=1)
+
+    fig.update_layout(
+        template=state.get_plotly_template(),
+        title="Composite Summary Indicators: 13-Indicator Orthogonal Basis (B_13^⊥) & 5-Architecture Comparison",
+        legend=get_right_flushed_legend(state.theme_mode),
+        margin=dict(l=40, r=230, t=60, b=40),
+        height=780
+    )
+    fig.update_xaxes(title_text="Date", row=3, col=1)
+    return fig
+
 def render_executive_summary_card(state: DashboardState):
     """Render high-impact Executive Summary card giving macroeconomic context and quantitative scope."""
     with ui.expansion("🏛️ Executive Summary: Macro Landscape & Multidimensional Framework", icon="analytics").classes('w-full mb-4 rounded-xl').style(
@@ -548,7 +623,7 @@ def render_executive_summary_card(state: DashboardState):
             with ui.row().classes('w-full gap-4 mt-2 flex-wrap'):
                 with ui.column().classes('flex-1 min-w-[280px] p-3 rounded-lg').style('background-color: rgba(2, 136, 209, 0.08); border: 1px solid rgba(2, 136, 209, 0.2);'):
                     ui.label("🎯 Unified Multi-Regime Architecture").style('font-size: 0.90rem; font-weight: 700; color: var(--text-primary);')
-                    ui.label("• 7 Integrated Modules: Macro Valuation, Systemic Leverage, Econometric Bubble, Sentiment & Volatility, Sector Health & TDA, Macro Mahalanobis Distance, and Tech Exuberance Score.").style('font-size: 0.83rem; color: var(--text-secondary);')
+                    ui.label("• 8 Integrated Modules: Macro Valuation, Systemic Leverage, Econometric Bubble, Sentiment & Volatility, Sector Health & TDA, Macro Mahalanobis Distance, Tech Exuberance Score, and Composite Summary Indicators.").style('font-size: 0.83rem; color: var(--text-secondary);')
                     ui.label("• Signed Mahalanobis Sizing: Pre-registered bubble vector b prevents crash-bottom de-risking, maintaining w_equity >= 0.80 at market troughs.").style('font-size: 0.83rem; color: var(--text-secondary);')
                     ui.label("• Dynamic Equity Exposure: Continuous risk-scaled sizing (w_equity ∈ [0.20, 1.00]) with strict 20% defensive liquidity floor.").style('font-size: 0.83rem; color: var(--text-secondary);')
 
@@ -682,6 +757,7 @@ def create_app():
                     t5 = ui.tab('Sector Health')
                     t6 = ui.tab('Macro Mahalanobis Distance')
                     t7 = ui.tab('Tech Exuberance Score')
+                    t8 = ui.tab('Composite Summary Indicators')
 
                 def on_tab_change(e):
                     ui.run_javascript("setTimeout(() => window.dispatchEvent(new Event('resize')), 100);")
@@ -780,6 +856,41 @@ def create_app():
 
                         with create_ios_card("Tech Exuberance Score: Synchronized Multi-Indicator Analytical Panel", "Macro Liquidity Decoupling, BSADF Explosive Tests, LPPLS Finite-Time Singularities & TDA Complexity"):
                             ui.plotly(build_tech_exuberance_chart(state)).classes('w-full').style('min-height: 850px; width: 100%;')
+
+                    with ui.tab_panel(t8):
+                        df_tab8 = state.df
+                        latest_comp = float(df_tab8["Composite_Summary_Index"][-1]) if "Composite_Summary_Index" in df_tab8.columns else 50.0
+                        latest_mahal = float(df_tab8["Mahalanobis_Summary_Index"][-1]) if "Mahalanobis_Summary_Index" in df_tab8.columns else 50.0
+                        latest_dfm = float(df_tab8["DFM_Summary_Index"][-1]) if "DFM_Summary_Index" in df_tab8.columns else 50.0
+                        latest_diff = float(df_tab8["Diffusion_Summary_Index"][-1]) if "Diffusion_Summary_Index" in df_tab8.columns else 50.0
+                        latest_spca = float(df_tab8["SPCA_Summary_Index"][-1]) if "SPCA_Summary_Index" in df_tab8.columns else 50.0
+                        latest_pillars = int(df_tab8["SPCA_Active_Pillars"][-1]) if "SPCA_Active_Pillars" in df_tab8.columns else 5
+
+                        with ui.row().classes('w-full gap-4 mb-4 flex-wrap'):
+                            with ui.column().classes('p-4 flex-1 min-w-[220px] rounded-xl').style('background-color: var(--bg-card); border: 1px solid var(--border-color);'):
+                                ui.label("1. Linear Composite Summary (γ=0.96)").style('font-size: 0.82rem; font-weight: 600; color: var(--text-secondary);')
+                                c_color = '#D32F2F' if latest_comp >= 70 else ('#FF9800' if latest_comp >= 55 else '#00E676')
+                                ui.label(f"{latest_comp:.1f}%").style(f'font-size: 1.6rem; font-weight: 800; color: {c_color};')
+                                ui.label("Information-Weighted 13-Pillar Basis").style('font-size: 0.75rem; color: var(--text-secondary);')
+
+                            with ui.column().classes('p-4 flex-1 min-w-[220px] rounded-xl').style('background-color: var(--bg-card); border: 1px solid var(--border-color);'):
+                                ui.label("2. Signed Mahalanobis Summary (γ=0.95)").style('font-size: 0.82rem; font-weight: 600; color: var(--text-secondary);')
+                                m_color = '#D32F2F' if latest_mahal >= 70 else ('#FF9800' if latest_mahal >= 55 else '#00E676')
+                                ui.label(f"{latest_mahal:.1f}%").style(f'font-size: 1.6rem; font-weight: 800; color: {m_color};')
+                                ui.label("Tikhonov Precision Projection (λ=0.05)").style('font-size: 0.75rem; color: var(--text-secondary);')
+
+                            with ui.column().classes('p-4 flex-1 min-w-[220px] rounded-xl').style('background-color: var(--bg-card); border: 1px solid var(--border-color);'):
+                                ui.label("3 & 4. DFM / Diffusion Breadth").style('font-size: 0.82rem; font-weight: 600; color: var(--text-secondary);')
+                                ui.label(f"{latest_dfm:.1f}% / {latest_diff:.1f}%").style('font-size: 1.45rem; font-weight: 800; color: #FFD600;')
+                                ui.label("126d Upper-Orthant DFM vs 63d LEI Diffusion").style('font-size: 0.75rem; color: var(--text-secondary);')
+
+                            with ui.column().classes('p-4 flex-1 min-w-[220px] rounded-xl').style('background-color: var(--bg-card); border: 1px solid var(--border-color);'):
+                                ui.label("5. Sparse PCA & Active Pillars").style('font-size: 0.82rem; font-weight: 600; color: var(--text-secondary);')
+                                ui.label(f"{latest_spca:.1f}% ({latest_pillars}/13)").style('font-size: 1.45rem; font-weight: 800; color: #E040FB;')
+                                ui.label("Soft-Thresholded (λ=0.06) Active Pillars").style('font-size: 0.75rem; color: var(--text-secondary);')
+
+                        with create_ios_card("Composite Summary Indicators: 13-Indicator Orthogonal Basis (B_13^⊥) & 5-Architecture Comparison", "Information-Weighted Linear, Signed Mahalanobis, Perron-Frobenius DFM, Conference Board Diffusion & L1 Sparse PCA"):
+                            ui.plotly(build_composite_summary_chart(state)).classes('w-full').style('min-height: 780px; width: 100%;')
 
         refresh_dashboard()
 

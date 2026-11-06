@@ -23,9 +23,17 @@ This subpackage houses institutional regime classification and structural break 
 
 from .structural_breaks import StructuralBreakPredictor
 from .regime_mahalanobis import MacroMahalanobisDetector, INDICATORS_15
+from .composite_summary import (
+    CompositeSummaryEngine,
+    INDICATORS_13_ORTHOGONAL,
+    SUMMARY_INDICATORS_5,
+)
 
 __all__ = [
     "StructuralBreakPredictor",
     "MacroMahalanobisDetector",
     "INDICATORS_15",
+    "CompositeSummaryEngine",
+    "INDICATORS_13_ORTHOGONAL",
+    "SUMMARY_INDICATORS_5",
 ]

@@ -100,7 +100,7 @@ def test_tech_exuberance_columns_in_core_wasm():
 
 def test_pane_tech_exuberance_in_dashboard_tabs():
     """Verify Tab 7 is bound to dashboard_tabs with title 'Tech Exuberance Score'."""
-    assert len(dashboard_tabs) == 7
+    assert len(dashboard_tabs) == 8
     tab_names = list(dashboard_tabs._names)
     assert "Tech Exuberance Score" in tab_names
     assert pane_tech_exuberance is not None
