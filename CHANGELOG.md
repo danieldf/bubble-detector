@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.0] - 2026-11-05
+
+### Added
+- **Tab 8 S&P 500 Historical Bubble Regime Validation Suite (`build_composite_validation_chart` & `build_composite_validation_fig`)**:
+  - Added a synchronized 4-subplot validation figure to **Tab 8 ("Composite Summary Indicators")** across both the NiceGUI server dashboard (`bubble_detector/ui/dashboard.py`) and the HoloViz Panel WebAssembly dashboard (`bubble_detector/ui/panel_dashboard.py`) with 100% numerical and visual parity:
+    1. **Subplot 1 — 20-Year S&P 500 Trajectory & 6-Color Composite Bubble Regime Date Bands**: Plots the S&P 500 (`SPY`) benchmark trajectory overlaid on 5 distinct transparent vertical date bands (`rgba(0,229,255,0.24)`, `rgba(255,23,68,0.24)`, `rgba(255,214,0,0.24)`, `rgba(0,230,118,0.24)`, `rgba(224,64,251,0.24)`) across 5 stratified vertical background tiers ($[0.0, 0.2], \dots, [0.8, 1.0]$) for each individual Composite Summary Indicator ($\ge 70\%$), plus a **6th full-height ($[0.0, 1.0]$) transparent Flame Orange-Red consensus band (`rgba(255,109,0,0.40)`)** indicating when **ALL 5 Composite Summary Indicators are simultaneously ON** ($\mathcal{S}_{\text{ALL}}(t) = 1$).
+    2. **Subplot 2 — S&P 500 Underwater Drawdown (%) & Forward 63-Day Max Drawdown vs. Active Bubble Consensus Count**: Demonstrates that multi-indicator bubble activations precede major S&P 500 drawdowns while dropping to $0/5$ during crash liquidation troughs.
+    3. **Subplot 3 — Cost-Inclusive `$100` Cumulative Wealth Validation (Net of 15 bps Turnover Friction & 4.0% Cash Yield)**: Compares the Dynamic Consensus Tactical Overlay (`$1,030.3` on the 20-year horizon, `-47.4%` MaxDD) and the Unanimous `ALL 5 ON` Shield against passive Buy-and-Hold S&P 500 (`$883.6`, `-55.2%` MaxDD).
+    4. **Subplot 4 — Dynamic Tactical Equity Allocation Weight (%) & Ensemble Bubble Consensus Breadth (%)**: Tracks real-time causal equity sizing ($w_{\text{eq}} \in [20\%, 125\%]$) and the fraction of active summary architectures.
+- **Unified 70.0% Systemic Bubble Threshold Calibration (`bubble_detector/models/composite_summary.py`)**:
+  - Standardized the signed Riemannian projection $z_{\text{eff}, t} = (s_t + 0.45(d_{B,t} - d_{C,t}) - 0.85) / 1.45$ in `Mahalanobis_Summary_Index` and calibrated the Bayesian log-odds intercept (`+0.55`) in `Composite_Summary_Index` so all 5 summary indicators share a unified equilibrium baseline and `70.0%` Systemic Bubble Warning Threshold.
+  - Added `build_band_polygon` and `compute_composite_validation_metrics` (expanded verification suite to **125 passed tests**).
+
 ## [3.3.0] - 2026-11-05
 
 ### Added

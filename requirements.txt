@@ -1,5 +1,5 @@
 # =============================================================================
-# Multidimensional Market Bubble Detector & Structural Break System (v3.3.0)
+# Multidimensional Market Bubble Detector & Structural Break System (v3.4.0)
 # Production & Development Requirements Specification
 # Compatible with `uv pip install -r requirements.txt` and standard pip
 # =============================================================================
@@ -118,7 +118,7 @@ pyyaml>=6.0.1
 # 5. Quality Assurance, Testing & Validation Suite
 # -----------------------------------------------------------------------------
 # Pytest: Enterprise-grade automated test runner and fixture architecture.
-# - Role: Executes the 122-test institutional verification suite covering provenance, models, and UI.
+# - Role: Executes the 125-test institutional verification suite covering provenance, models, and UI.
 pytest>=8.0.0
 
 # AnyIO: Asynchronous concurrency library supporting async test execution.

@@ -193,12 +193,14 @@ def test_wasm_full_script_pyodide_execution(monkeypatch, tmp_path):
     assert len(tmpl.sidebar) >= 3
     assert len(tmpl.main) >= 6
 
-    # Verify 8 plotly panes
+    # Verify 8 tabs and all embedded plotly panes
     tabs = globs["dashboard_tabs"]
     assert len(tabs) == 8
     for pane in tabs.objects:
-        fig = pane.object
-        assert len(fig.data) > 0, "Tab figure has 0 traces"
+        sub_panes = pane.objects if hasattr(pane, "objects") else [pane]
+        for sp in sub_panes:
+            fig = sp.object
+            assert len(fig.data) > 0, "Tab figure has 0 traces"
 
     # Verify switching to Option 2
     update_all = globs["update_all_charts"]
@@ -241,7 +243,9 @@ def test_wasm_full_script_pure_numpy_fallback_execution(monkeypatch, tmp_path):
 
     tabs = globs["dashboard_tabs"]
     for pane in tabs.objects:
-        assert len(pane.object.data) > 0
+        sub_panes = pane.objects if hasattr(pane, "objects") else [pane]
+        for sp in sub_panes:
+            assert len(sp.object.data) > 0
 
 def test_all_7_plotly_figures_have_traces():
     """Verify all 7 Plotly figures construct successfully with non-empty traces."""

@@ -428,7 +428,7 @@ def compute_orthogonal_basis_and_summaries_numpy(
         d_c = np.sqrt(max(float(v_t.T @ M_t @ v_t), 0.0))
 
         eff_z = s_t + 0.45 * (d_b - d_c)
-        p_struct_t = float(norm_cdf_numpy(np.array([eff_z - 0.10]))[0])
+        p_struct_t = float(norm_cdf_numpy(np.array([(eff_z - 0.85) / 1.45]))[0])
 
         excess_crash = max(d_c - d_b, 0.0) + max(-s_t - 0.40, 0.0)
         lam_c = float(np.exp(-0.35 * (excess_crash ** 2)))
@@ -527,6 +527,7 @@ def compute_orthogonal_basis_and_summaries_numpy(
         + 0.20 * np.log(p3 / (1.0 - p3))
         + 0.15 * np.log(p4 / (1.0 - p4))
         + 0.15 * np.log(p_dd / (1.0 - p_dd))
+        + 0.55
     )
     I_star = np.clip((100.0 / (1.0 + np.exp(-logit_star))) * lambda_crash, 0.0, 100.0)
 
@@ -654,3 +655,164 @@ class CompositeSummaryEngine:
         results = compute_orthogonal_basis_and_summaries_numpy(raw_cols, window=self.rolling_window)
         new_series = [pl.Series(k, v) for k, v in results.items()]
         return df.with_columns(new_series)
+
+
+def build_band_polygon(dates: List[str], sig: np.ndarray, y0: float, y1: float) -> Tuple[List[str], np.ndarray]:
+    """
+    Construct a closed, NaN-free rectangular span polygon for Plotly `fill='toself'` vertical date bands.
+    Emits 4 vertices per contiguous active span, guaranteeing exact date boundaries,
+    monotonically non-decreasing x-coordinates, and lightweight rendering.
+    """
+    n = len(dates)
+    if n == 0:
+        return [], np.array([], dtype=np.float64)
+    d_list = [str(d)[:10] for d in dates]
+    s_arr = (np.asarray(sig, dtype=np.float64) > 0.5).astype(np.int32)
+
+    x_poly: List[str] = [d_list[0]]
+    y_poly: List[float] = [float(y0)]
+
+    in_span = False
+    for i in range(n):
+        if s_arr[i] == 1 and not in_span:
+            in_span = True
+            d_start = d_list[i]
+            x_poly.extend([d_start, d_start])
+            y_poly.extend([float(y0), float(y1)])
+        elif s_arr[i] == 0 and in_span:
+            in_span = False
+            d_end = d_list[i]
+            x_poly.extend([d_end, d_end])
+            y_poly.extend([float(y1), float(y0)])
+
+    if in_span:
+        d_end = d_list[-1]
+        x_poly.extend([d_end, d_end])
+        y_poly.extend([float(y1), float(y0)])
+
+    x_poly.append(d_list[-1])
+    y_poly.append(float(y0))
+    return x_poly, np.asarray(y_poly, dtype=np.float64)
+
+
+def compute_composite_validation_metrics(
+    spy: np.ndarray,
+    comp: np.ndarray,
+    mahal: np.ndarray,
+    dfm: np.ndarray,
+    diff: np.ndarray,
+    spca: np.ndarray,
+    damper: np.ndarray,
+    threshold: float = 70.0,
+) -> Dict[str, np.ndarray]:
+    """
+    Pure-NumPy deterministic engine computing the 6 binary bubble regime states
+    (5 individual Composite Summary Indicators + 1 Unanimous 'ALL 5 ON' state),
+    S&P 500 realized and forward 63-day drawdowns, and cost-inclusive (15 bps)
+    $100 cumulative wealth validation curves.
+    """
+    spy_arr = np.maximum(np.asarray(spy, dtype=np.float64), 1e-4)
+    n = len(spy_arr)
+
+    def _causal_state(arr: np.ndarray) -> np.ndarray:
+        raw = (np.asarray(arr, dtype=np.float64) >= threshold).astype(np.int32)
+        out = raw.copy()
+        if n > 2:
+            out[1:] = np.maximum(out[1:], raw[:-1])
+            out[2:] = np.maximum(out[2:], raw[:-2])
+        return out
+
+    s_comp = _causal_state(comp)
+    s_mahal = _causal_state(mahal)
+    s_dfm = _causal_state(dfm)
+    s_diff = _causal_state(diff)
+    s_spca = _causal_state(spca)
+
+    s_all = (s_comp & s_mahal & s_dfm & s_diff & s_spca).astype(np.int32)
+    n_on = (s_comp + s_mahal + s_dfm + s_diff + s_spca).astype(np.float64)
+
+    # Realized underwater drawdown (%) and forward 63-day max drawdown (%)
+    run_max = np.maximum.accumulate(spy_arr)
+    dd_spy = (spy_arr - run_max) / run_max * 100.0
+
+    fwd_dd63 = np.zeros(n, dtype=np.float64)
+    for t in range(n):
+        seg = spy_arr[t : min(n, t + 64)]
+        fwd_dd63[t] = (float(np.min(seg)) - spy_arr[t]) / spy_arr[t] * 100.0
+
+    # Strictly causal Dynamic Tactical Equity Allocation & $100 Cumulative Wealth (15 bps cost, 4% cash yield)
+    ret_spy = np.zeros(n, dtype=np.float64)
+    if n > 1:
+        ret_spy[1:] = (spy_arr[1:] - spy_arr[:-1]) / spy_arr[:-1]
+
+    r_cash = 0.04 / 252.0
+    cost_bps = 0.0015
+    dmp_arr = np.asarray(damper, dtype=np.float64)
+    cs_spy = np.cumsum(np.insert(spy_arr, 0, 0.0))
+    idx_end = np.arange(1, n + 1)
+    s50 = np.maximum(0, idx_end - 50)
+    s200 = np.maximum(0, idx_end - 200)
+    ma50 = (cs_spy[idx_end] - cs_spy[s50]) / np.maximum(idx_end - s50, 1)
+    ma200 = (cs_spy[idx_end] - cs_spy[s200]) / np.maximum(idx_end - s200, 1)
+
+    w_eq = np.ones(n, dtype=np.float64)
+    w_all5 = np.ones(n, dtype=np.float64)
+    wealth_bh = np.full(n, 100.0, dtype=np.float64)
+    wealth_tac = np.full(n, 100.0, dtype=np.float64)
+    wealth_all5 = np.full(n, 100.0, dtype=np.float64)
+
+    curr_w = 1.0
+    curr_w5 = 1.0
+    for t in range(1, n):
+        cnt_prev = int(np.clip(n_on[t - 1], 0, 5))
+        if dmp_arr[t - 1] < 45.0 or (dd_spy[t - 1] <= -18.0 and spy_arr[t - 1] >= ma50[t - 1]):
+            target_w = 1.25
+        elif dd_spy[t - 1] <= -12.0 and spy_arr[t - 1] < ma200[t - 1]:
+            target_w = 0.25
+        elif s_all[t - 1] == 1:
+            target_w = 0.20
+        elif cnt_prev >= 4:
+            target_w = 0.55
+        else:
+            target_w = 1.05
+
+        if abs(target_w - curr_w) >= 0.02:
+            turnover = abs(target_w - curr_w)
+            curr_w = target_w
+        else:
+            turnover = 0.0
+        w_eq[t] = curr_w
+
+        target_w5 = 0.20 if s_all[t - 1] == 1 else (0.45 if (dd_spy[t - 1] <= -12.0 and spy_arr[t - 1] < ma200[t - 1]) else 1.00)
+        if dmp_arr[t - 1] < 45.0:
+            target_w5 = 1.15
+        turnover5 = abs(target_w5 - curr_w5) if abs(target_w5 - curr_w5) >= 0.02 else 0.0
+        curr_w5 = target_w5 if turnover5 > 0.0 else curr_w5
+        w_all5[t] = curr_w5
+
+        r_t = ret_spy[t]
+        wealth_bh[t] = wealth_bh[t - 1] * (1.0 + r_t)
+        wealth_tac[t] = wealth_tac[t - 1] * (1.0 + curr_w * r_t + (1.0 - curr_w) * r_cash - turnover * cost_bps)
+        wealth_all5[t] = wealth_all5[t - 1] * (1.0 + curr_w5 * r_t + (1.0 - curr_w5) * r_cash - turnover5 * cost_bps)
+
+    consensus_pct = (n_on / 5.0) * 100.0
+    cond_risk_pct = np.clip(65.0 * (n_on / 5.0) + 35.0 * s_all.astype(np.float64), 0.0, 100.0)
+
+    return {
+        "s_comp": s_comp,
+        "s_mahal": s_mahal,
+        "s_dfm": s_dfm,
+        "s_diff": s_diff,
+        "s_spca": s_spca,
+        "s_all": s_all,
+        "n_on": n_on,
+        "dd_spy": dd_spy,
+        "fwd_dd63": fwd_dd63,
+        "w_eq_pct": w_eq * 100.0,
+        "wealth_bh": wealth_bh,
+        "wealth_tac": wealth_tac,
+        "wealth_all5": wealth_all5,
+        "consensus_pct": consensus_pct,
+        "cond_risk_pct": cond_risk_pct,
+    }
+

@@ -416,6 +416,7 @@ if (document.readyState === 'loading') {
                     ):
                         node.body.pop(0)
             min_py = ast.unparse(tree)
+            min_py = re.sub(r"(?m)^(    )+", lambda m: " " * (len(m.group(0)) // 4), min_py)
             escaped_py = (
                 min_py.replace("\\", "\\\\")
                 .replace("`", "\\`")

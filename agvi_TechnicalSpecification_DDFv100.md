@@ -148,6 +148,7 @@ To maximize non-redundant multi-domain information across all seven dashboard ta
 
 ## 10. Specification Changelog (SemVer)
 
+- **[v3.4.0] - 2026-11-05**: Added the 4-subplot Tab 8 S&P 500 Historical Bubble Regime Validation Suite (`build_composite_validation_chart` & `build_composite_validation_fig`) featuring 5 indicator-specific transparent vertical date bands ($\ge 70\%$) + a 6th full-height unanimous consensus band (`ALL 5 INDICATORS ON`), S&P 500 underwater & forward 63-day drawdown validation, and cost-inclusive `$100` cumulative wealth validation across NiceGUI and HoloViz Panel WebAssembly (125 passed tests).
 - **[v3.3.0] - 2026-11-05**: Added two-stage causal $I(0)$ unit-variance preprocessing protocol, comparative mathematical/empirical evaluation of Conference Board Diffusion, Federal Reserve State-Space DFM, and Elastic-Net Sparse PCA against Asymmetric Mahalanobis–GBDT Synthesis on the 13-indicator orthogonal basis $\mathcal{B}_{13}^{\perp}$ (20-year horizon), and architectural specification for Tab 8 ("Composite Summary Indicators") across NiceGUI and HoloViz Panel WebAssembly.
 - **[v3.2.0] - 2026-11-03**: Added Option 3 (20-Year Global Crisis Horizon, 2006–2026), cross-runtime indicator/trace parity suite, and dual-directory WASM synchronization.
 - **[v3.1.0] - 2026-10-05**: Added Tab 7 ("Tech Exuberance Score"), Filimonov–Sornette LPPLS model, and FRED Global Liquidity ETL.

@@ -20,7 +20,7 @@ Rules:
 ### 2. Architectural Blueprint & Directory Layout
 ```text
 bubble_detector/
-├── __init__.py           # Version definition (v3.3.0) and top-level exports
+├── __init__.py           # Version definition (v3.4.0) and top-level exports
 ├── config.py             # Global constants, paths, logging (RotatingFileHandler), custom exceptions
 ├── ui_theme.py           # WCAG 2.2 AA contrast engine, Apple human interface styling, 8px rhythm
 ├── data/                 # Ground-truth point-in-time ETL pipelines and multi-decade horizon anchoring
@@ -80,7 +80,7 @@ bubble_detector/
   ```bash
   ./.venv/bin/pytest tests/ -v
   ```
-  Expected result: **122 passed tests (100% pass rate)**.
+  Expected result: **125 passed tests (100% pass rate)**.
 - Anti-synthetic regression verification:
   ```bash
   ./.venv/bin/pytest tests/test_no_gaussian_bumps.py -v

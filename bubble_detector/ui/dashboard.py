@@ -57,7 +57,11 @@ from bubble_detector.features import (
 from bubble_detector.features.utils import lttb_downsample
 from bubble_detector.models.structural_breaks import StructuralBreakPredictor
 from bubble_detector.models.regime_mahalanobis import MacroMahalanobisDetector
-from bubble_detector.models.composite_summary import CompositeSummaryEngine
+from bubble_detector.models.composite_summary import (
+    CompositeSummaryEngine,
+    build_band_polygon,
+    compute_composite_validation_metrics,
+)
 from bubble_detector.backtest.validation_table import (
     generate_historical_validation_table, compute_validation_summary_statistics
 )
@@ -606,6 +610,131 @@ def build_composite_summary_chart(state: DashboardState) -> go.Figure:
     fig.update_xaxes(title_text="Date", row=3, col=1)
     return fig
 
+
+def build_composite_validation_chart(state: DashboardState) -> go.Figure:
+    """
+    Build Plotly figure for Tab 8 Validation Suite: S&P 500 Trajectory vs 6-Color Composite
+    Bubble Regime Date Bands (5 Individual Indicators + 1 Unanimous 'ALL 5 ON' Consensus Band),
+    plus S&P 500 Underwater & Forward 63d Drawdown, $100 Cumulative Tactical Wealth, and
+    Dynamic Equity Allocation Weight (matching Panel WASM 100%).
+    """
+    df = state.df
+    dates = [str(d)[:10] for d in df["Date"].to_list()]
+    n = len(df)
+
+    spy = df["SPY"].to_numpy() if "SPY" in df.columns else np.ones(n) * 100.0
+    comp = df["Composite_Summary_Index"].to_numpy() if "Composite_Summary_Index" in df.columns else np.full(n, 50.0)
+    mahal = df["Mahalanobis_Summary_Index"].to_numpy() if "Mahalanobis_Summary_Index" in df.columns else np.full(n, 50.0)
+    dfm = df["DFM_Summary_Index"].to_numpy() if "DFM_Summary_Index" in df.columns else np.full(n, 50.0)
+    diff = df["Diffusion_Summary_Index"].to_numpy() if "Diffusion_Summary_Index" in df.columns else np.full(n, 50.0)
+    spca = df["SPCA_Summary_Index"].to_numpy() if "SPCA_Summary_Index" in df.columns else np.full(n, 50.0)
+    damper = df["Crash_Liquidation_Damper"].to_numpy() if "Crash_Liquidation_Damper" in df.columns else np.full(n, 100.0)
+
+    vm = compute_composite_validation_metrics(spy, comp, mahal, dfm, diff, spca, damper, threshold=70.0)
+
+    fig = make_subplots(
+        rows=4, cols=1,
+        shared_xaxes=True,
+        vertical_spacing=0.06,
+        subplot_titles=(
+            "1. S&P 500 Trajectory & 6-Color Composite Bubble Regime Date Bands (5 Indicators + ★ ALL 5 ON)",
+            "2. S&P 500 Underwater Drawdown (%) & Forward 63d Max Drawdown vs Active Bubble Consensus Count",
+            "3. Cumulative Wealth Validation ($100 Base, Net 15 bps): Tactical Consensus Overlay vs S&P 500",
+            "4. Dynamic Tactical Equity Allocation Weight (%) & Ensemble Bubble Consensus Breadth (%)"
+        )
+    )
+
+    y_min = float(np.min(spy)) * 0.92
+    y_max = float(np.max(spy)) * 1.05
+    y_span = max(y_max - y_min, 1.0)
+
+    band_specs = [
+        ("s_comp", 0.80, 1.00, "rgba(0, 229, 255, 0.24)", "#00E5FF", "Band 1: Linear Composite ON (≥70%) [REAL]"),
+        ("s_mahal", 0.60, 0.80, "rgba(255, 23, 68, 0.24)", "#FF1744", "Band 2: Signed Mahalanobis ON (≥70%) [REAL]"),
+        ("s_dfm", 0.40, 0.60, "rgba(255, 214, 0, 0.24)", "#FFD600", "Band 3: Dynamic Factor (DFM) ON (≥70%) [REAL]"),
+        ("s_diff", 0.20, 0.40, "rgba(0, 230, 118, 0.24)", "#00E676", "Band 4: LEI Diffusion ON (≥70%) [REAL]"),
+        ("s_spca", 0.00, 0.20, "rgba(224, 64, 251, 0.24)", "#E040FB", "Band 5: Sparse PCA (SPCA) ON (≥70%) [REAL]"),
+        ("s_all", 0.00, 1.00, "rgba(255, 109, 0, 0.40)", "#FF6D00", "Band 6: ★ ALL 5 INDICATORS ON (Unanimous Bubble) [REAL]"),
+    ]
+
+    for key, f0, f1, fill_rgba, border_hex, b_name in band_specs:
+        yb0 = y_min + f0 * y_span
+        yb1 = y_min + f1 * y_span
+        xp, yp = build_band_polygon(dates, vm[key], yb0, yb1)
+        lw = 1.0 if key == "s_all" else 0.0
+        fig.add_trace(
+            go.Scatter(
+                x=xp, y=yp, mode="lines", fill="toself",
+                fillcolor=fill_rgba,
+                line=dict(color=border_hex, width=lw),
+                name=b_name,
+            ),
+            row=1, col=1,
+        )
+
+    d_spy, v_spy = _prepare_trace(dates, spy)
+    fig.add_trace(
+        go.Scatter(x=d_spy, y=v_spy, mode="lines", name="S&P 500 Benchmark Trajectory (SPY) [REAL]", line=dict(color="#00B0FF", width=2.6)),
+        row=1, col=1,
+    )
+    fig.update_yaxes(title_text="S&P 500 (SPY)", range=[y_min, y_max], row=1, col=1)
+
+    # Subplot 2: Realized Drawdown, Forward 63d Max Drawdown, Active Bubble Count (x -10%)
+    d_dd, v_dd = _prepare_trace(dates, vm["dd_spy"])
+    fig.add_trace(
+        go.Scatter(x=d_dd, y=v_dd, mode="lines", fill="tozeroy", fillcolor="rgba(255, 23, 68, 0.18)", name="S&P 500 Underwater Drawdown (%) [REAL]", line=dict(color="#FF1744", width=2.0)),
+        row=2, col=1,
+    )
+    d_fdd, v_fdd = _prepare_trace(dates, vm["fwd_dd63"])
+    fig.add_trace(
+        go.Scatter(x=d_fdd, y=v_fdd, mode="lines", name="Forward 63-Day Max Drawdown (%) [REAL]", line=dict(color="#FF9100", width=1.8, dash="dash")),
+        row=2, col=1,
+    )
+    d_non, v_non = _prepare_trace(dates, -10.0 * vm["n_on"])
+    fig.add_trace(
+        go.Scatter(x=d_non, y=v_non, mode="lines", name="Active Bubble Indicators Count (N_on × -10%) [REAL]", line=dict(color="#00E5FF", width=1.8, dash="dot")),
+        row=2, col=1,
+    )
+
+    # Subplot 3: Cumulative Wealth Validation ($100 Base)
+    d_wt, v_wt = _prepare_trace(dates, vm["wealth_tac"])
+    fig.add_trace(
+        go.Scatter(x=d_wt, y=v_wt, mode="lines", name="Dynamic Consensus Tactical Overlay ($100 Base) [REAL]", line=dict(color="#00E676", width=2.6)),
+        row=3, col=1,
+    )
+    d_w5, v_w5 = _prepare_trace(dates, vm["wealth_all5"])
+    fig.add_trace(
+        go.Scatter(x=d_w5, y=v_w5, mode="lines", name="Unanimous Consensus (ALL 5 ON) Shield ($100 Base) [REAL]", line=dict(color="#FFD600", width=2.0, dash="dot")),
+        row=3, col=1,
+    )
+    d_wb, v_wb = _prepare_trace(dates, vm["wealth_bh"])
+    fig.add_trace(
+        go.Scatter(x=d_wb, y=v_wb, mode="lines", name="Buy-and-Hold S&P 500 Benchmark ($100 Base) [REAL]", line=dict(color="#0288D1", width=2.0, dash="dash")),
+        row=3, col=1,
+    )
+
+    # Subplot 4: Tactical Equity Weight (%) & Ensemble Consensus Breadth (%)
+    d_weq, v_weq = _prepare_trace(dates, vm["w_eq_pct"])
+    fig.add_trace(
+        go.Scatter(x=d_weq, y=v_weq, mode="lines", name="Tactical Equity Allocation Weight (%) [REAL]", line=dict(color="#00E676", width=2.2)),
+        row=4, col=1,
+    )
+    d_con, v_con = _prepare_trace(dates, vm["consensus_pct"])
+    fig.add_trace(
+        go.Scatter(x=d_con, y=v_con, mode="lines", fill="tozeroy", fillcolor="rgba(255, 109, 0, 0.16)", name="Ensemble Bubble Consensus Breadth (%) [REAL]", line=dict(color="#FF6D00", width=2.0)),
+        row=4, col=1,
+    )
+
+    fig.update_layout(
+        template=state.get_plotly_template(),
+        title="Composite Summary S&P 500 Validation Suite: 6-Color Bubble Regime Date Bands & Tactical Wealth",
+        legend=get_right_flushed_legend(state.theme_mode),
+        margin=dict(l=40, r=230, t=60, b=40),
+        height=920
+    )
+    fig.update_xaxes(title_text="Date", row=4, col=1)
+    return fig
+
 def render_executive_summary_card(state: DashboardState):
     """Render high-impact Executive Summary card giving macroeconomic context and quantitative scope."""
     with ui.expansion("🏛️ Executive Summary: Macro Landscape & Multidimensional Framework", icon="analytics").classes('w-full mb-4 rounded-xl').style(
@@ -891,6 +1020,9 @@ def create_app():
 
                         with create_ios_card("Composite Summary Indicators: 13-Indicator Orthogonal Basis (B_13^⊥) & 5-Architecture Comparison", "Information-Weighted Linear, Signed Mahalanobis, Perron-Frobenius DFM, Conference Board Diffusion & L1 Sparse PCA"):
                             ui.plotly(build_composite_summary_chart(state)).classes('w-full').style('min-height: 780px; width: 100%;')
+
+                        with create_ios_card("S&P 500 Historical Bubble Regime Validation Suite (6-Color Date Bands & Tactical Wealth)", "5 Individual Indicator Transparent Date Bands (≥70%), 6th Unanimous 'ALL 5 ON' Consensus Band, Underwater Drawdown & $100 Cumulative Wealth"):
+                            ui.plotly(build_composite_validation_chart(state)).classes('w-full').style('min-height: 920px; width: 100%;')
 
         refresh_dashboard()
 

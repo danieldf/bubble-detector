@@ -9,13 +9,15 @@ import numpy as np
 from bubble_detector.ui.dashboard import (
     DashboardState, build_macro_valuation_chart, build_leverage_chart,
     build_econometric_chart, build_sentiment_vol_chart, build_sector_health_chart,
-    build_mahalanobis_chart, build_tech_exuberance_chart, build_composite_summary_chart
+    build_mahalanobis_chart, build_tech_exuberance_chart, build_composite_summary_chart,
+    build_composite_validation_chart,
 )
 from bubble_detector.ui.panel_dashboard import (
     generate_wasm_dataset, HORIZON_METADATA,
     build_macro_valuation_fig, build_leverage_fig,
     build_econometric_fig, build_sentiment_vol_fig, build_sector_health_fig,
-    build_mahalanobis_fig, build_tech_exuberance_fig, build_composite_summary_fig
+    build_mahalanobis_fig, build_tech_exuberance_fig, build_composite_summary_fig,
+    build_composite_validation_fig,
 )
 
 INDICATORS_TO_CHECK = [
@@ -142,6 +144,7 @@ def test_all_7_tabs_plot_trace_parity(horizon_id):
         ("mahalanobis", build_mahalanobis_chart(state), build_mahalanobis_fig(horizon_id)),
         ("tech_exuberance", build_tech_exuberance_chart(state), build_tech_exuberance_fig(horizon_id)),
         ("composite_summary", build_composite_summary_chart(state), build_composite_summary_fig(horizon_id)),
+        ("composite_validation", build_composite_validation_chart(state), build_composite_validation_fig(horizon_id)),
     ]
 
     for chart_name, nice_fig, wasm_fig in charts_to_test:

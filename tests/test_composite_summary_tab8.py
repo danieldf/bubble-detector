@@ -13,10 +13,16 @@ from bubble_detector.models.composite_summary import (
     INDICATORS_13_ORTHOGONAL,
     SUMMARY_INDICATORS_5,
     compute_orthogonal_basis_and_summaries_numpy,
+    compute_composite_validation_metrics,
 )
-from bubble_detector.ui.dashboard import DashboardState, build_composite_summary_chart
+from bubble_detector.ui.dashboard import (
+    DashboardState,
+    build_composite_summary_chart,
+    build_composite_validation_chart,
+)
 from bubble_detector.ui.panel_dashboard import (
     build_composite_summary_fig,
+    build_composite_validation_fig,
     dashboard_tabs,
     generate_wasm_dataset,
     HORIZON_METADATA,
@@ -190,3 +196,41 @@ def test_tab8_dual_ui_parity_across_all_horizons(horizon_id):
             atol=1e-4,
             err_msg=f"Trace {i} ({tr_n.name}) y-values mismatch on {horizon_id}",
         )
+
+
+@pytest.mark.parametrize("horizon_id", [HORIZON_OPTION_1_ID, HORIZON_OPTION_2_ID, HORIZON_OPTION_3_ID])
+def test_tab8_validation_6_color_bands_and_wealth_parity(horizon_id):
+    """
+    Verify the Tab 8 S&P 500 Validation Suite figure (`build_composite_validation_chart` vs
+    `build_composite_validation_fig`) across all 3 horizons:
+      - 15 total traces (6 transparent vertical date bands + S&P 500 trajectory + 3 drawdown traces + 3 wealth traces + 2 allocation traces)
+      - 6 distinct transparent fill colors for the 5 individual indicators and the 6th 'ALL 5 ON' consensus band
+      - 100% numerical parity between NiceGUI and Panel WebAssembly.
+    """
+    state = DashboardState(load_data=False)
+    state.load_data(horizon_id)
+
+    fig_val_nice = build_composite_validation_chart(state)
+    fig_val_wasm = build_composite_validation_fig(horizon_id)
+
+    assert len(fig_val_nice.data) == 15
+    assert len(fig_val_wasm.data) == 15
+
+    # Verify the first 6 traces are the 6 distinct transparent vertical date bands
+    band_traces = fig_val_nice.data[:6]
+    fill_colors = [tr.fillcolor for tr in band_traces]
+    assert len(set(fill_colors)) == 6, f"Expected 6 distinct transparent band colors, got {fill_colors}"
+    assert "ALL 5 INDICATORS ON" in band_traces[5].name
+
+    for i, (tr_n, tr_w) in enumerate(zip(fig_val_nice.data, fig_val_wasm.data)):
+        assert tr_n.name == tr_w.name
+        assert tr_n.fillcolor == tr_w.fillcolor
+        assert list(tr_n.x) == list(tr_w.x)
+        np.testing.assert_allclose(
+            np.asarray(tr_n.y, dtype=np.float64),
+            np.asarray(tr_w.y, dtype=np.float64),
+            rtol=1e-4,
+            atol=1e-4,
+            err_msg=f"Validation trace {i} ({tr_n.name}) y-values mismatch on {horizon_id}",
+        )
+

@@ -34,6 +34,7 @@ try:
         get_dynamic_horizon_metadata
     )
     from bubble_detector.features.utils import normalize_tda_indicator, lttb_downsample
+    from bubble_detector.models.composite_summary import build_band_polygon, compute_composite_validation_metrics
     from bubble_detector.config import BASE_DIR, CACHE_DIR, PROVENANCE_DIR, logger
 except ImportError:
     import logging
@@ -200,6 +201,90 @@ except ImportError:
 
         sampled_indices.append(n - 1)
         return [str(dates[i])[:10] for i in sampled_indices], y[sampled_indices]
+
+    def build_band_polygon(dates, sig, y0, y1):
+        n = len(dates)
+        if n == 0:
+            return [], np.array([], dtype=np.float64)
+        d_list = [str(d)[:10] for d in dates]
+        s_arr = (np.asarray(sig, dtype=np.float64) > 0.5).astype(np.int32)
+        x_poly, y_poly = [d_list[0]], [float(y0)]
+        in_span = False
+        for i in range(n):
+            if s_arr[i] == 1 and not in_span:
+                in_span = True
+                x_poly.extend([d_list[i], d_list[i]])
+                y_poly.extend([float(y0), float(y1)])
+            elif s_arr[i] == 0 and in_span:
+                in_span = False
+                x_poly.extend([d_list[i], d_list[i]])
+                y_poly.extend([float(y1), float(y0)])
+        if in_span:
+            x_poly.extend([d_list[-1], d_list[-1]])
+            y_poly.extend([float(y1), float(y0)])
+        x_poly.append(d_list[-1])
+        y_poly.append(float(y0))
+        return x_poly, np.asarray(y_poly, dtype=np.float64)
+
+    def compute_composite_validation_metrics(spy, comp, mahal, dfm, diff, spca, damper, threshold=70.0):
+        spy_arr = np.maximum(np.asarray(spy, dtype=np.float64), 1e-4)
+        n = len(spy_arr)
+        def _cs(arr):
+            r = (np.asarray(arr, dtype=np.float64) >= threshold).astype(np.int32)
+            o = r.copy()
+            if n > 2:
+                o[1:] = np.maximum(o[1:], r[:-1])
+                o[2:] = np.maximum(o[2:], r[:-2])
+            return o
+        s_c, s_m, s_d, s_df, s_s = _cs(comp), _cs(mahal), _cs(dfm), _cs(diff), _cs(spca)
+        s_all = (s_c & s_m & s_d & s_df & s_s).astype(np.int32)
+        n_on = (s_c + s_m + s_d + s_df + s_s).astype(np.float64)
+        run_max = np.maximum.accumulate(spy_arr)
+        dd_spy = (spy_arr - run_max) / run_max * 100.0
+        fwd_dd63 = np.array([(float(np.min(spy_arr[t:min(n, t+64)])) - spy_arr[t]) / spy_arr[t] * 100.0 for t in range(n)], dtype=np.float64)
+        ret_spy = np.zeros(n, dtype=np.float64)
+        if n > 1:
+            ret_spy[1:] = (spy_arr[1:] - spy_arr[:-1]) / spy_arr[:-1]
+        dmp_arr = np.asarray(damper, dtype=np.float64)
+        cs_spy = np.cumsum(np.insert(spy_arr, 0, 0.0))
+        idx_e = np.arange(1, n + 1)
+        s50, s200 = np.maximum(0, idx_e - 50), np.maximum(0, idx_e - 200)
+        ma50 = (cs_spy[idx_e] - cs_spy[s50]) / np.maximum(idx_e - s50, 1)
+        ma200 = (cs_spy[idx_e] - cs_spy[s200]) / np.maximum(idx_e - s200, 1)
+        w_eq, wealth_bh, wealth_tac, wealth_all5 = np.ones(n), np.full(n, 100.0), np.full(n, 100.0), np.full(n, 100.0)
+        curr_w, curr_w5, r_cash, cost_bps = 1.0, 1.0, 0.04 / 252.0, 0.0015
+        for t in range(1, n):
+            cnt_prev = int(np.clip(n_on[t - 1], 0, 5))
+            if dmp_arr[t - 1] < 45.0 or (dd_spy[t - 1] <= -18.0 and spy_arr[t - 1] >= ma50[t - 1]):
+                tw = 1.25
+            elif dd_spy[t - 1] <= -12.0 and spy_arr[t - 1] < ma200[t - 1]:
+                tw = 0.25
+            elif s_all[t - 1] == 1:
+                tw = 0.20
+            elif cnt_prev >= 4:
+                tw = 0.55
+            else:
+                tw = 1.05
+            to = abs(tw - curr_w) if abs(tw - curr_w) >= 0.02 else 0.0
+            if to > 0.0:
+                curr_w = tw
+            w_eq[t] = curr_w
+            tw5 = 0.20 if s_all[t - 1] == 1 else (0.45 if (dd_spy[t - 1] <= -12.0 and spy_arr[t - 1] < ma200[t - 1]) else 1.00)
+            if dmp_arr[t - 1] < 45.0:
+                tw5 = 1.15
+            to5 = abs(tw5 - curr_w5) if abs(tw5 - curr_w5) >= 0.02 else 0.0
+            if to5 > 0.0:
+                curr_w5 = tw5
+            r_t = ret_spy[t]
+            wealth_bh[t] = wealth_bh[t - 1] * (1.0 + r_t)
+            wealth_tac[t] = wealth_tac[t - 1] * (1.0 + curr_w * r_t + (1.0 - curr_w) * r_cash - to * cost_bps)
+            wealth_all5[t] = wealth_all5[t - 1] * (1.0 + curr_w5 * r_t + (1.0 - curr_w5) * r_cash - to5 * cost_bps)
+        return {
+            "s_comp": s_c, "s_mahal": s_m, "s_dfm": s_d, "s_diff": s_df, "s_spca": s_s, "s_all": s_all,
+            "n_on": n_on, "dd_spy": dd_spy, "fwd_dd63": fwd_dd63, "w_eq_pct": w_eq * 100.0,
+            "wealth_bh": wealth_bh, "wealth_tac": wealth_tac, "wealth_all5": wealth_all5,
+            "consensus_pct": (n_on / 5.0) * 100.0,
+        }
 
 
 _dyn_start_50, _dyn_end = get_dynamic_50yr_date_range()
@@ -517,17 +602,8 @@ def get_figure_margin(is_mobile: bool = False) -> dict:
 PLOTLY_TEMPLATE = None if os.environ.get("WASM_BUILD_PACKAGING") == "1" else "plotly_dark"
 
 def _build_packaging_proxy_fig(title: str, is_mobile: bool = False) -> go.Figure:
-    """Generate ultra-compact 2-point proxy figure for build-time HTML bundling (WASM_BUILD_PACKAGING=1)."""
-    fig = go.Figure(
-        data=[go.Scatter(x=["2026-01-01", "2026-01-02"], y=[0.0, 1.0], mode="lines", name=f"{title} Proxy")],
-        layout=dict(
-            template=None,
-            title=title,
-            legend=get_right_flushed_legend(is_mobile),
-            margin=get_figure_margin(is_mobile)
-        )
-    )
-    return fig
+    """Generate ultra-compact proxy figure for build-time HTML bundling (WASM_BUILD_PACKAGING=1)."""
+    return go.Figure()
 
 def _prepare_trace(dates, values, target_points: int = 1000) -> Tuple[list, np.ndarray]:
     """Decimate time series via pure NumPy LTTB, or take compact 2-point proxy during WASM_BUILD_PACKAGING."""
@@ -967,6 +1043,125 @@ def build_composite_summary_fig(horizon_id: str, is_mobile: bool = False) -> go.
     return fig
 
 
+def build_composite_validation_fig(horizon_id: str, is_mobile: bool = False) -> go.Figure:
+    """Build Plotly figure for Tab 8 Validation Suite (matching NiceGUI 100%)."""
+    if os.environ.get("WASM_BUILD_PACKAGING") == "1":
+        return _build_packaging_proxy_fig("Composite Summary Validation Suite", is_mobile)
+    data = fetch_dataset(horizon_id)
+    dates = [str(d)[:10] for d in data["Date"]]
+    n = len(dates)
+
+    spy = data["SPY"] if "SPY" in data else np.ones(n) * 100.0
+    comp = data["Composite_Summary_Index"] if "Composite_Summary_Index" in data else np.full(n, 50.0)
+    mahal = data["Mahalanobis_Summary_Index"] if "Mahalanobis_Summary_Index" in data else np.full(n, 50.0)
+    dfm = data["DFM_Summary_Index"] if "DFM_Summary_Index" in data else np.full(n, 50.0)
+    diff = data["Diffusion_Summary_Index"] if "Diffusion_Summary_Index" in data else np.full(n, 50.0)
+    spca = data["SPCA_Summary_Index"] if "SPCA_Summary_Index" in data else np.full(n, 50.0)
+    damper = data["Crash_Liquidation_Damper"] if "Crash_Liquidation_Damper" in data else np.full(n, 100.0)
+
+    vm = compute_composite_validation_metrics(spy, comp, mahal, dfm, diff, spca, damper, threshold=70.0)
+
+    fig = make_subplots(
+        rows=4, cols=1,
+        shared_xaxes=True,
+        vertical_spacing=0.06 if not is_mobile else 0.08,
+        subplot_titles=(
+            "1. S&P 500 Trajectory & 6-Color Composite Bubble Regime Date Bands (5 Indicators + ★ ALL 5 ON)",
+            "2. S&P 500 Underwater Drawdown (%) & Forward 63d Max Drawdown vs Active Bubble Consensus Count",
+            "3. Cumulative Wealth Validation ($100 Base, Net 15 bps): Tactical Consensus Overlay vs S&P 500",
+            "4. Dynamic Tactical Equity Allocation Weight (%) & Ensemble Bubble Consensus Breadth (%)"
+        )
+    )
+
+    y_min = float(np.min(spy)) * 0.92
+    y_max = float(np.max(spy)) * 1.05
+    y_span = max(y_max - y_min, 1.0)
+
+    band_specs = [
+        ("s_comp", 0.80, 1.00, "rgba(0, 229, 255, 0.24)", "#00E5FF", "Band 1: Linear Composite ON (≥70%) [REAL]"),
+        ("s_mahal", 0.60, 0.80, "rgba(255, 23, 68, 0.24)", "#FF1744", "Band 2: Signed Mahalanobis ON (≥70%) [REAL]"),
+        ("s_dfm", 0.40, 0.60, "rgba(255, 214, 0, 0.24)", "#FFD600", "Band 3: Dynamic Factor (DFM) ON (≥70%) [REAL]"),
+        ("s_diff", 0.20, 0.40, "rgba(0, 230, 118, 0.24)", "#00E676", "Band 4: LEI Diffusion ON (≥70%) [REAL]"),
+        ("s_spca", 0.00, 0.20, "rgba(224, 64, 251, 0.24)", "#E040FB", "Band 5: Sparse PCA (SPCA) ON (≥70%) [REAL]"),
+        ("s_all", 0.00, 1.00, "rgba(255, 109, 0, 0.40)", "#FF6D00", "Band 6: ★ ALL 5 INDICATORS ON (Unanimous Bubble) [REAL]"),
+    ]
+
+    for key, f0, f1, fill_rgba, border_hex, b_name in band_specs:
+        yb0 = y_min + f0 * y_span
+        yb1 = y_min + f1 * y_span
+        xp, yp = build_band_polygon(dates, vm[key], yb0, yb1)
+        lw = 1.0 if key == "s_all" else 0.0
+        fig.add_trace(
+            go.Scatter(
+                x=xp, y=yp, mode="lines", fill="toself",
+                fillcolor=fill_rgba,
+                line=dict(color=border_hex, width=lw),
+                name=b_name,
+            ),
+            row=1, col=1,
+        )
+
+    d_spy, v_spy = _prepare_trace(dates, spy)
+    fig.add_trace(
+        go.Scatter(x=d_spy, y=v_spy, mode="lines", name="S&P 500 Benchmark Trajectory (SPY) [REAL]", line=dict(color="#00B0FF", width=2.6)),
+        row=1, col=1,
+    )
+    fig.update_yaxes(title_text="S&P 500 (SPY)", range=[y_min, y_max], row=1, col=1)
+
+    d_dd, v_dd = _prepare_trace(dates, vm["dd_spy"])
+    fig.add_trace(
+        go.Scatter(x=d_dd, y=v_dd, mode="lines", fill="tozeroy", fillcolor="rgba(255, 23, 68, 0.18)", name="S&P 500 Underwater Drawdown (%) [REAL]", line=dict(color="#FF1744", width=2.0)),
+        row=2, col=1,
+    )
+    d_fdd, v_fdd = _prepare_trace(dates, vm["fwd_dd63"])
+    fig.add_trace(
+        go.Scatter(x=d_fdd, y=v_fdd, mode="lines", name="Forward 63-Day Max Drawdown (%) [REAL]", line=dict(color="#FF9100", width=1.8, dash="dash")),
+        row=2, col=1,
+    )
+    d_non, v_non = _prepare_trace(dates, -10.0 * vm["n_on"])
+    fig.add_trace(
+        go.Scatter(x=d_non, y=v_non, mode="lines", name="Active Bubble Indicators Count (N_on × -10%) [REAL]", line=dict(color="#00E5FF", width=1.8, dash="dot")),
+        row=2, col=1,
+    )
+
+    d_wt, v_wt = _prepare_trace(dates, vm["wealth_tac"])
+    fig.add_trace(
+        go.Scatter(x=d_wt, y=v_wt, mode="lines", name="Dynamic Consensus Tactical Overlay ($100 Base) [REAL]", line=dict(color="#00E676", width=2.6)),
+        row=3, col=1,
+    )
+    d_w5, v_w5 = _prepare_trace(dates, vm["wealth_all5"])
+    fig.add_trace(
+        go.Scatter(x=d_w5, y=v_w5, mode="lines", name="Unanimous Consensus (ALL 5 ON) Shield ($100 Base) [REAL]", line=dict(color="#FFD600", width=2.0, dash="dot")),
+        row=3, col=1,
+    )
+    d_wb, v_wb = _prepare_trace(dates, vm["wealth_bh"])
+    fig.add_trace(
+        go.Scatter(x=d_wb, y=v_wb, mode="lines", name="Buy-and-Hold S&P 500 Benchmark ($100 Base) [REAL]", line=dict(color="#0288D1", width=2.0, dash="dash")),
+        row=3, col=1,
+    )
+
+    d_weq, v_weq = _prepare_trace(dates, vm["w_eq_pct"])
+    fig.add_trace(
+        go.Scatter(x=d_weq, y=v_weq, mode="lines", name="Tactical Equity Allocation Weight (%) [REAL]", line=dict(color="#00E676", width=2.2)),
+        row=4, col=1,
+    )
+    d_con, v_con = _prepare_trace(dates, vm["consensus_pct"])
+    fig.add_trace(
+        go.Scatter(x=d_con, y=v_con, mode="lines", fill="tozeroy", fillcolor="rgba(255, 109, 0, 0.16)", name="Ensemble Bubble Consensus Breadth (%) [REAL]", line=dict(color="#FF6D00", width=2.0)),
+        row=4, col=1,
+    )
+
+    fig.update_layout(
+        template=PLOTLY_TEMPLATE,
+        title="Composite Summary S&P 500 Validation Suite: 6-Color Bubble Regime Date Bands & Tactical Wealth",
+        legend=get_right_flushed_legend(is_mobile),
+        margin=get_figure_margin(is_mobile),
+        height=920 if not is_mobile else 1100
+    )
+    fig.update_xaxes(title_text="Date", row=4, col=1)
+    return fig
+
+
 # Reactive Panel Bindings Pre-initialized with Option 1 Figures
 pane_macro = pn.pane.Plotly(build_macro_valuation_fig(HORIZON_OPTION_1_ID), sizing_mode='stretch_both', min_height=420)
 pane_leverage = pn.pane.Plotly(build_leverage_fig(HORIZON_OPTION_1_ID), sizing_mode='stretch_both', min_height=420)
@@ -976,6 +1171,7 @@ pane_sector = pn.pane.Plotly(build_sector_health_fig(HORIZON_OPTION_1_ID), sizin
 pane_mahalanobis = pn.pane.Plotly(build_mahalanobis_fig(HORIZON_OPTION_1_ID), sizing_mode='stretch_both', min_height=420)
 pane_tech_exuberance = pn.pane.Plotly(build_tech_exuberance_fig(HORIZON_OPTION_1_ID), sizing_mode='stretch_both', min_height=650)
 pane_composite_summary = pn.pane.Plotly(build_composite_summary_fig(HORIZON_OPTION_1_ID), sizing_mode='stretch_both', min_height=650)
+pane_composite_validation = pn.pane.Plotly(build_composite_validation_fig(HORIZON_OPTION_1_ID), sizing_mode='stretch_both', min_height=820)
 
 def generate_explanatory_markdown(horizon_id: str) -> str:
     meta = HORIZON_METADATA[horizon_id]
@@ -1079,6 +1275,7 @@ def update_all_charts(horizon_id: str):
     pane_mahalanobis.object = get_cached_or_build_fig("mahalanobis", horizon_id, build_mahalanobis_fig)
     pane_tech_exuberance.object = get_cached_or_build_fig("tech_exuberance", horizon_id, build_tech_exuberance_fig)
     pane_composite_summary.object = get_cached_or_build_fig("composite_summary", horizon_id, build_composite_summary_fig)
+    pane_composite_validation.object = get_cached_or_build_fig("composite_validation", horizon_id, build_composite_validation_fig)
 
     data = fetch_dataset(horizon_id)
     red_fallback_banner.visible = _IS_SYNTHETIC_FALLBACK_ACTIVE
@@ -1116,6 +1313,8 @@ header_banner = pn.pane.Markdown(
 
 kpi_row = pn.Row(metric_dm, metric_prob, metric_exposure, metric_driver, sizing_mode="stretch_width")
 
+tab8_panel = pn.Column(pane_composite_summary, pane_composite_validation, sizing_mode="stretch_both")
+
 dashboard_tabs = pn.Tabs(
     ("Macro Valuation", pane_macro),
     ("Systemic Leverage", pane_leverage),
@@ -1124,7 +1323,7 @@ dashboard_tabs = pn.Tabs(
     ("Sector Health", pane_sector),
     ("Macro Mahalanobis Distance", pane_mahalanobis),
     ("Tech Exuberance Score", pane_tech_exuberance),
-    ("Composite Summary Indicators", pane_composite_summary),
+    ("Composite Summary Indicators", tab8_panel),
     sizing_mode="stretch_both",
     min_height=520
 )

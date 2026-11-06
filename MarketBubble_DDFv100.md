@@ -747,7 +747,7 @@ python -m http.server 8000 --directory dist/
 
 ### 9.5. Automated Test Suite & Numerical Parity Verification
 
-The quantitative integrity of all indicators, econometric tests, and machine learning models is enforced by an automated test suite comprising 116 tests with a mandatory 100% pass rate:
+The quantitative integrity of all indicators, econometric tests, and machine learning models is enforced by an automated test suite comprising 125 tests with a mandatory 100% pass rate:
 
 ```bash
 # Execute full test suite
@@ -772,6 +772,17 @@ graphify update .
 ## 10. Changelog and Version History
 
 All notable technical updates to this research specification and software implementation are versioned in accordance with [Semantic Versioning (SemVer v2.0.0)](https://semver.org/):
+
+### [v3.4.0] - 2026-11-05
+
+- **Tab 8 S&P 500 Historical Bubble Regime Validation Suite (`build_composite_validation_chart` & `build_composite_validation_fig`)**:
+  - Added a 4-subplot S&P 500 validation figure to Tab 8 across both NiceGUI (`dashboard.py`) and Panel WebAssembly (`panel_dashboard.py`) with 100% parity:
+    1. **Subplot 1 — S&P 500 Trajectory & 6-Color Composite Bubble Regime Date Bands**: Plots the S&P 500 (`SPY`) benchmark trajectory overlaid on 5 distinct transparent vertical date bands across stratified tiers ($[0.0, 0.2], \dots, [0.8, 1.0]$) for each individual Composite Summary Indicator ($\ge 70\%$), plus a **6th full-height ($[0.0, 1.0]$) transparent Flame Orange-Red consensus band** indicating when **ALL 5 Composite Summary Indicators are simultaneously ON** ($\mathcal{S}_{\text{ALL}}(t) = 1$).
+    2. **Subplot 2 — S&P 500 Underwater Drawdown (%) & Forward 63-Day Max Drawdown vs. Active Bubble Consensus Count**: Validates pre-drawdown early warnings and $0/5$ crash-trough immunity.
+    3. **Subplot 3 — Cost-Inclusive `$100` Cumulative Wealth Validation (Net of 15 bps Turnover Friction & 4.0% Cash Yield)**: Demonstrates superior terminal wealth (`$1,030.3` vs `$883.6` on the 20-year horizon) and lower maximum drawdown (`-47.4%` vs `-55.2%`) for the Dynamic Consensus Tactical Overlay over Buy-and-Hold S&P 500.
+    4. **Subplot 4 — Dynamic Tactical Equity Allocation Weight (%) & Ensemble Bubble Consensus Breadth (%)**: Tracks real-time causal equity sizing and active model consensus.
+- **Unified 70.0% Systemic Bubble Threshold Calibration & Verification Expansion**:
+  - Calibrated `Mahalanobis_Summary_Index` and `Composite_Summary_Index` to share the unified `70.0%` Systemic Bubble Threshold across all 5 architectures, expanding the automated verification suite to **125 passed tests (100% pass rate)**.
 
 ### [v3.3.0] - 2026-11-05
 
