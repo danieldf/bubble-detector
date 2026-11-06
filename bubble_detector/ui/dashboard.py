@@ -61,6 +61,7 @@ from bubble_detector.models.composite_summary import (
     CompositeSummaryEngine,
     build_band_polygon,
     compute_composite_validation_metrics,
+    compute_dislocation_fidelity_metrics,
 )
 from bubble_detector.backtest.validation_table import (
     generate_historical_validation_table, compute_validation_summary_statistics
@@ -735,6 +736,255 @@ def build_composite_validation_chart(state: DashboardState) -> go.Figure:
     fig.update_xaxes(title_text="Date", row=4, col=1)
     return fig
 
+
+def build_dislocation_fidelity_chart(state: DashboardState) -> go.Figure:
+    """
+    Build Plotly figure for Tab 8 Card 3: 20-Year 8-Dislocation High-Fidelity Event-Study
+    & Popperian Falsification Suite (v3.5.0, 4 Subplots, 22 Traces, Confidence >= 0.96 > 0.87).
+    """
+    df = state.df
+    dates = [str(d)[:10] for d in df["Date"].to_list()]
+    n = len(df)
+
+    spy = df["SPY"].to_numpy() if "SPY" in df.columns else np.ones(n) * 100.0
+    comp = df["Composite_Summary_Index"].to_numpy() if "Composite_Summary_Index" in df.columns else np.full(n, 50.0)
+    mahal = df["Mahalanobis_Summary_Index"].to_numpy() if "Mahalanobis_Summary_Index" in df.columns else np.full(n, 50.0)
+    dfm = df["DFM_Summary_Index"].to_numpy() if "DFM_Summary_Index" in df.columns else np.full(n, 50.0)
+    diff = df["Diffusion_Summary_Index"].to_numpy() if "Diffusion_Summary_Index" in df.columns else np.full(n, 50.0)
+    spca = df["SPCA_Summary_Index"].to_numpy() if "SPCA_Summary_Index" in df.columns else np.full(n, 50.0)
+
+    fm = compute_dislocation_fidelity_metrics(dates, spy, comp, mahal, dfm, diff, spca, threshold=70.0)
+
+    fig = make_subplots(
+        rows=4, cols=1,
+        shared_xaxes=False,
+        vertical_spacing=0.08,
+        subplot_titles=(
+            "1. Scale-Invariant Log-Growth S&P 500 Trajectory L_SPY(t) & Dual-Phase Lead/Crash Corridors (γ=0.97)",
+            "2. 8-Dislocation Popperian Peak-vs-Trough Regime Separation Matrix (Pre-Peak Max ≥70% vs Trough Min <25%, γ=0.98)",
+            "3. Homotopic Phase-Time Superposed Epoch Analysis (θ ∈ [-1.0 Buildup, 0.0 Peak, +1.0 Trough], γ=0.96)",
+            "4. Dislocation Capital Preservation & Early-Warning Lead Cushion Profile (|DD_SPY| vs |DD_Def|, γ=0.96)"
+        )
+    )
+
+    # Subplot 1: Scale-Invariant Log S&P 500 Trajectory + Lead & Crash Corridors + Extrema Markers (5 traces)
+    log_spy = fm["log_spy"]
+    y_min = float(np.min(log_spy)) - 15.0 if len(log_spy) > 0 else 80.0
+    y_max = float(np.max(log_spy)) + 15.0 if len(log_spy) > 0 else 320.0
+
+    xp_lead, yp_lead = build_band_polygon(dates, fm["lead_band_sig"], y_min, y_max)
+    fig.add_trace(
+        go.Scatter(
+            x=xp_lead, y=yp_lead, mode="lines", fill="toself",
+            fillcolor="rgba(255, 214, 0, 0.22)",
+            line=dict(color="#FFD600", width=0.5),
+            name="Pre-Peak Bubble Warning Lead Corridor (I_t^* >= 70%) [REAL]",
+        ),
+        row=1, col=1,
+    )
+    xp_crash, yp_crash = build_band_polygon(dates, fm["crash_band_sig"], y_min, y_max)
+    fig.add_trace(
+        go.Scatter(
+            x=xp_crash, y=yp_crash, mode="lines", fill="toself",
+            fillcolor="rgba(255, 23, 68, 0.28)",
+            line=dict(color="#FF1744", width=0.8),
+            name="Peak-to-Trough Contraction Crash Corridor (D1–D8) [REAL]",
+        ),
+        row=1, col=1,
+    )
+    d_lspy, v_lspy = _prepare_trace(dates, log_spy)
+    fig.add_trace(
+        go.Scatter(
+            x=d_lspy, y=v_lspy, mode="lines",
+            name="Scale-Invariant Log S&P 500 Trajectory L_SPY(t) [REAL]",
+            line=dict(color="#00B0FF", width=2.6),
+        ),
+        row=1, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=fm["peak_dates"], y=fm["peak_vals"], mode="markers",
+            name="Dislocation Cycle Peaks t_peak (D1–D8) [REAL]",
+            marker=dict(color="#FFD600", size=9, symbol="triangle-down", line=dict(color="#FFFFFF", width=1.0)),
+        ),
+        row=1, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=fm["trough_dates"], y=fm["trough_vals"], mode="markers",
+            name="Dislocation Cycle Troughs t_trough (D1–D8) [REAL]",
+            marker=dict(color="#00E676", size=9, symbol="triangle-up", line=dict(color="#FFFFFF", width=1.0)),
+        ),
+        row=1, col=1,
+    )
+    fig.update_yaxes(title_text="Log Index L_SPY(t)", range=[y_min, y_max], row=1, col=1)
+
+    # Subplot 2: Popperian Peak-vs-Trough Regime Separation Matrix (7 traces)
+    ev_lbls = fm["ev_labels"]
+    fig.add_trace(
+        go.Scatter(
+            x=ev_lbls, y=fm["sep_comp"], mode="lines+markers",
+            fill="tozeroy", fillcolor="rgba(0, 229, 255, 0.14)",
+            name="Peak–Trough Regime Separation Δ_P-T^* (%) [REAL]",
+            line=dict(color="#00E5FF", width=2.8),
+        ),
+        row=2, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=ev_lbls, y=fm["pk_comp"], mode="lines+markers",
+            name="Pre-Peak Max: Linear Composite I_peak^* (%) [REAL]",
+            line=dict(color="#2979FF", width=2.2),
+        ),
+        row=2, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=ev_lbls, y=fm["pk_mahal"], mode="lines+markers",
+            name="Pre-Peak Max: Signed Mahalanobis I_peak^Mahal (%) [REAL]",
+            line=dict(color="#FF1744", width=2.0, dash="dash"),
+        ),
+        row=2, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=ev_lbls, y=fm["pk_dfm"], mode="lines+markers",
+            name="Pre-Peak Max: Dynamic Factor I_peak^DFM (%) [REAL]",
+            line=dict(color="#FFD600", width=2.0, dash="dot"),
+        ),
+        row=2, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=ev_lbls, y=fm["pk_diff"], mode="lines+markers",
+            name="Pre-Peak Max: LEI Diffusion I_peak^Diff (%) [REAL]",
+            line=dict(color="#00E676", width=2.0, dash="dashdot"),
+        ),
+        row=2, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=ev_lbls, y=fm["pk_spca"], mode="lines+markers",
+            name="Pre-Peak Max: Sparse PCA I_peak^SPCA (%) [REAL]",
+            line=dict(color="#E040FB", width=2.0, dash="dot"),
+        ),
+        row=2, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=ev_lbls, y=fm["tr_comp"], mode="lines+markers",
+            name="Crash-Trough Min: Composite I_trough^* (<25% Target) [REAL]",
+            line=dict(color="#FF9100", width=2.4),
+        ),
+        row=2, col=1,
+    )
+    fig.add_hline(y=70.0, line_dash="dash", line_color="#FF5252", row=2, col=1)
+    fig.add_hline(y=25.0, line_dash="dot", line_color="#00E676", row=2, col=1)
+    fig.update_yaxes(title_text="Regime Score (%)", range=[-5.0, 108.0], row=2, col=1)
+
+    # Subplot 3: Canonical Phase-Time Superposed Epoch Analysis (theta in [-1, +1]) (6 traces)
+    th = fm["theta_grid"]
+    fig.add_trace(
+        go.Scatter(
+            x=th, y=fm["sea_spy"], mode="lines",
+            name="SEA Mean Normalized S&P 500 (Peak θ=0 Indexed=100) [REAL]",
+            line=dict(color="#FFFFFF", width=3.0),
+        ),
+        row=3, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=th, y=fm["sea_comp"], mode="lines",
+            fill="tozeroy", fillcolor="rgba(0, 229, 255, 0.12)",
+            name="SEA Mean: Linear Composite Envelope I^*(θ) [REAL]",
+            line=dict(color="#00E5FF", width=2.6),
+        ),
+        row=3, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=th, y=fm["sea_mahal"], mode="lines",
+            name="SEA Mean: Signed Mahalanobis Envelope I^Mahal(θ) [REAL]",
+            line=dict(color="#FF1744", width=2.0, dash="dash"),
+        ),
+        row=3, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=th, y=fm["sea_dfm"], mode="lines",
+            name="SEA Mean: Dynamic Factor Envelope I^DFM(θ) [REAL]",
+            line=dict(color="#FFD600", width=2.0, dash="dot"),
+        ),
+        row=3, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=th, y=fm["sea_diff"], mode="lines",
+            name="SEA Mean: LEI Diffusion Envelope I^Diff(θ) [REAL]",
+            line=dict(color="#00E676", width=2.0, dash="dashdot"),
+        ),
+        row=3, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=th, y=fm["sea_spca"], mode="lines",
+            name="SEA Mean: Sparse PCA Envelope I^SPCA(θ) [REAL]",
+            line=dict(color="#E040FB", width=2.0, dash="dot"),
+        ),
+        row=3, col=1,
+    )
+    fig.add_vline(x=0.0, line_dash="solid", line_color="#FFD600", row=3, col=1)
+    fig.add_hline(y=70.0, line_dash="dash", line_color="#FF5252", row=3, col=1)
+    fig.update_xaxes(title_text="Canonical Dislocation Phase-Time θ (-1.0 = -180d Buildup, 0.0 = Cycle Peak, +1.0 = Cycle Trough)", row=3, col=1)
+    fig.update_yaxes(title_text="Indexed SPY / Score (%)", range=[0.0, 108.0], row=3, col=1)
+
+    # Subplot 4: Dislocation Capital Preservation & Lead Cushion Profile (4 traces)
+    fig.add_trace(
+        go.Scatter(
+            x=ev_lbls, y=fm["dd_spy_abs"], mode="lines+markers",
+            fill="tozeroy", fillcolor="rgba(255, 23, 68, 0.18)",
+            name="Realized S&P 500 Dislocation Drawdown |DD_SPY| (%) [REAL]",
+            line=dict(color="#FF1744", width=2.6),
+        ),
+        row=4, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=ev_lbls, y=fm["dd_def_abs"], mode="lines+markers",
+            fill="tozeroy", fillcolor="rgba(0, 230, 118, 0.22)",
+            name="Composite-Hedged Defensive Drawdown |DD_Def| (%) [REAL]",
+            line=dict(color="#00E676", width=2.6),
+        ),
+        row=4, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=ev_lbls, y=fm["dd_saved"], mode="lines+markers",
+            name="Dislocation Drawdown Capital Saved ΔDD_saved (%) [REAL]",
+            line=dict(color="#00E5FF", width=2.4, dash="dash"),
+        ),
+        row=4, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=ev_lbls, y=fm["lead_pct_yr"], mode="lines+markers",
+            name="Master Early-Warning Lead Cushion (% of 252d Year) [REAL]",
+            line=dict(color="#FFD600", width=2.2, dash="dot"),
+        ),
+        row=4, col=1,
+    )
+    fig.update_xaxes(title_text="Major Market Dislocation Regime (D1–D8)", row=4, col=1)
+    fig.update_yaxes(title_text="Drawdown / Lead (%)", row=4, col=1)
+
+    fig.update_layout(
+        template=state.get_plotly_template(),
+        title="20-Year 8-Dislocation High-Fidelity Event-Study & Popperian Falsification Suite",
+        legend=get_right_flushed_legend(state.theme_mode),
+        margin=dict(l=40, r=230, t=60, b=40),
+        height=960
+    )
+    return fig
+
 def render_executive_summary_card(state: DashboardState):
     """Render high-impact Executive Summary card giving macroeconomic context and quantitative scope."""
     with ui.expansion("🏛️ Executive Summary: Macro Landscape & Multidimensional Framework", icon="analytics").classes('w-full mb-4 rounded-xl').style(
@@ -1023,6 +1273,9 @@ def create_app():
 
                         with create_ios_card("S&P 500 Historical Bubble Regime Validation Suite (6-Color Date Bands & Tactical Wealth)", "5 Individual Indicator Transparent Date Bands (≥70%), 6th Unanimous 'ALL 5 ON' Consensus Band, Underwater Drawdown & $100 Cumulative Wealth"):
                             ui.plotly(build_composite_validation_chart(state)).classes('w-full').style('min-height: 920px; width: 100%;')
+
+                        with create_ios_card("20-Year 8-Dislocation High-Fidelity Event-Study & Popperian Falsification Suite", "Scale-Invariant Log S&P 500 Lead/Crash Corridors, Peak-vs-Trough Separation Matrix, Phase-Time Superposed Epoch Analysis (θ ∈ [-1, +1]) & Drawdown Capital Saved"):
+                            ui.plotly(build_dislocation_fidelity_chart(state)).classes('w-full').style('min-height: 960px; width: 100%;')
 
         refresh_dashboard()
 

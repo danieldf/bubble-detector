@@ -1,6 +1,6 @@
 // Standalone W3C Cache API Service Worker for WebAssembly Market Bubble Detector
 // Cache Name Version
-const CACHE_NAME = 'bubble-detector-wasm-v3.4.0';
+const CACHE_NAME = 'bubble-detector-wasm-v3.5.0';
 
 // Core static assets for initial pre-cache
 const PRECACHE_ASSETS = [

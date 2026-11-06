@@ -1,6 +1,7 @@
 """
 Unit & Mathematical Verification Suite for the 13-Indicator Orthogonal Basis (B_13^perp),
-the 5 Information-Maximizing Summary Indicators, and Tab 8 Dual-UI Parity (v3.3.0).
+the 5 Information-Maximizing Summary Indicators, the 8-Dislocation Event-Study Suite,
+and Tab 8 Dual-UI Parity (v3.5.0).
 """
 
 import numpy as np
@@ -10,19 +11,23 @@ import pytest
 from bubble_detector.config import HORIZON_OPTION_1_ID, HORIZON_OPTION_2_ID, HORIZON_OPTION_3_ID, PROVENANCE_DIR
 from bubble_detector.models.composite_summary import (
     CompositeSummaryEngine,
+    DISLOCATIONS_8_20YR,
     INDICATORS_13_ORTHOGONAL,
     SUMMARY_INDICATORS_5,
     compute_orthogonal_basis_and_summaries_numpy,
     compute_composite_validation_metrics,
+    compute_dislocation_fidelity_metrics,
 )
 from bubble_detector.ui.dashboard import (
     DashboardState,
     build_composite_summary_chart,
     build_composite_validation_chart,
+    build_dislocation_fidelity_chart,
 )
 from bubble_detector.ui.panel_dashboard import (
     build_composite_summary_fig,
     build_composite_validation_fig,
+    build_dislocation_fidelity_fig,
     dashboard_tabs,
     generate_wasm_dataset,
     HORIZON_METADATA,
@@ -233,4 +238,94 @@ def test_tab8_validation_6_color_bands_and_wealth_parity(horizon_id):
             atol=1e-4,
             err_msg=f"Validation trace {i} ({tr_n.name}) y-values mismatch on {horizon_id}",
         )
+
+
+def test_dislocation_8_fidelity_metrics_popperian_falsification_20yr():
+    """
+    Verify the 20-Year 8-Dislocation High-Fidelity Event-Study & Popperian Falsification
+    metrics (`compute_dislocation_fidelity_metrics`) on `market_data_20yr.parquet`:
+      - 8 canonical dislocations (D1-D8) from 2007 GFC to 2025 AI Shock
+      - 100% pre-peak warning hit rate (all 8 dislocations achieve pk_comp >= 70.0%, mean >= 90.0%)
+      - Crash-trough relaxation (all 8 dislocations achieve tr_comp < 40.0%, mean < 10.0%)
+      - Peak-Trough separation sep_comp > +60.0% across all 8 dislocations (mean >= +85.0%)
+      - Phase-time Superposed Epoch Analysis (SEA) on theta_grid in [-1.0, +1.0] (81 points)
+      - Positive Popperian drawdown savings (dd_saved > 0 across all 8 dislocations, mean > 15.0%).
+    """
+    assert len(DISLOCATIONS_8_20YR) == 8
+
+    df_20yr = pl.read_parquet(PROVENANCE_DIR / "market_data_20yr.parquet")
+    dates = [str(d)[:10] for d in df_20yr["Date"].to_list()]
+    spy = df_20yr["SPY"].to_numpy()
+    comp = df_20yr["Composite_Summary_Index"].to_numpy()
+    mahal = df_20yr["Mahalanobis_Summary_Index"].to_numpy()
+    dfm = df_20yr["DFM_Summary_Index"].to_numpy()
+    diff = df_20yr["Diffusion_Summary_Index"].to_numpy()
+    spca = df_20yr["SPCA_Summary_Index"].to_numpy()
+
+    dm = compute_dislocation_fidelity_metrics(dates, spy, comp, mahal, dfm, diff, spca, threshold=70.0)
+
+    assert len(dm["ev_labels"]) == 8
+    assert len(dm["peak_dates"]) == 8
+    assert len(dm["trough_dates"]) == 8
+
+    # 100% pre-peak warning hit rate & Peak-Trough separation
+    assert np.all(dm["pk_comp"] >= 70.0), f"Pre-peak warning missed: {dm['pk_comp']}"
+    assert float(np.mean(dm["pk_comp"])) >= 90.0
+    assert np.all(dm["tr_comp"] < 40.0), f"Crash trough failed to relax: {dm['tr_comp']}"
+    assert float(np.mean(dm["tr_comp"])) < 10.0
+    assert np.all(dm["sep_comp"] > 60.0), f"Insufficient Peak-Trough separation: {dm['sep_comp']}"
+    assert float(np.mean(dm["sep_comp"])) >= 85.0
+
+    # Phase-time Superposed Epoch Analysis (SEA)
+    assert len(dm["theta_grid"]) == 81
+    assert np.isclose(dm["theta_grid"][0], -1.0)
+    assert np.isclose(dm["theta_grid"][40], 0.0)
+    assert np.isclose(dm["theta_grid"][-1], 1.0)
+    assert np.isclose(dm["sea_spy"][40], 100.0, atol=1e-4)
+    assert float(dm["sea_comp"][40]) > 75.0
+    assert float(dm["sea_comp"][-1]) < 15.0
+
+    # Popperian Drawdown Savings
+    assert np.all(dm["dd_spy_abs"] >= 8.0)
+    assert np.all(dm["dd_saved"] > 0.0), f"Negative drawdown savings on event: {dm['dd_saved']}"
+    assert float(np.mean(dm["dd_saved"])) > 15.0
+    assert np.all(dm["lead_days"] > 0.0)
+
+
+@pytest.mark.parametrize("horizon_id", [HORIZON_OPTION_1_ID, HORIZON_OPTION_2_ID, HORIZON_OPTION_3_ID])
+def test_tab8_dislocation_fidelity_dual_ui_parity(horizon_id):
+    """
+    Verify that the 3rd Tab 8 figure (`build_dislocation_fidelity_chart` vs
+    `build_dislocation_fidelity_fig`) has 22 traces across 4 subplots and achieves
+    100% numerical parity between NiceGUI and Panel WebAssembly across all 3 horizons.
+    """
+    state = DashboardState(load_data=False)
+    state.load_data(horizon_id)
+
+    fig_nice = build_dislocation_fidelity_chart(state)
+    fig_wasm = build_dislocation_fidelity_fig(horizon_id)
+
+    assert len(fig_nice.data) == 22
+    assert len(fig_wasm.data) == 22
+
+    for i, (tr_n, tr_w) in enumerate(zip(fig_nice.data, fig_wasm.data)):
+        assert tr_n.name == tr_w.name, f"Dislocation trace {i} name mismatch: {tr_n.name} vs {tr_w.name}"
+        assert tr_n.type == tr_w.type, f"Dislocation trace {i} type mismatch: {tr_n.type} vs {tr_w.type}"
+        if isinstance(tr_n.x[0], (str, np.str_)) if len(tr_n.x) > 0 else True:
+            assert list(tr_n.x) == list(tr_w.x), f"Dislocation trace {i} x mismatch on {horizon_id}"
+        else:
+            np.testing.assert_allclose(
+                np.asarray(tr_n.x, dtype=np.float64),
+                np.asarray(tr_w.x, dtype=np.float64),
+                rtol=1e-4,
+                atol=1e-4,
+            )
+        np.testing.assert_allclose(
+            np.asarray(tr_n.y, dtype=np.float64),
+            np.asarray(tr_w.y, dtype=np.float64),
+            rtol=1e-4,
+            atol=1e-4,
+            err_msg=f"Dislocation trace {i} ({tr_n.name}) y-values mismatch on {horizon_id}",
+        )
+
 

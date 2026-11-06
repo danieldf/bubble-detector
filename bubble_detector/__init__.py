@@ -18,7 +18,7 @@ Key Architectural Components:
 - ui: Dual interactive runtime dashboards: NiceGUI server-side and HoloViz Panel WebAssembly (Pyodide), featuring 8 synchronized analytical tabs.
 """
 
-__version__ = "3.4.0"
+__version__ = "3.5.0"
 
 from bubble_detector.data.ingestor import DataIngestor
 from bubble_detector.models.regime_mahalanobis import MacroMahalanobisDetector
@@ -27,8 +27,10 @@ from bubble_detector.models.composite_summary import (
     CompositeSummaryEngine,
     INDICATORS_13_ORTHOGONAL,
     SUMMARY_INDICATORS_5,
+    DISLOCATIONS_8_20YR,
     build_band_polygon,
     compute_composite_validation_metrics,
+    compute_dislocation_fidelity_metrics,
 )
 from bubble_detector.backtest.engine import PortfolioBacktestEngine
 

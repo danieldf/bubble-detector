@@ -27,8 +27,10 @@ from .composite_summary import (
     CompositeSummaryEngine,
     INDICATORS_13_ORTHOGONAL,
     SUMMARY_INDICATORS_5,
+    DISLOCATIONS_8_20YR,
     build_band_polygon,
     compute_composite_validation_metrics,
+    compute_dislocation_fidelity_metrics,
 )
 
 __all__ = [
@@ -38,6 +40,8 @@ __all__ = [
     "CompositeSummaryEngine",
     "INDICATORS_13_ORTHOGONAL",
     "SUMMARY_INDICATORS_5",
+    "DISLOCATIONS_8_20YR",
     "build_band_polygon",
     "compute_composite_validation_metrics",
+    "compute_dislocation_fidelity_metrics",
 ]

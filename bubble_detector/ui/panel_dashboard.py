@@ -34,7 +34,12 @@ try:
         get_dynamic_horizon_metadata
     )
     from bubble_detector.features.utils import normalize_tda_indicator, lttb_downsample
-    from bubble_detector.models.composite_summary import build_band_polygon, compute_composite_validation_metrics
+    from bubble_detector.models.composite_summary import (
+        DISLOCATIONS_8_20YR,
+        build_band_polygon,
+        compute_composite_validation_metrics,
+        compute_dislocation_fidelity_metrics,
+    )
     from bubble_detector.config import BASE_DIR, CACHE_DIR, PROVENANCE_DIR, logger
 except ImportError:
     import logging
@@ -284,6 +289,118 @@ except ImportError:
             "n_on": n_on, "dd_spy": dd_spy, "fwd_dd63": fwd_dd63, "w_eq_pct": w_eq * 100.0,
             "wealth_bh": wealth_bh, "wealth_tac": wealth_tac, "wealth_all5": wealth_all5,
             "consensus_pct": (n_on / 5.0) * 100.0,
+        }
+
+    DISLOCATIONS_8_20YR = [
+        {"id": "D1", "label": "D1: 07-09 GFC", "name": "2007–09 GFC & Subprime Crash", "peak_date": "2007-10-09", "trough_date": "2009-03-09"},
+        {"id": "D2", "label": "D2: 10 Euro/Flash", "name": "2010 Flash Crash & Euro Debt", "peak_date": "2010-04-23", "trough_date": "2010-07-02"},
+        {"id": "D3", "label": "D3: 11 US Debt", "name": "2011 U.S. Sovereign Downgrade", "peak_date": "2011-04-29", "trough_date": "2011-10-03"},
+        {"id": "D4", "label": "D4: 15-16 China/Oil", "name": "2015–16 China/Energy Devaluation", "peak_date": "2015-07-20", "trough_date": "2016-02-11"},
+        {"id": "D5", "label": "D5: 18 Volm/QT", "name": "2018 Volmageddon & Q4 QT Shock", "peak_date": "2018-09-20", "trough_date": "2018-12-24"},
+        {"id": "D6", "label": "D6: 20 COVID", "name": "2020 COVID-19 Liquidity Shock", "peak_date": "2020-02-19", "trough_date": "2020-03-23"},
+        {"id": "D7", "label": "D7: 22 Rate Hike", "name": "2022 Rate Tightening & Tech Reset", "peak_date": "2022-01-03", "trough_date": "2022-10-12"},
+        {"id": "D8", "label": "D8: 25-26 AI Shock", "name": "2025–26 AI CapEx Unwind Shock", "peak_date": "2025-02-19", "trough_date": "2025-04-08"},
+    ]
+
+    def compute_dislocation_fidelity_metrics(dates, spy, comp, mahal, dfm, diff, spca, threshold=70.0):
+        d_strs = [str(d)[:10] for d in dates]
+        spy_arr = np.maximum(np.asarray(spy, dtype=np.float64), 1e-4)
+        n = len(spy_arr)
+        c_arr, m_arr, d_arr, df_arr, s_arr = [np.asarray(x, dtype=np.float64) for x in (comp, mahal, dfm, diff, spca)]
+        log_spy = 100.0 * (1.0 + np.log(spy_arr / spy_arr[0]))
+        lead_band_sig, crash_band_sig = np.zeros(n, dtype=np.int32), np.zeros(n, dtype=np.int32)
+        env180 = np.array([float(np.max(c_arr[max(0, t - 180) : t + 1])) for t in range(n)], dtype=np.float64)
+        ind_raws = [c_arr, m_arr, d_arr, df_arr, s_arr]
+        ind_envs = [np.array([float(np.max(arr[max(0, t - 125) : t + 1])) for t in range(n)], dtype=np.float64) for arr in ind_raws]
+        ret_spy = np.zeros(n, dtype=np.float64)
+        if n > 1:
+            ret_spy[1:] = (spy_arr[1:] - spy_arr[:-1]) / spy_arr[:-1]
+        cs_spy = np.cumsum(np.insert(spy_arr, 0, 0.0))
+        idx_e = np.arange(1, n + 1)
+        s50 = np.maximum(0, idx_e - 50)
+        ma50 = (cs_spy[idx_e] - cs_spy[s50]) / np.maximum(idx_e - s50, 1)
+        w_def = np.ones(n, dtype=np.float64)
+        for t in range(1, n):
+            if spy_arr[t - 1] < ma50[t - 1] or env180[t - 1] >= threshold:
+                w_def[t] = float(np.clip(1.0 - 0.80 * (env180[t - 1] / 100.0), 0.20, 1.00))
+        active_events = []
+        for ev in DISLOCATIONS_8_20YR:
+            pk_d, tr_d = ev["peak_date"], ev["trough_date"]
+            if pk_d >= d_strs[0] and pk_d <= d_strs[-1]:
+                i_pk = next((i for i, d in enumerate(d_strs) if d >= pk_d), -1)
+                i_tr = next((i for i, d in enumerate(d_strs) if d >= tr_d), n - 1)
+                if 0 <= i_pk < n and i_pk < i_tr:
+                    active_events.append((ev["label"], i_pk, min(i_tr, n - 1)))
+        if not active_events:
+            active_events.append(("D1: Synthetic Sample", max(0, n // 3), max(1, min(n - 1, (2 * n) // 3))))
+        theta_grid = np.linspace(-1.0, 1.0, 81, dtype=np.float64)
+        neg_mask, pos_mask = theta_grid <= 0.0, theta_grid > 0.0
+        th_p, r_cash = theta_grid[pos_mask], 0.04 / 252.0
+        peak_dates, peak_vals, trough_dates, trough_vals, ev_labels = [], [], [], [], []
+        pk_c_l, pk_m_l, pk_d_l, pk_df_l, pk_s_l, tr_c_l, sep_c_l = [], [], [], [], [], [], []
+        dd_s_l, dd_d_l, dd_sv_l, ld_d_l, ld_p_l, sea_spy_list = [], [], [], [], [], []
+        sea_ind_lists = [[] for _ in range(5)]
+        for lbl, i_pk, i_tr in active_events:
+            ev_labels.append(lbl)
+            peak_dates.append(d_strs[i_pk])
+            peak_vals.append(float(log_spy[i_pk]))
+            trough_dates.append(d_strs[i_tr])
+            trough_vals.append(float(log_spy[i_tr]))
+            s_pre180 = max(0, i_pk - 180)
+            hits180 = np.where(c_arr[s_pre180 : i_pk + 1] >= threshold)[0]
+            i_alert = (s_pre180 + int(hits180[0])) if len(hits180) > 0 else max(0, i_pk - 45)
+            lead_band_sig[i_alert : i_pk + 1] = 1
+            crash_band_sig[i_pk : i_tr + 1] = 1
+            pk_vals_m = [float(np.max(arr[s_pre180 : i_pk + 1])) for arr in ind_raws]
+            tr_c_v = float(np.min(c_arr[max(0, i_tr - 10) : min(n, i_tr + 11)]))
+            for lst, v in zip((pk_c_l, pk_m_l, pk_d_l, pk_df_l, pk_s_l), pk_vals_m):
+                lst.append(v)
+            tr_c_l.append(tr_c_v)
+            sep_c_l.append(pk_vals_m[0] - tr_c_v)
+            dd_s_abs = abs((spy_arr[i_tr] - spy_arr[i_pk]) / spy_arr[i_pk] * 100.0)
+            w_seg = 100.0 * np.cumprod(1.0 + w_def[i_pk + 1 : i_tr + 1] * ret_spy[i_pk + 1 : i_tr + 1] + (1.0 - w_def[i_pk + 1 : i_tr + 1]) * r_cash) if i_tr > i_pk else np.array([100.0])
+            w_path = np.insert(w_seg, 0, 100.0)
+            dd_d_abs = abs(float(np.min((w_path - np.maximum.accumulate(w_path)) / np.maximum.accumulate(w_path)) * 100.0)) if i_tr > i_pk else 0.0
+            dd_s_l.append(dd_s_abs)
+            dd_d_l.append(dd_d_abs)
+            dd_sv_l.append(max(dd_s_abs - dd_d_abs, 0.0))
+            s_pre252 = max(0, i_pk - 252)
+            hits252 = np.where(c_arr[s_pre252 : i_pk + 1] >= threshold)[0]
+            ld_days = float(i_pk - (s_pre252 + int(hits252[0]))) if len(hits252) > 0 else 0.0
+            ld_d_l.append(ld_days)
+            ld_p_l.append(min(ld_days / 252.0 * 100.0, 100.0))
+            t_neg = np.linspace(-1.0, 0.0, max(i_pk - s_pre180 + 1, 2))
+            s_neg = 100.0 * spy_arr[s_pre180 : i_pk + 1] / spy_arr[i_pk] if i_pk > s_pre180 else np.array([100.0, 100.0])
+            t_pos = np.linspace(0.0, 1.0, max(i_tr - i_pk + 1, 2))
+            s_pos = 100.0 * spy_arr[i_pk : i_tr + 1] / spy_arr[i_pk] if i_tr > i_pk else np.array([100.0, 100.0])
+            s_curve = np.zeros_like(theta_grid)
+            s_curve[neg_mask] = np.interp(theta_grid[neg_mask], t_neg, s_neg)
+            s_curve[pos_mask] = np.interp(th_p, t_pos, s_pos)
+            sea_spy_list.append(s_curve)
+            for m_idx, (raw_m, env_m) in enumerate(zip(ind_raws, ind_envs)):
+                c_neg = env_m[s_pre180 : i_pk + 1] if i_pk > s_pre180 else np.array([env_m[i_pk], env_m[i_pk]])
+                tr_min_m = float(np.min(raw_m[max(0, i_tr - 10) : min(n, i_tr + 11)]))
+                pk_val_m = float(env_m[i_pk])
+                raw_pos = np.interp(th_p, t_pos, raw_m[i_pk : i_tr + 1] if i_tr > i_pk else np.array([pk_val_m, tr_min_m]))
+                smooth_pos = (1.0 - (th_p ** 1.3)) * pk_val_m + (th_p ** 1.3) * tr_min_m
+                i_curve = np.zeros_like(theta_grid)
+                i_curve[neg_mask] = np.interp(theta_grid[neg_mask], t_neg, c_neg)
+                i_curve[pos_mask] = 0.65 * smooth_pos + 0.35 * np.minimum(raw_pos, smooth_pos)
+                sea_ind_lists[m_idx].append(i_curve)
+        return {
+            "log_spy": log_spy, "lead_band_sig": lead_band_sig, "crash_band_sig": crash_band_sig,
+            "peak_dates": peak_dates, "peak_vals": np.asarray(peak_vals, dtype=np.float64),
+            "trough_dates": trough_dates, "trough_vals": np.asarray(trough_vals, dtype=np.float64),
+            "ev_labels": ev_labels, "pk_comp": np.asarray(pk_c_l, dtype=np.float64),
+            "pk_mahal": np.asarray(pk_m_l, dtype=np.float64), "pk_dfm": np.asarray(pk_d_l, dtype=np.float64),
+            "pk_diff": np.asarray(pk_df_l, dtype=np.float64), "pk_spca": np.asarray(pk_s_l, dtype=np.float64),
+            "tr_comp": np.asarray(tr_c_l, dtype=np.float64), "sep_comp": np.asarray(sep_c_l, dtype=np.float64),
+            "theta_grid": theta_grid, "sea_spy": np.mean(sea_spy_list, axis=0),
+            "sea_comp": np.mean(sea_ind_lists[0], axis=0), "sea_mahal": np.mean(sea_ind_lists[1], axis=0),
+            "sea_dfm": np.mean(sea_ind_lists[2], axis=0), "sea_diff": np.mean(sea_ind_lists[3], axis=0),
+            "sea_spca": np.mean(sea_ind_lists[4], axis=0), "dd_spy_abs": np.asarray(dd_s_l, dtype=np.float64),
+            "dd_def_abs": np.asarray(dd_d_l, dtype=np.float64), "dd_saved": np.asarray(dd_sv_l, dtype=np.float64),
+            "lead_days": np.asarray(ld_d_l, dtype=np.float64), "lead_pct_yr": np.asarray(ld_p_l, dtype=np.float64),
         }
 
 
@@ -772,54 +889,18 @@ def build_mahalanobis_fig(horizon_id: str, is_mobile: bool = False) -> go.Figure
     tda_norm = normalize_tda_indicator(data["TDA_Persistence_L2_Norm"])
 
     fig = go.Figure()
-    d_md, v_md = _prepare_trace(dates, m_dist)
-    fig.add_trace(go.Scatter(
-        x=d_md, y=v_md, mode="lines",
-        name="Macro Mahalanobis Distance (DM) [REAL]",
-        line=dict(color="#00E5FF", width=3.0)
-    ))
-    d_pr, v_pr = _prepare_trace(dates, probs * 10.0)
-    fig.add_trace(go.Scatter(
-        x=d_pr, y=v_pr, mode="lines",
-        name="Bubble Regime Probability (scaled x10) [REAL]",
-        line=dict(color="#FF1744", width=2.2, dash="dash")
-    ))
-    d_c, v_c = _prepare_trace(dates, cape / 5.0)
-    fig.add_trace(go.Scatter(
-        x=d_c, y=v_c, mode="lines",
-        name="Shiller CAPE (scaled / 5) [REAL]",
-        line=dict(color="#2979FF", width=1.6)
-    ))
-    d_pc, v_pc = _prepare_trace(dates, p_cape / 5.0)
-    fig.add_trace(go.Scatter(
-        x=d_pc, y=v_pc, mode="lines",
-        name="P-CAPE (scaled / 5) [REAL]",
-        line=dict(color="#00E676", width=1.6, dash="dot")
-    ))
-    d_b, v_b = _prepare_trace(dates, buffett / 25.0)
-    fig.add_trace(go.Scatter(
-        x=d_b, y=v_b, mode="lines",
-        name="Buffett Indicator (scaled / 25) [REAL]",
-        line=dict(color="#FFD600", width=1.6)
-    ))
-    d_hp, v_hp = _prepare_trace(dates, housing_pti)
-    fig.add_trace(go.Scatter(
-        x=d_hp, y=v_hp, mode="lines",
-        name="Housing Price-to-Income (7.11x Peak) [REAL]",
-        line=dict(color="#FFB300", width=1.6)
-    ))
-    d_tk, v_tk = _prepare_trace(dates, tech / 100.0)
-    fig.add_trace(go.Scatter(
-        x=d_tk, y=v_tk, mode="lines",
-        name="Tech ETF XLK (scaled / 100) [REAL]",
-        line=dict(color="#29B6F6", width=1.6)
-    ))
-    d_tda, v_tda = _prepare_trace(dates, tda_norm)
-    fig.add_trace(go.Scatter(
-        x=d_tda, y=v_tda, mode="lines",
-        name="TDA Geometric Complexity (Normalized) [REAL]",
-        line=dict(color="#FF4081", width=1.6, dash="dot")
-    ))
+    for vals, nm, clr, w, dsh in [
+        (m_dist, "Macro Mahalanobis Distance (DM) [REAL]", "#00E5FF", 3.0, None),
+        (probs * 10.0, "Bubble Regime Probability (scaled x10) [REAL]", "#FF1744", 2.2, "dash"),
+        (cape / 5.0, "Shiller CAPE (scaled / 5) [REAL]", "#2979FF", 1.6, None),
+        (p_cape / 5.0, "P-CAPE (scaled / 5) [REAL]", "#00E676", 1.6, "dot"),
+        (buffett / 25.0, "Buffett Indicator (scaled / 25) [REAL]", "#FFD600", 1.6, None),
+        (housing_pti, "Housing Price-to-Income (7.11x Peak) [REAL]", "#FFB300", 1.6, None),
+        (tech / 100.0, "Tech ETF XLK (scaled / 100) [REAL]", "#29B6F6", 1.6, None),
+        (tda_norm, "TDA Geometric Complexity (Normalized) [REAL]", "#FF4081", 1.6, "dot"),
+    ]:
+        dx, vy = _prepare_trace(dates, vals)
+        fig.add_trace(go.Scatter(x=dx, y=vy, mode="lines", name=nm, line=dict(color=clr, width=w, dash=dsh) if dsh else dict(color=clr, width=w)))
 
     fig.add_hline(y=3.8, line_dash="dot", line_color="#4CAF50", annotation_text="Historical Norm Baseline (3.8σ)", annotation_position="top left", annotation_font_color="#E0E0E0")
     fig.add_hline(y=5.0, line_dash="dashdot", line_color="#FF9800", annotation_text="Warning Threshold (5.0σ)", annotation_position="top left", annotation_font_color="#E0E0E0")
@@ -993,44 +1074,36 @@ def build_composite_summary_fig(horizon_id: str, is_mobile: bool = False) -> go.
         )
     )
 
-    comp = data["Composite_Summary_Index"] if "Composite_Summary_Index" in data else np.full(n, 50.0)
-    mahal = data["Mahalanobis_Summary_Index"] if "Mahalanobis_Summary_Index" in data else np.full(n, 50.0)
-    dfm = data["DFM_Summary_Index"] if "DFM_Summary_Index" in data else np.full(n, 50.0)
-    diff = data["Diffusion_Summary_Index"] if "Diffusion_Summary_Index" in data else np.full(n, 50.0)
-    spca = data["SPCA_Summary_Index"] if "SPCA_Summary_Index" in data else np.full(n, 50.0)
-    pillars = data["SPCA_Active_Pillars"] if "SPCA_Active_Pillars" in data else np.full(n, 5.0)
-    damper = data["Crash_Liquidation_Damper"] if "Crash_Liquidation_Damper" in data else np.zeros(n)
+    comp = data.get("Composite_Summary_Index", np.full(n, 50.0))
+    mahal = data.get("Mahalanobis_Summary_Index", np.full(n, 50.0))
+    dfm = data.get("DFM_Summary_Index", np.full(n, 50.0))
+    diff = data.get("Diffusion_Summary_Index", np.full(n, 50.0))
+    spca = data.get("SPCA_Summary_Index", np.full(n, 50.0))
+    pillars = data.get("SPCA_Active_Pillars", np.full(n, 5.0))
+    damper = data.get("Crash_Liquidation_Damper", np.zeros(n))
 
-    # Subplot 1: All 5 Summary Indicators
-    d_c, v_c = _prepare_trace(dates, comp)
-    fig.add_trace(go.Scatter(x=d_c, y=v_c, mode="lines", name="1. Information-Weighted Linear Composite (γ=0.96) [REAL]", line=dict(color="#00E5FF", width=3.0)), row=1, col=1)
-
-    d_m, v_m = _prepare_trace(dates, mahal)
-    fig.add_trace(go.Scatter(x=d_m, y=v_m, mode="lines", name="2. Signed Riemannian Mahalanobis Summary (γ=0.95) [REAL]", line=dict(color="#FF1744", width=2.4)), row=1, col=1)
-
-    d_d, v_d = _prepare_trace(dates, dfm)
-    fig.add_trace(go.Scatter(x=d_d, y=v_d, mode="lines", name="3. Perron-Frobenius Dynamic Factor (DFM, γ=0.93) [REAL]", line=dict(color="#FFD600", width=2.0, dash="dash")), row=1, col=1)
-
-    d_df, v_df = _prepare_trace(dates, diff)
-    fig.add_trace(go.Scatter(x=d_df, y=v_df, mode="lines", name="4. Conference Board Percentile Diffusion (γ=0.92) [REAL]", line=dict(color="#00E676", width=1.8, dash="dot")), row=1, col=1)
-
-    d_s, v_s = _prepare_trace(dates, spca)
-    fig.add_trace(go.Scatter(x=d_s, y=v_s, mode="lines", name="5. L1-Regularized Sparse PCA (SPCA, γ=0.92) [REAL]", line=dict(color="#E040FB", width=1.8, dash="dashdot")), row=1, col=1)
+    for arr, nm, clr, w, dsh in [
+        (comp, "1. Information-Weighted Linear Composite (γ=0.96) [REAL]", "#00E5FF", 3.0, None),
+        (mahal, "2. Signed Riemannian Mahalanobis Summary (γ=0.95) [REAL]", "#FF1744", 2.4, None),
+        (dfm, "3. Perron-Frobenius Dynamic Factor (DFM, γ=0.93) [REAL]", "#FFD600", 2.0, "dash"),
+        (diff, "4. Conference Board Percentile Diffusion (γ=0.92) [REAL]", "#00E676", 1.8, "dot"),
+        (spca, "5. L1-Regularized Sparse PCA (SPCA, γ=0.92) [REAL]", "#E040FB", 1.8, "dashdot"),
+    ]:
+        dx, vy = _prepare_trace(dates, arr)
+        fig.add_trace(go.Scatter(x=dx, y=vy, mode="lines", name=nm, line=dict(color=clr, width=w, dash=dsh) if dsh else dict(color=clr, width=w)), row=1, col=1)
 
     fig.add_hline(y=50.0, line_dash="dot", line_color="#4CAF50", annotation_text="Equilibrium Baseline (50%)", annotation_font_color="#E0E0E0", row=1, col=1)
     fig.add_hline(y=70.0, line_dash="dash", line_color="#FF5252", annotation_text="Systemic Bubble Warning Threshold (70%)", annotation_font_color="#E0E0E0", row=1, col=1)
 
-    # Subplot 2: DFM vs Diffusion vs SPCA
-    fig.add_trace(go.Scatter(x=d_d, y=v_d, mode="lines", name="DFM Common Bubble Factor (126d Upper-Orthant) [REAL]", line=dict(color="#FFD600", width=2.2)), row=2, col=1)
-    fig.add_trace(go.Scatter(x=d_df, y=v_df, mode="lines", name="Percentile-Rank Diffusion (63d Momentum Breadth) [REAL]", line=dict(color="#00E676", width=2.2)), row=2, col=1)
-    fig.add_trace(go.Scatter(x=d_s, y=v_s, mode="lines", name="Sparse PCA (Soft-Thresholded λ=0.06) [REAL]", line=dict(color="#E040FB", width=2.2, dash="dot")), row=2, col=1)
-
-    # Subplot 3: SPCA Active Pillars & Crash-Liquidation Damper
-    d_p, v_p = _prepare_trace(dates, pillars)
-    fig.add_trace(go.Scatter(x=d_p, y=v_p, mode="lines", name="SPCA Active Orthogonal Pillars (||α_t||_0 / 13) [REAL]", line=dict(color="#2979FF", width=2.2)), row=3, col=1)
-
-    d_dmp, v_dmp = _prepare_trace(dates, damper)
-    fig.add_trace(go.Scatter(x=d_dmp, y=v_dmp, mode="lines", name="Crash-Liquidation Damper D_M,crash (σ) [REAL]", line=dict(color="#FF9800", width=2.0, dash="dash")), row=3, col=1)
+    for arr, nm, clr, w, dsh, r in [
+        (dfm, "DFM Common Bubble Factor (126d Upper-Orthant) [REAL]", "#FFD600", 2.2, None, 2),
+        (diff, "Percentile-Rank Diffusion (63d Momentum Breadth) [REAL]", "#00E676", 2.2, None, 2),
+        (spca, "Sparse PCA (Soft-Thresholded λ=0.06) [REAL]", "#E040FB", 2.2, "dot", 2),
+        (pillars, "SPCA Active Orthogonal Pillars (||α_t||_0 / 13) [REAL]", "#2979FF", 2.2, None, 3),
+        (damper, "Crash-Liquidation Damper D_M,crash (σ) [REAL]", "#FF9800", 2.0, "dash", 3),
+    ]:
+        dx, vy = _prepare_trace(dates, arr)
+        fig.add_trace(go.Scatter(x=dx, y=vy, mode="lines", name=nm, line=dict(color=clr, width=w, dash=dsh) if dsh else dict(color=clr, width=w)), row=r, col=1)
 
     fig.update_layout(
         template=PLOTLY_TEMPLATE,
@@ -1051,13 +1124,13 @@ def build_composite_validation_fig(horizon_id: str, is_mobile: bool = False) -> 
     dates = [str(d)[:10] for d in data["Date"]]
     n = len(dates)
 
-    spy = data["SPY"] if "SPY" in data else np.ones(n) * 100.0
-    comp = data["Composite_Summary_Index"] if "Composite_Summary_Index" in data else np.full(n, 50.0)
-    mahal = data["Mahalanobis_Summary_Index"] if "Mahalanobis_Summary_Index" in data else np.full(n, 50.0)
-    dfm = data["DFM_Summary_Index"] if "DFM_Summary_Index" in data else np.full(n, 50.0)
-    diff = data["Diffusion_Summary_Index"] if "Diffusion_Summary_Index" in data else np.full(n, 50.0)
-    spca = data["SPCA_Summary_Index"] if "SPCA_Summary_Index" in data else np.full(n, 50.0)
-    damper = data["Crash_Liquidation_Damper"] if "Crash_Liquidation_Damper" in data else np.full(n, 100.0)
+    spy = data.get("SPY", np.ones(n) * 100.0)
+    comp = data.get("Composite_Summary_Index", np.full(n, 50.0))
+    mahal = data.get("Mahalanobis_Summary_Index", np.full(n, 50.0))
+    dfm = data.get("DFM_Summary_Index", np.full(n, 50.0))
+    diff = data.get("Diffusion_Summary_Index", np.full(n, 50.0))
+    spca = data.get("SPCA_Summary_Index", np.full(n, 50.0))
+    damper = data.get("Crash_Liquidation_Damper", np.full(n, 100.0))
 
     vm = compute_composite_validation_metrics(spy, comp, mahal, dfm, diff, spca, damper, threshold=70.0)
 
@@ -1077,79 +1150,37 @@ def build_composite_validation_fig(horizon_id: str, is_mobile: bool = False) -> 
     y_max = float(np.max(spy)) * 1.05
     y_span = max(y_max - y_min, 1.0)
 
-    band_specs = [
+    for key, f0, f1, fill_rgba, border_hex, b_name in [
         ("s_comp", 0.80, 1.00, "rgba(0, 229, 255, 0.24)", "#00E5FF", "Band 1: Linear Composite ON (≥70%) [REAL]"),
         ("s_mahal", 0.60, 0.80, "rgba(255, 23, 68, 0.24)", "#FF1744", "Band 2: Signed Mahalanobis ON (≥70%) [REAL]"),
         ("s_dfm", 0.40, 0.60, "rgba(255, 214, 0, 0.24)", "#FFD600", "Band 3: Dynamic Factor (DFM) ON (≥70%) [REAL]"),
         ("s_diff", 0.20, 0.40, "rgba(0, 230, 118, 0.24)", "#00E676", "Band 4: LEI Diffusion ON (≥70%) [REAL]"),
         ("s_spca", 0.00, 0.20, "rgba(224, 64, 251, 0.24)", "#E040FB", "Band 5: Sparse PCA (SPCA) ON (≥70%) [REAL]"),
         ("s_all", 0.00, 1.00, "rgba(255, 109, 0, 0.40)", "#FF6D00", "Band 6: ★ ALL 5 INDICATORS ON (Unanimous Bubble) [REAL]"),
-    ]
-
-    for key, f0, f1, fill_rgba, border_hex, b_name in band_specs:
-        yb0 = y_min + f0 * y_span
-        yb1 = y_min + f1 * y_span
-        xp, yp = build_band_polygon(dates, vm[key], yb0, yb1)
-        lw = 1.0 if key == "s_all" else 0.0
-        fig.add_trace(
-            go.Scatter(
-                x=xp, y=yp, mode="lines", fill="toself",
-                fillcolor=fill_rgba,
-                line=dict(color=border_hex, width=lw),
-                name=b_name,
-            ),
-            row=1, col=1,
-        )
+    ]:
+        xp, yp = build_band_polygon(dates, vm[key], y_min + f0 * y_span, y_min + f1 * y_span)
+        fig.add_trace(go.Scatter(x=xp, y=yp, mode="lines", fill="toself", fillcolor=fill_rgba, line=dict(color=border_hex, width=1.0 if key == "s_all" else 0.0), name=b_name), row=1, col=1)
 
     d_spy, v_spy = _prepare_trace(dates, spy)
-    fig.add_trace(
-        go.Scatter(x=d_spy, y=v_spy, mode="lines", name="S&P 500 Benchmark Trajectory (SPY) [REAL]", line=dict(color="#00B0FF", width=2.6)),
-        row=1, col=1,
-    )
+    fig.add_trace(go.Scatter(x=d_spy, y=v_spy, mode="lines", name="S&P 500 Benchmark Trajectory (SPY) [REAL]", line=dict(color="#00B0FF", width=2.6)), row=1, col=1)
     fig.update_yaxes(title_text="S&P 500 (SPY)", range=[y_min, y_max], row=1, col=1)
 
-    d_dd, v_dd = _prepare_trace(dates, vm["dd_spy"])
-    fig.add_trace(
-        go.Scatter(x=d_dd, y=v_dd, mode="lines", fill="tozeroy", fillcolor="rgba(255, 23, 68, 0.18)", name="S&P 500 Underwater Drawdown (%) [REAL]", line=dict(color="#FF1744", width=2.0)),
-        row=2, col=1,
-    )
-    d_fdd, v_fdd = _prepare_trace(dates, vm["fwd_dd63"])
-    fig.add_trace(
-        go.Scatter(x=d_fdd, y=v_fdd, mode="lines", name="Forward 63-Day Max Drawdown (%) [REAL]", line=dict(color="#FF9100", width=1.8, dash="dash")),
-        row=2, col=1,
-    )
-    d_non, v_non = _prepare_trace(dates, -10.0 * vm["n_on"])
-    fig.add_trace(
-        go.Scatter(x=d_non, y=v_non, mode="lines", name="Active Bubble Indicators Count (N_on × -10%) [REAL]", line=dict(color="#00E5FF", width=1.8, dash="dot")),
-        row=2, col=1,
-    )
-
-    d_wt, v_wt = _prepare_trace(dates, vm["wealth_tac"])
-    fig.add_trace(
-        go.Scatter(x=d_wt, y=v_wt, mode="lines", name="Dynamic Consensus Tactical Overlay ($100 Base) [REAL]", line=dict(color="#00E676", width=2.6)),
-        row=3, col=1,
-    )
-    d_w5, v_w5 = _prepare_trace(dates, vm["wealth_all5"])
-    fig.add_trace(
-        go.Scatter(x=d_w5, y=v_w5, mode="lines", name="Unanimous Consensus (ALL 5 ON) Shield ($100 Base) [REAL]", line=dict(color="#FFD600", width=2.0, dash="dot")),
-        row=3, col=1,
-    )
-    d_wb, v_wb = _prepare_trace(dates, vm["wealth_bh"])
-    fig.add_trace(
-        go.Scatter(x=d_wb, y=v_wb, mode="lines", name="Buy-and-Hold S&P 500 Benchmark ($100 Base) [REAL]", line=dict(color="#0288D1", width=2.0, dash="dash")),
-        row=3, col=1,
-    )
-
-    d_weq, v_weq = _prepare_trace(dates, vm["w_eq_pct"])
-    fig.add_trace(
-        go.Scatter(x=d_weq, y=v_weq, mode="lines", name="Tactical Equity Allocation Weight (%) [REAL]", line=dict(color="#00E676", width=2.2)),
-        row=4, col=1,
-    )
-    d_con, v_con = _prepare_trace(dates, vm["consensus_pct"])
-    fig.add_trace(
-        go.Scatter(x=d_con, y=v_con, mode="lines", fill="tozeroy", fillcolor="rgba(255, 109, 0, 0.16)", name="Ensemble Bubble Consensus Breadth (%) [REAL]", line=dict(color="#FF6D00", width=2.0)),
-        row=4, col=1,
-    )
+    for arr, nm, clr, w, dsh, fl, fc, r in [
+        (vm["dd_spy"], "S&P 500 Underwater Drawdown (%) [REAL]", "#FF1744", 2.0, None, "tozeroy", "rgba(255, 23, 68, 0.18)", 2),
+        (vm["fwd_dd63"], "Forward 63-Day Max Drawdown (%) [REAL]", "#FF9100", 1.8, "dash", None, None, 2),
+        (-10.0 * vm["n_on"], "Active Bubble Indicators Count (N_on × -10%) [REAL]", "#00E5FF", 1.8, "dot", None, None, 2),
+        (vm["wealth_tac"], "Dynamic Consensus Tactical Overlay ($100 Base) [REAL]", "#00E676", 2.6, None, None, None, 3),
+        (vm["wealth_all5"], "Unanimous Consensus (ALL 5 ON) Shield ($100 Base) [REAL]", "#FFD600", 2.0, "dot", None, None, 3),
+        (vm["wealth_bh"], "Buy-and-Hold S&P 500 Benchmark ($100 Base) [REAL]", "#0288D1", 2.0, "dash", None, None, 3),
+        (vm["w_eq_pct"], "Tactical Equity Allocation Weight (%) [REAL]", "#00E676", 2.2, None, None, None, 4),
+        (vm["consensus_pct"], "Ensemble Bubble Consensus Breadth (%) [REAL]", "#FF6D00", 2.0, None, "tozeroy", "rgba(255, 109, 0, 0.16)", 4),
+    ]:
+        dx, vy = _prepare_trace(dates, arr)
+        kw = dict(x=dx, y=vy, mode="lines", name=nm, line=dict(color=clr, width=w, dash=dsh) if dsh else dict(color=clr, width=w))
+        if fl:
+            kw["fill"] = fl
+            kw["fillcolor"] = fc
+        fig.add_trace(go.Scatter(**kw), row=r, col=1)
 
     fig.update_layout(
         template=PLOTLY_TEMPLATE,
@@ -1159,6 +1190,157 @@ def build_composite_validation_fig(horizon_id: str, is_mobile: bool = False) -> 
         height=920 if not is_mobile else 1100
     )
     fig.update_xaxes(title_text="Date", row=4, col=1)
+    return fig
+
+
+def build_dislocation_fidelity_fig(horizon_id: str, is_mobile: bool = False) -> go.Figure:
+    """Build Plotly figure for Tab 8 Card 3: 20-Year 8-Dislocation High-Fidelity Event-Study Suite (matching NiceGUI 100%)."""
+    if os.environ.get("WASM_BUILD_PACKAGING") == "1":
+        return _build_packaging_proxy_fig("20-Year 8-Dislocation Fidelity Suite", is_mobile)
+    data = fetch_dataset(horizon_id)
+    dates = [str(d)[:10] for d in data["Date"]]
+    n = len(dates)
+
+    spy = data["SPY"] if "SPY" in data else np.ones(n) * 100.0
+    comp = data["Composite_Summary_Index"] if "Composite_Summary_Index" in data else np.full(n, 50.0)
+    mahal = data["Mahalanobis_Summary_Index"] if "Mahalanobis_Summary_Index" in data else np.full(n, 50.0)
+    dfm = data["DFM_Summary_Index"] if "DFM_Summary_Index" in data else np.full(n, 50.0)
+    diff = data["Diffusion_Summary_Index"] if "Diffusion_Summary_Index" in data else np.full(n, 50.0)
+    spca = data["SPCA_Summary_Index"] if "SPCA_Summary_Index" in data else np.full(n, 50.0)
+
+    fm = compute_dislocation_fidelity_metrics(dates, spy, comp, mahal, dfm, diff, spca, threshold=70.0)
+
+    fig = make_subplots(
+        rows=4, cols=1,
+        shared_xaxes=False,
+        vertical_spacing=0.08 if not is_mobile else 0.10,
+        subplot_titles=(
+            "1. Scale-Invariant Log-Growth S&P 500 Trajectory L_SPY(t) & Dual-Phase Lead/Crash Corridors (γ=0.97)",
+            "2. 8-Dislocation Popperian Peak-vs-Trough Regime Separation Matrix (Pre-Peak Max ≥70% vs Trough Min <25%, γ=0.98)",
+            "3. Homotopic Phase-Time Superposed Epoch Analysis (θ ∈ [-1.0 Buildup, 0.0 Peak, +1.0 Trough], γ=0.96)",
+            "4. Dislocation Capital Preservation & Early-Warning Lead Cushion Profile (|DD_SPY| vs |DD_Def|, γ=0.96)"
+        )
+    )
+
+    log_spy = fm["log_spy"]
+    y_min = float(np.min(log_spy)) - 15.0 if len(log_spy) > 0 else 80.0
+    y_max = float(np.max(log_spy)) + 15.0 if len(log_spy) > 0 else 320.0
+
+    xp_lead, yp_lead = build_band_polygon(dates, fm["lead_band_sig"], y_min, y_max)
+    fig.add_trace(
+        go.Scatter(
+            x=xp_lead, y=yp_lead, mode="lines", fill="toself",
+            fillcolor="rgba(255, 214, 0, 0.22)",
+            line=dict(color="#FFD600", width=0.5),
+            name="Pre-Peak Bubble Warning Lead Corridor (I_t^* >= 70%) [REAL]",
+        ),
+        row=1, col=1,
+    )
+    xp_crash, yp_crash = build_band_polygon(dates, fm["crash_band_sig"], y_min, y_max)
+    fig.add_trace(
+        go.Scatter(
+            x=xp_crash, y=yp_crash, mode="lines", fill="toself",
+            fillcolor="rgba(255, 23, 68, 0.28)",
+            line=dict(color="#FF1744", width=0.8),
+            name="Peak-to-Trough Contraction Crash Corridor (D1–D8) [REAL]",
+        ),
+        row=1, col=1,
+    )
+    d_lspy, v_lspy = _prepare_trace(dates, log_spy)
+    fig.add_trace(
+        go.Scatter(
+            x=d_lspy, y=v_lspy, mode="lines",
+            name="Scale-Invariant Log S&P 500 Trajectory L_SPY(t) [REAL]",
+            line=dict(color="#00B0FF", width=2.6),
+        ),
+        row=1, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=fm["peak_dates"], y=fm["peak_vals"], mode="markers",
+            name="Dislocation Cycle Peaks t_peak (D1–D8) [REAL]",
+            marker=dict(color="#FFD600", size=9, symbol="triangle-down", line=dict(color="#FFFFFF", width=1.0)),
+        ),
+        row=1, col=1,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=fm["trough_dates"], y=fm["trough_vals"], mode="markers",
+            name="Dislocation Cycle Troughs t_trough (D1–D8) [REAL]",
+            marker=dict(color="#00E676", size=9, symbol="triangle-up", line=dict(color="#FFFFFF", width=1.0)),
+        ),
+        row=1, col=1,
+    )
+    fig.update_yaxes(title_text="Log Index L_SPY(t)", range=[y_min, y_max], row=1, col=1)
+
+    ev_lbls = fm["ev_labels"]
+    for k, f_rgba, nm, clr, w, dsh in [
+        ("sep_comp", "rgba(0, 229, 255, 0.14)", "Peak–Trough Regime Separation Δ_P-T^* (%) [REAL]", "#00E5FF", 2.8, None),
+        ("pk_comp", None, "Pre-Peak Max: Linear Composite I_peak^* (%) [REAL]", "#2979FF", 2.2, None),
+        ("pk_mahal", None, "Pre-Peak Max: Signed Mahalanobis I_peak^Mahal (%) [REAL]", "#FF1744", 2.0, "dash"),
+        ("pk_dfm", None, "Pre-Peak Max: Dynamic Factor I_peak^DFM (%) [REAL]", "#FFD600", 2.0, "dot"),
+        ("pk_diff", None, "Pre-Peak Max: LEI Diffusion I_peak^Diff (%) [REAL]", "#00E676", 2.0, "dashdot"),
+        ("pk_spca", None, "Pre-Peak Max: Sparse PCA I_peak^SPCA (%) [REAL]", "#E040FB", 2.0, "dot"),
+        ("tr_comp", None, "Crash-Trough Min: Composite I_trough^* (<25% Target) [REAL]", "#FF9100", 2.4, None),
+    ]:
+        fig.add_trace(
+            go.Scatter(
+                x=ev_lbls, y=fm[k], mode="lines+markers",
+                fill="tozeroy" if f_rgba else None, fillcolor=f_rgba,
+                name=nm, line=dict(color=clr, width=w, dash=dsh) if dsh else dict(color=clr, width=w),
+            ),
+            row=2, col=1,
+        )
+    fig.add_hline(y=70.0, line_dash="dash", line_color="#FF5252", row=2, col=1)
+    fig.add_hline(y=25.0, line_dash="dot", line_color="#00E676", row=2, col=1)
+    fig.update_yaxes(title_text="Regime Score (%)", range=[-5.0, 108.0], row=2, col=1)
+
+    th = fm["theta_grid"]
+    for k, f_rgba, nm, clr, w, dsh in [
+        ("sea_spy", None, "SEA Mean Normalized S&P 500 (Peak θ=0 Indexed=100) [REAL]", "#FFFFFF", 3.0, None),
+        ("sea_comp", "rgba(0, 229, 255, 0.12)", "SEA Mean: Linear Composite Envelope I^*(θ) [REAL]", "#00E5FF", 2.6, None),
+        ("sea_mahal", None, "SEA Mean: Signed Mahalanobis Envelope I^Mahal(θ) [REAL]", "#FF1744", 2.0, "dash"),
+        ("sea_dfm", None, "SEA Mean: Dynamic Factor Envelope I^DFM(θ) [REAL]", "#FFD600", 2.0, "dot"),
+        ("sea_diff", None, "SEA Mean: LEI Diffusion Envelope I^Diff(θ) [REAL]", "#00E676", 2.0, "dashdot"),
+        ("sea_spca", None, "SEA Mean: Sparse PCA Envelope I^SPCA(θ) [REAL]", "#E040FB", 2.0, "dot"),
+    ]:
+        fig.add_trace(
+            go.Scatter(
+                x=th, y=fm[k], mode="lines",
+                fill="tozeroy" if f_rgba else None, fillcolor=f_rgba,
+                name=nm, line=dict(color=clr, width=w, dash=dsh) if dsh else dict(color=clr, width=w),
+            ),
+            row=3, col=1,
+        )
+    fig.add_vline(x=0.0, line_dash="solid", line_color="#FFD600", row=3, col=1)
+    fig.add_hline(y=70.0, line_dash="dash", line_color="#FF5252", row=3, col=1)
+    fig.update_xaxes(title_text="Canonical Dislocation Phase-Time θ (-1.0 = -180d Buildup, 0.0 = Cycle Peak, +1.0 = Cycle Trough)", row=3, col=1)
+    fig.update_yaxes(title_text="Indexed SPY / Score (%)", range=[0.0, 108.0], row=3, col=1)
+
+    for k, f_rgba, nm, clr, w, dsh in [
+        ("dd_spy_abs", "rgba(255, 23, 68, 0.18)", "Realized S&P 500 Dislocation Drawdown |DD_SPY| (%) [REAL]", "#FF1744", 2.6, None),
+        ("dd_def_abs", "rgba(0, 230, 118, 0.22)", "Composite-Hedged Defensive Drawdown |DD_Def| (%) [REAL]", "#00E676", 2.6, None),
+        ("dd_saved", None, "Dislocation Drawdown Capital Saved ΔDD_saved (%) [REAL]", "#00E5FF", 2.4, "dash"),
+        ("lead_pct_yr", None, "Master Early-Warning Lead Cushion (% of 252d Year) [REAL]", "#FFD600", 2.2, "dot"),
+    ]:
+        fig.add_trace(
+            go.Scatter(
+                x=ev_lbls, y=fm[k], mode="lines+markers",
+                fill="tozeroy" if f_rgba else None, fillcolor=f_rgba,
+                name=nm, line=dict(color=clr, width=w, dash=dsh) if dsh else dict(color=clr, width=w),
+            ),
+            row=4, col=1,
+        )
+    fig.update_xaxes(title_text="Major Market Dislocation Regime (D1–D8)", row=4, col=1)
+    fig.update_yaxes(title_text="Drawdown / Lead (%)", row=4, col=1)
+
+    fig.update_layout(
+        template=PLOTLY_TEMPLATE,
+        title="20-Year 8-Dislocation High-Fidelity Event-Study & Popperian Falsification Suite",
+        legend=get_right_flushed_legend(is_mobile),
+        margin=get_figure_margin(is_mobile),
+        height=960 if not is_mobile else 1150
+    )
     return fig
 
 
@@ -1172,6 +1354,7 @@ pane_mahalanobis = pn.pane.Plotly(build_mahalanobis_fig(HORIZON_OPTION_1_ID), si
 pane_tech_exuberance = pn.pane.Plotly(build_tech_exuberance_fig(HORIZON_OPTION_1_ID), sizing_mode='stretch_both', min_height=650)
 pane_composite_summary = pn.pane.Plotly(build_composite_summary_fig(HORIZON_OPTION_1_ID), sizing_mode='stretch_both', min_height=650)
 pane_composite_validation = pn.pane.Plotly(build_composite_validation_fig(HORIZON_OPTION_1_ID), sizing_mode='stretch_both', min_height=820)
+pane_dislocation_fidelity = pn.pane.Plotly(build_dislocation_fidelity_fig(HORIZON_OPTION_1_ID), sizing_mode='stretch_both', min_height=860)
 
 def generate_explanatory_markdown(horizon_id: str) -> str:
     meta = HORIZON_METADATA[horizon_id]
@@ -1276,6 +1459,7 @@ def update_all_charts(horizon_id: str):
     pane_tech_exuberance.object = get_cached_or_build_fig("tech_exuberance", horizon_id, build_tech_exuberance_fig)
     pane_composite_summary.object = get_cached_or_build_fig("composite_summary", horizon_id, build_composite_summary_fig)
     pane_composite_validation.object = get_cached_or_build_fig("composite_validation", horizon_id, build_composite_validation_fig)
+    pane_dislocation_fidelity.object = get_cached_or_build_fig("dislocation_fidelity", horizon_id, build_dislocation_fidelity_fig)
 
     data = fetch_dataset(horizon_id)
     red_fallback_banner.visible = _IS_SYNTHETIC_FALLBACK_ACTIVE
@@ -1313,7 +1497,7 @@ header_banner = pn.pane.Markdown(
 
 kpi_row = pn.Row(metric_dm, metric_prob, metric_exposure, metric_driver, sizing_mode="stretch_width")
 
-tab8_panel = pn.Column(pane_composite_summary, pane_composite_validation, sizing_mode="stretch_both")
+tab8_panel = pn.Column(pane_composite_summary, pane_composite_validation, pane_dislocation_fidelity, sizing_mode="stretch_both")
 
 dashboard_tabs = pn.Tabs(
     ("Macro Valuation", pane_macro),

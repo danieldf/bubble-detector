@@ -22,5 +22,5 @@ description: Institutional architecture, econometric guidelines, testing constra
 ## 3. Execution & Verification Rules
 - **Virtualenv**: Use `./.venv/bin/python` and `./.venv/bin/pytest`.
 - **Command Execution**: Always run commands with `BypassSandbox: true` due to macOS Nix store dylib resolution.
-- **Verification Protocol**: Before submitting changes, run `./.venv/bin/pytest tests/ -v`. All 125 tests must pass with 100% success rate.
+- **Verification Protocol**: Before submitting changes, run `./.venv/bin/pytest tests/ -v`. All 129 tests must pass with 100% success rate.
 - **Knowledge Graph Synchronization**: Always execute `graphify update .` after code modifications.

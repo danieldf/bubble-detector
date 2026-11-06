@@ -93,6 +93,12 @@ def postprocess_wasm_content(content: str) -> str:
 
             def clean_bokeh_templates(obj):
                 if isinstance(obj, dict):
+                    if "stylesheets" in obj and isinstance(obj["stylesheets"], list):
+                        obj["stylesheets"] = [
+                            s for s in obj["stylesheets"]
+                            if not (isinstance(s, str) and (":host(.pn-loading):before" in s or "--plotly-icon-color" in s))
+                            and not (isinstance(s, dict) and "maplibre-gl" in str(s.get("attributes", {}).get("url", "")))
+                        ]
                     if obj.get("type") == "map" and "entries" in obj:
                         new_entries = []
                         for entry in obj["entries"]:
@@ -403,20 +409,45 @@ if (document.readyState === 'loading') {
     if m_code:
         try:
             import ast
+            import io
+            import tokenize
             raw_py = m_code.group(2).encode("utf-8").decode("unicode_escape")
             tree = compile(raw_py, "<wasm>", "exec", flags=ast.PyCF_ONLY_AST | ast.PyCF_ALLOW_TOP_LEVEL_AWAIT)
             for node in ast.walk(tree):
-                if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.Module)):
-                    if (
-                        node.body
-                        and isinstance(node.body[0], ast.Expr)
-                        and isinstance(node.body[0].value, ast.Constant)
-                        and isinstance(node.body[0].value.value, str)
-                        and len(node.body) > 1
-                    ):
-                        node.body.pop(0)
+                for field in ("body", "orelse", "finalbody"):
+                    stmts = getattr(node, field, None)
+                    if isinstance(stmts, list) and len(stmts) > 1:
+                        new_stmts = [
+                            s for s in stmts
+                            if not (isinstance(s, ast.Expr) and isinstance(s.value, ast.Constant) and isinstance(s.value.value, str))
+                        ]
+                        if not new_stmts:
+                            new_stmts = [stmts[0]]
+                        setattr(node, field, new_stmts)
             min_py = ast.unparse(tree)
             min_py = re.sub(r"(?m)^(    )+", lambda m: " " * (len(m.group(0)) // 4), min_py)
+            lines = min_py.splitlines(keepends=True)
+            tokens = list(tokenize.generate_tokens(io.StringIO(min_py).readline))
+            line_ops = [[] for _ in range(len(lines) + 1)]
+            for tok in tokens:
+                ttype, _, (srow, scol), (erow, ecol), _ = tok
+                if ttype == tokenize.OP and srow == erow:
+                    line_ops[srow].append((scol, ecol))
+            new_lines = []
+            for idx_l, line in enumerate(lines, start=1):
+                ops = line_ops[idx_l]
+                if ops:
+                    ind_len = len(line) - len(line.lstrip(" "))
+                    chars = list(line)
+                    for scol, ecol in reversed(ops):
+                        while ecol < len(chars) and chars[ecol] == " ":
+                            del chars[ecol]
+                        while scol > ind_len and chars[scol - 1] == " ":
+                            del chars[scol - 1]
+                            scol -= 1
+                    line = "".join(chars)
+                new_lines.append(line)
+            min_py = "".join(new_lines)
             escaped_py = (
                 min_py.replace("\\", "\\\\")
                 .replace("`", "\\`")
