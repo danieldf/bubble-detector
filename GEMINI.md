@@ -80,7 +80,7 @@ bubble_detector/
   ```bash
   ./.venv/bin/pytest tests/ -v
   ```
-  Expected result: **129 passed tests (100% pass rate)**.
+  Expected result: **130 passed tests (100% pass rate)**.
 - Anti-synthetic regression verification:
   ```bash
   ./.venv/bin/pytest tests/test_no_gaussian_bumps.py -v

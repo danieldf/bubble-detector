@@ -164,13 +164,16 @@ def test_wasm_build_packaging_html_size():
 
 
 def test_service_worker_file_validity():
-    """Verify sw.js existence, cache versioning, and cache strategy rules."""
-    sw_paths = [BASE_DIR / "sw.js", BASE_DIR / "dist" / "sw.js"]
+    """Verify sw.js existence, cache versioning, and cache strategy rules across root, dist/, and build/."""
+    from bubble_detector import __version__
+
+    sw_paths = [BASE_DIR / "sw.js", BASE_DIR / "dist" / "sw.js", BASE_DIR / "build" / "sw.js"]
+    expected_cache = f"bubble-detector-wasm-v{__version__}"
     for sw_path in sw_paths:
         assert sw_path.exists(), f"Service worker file missing at {sw_path}"
         content = sw_path.read_text(encoding="utf-8")
 
-        assert "bubble-detector-wasm-v3." in content, "Service worker missing correct cache name"
+        assert expected_cache in content, f"Service worker {sw_path} missing {expected_cache}"
         assert "caches.open(CACHE_NAME)" in content, "Missing caches.open call"
         assert "market_data_50yr.json" in content, "Missing pre-cached 50yr dataset"
         assert ".wasm" in content, "Missing Cache-First .wasm rule"

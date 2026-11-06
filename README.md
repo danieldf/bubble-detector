@@ -4,7 +4,7 @@
 [![Live WebAssembly Dashboard](https://img.shields.io/badge/Live_Dashboard-GitHub_Pages-0288D1?style=flat&logo=github)](https://danieldf.github.io/bubble-detector/)
 [![Version](https://img.shields.io/badge/Version-v3.5.0-4CAF50?style=flat)](https://github.com/danieldf/bubble-detector/releases/tag/v3.5.0)
 [![Python Version](https://img.shields.io/badge/Python-3.11%2B%20%7C%203.14-blue?style=flat&logo=python)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/Tests-129%20Passed%20(100%25)-success?style=flat)](https://github.com/danieldf/bubble-detector/actions)
+[![Tests](https://img.shields.io/badge/Tests-130%20Passed%20(100%25)-success?style=flat)](https://github.com/danieldf/bubble-detector/actions)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey.svg)](LICENSE)
 
 An enterprise-grade quantitative econometric system, statistical distance classifier, and machine learning framework engineered to detect financial asset bubbles, diagnose non-linear macroeconomic regime shifts, quantify systemic distance from historical equilibrium, and dynamically adjust portfolio equity exposure with zero lookahead bias and institutional cost accounting.
@@ -284,10 +284,10 @@ python -m http.server 8000 --directory dist/
 
 ### 5. Run the Automated Test Suite
 
-Executes all 129 automated unit, integration, numerical parity, module alias, and anti-synthetic tests:
+Executes all 130 automated unit, integration, numerical parity, module alias, and anti-synthetic tests:
 
 ```bash
-# Run all 129 tests
+# Run all 130 tests
 ./.venv/bin/pytest tests/ -v
 
 # Run Mahalanobis and Tab 6 normalization tests specifically
@@ -320,7 +320,7 @@ All notable changes to this project are documented in this section adhering to [
 #### Added
 - **Tab 8 20-Year 8-Dislocation High-Fidelity Event-Study & Popperian Falsification Suite (`DISLOCATIONS_8_20YR`, `compute_dislocation_fidelity_metrics`, `build_dislocation_fidelity_chart`, `build_dislocation_fidelity_fig`)**:
   - Synchronized 4-subplot, 22-trace event-study figure added directly below the existing Tab 8 plots across both NiceGUI (`dashboard.py`) and HoloViz Panel WebAssembly (`panel_dashboard.py`) with 100% parity, proving a 100% (8/8) pre-peak warning hit rate (mean $\mathcal{I}_{\text{peak}, k}^* = 95.9\%$), $+90.2\%$ mean Peak–Trough separation, phase-time Superposed Epoch Analysis ($\theta \in [-1, +1]$), and $+19.4\%$ average drawdown preservation across the 8 major market dislocations (`D1`–`D8`).
-  - Enhanced WebAssembly AST minification and duplicate Bokeh stylesheet pruning (`117.90 KB < 120.0 KB`), and expanded the automated test suite to **129 passed tests (100% pass rate)**.
+  - Enhanced WebAssembly AST minification and duplicate Bokeh stylesheet pruning (`118.77 KB < 120.0 KB`), and expanded the automated test suite to **130 passed tests (100% pass rate)**.
 
 ### [v3.4.0] - 2026-11-05
 

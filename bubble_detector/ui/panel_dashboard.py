@@ -304,9 +304,30 @@ except ImportError:
 
     def compute_dislocation_fidelity_metrics(dates, spy, comp, mahal, dfm, diff, spca, threshold=70.0):
         d_strs = [str(d)[:10] for d in dates]
-        spy_arr = np.maximum(np.asarray(spy, dtype=np.float64), 1e-4)
-        n = len(spy_arr)
-        c_arr, m_arr, d_arr, df_arr, s_arr = [np.asarray(x, dtype=np.float64) for x in (comp, mahal, dfm, diff, spca)]
+        raws = [np.asarray(x, dtype=np.float64) for x in (spy, comp, mahal, dfm, diff, spca)]
+        n = min([len(d_strs)] + [len(a) for a in raws])
+        if n == 0:
+            th_e, z_e = np.linspace(-1.0, 1.0, 81), np.zeros(0, dtype=np.float64)
+            return {
+                "log_spy": z_e, "lead_band_sig": z_e, "crash_band_sig": z_e, "peak_dates": [], "peak_vals": z_e,
+                "trough_dates": [], "trough_vals": z_e, "ev_labels": [], "pk_comp": z_e, "pk_mahal": z_e,
+                "pk_dfm": z_e, "pk_diff": z_e, "pk_spca": z_e, "tr_comp": z_e, "sep_comp": z_e,
+                "theta_grid": th_e, "sea_spy": np.full(81, 100.0), "sea_comp": np.zeros(81), "sea_mahal": np.zeros(81),
+                "sea_dfm": np.zeros(81), "sea_diff": np.zeros(81), "sea_spca": np.zeros(81),
+                "dd_spy_abs": z_e, "dd_def_abs": z_e, "dd_saved": z_e, "lead_days": z_e, "lead_pct_yr": z_e,
+            }
+        def _cln(a, fb):
+            o = a[:n].copy()
+            lv = float(fb)
+            for idx in range(n):
+                if np.isnan(o[idx]) or np.isinf(o[idx]):
+                    o[idx] = lv
+                else:
+                    lv = float(o[idx])
+            return o
+        d_strs = d_strs[:n]
+        spy_arr = np.maximum(_cln(raws[0], 100.0), 1e-4)
+        c_arr, m_arr, d_arr, df_arr, s_arr = [np.clip(_cln(x, 50.0), 0.0, 100.0) for x in raws[1:]]
         log_spy = 100.0 * (1.0 + np.log(spy_arr / spy_arr[0]))
         lead_band_sig, crash_band_sig = np.zeros(n, dtype=np.int32), np.zeros(n, dtype=np.int32)
         env180 = np.array([float(np.max(c_arr[max(0, t - 180) : t + 1])) for t in range(n)], dtype=np.float64)
@@ -332,7 +353,8 @@ except ImportError:
                 if 0 <= i_pk < n and i_pk < i_tr:
                     active_events.append((ev["label"], i_pk, min(i_tr, n - 1)))
         if not active_events:
-            active_events.append(("D1: Synthetic Sample", max(0, n // 3), max(1, min(n - 1, (2 * n) // 3))))
+            i_pk_fb = max(0, (n - 1) // 3)
+            active_events.append(("D1: Synthetic Sample", i_pk_fb, min(n - 1, max(i_pk_fb + 1, (2 * n) // 3))))
         theta_grid = np.linspace(-1.0, 1.0, 81, dtype=np.float64)
         neg_mask, pos_mask = theta_grid <= 0.0, theta_grid > 0.0
         th_p, r_cash = theta_grid[pos_mask], 0.04 / 252.0

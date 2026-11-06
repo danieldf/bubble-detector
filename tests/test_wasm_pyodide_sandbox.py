@@ -310,7 +310,7 @@ def test_dist_index_html_postprocessing_idempotence():
     assert second_pass.count("Pre-loaded MEMFS dataset:") == 1
 
 def test_dist_index_html_on_disk():
-    """Verify that dist/index.html exists on disk, contains error boundary, preloader, version pins, and resilience bridge."""
+    """Verify that dist/index.html exists on disk, contains error boundary, preloader, version pins, UTF-8 integrity, idempotence, and resilience bridge."""
     index_target = BASE_DIR / "dist" / "index.html"
     assert index_target.exists(), "dist/index.html must exist"
     content = index_target.read_text(encoding="utf-8")
@@ -323,3 +323,6 @@ def test_dist_index_html_on_disk():
     assert "panel==" in content, "dist/index.html must have exact panel version pin"
     assert "bokeh==" in content, "dist/index.html must have exact bokeh version pin"
     assert "bokeh-panel-resilience-bridge" in content, "dist/index.html must contain resilience bridge"
+    assert "θ" in content and "Î¸" not in content, "dist/index.html must preserve UTF-8 symbols without Latin-1 mojibake"
+    assert apply_postprocessing(content) == content, "postprocess_wasm_content must be idempotent on dist/index.html"
+

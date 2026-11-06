@@ -329,3 +329,83 @@ def test_tab8_dislocation_fidelity_dual_ui_parity(horizon_id):
         )
 
 
+def test_dislocation_fidelity_edge_cases_and_wasm_fallback_parity():
+    """
+    Verify boundary/edge cases (n=0, n=1, short out-of-range dates, NaN/Inf inputs,
+    mismatched array lengths) and 100% numerical parity between `composite_summary.py`
+    and `panel_dashboard.py`'s standalone Pyodide fallback `compute_dislocation_fidelity_metrics`.
+    """
+    import ast
+    from bubble_detector.config import BASE_DIR
+
+    # Extract standalone fallback compute_dislocation_fidelity_metrics from panel_dashboard.py
+    src = (BASE_DIR / "bubble_detector" / "ui" / "panel_dashboard.py").read_text(encoding="utf-8")
+    tree = ast.parse(src)
+    fb_ns = {"np": np, "DISLOCATIONS_8_20YR": DISLOCATIONS_8_20YR}
+    for node in tree.body:
+        if isinstance(node, ast.Try):
+            for handler in node.handlers:
+                for stmt in handler.body:
+                    if isinstance(stmt, ast.FunctionDef) and stmt.name == "compute_dislocation_fidelity_metrics":
+                        code_obj = compile(ast.Module(body=[stmt], type_ignores=[]), "<fallback>", "exec")
+                        exec(code_obj, fb_ns)
+    fb_fn = fb_ns["compute_dislocation_fidelity_metrics"]
+
+    for fn in (compute_dislocation_fidelity_metrics, fb_fn):
+        # 1. Empty inputs (n=0)
+        dm0 = fn([], np.array([]), np.array([]), np.array([]), np.array([]), np.array([]), np.array([]))
+        assert len(dm0["log_spy"]) == 0
+        assert len(dm0["ev_labels"]) == 0
+        assert len(dm0["theta_grid"]) == 81
+
+        # 2. Single-row input (n=1) outside historical dislocation windows
+        dm1 = fn(
+            ["2026-01-02"],
+            np.array([500.0]),
+            np.array([80.0]),
+            np.array([75.0]),
+            np.array([70.0]),
+            np.array([65.0]),
+            np.array([60.0]),
+        )
+        assert len(dm1["log_spy"]) == 1
+        assert dm1["ev_labels"] == ["D1: Synthetic Sample"]
+        assert np.all(np.isfinite(dm1["pk_comp"]))
+        assert np.all(np.isfinite(dm1["sea_spy"]))
+
+        # 3. NaN/Inf and mismatched array lengths
+        dm_nan = fn(
+            ["2020-02-19", "2020-03-01", "2020-03-23", "2020-04-01"],
+            np.array([338.0, np.nan, 222.0, np.inf, 300.0]),
+            np.array([92.0, np.nan, 5.0, 20.0]),
+            np.array([88.0, 80.0, np.nan, 15.0]),
+            np.array([85.0, np.inf, 8.0, 12.0]),
+            np.array([90.0, 75.0, 4.0, 10.0]),
+            np.array([86.0, 70.0, 6.0, 14.0]),
+        )
+        assert len(dm_nan["log_spy"]) == 4
+        assert np.all(np.isfinite(dm_nan["log_spy"]))
+        assert np.all(np.isfinite(dm_nan["pk_comp"]))
+        assert np.all(np.isfinite(dm_nan["sea_spy"]))
+
+    # 4. Exact numerical parity on real 20-year dataset
+    df_20yr = pl.read_parquet(PROVENANCE_DIR / "market_data_20yr.parquet")
+    dates = [str(d)[:10] for d in df_20yr["Date"].to_list()]
+    args = (
+        dates,
+        df_20yr["SPY"].to_numpy(),
+        df_20yr["Composite_Summary_Index"].to_numpy(),
+        df_20yr["Mahalanobis_Summary_Index"].to_numpy(),
+        df_20yr["DFM_Summary_Index"].to_numpy(),
+        df_20yr["Diffusion_Summary_Index"].to_numpy(),
+        df_20yr["SPCA_Summary_Index"].to_numpy(),
+    )
+    dm_main = compute_dislocation_fidelity_metrics(*args)
+    dm_fb = fb_fn(*args)
+    for k in dm_main:
+        if isinstance(dm_main[k], np.ndarray):
+            np.testing.assert_allclose(dm_main[k], dm_fb[k], rtol=1e-6, atol=1e-6, err_msg=f"Mismatch in {k}")
+        else:
+            assert dm_main[k] == dm_fb[k], f"Mismatch in {k}"
+
+

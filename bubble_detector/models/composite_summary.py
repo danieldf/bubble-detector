@@ -855,8 +855,13 @@ def compute_dislocation_fidelity_metrics(
         and normalized early-warning lead time (% of 252-day trading year).
     """
     d_strs = [str(d)[:10] for d in dates]
-    spy_arr = np.maximum(np.asarray(spy, dtype=np.float64), 1e-4)
-    n = len(spy_arr)
+    raw_spy = np.asarray(spy, dtype=np.float64)
+    raw_c = np.asarray(comp, dtype=np.float64)
+    raw_m = np.asarray(mahal, dtype=np.float64)
+    raw_d = np.asarray(dfm, dtype=np.float64)
+    raw_df = np.asarray(diff, dtype=np.float64)
+    raw_s = np.asarray(spca, dtype=np.float64)
+    n = min(len(d_strs), len(raw_spy), len(raw_c), len(raw_m), len(raw_d), len(raw_df), len(raw_s))
     if n == 0:
         theta_empty = np.linspace(-1.0, 1.0, 81)
         z_empty = np.zeros(0, dtype=np.float64)
@@ -871,11 +876,13 @@ def compute_dislocation_fidelity_metrics(
             "lead_days": z_empty, "lead_pct_yr": z_empty,
         }
 
-    c_arr = np.asarray(comp, dtype=np.float64)
-    m_arr = np.asarray(mahal, dtype=np.float64)
-    d_arr = np.asarray(dfm, dtype=np.float64)
-    df_arr = np.asarray(diff, dtype=np.float64)
-    s_arr = np.asarray(spca, dtype=np.float64)
+    d_strs = d_strs[:n]
+    spy_arr = np.maximum(causal_ffill_clean(raw_spy[:n], 100.0), 1e-4)
+    c_arr = np.clip(causal_ffill_clean(raw_c[:n], 50.0), 0.0, 100.0)
+    m_arr = np.clip(causal_ffill_clean(raw_m[:n], 50.0), 0.0, 100.0)
+    d_arr = np.clip(causal_ffill_clean(raw_d[:n], 50.0), 0.0, 100.0)
+    df_arr = np.clip(causal_ffill_clean(raw_df[:n], 50.0), 0.0, 100.0)
+    s_arr = np.clip(causal_ffill_clean(raw_s[:n], 50.0), 0.0, 100.0)
 
     # 1. Scale-invariant continuous logarithmic S&P 500 growth trajectory L_SPY(t)
     log_spy = 100.0 * (1.0 + np.log(spy_arr / spy_arr[0]))
@@ -914,8 +921,8 @@ def compute_dislocation_fidelity_metrics(
                 active_events.append((ev["label"], i_pk, min(i_tr, n - 1)))
 
     if not active_events:
-        i_pk_fb = max(0, n // 3)
-        i_tr_fb = max(i_pk_fb + 1, min(n - 1, (2 * n) // 3))
+        i_pk_fb = max(0, (n - 1) // 3)
+        i_tr_fb = min(n - 1, max(i_pk_fb + 1, (2 * n) // 3))
         active_events.append(("D1: Synthetic Sample", i_pk_fb, i_tr_fb))
 
     theta_grid = np.linspace(-1.0, 1.0, 81, dtype=np.float64)

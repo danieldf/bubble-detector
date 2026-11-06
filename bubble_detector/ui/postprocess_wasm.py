@@ -411,7 +411,13 @@ if (document.readyState === 'loading') {
             import ast
             import io
             import tokenize
-            raw_py = m_code.group(2).encode("utf-8").decode("unicode_escape")
+            raw_py = (
+                m_code.group(2)
+                .replace("\\`", "`")
+                .replace("\\${", "${")
+                .encode("ascii", "backslashreplace")
+                .decode("unicode_escape")
+            )
             tree = compile(raw_py, "<wasm>", "exec", flags=ast.PyCF_ONLY_AST | ast.PyCF_ALLOW_TOP_LEVEL_AWAIT)
             for node in ast.walk(tree):
                 for field in ("body", "orelse", "finalbody"):
@@ -494,9 +500,13 @@ def sync_wasm_build_directories():
     import shutil
     dist_dir = Path("dist")
     build_dir = Path("build")
+    root_sw = Path("sw.js")
 
     if not dist_dir.exists():
         return
+
+    if root_sw.exists():
+        shutil.copy2(root_sw, dist_dir / "sw.js")
 
     postprocess_wasm_html(dist_dir / "index.html")
 
@@ -507,8 +517,8 @@ def sync_wasm_build_directories():
             shutil.copy2(dist_dir / "index.html", build_dir / "panel_dashboard.html")
         if (dist_dir / "sw.js").exists():
             shutil.copy2(dist_dir / "sw.js", build_dir / "sw.js")
-        elif Path("sw.js").exists():
-            shutil.copy2(Path("sw.js"), build_dir / "sw.js")
+        elif root_sw.exists():
+            shutil.copy2(root_sw, build_dir / "sw.js")
 
         for f in dist_dir.glob("market_data_*.*"):
             shutil.copy2(f, build_dir / f.name)
