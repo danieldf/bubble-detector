@@ -113,9 +113,9 @@ def parse_shiller_excel(xls_path: Path) -> pd.DataFrame:
     df["Price_to_Dividend"] = (df["SP_Price"] / np.maximum(df["SP_Dividends"], 1e-4)).astype(np.float32)
     df["Real_Earnings_Yield"] = (1.0 / np.maximum(df["Shiller_CAPE"], 1.0)).astype(np.float32)
 
-    # If dataset ends prior to 2026-09-01, extend forward using latest available values
+    # If dataset ends prior to 2026-11-01, extend forward using latest available values
     last_dt = df["Date"].iloc[-1]
-    target_end = pd.Timestamp("2026-09-01")
+    target_end = pd.Timestamp("2026-11-01")
     if last_dt < target_end:
         ext_dates = pd.date_range(start=last_dt + pd.DateOffset(months=1), end=target_end, freq="MS")
         last_row = df.iloc[-1].to_dict()
@@ -207,6 +207,7 @@ class ShillerETL:
         df_pd["Available_Date"] = df_pd["Date"] + pd.offsets.MonthEnd(1) + pd.Timedelta(days=publication_lag_days)
 
         daily_dates = pd.date_range(start=start_date, end=end_date, freq="B")
+        daily_dates = daily_dates.union(pd.DatetimeIndex([pd.Timestamp(start_date), pd.Timestamp(end_date)]))
         daily_df = pd.DataFrame({"Date": daily_dates})
 
         merged = pd.merge_asof(

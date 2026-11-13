@@ -626,7 +626,7 @@ def generate_wasm_dataset(start_date: str, end_date: str) -> Dict[str, Any]:
     curr = s_dt
     date_list = []
     while curr <= e_dt:
-        if curr.weekday() < 5:
+        if curr.weekday() < 5 or curr == s_dt or curr == e_dt:
             date_list.append(curr.isoformat())
         curr += datetime.timedelta(days=1)
     if not date_list:

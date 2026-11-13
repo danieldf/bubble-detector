@@ -330,8 +330,9 @@ class FredETL:
         # Construct continuous daily grid spanning from 1959 to max(end_date, latest available)
         # to ensure 252-day YoY shifts and 60-day SMAs have zero warm-up NaNs in the requested window.
         grid_start = min(pd.Timestamp("1959-02-01"), pd.Timestamp(start_date))
-        grid_end = max(pd.Timestamp("2026-10-05"), pd.Timestamp(end_date))
+        grid_end = max(pd.Timestamp("2026-11-13"), pd.Timestamp(end_date))
         full_dates = pd.date_range(start=grid_start, end=grid_end, freq="B")
+        full_dates = full_dates.union(pd.DatetimeIndex([pd.Timestamp(start_date), pd.Timestamp(end_date)]))
         full_df = pd.DataFrame({"Date": full_dates})
 
         # Merge backward on Available_Date

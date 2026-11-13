@@ -113,7 +113,7 @@ def parse_finra_margin_debt_series(prov_dir: Path) -> pd.DataFrame:
         df_finra_raw["FINRA_Margin_Debt"] = pd.to_numeric(df_finra_raw[debit_col], errors="coerce") / 1000.0
         df_finra_clean = df_finra_raw.dropna(subset=["Month_Date", "FINRA_Margin_Debt"]).sort_values("Month_Date").reset_index(drop=True)
     else:
-        dates_f = pd.date_range(start="1997-01-01", end="2026-09-01", freq="MS")
+        dates_f = pd.date_range(start="1997-01-01", end="2026-11-01", freq="MS")
         debt_f = 100.0 * np.exp(0.09 * (dates_f.year - 1997.0))
         df_finra_clean = pd.DataFrame({"Month_Date": dates_f, "FINRA_Margin_Debt": debt_f})
 
@@ -180,6 +180,7 @@ class FinraETL:
         df_pd["Available_Date"] = pd.to_datetime(df_pd["Available_Date"])
 
         daily_dates = pd.date_range(start=start_date, end=end_date, freq="B")
+        daily_dates = daily_dates.union(pd.DatetimeIndex([pd.Timestamp(start_date), pd.Timestamp(end_date)]))
         daily_df = pd.DataFrame({"Date": daily_dates})
 
         merged = pd.merge_asof(

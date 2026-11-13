@@ -430,7 +430,10 @@ def compute_orthogonal_basis_and_summaries_numpy(
         eff_z = s_t + 0.45 * (d_b - d_c)
         p_struct_t = float(norm_cdf_numpy(np.array([(eff_z - 0.85) / 1.45]))[0])
 
-        excess_crash = max(d_c - d_b, 0.0) + max(-s_t - 0.40, 0.0)
+        s63_dd = max(0, t - 63 + 1)
+        spy_peak63 = max(float(np.max(spy[s63_dd : t + 1])), 1e-4)
+        dd63_t = (spy[t] - spy_peak63) / spy_peak63
+        excess_crash = max(d_c - d_b, 0.0) + max(-s_t - 0.40, 0.0) + max((-dd63_t - 0.16) * 12.0, 0.0)
         lam_c = float(np.exp(-0.35 * (excess_crash ** 2)))
         lambda_crash[t] = lam_c
         I_mahal[t] = 100.0 * p_struct_t * lam_c

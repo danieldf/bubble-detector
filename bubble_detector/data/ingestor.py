@@ -114,13 +114,15 @@ class DataIngestor:
         tickers = [SP500_TICKER, "^GSPC"] + list(SECTOR_TICKERS.values()) + list(VOLATILITY_TICKERS.values())
 
         date_range = pd.date_range(start=start_date, end=end_date, freq="B")
+        date_range = date_range.union(pd.DatetimeIndex([pd.Timestamp(start_date), pd.Timestamp(end_date)]))
         df_base = pd.DataFrame(index=date_range)
         df_base.index.name = "Date"
 
         # 1. Attempt live yfinance download
         df_yf: Optional[pd.DataFrame] = None
         try:
-            data = yf.download(tickers, start=start_date, end=end_date, progress=False)
+            yf_end = (pd.Timestamp(end_date) + pd.Timedelta(days=1)).strftime("%Y-%m-%d")
+            data = yf.download(tickers, start=start_date, end=yf_end, progress=False)
             if not data.empty and "Close" in data:
                 df_yf = data["Close"].copy()
         except Exception as e:
@@ -362,11 +364,12 @@ class DataIngestor:
         df_out[VOLATILITY_TICKERS["VIX1D"]] = (vix_prices * vix_term_factor).astype(np.float32)
         df_out[VOLATILITY_TICKERS["VIX3M"]] = (vix_prices * vix3m_factor).astype(np.float32)
 
-        # SKEW, VXN, OVX
+        # SKEW, VXN, OVX (deterministic RNG for reproducible backtests)
+        rng = np.random.RandomState(42)
         t_skew = np.clip((years - 1976.0) / 50.0, 0.0, 1.0)
-        df_out[VOLATILITY_TICKERS["SKEW"]] = np.clip(125.0 + 32.0 * t_skew + 2.0 * np.random.randn(n), 115.0, 165.0).astype(np.float32)
+        df_out[VOLATILITY_TICKERS["SKEW"]] = np.clip(125.0 + 32.0 * t_skew + 2.0 * rng.randn(n), 115.0, 165.0).astype(np.float32)
         df_out[VOLATILITY_TICKERS["VXN"]] = (vix_prices * 1.3).astype(np.float32)
-        df_out[VOLATILITY_TICKERS["OVX"]] = np.clip(25.0 + 8.0 * np.random.randn(n), 12.0, 75.0).astype(np.float32)
+        df_out[VOLATILITY_TICKERS["OVX"]] = np.clip(25.0 + 8.0 * rng.randn(n), 12.0, 75.0).astype(np.float32)
 
         return df_out
 
