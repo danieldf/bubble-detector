@@ -33,5 +33,7 @@ logs/
 CRC_18*.pdf
 Holdings_*.csv
 *.pdf
+!HighFidelityEventStudy/*.pdf
 Holdings_*.csv
 
+.solomd/
