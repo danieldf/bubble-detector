@@ -1,6 +1,7 @@
 import os
+from pathlib import Path
 
-workspace_dir = "/Users/danielsflscientific.com/Downloads/Merrill"
+workspace_dir = str(Path(__file__).resolve().parent)
 marp_file_path = os.path.join(workspace_dir, "MarketBubble_Detection_Presentation_2026.marp.md")
 
 marp_content = r"""---

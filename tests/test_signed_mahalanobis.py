@@ -89,3 +89,30 @@ def test_min_cov_det_robustness():
     assert not np.isinf(m_dist_lw).any()
     # At normal rows following the outlier (e.g. index 70), distance should stay reasonably bounded
     assert m_dist_lw[70] < 12.0
+
+
+def test_dm_bubble_crash_off_diagonal_polarity_consistency():
+    """
+    RT-CRIT-01: Verify that DM_Bubble and DM_Crash preserve off-diagonal precision matrix signs
+    for inverse-polarity indicators (Real_Earnings_Yield, b_j = -1), so a pure bubble vector
+    yields DM_Bubble == Mahalanobis_Distance and DM_Crash == 0.
+    """
+    detector = MacroMahalanobisDetector()
+    k = len(INDICATORS_15)
+    np.random.seed(123)
+    # Create correlated historical returns where Real_Earnings_Yield (index 2) is negatively correlated with Shiller_CAPE (index 0)
+    history = np.random.randn(150, k).astype(np.float64)
+    history[:, 2] = -0.85 * history[:, 0] + 0.3 * np.random.randn(150)
+
+    b_signs = np.array([DIRECTION_VECTOR_B.get(col, 1.0) for col in INDICATORS_15], dtype=np.float64)
+    # Pure bubble excursion relative to historical mean: diff has exact sign of b_signs (unclipped < 12.0)
+    hist_mean = np.mean(history, axis=0)
+    pure_bubble_obs = hist_mean + 1.5 * b_signs
+    Z = np.vstack([history, pure_bubble_obs])
+
+    m_dist, s_score, dm_b, dm_c = detector.compute_signed_mahalanobis_metrics(Z)
+    # Because every component of (z_t - mu) is strictly in the +b orthant, v = 0 and u_unaligned == diff!
+    # Therefore DM_Bubble[-1] must equal m_dist[-1] to machine precision, and DM_Crash[-1] must be 0.0.
+    assert np.isclose(dm_b[-1], m_dist[-1], rtol=1e-5), f"Expected DM_Bubble ({dm_b[-1]}) == m_dist ({m_dist[-1]})"
+    assert np.isclose(dm_c[-1], 0.0, atol=1e-6), f"Expected DM_Crash == 0.0, got {dm_c[-1]}"
+

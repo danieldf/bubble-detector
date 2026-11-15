@@ -26,8 +26,32 @@ from stage_provenance import precompile_wasm_parquet_datasets
 
 
 def test_precompile_wasm_parquet_datasets():
-    """Precompile WASM Parquet and JSON datasets to ensure up-to-date parquet/json artifacts."""
-    precompile_wasm_parquet_datasets()
+    """Verify precompiled WASM Parquet and JSON datasets exist, are non-null, and contain all CORE_WASM_COLUMNS (rebuilding only if missing)."""
+    from pathlib import Path
+    import polars as pl
+
+    prov_dir = Path(__file__).resolve().parent.parent / "data" / "provenance"
+    names = ["market_data_50yr", "market_data_20yr", "market_data_modern"]
+    needs_rebuild = False
+    for name in names:
+        pq_path = prov_dir / f"{name}.parquet"
+        js_path = prov_dir / f"{name}.json"
+        if not pq_path.exists() or not js_path.exists():
+            needs_rebuild = True
+            break
+        df = pl.read_parquet(pq_path)
+        if any(col not in df.columns for col in CORE_WASM_COLUMNS):
+            needs_rebuild = True
+            break
+
+    if needs_rebuild:
+        precompile_wasm_parquet_datasets()
+
+    for name in names:
+        df = pl.read_parquet(prov_dir / f"{name}.parquet")
+        for col in CORE_WASM_COLUMNS:
+            assert col in df.columns, f"Missing {col} in {name}.parquet"
+            assert df[col].null_count() == 0, f"Nulls found in {name}.parquet[{col}]"
 
 
 

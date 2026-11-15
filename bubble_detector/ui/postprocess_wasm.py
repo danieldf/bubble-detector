@@ -94,11 +94,17 @@ def postprocess_wasm_content(content: str) -> str:
             def clean_bokeh_templates(obj):
                 if isinstance(obj, dict):
                     if "stylesheets" in obj and isinstance(obj["stylesheets"], list):
-                        obj["stylesheets"] = [
-                            s for s in obj["stylesheets"]
-                            if not (isinstance(s, str) and (":host(.pn-loading):before" in s or "--plotly-icon-color" in s))
-                            and not (isinstance(s, dict) and "maplibre-gl" in str(s.get("attributes", {}).get("url", "")))
-                        ]
+                        cleaned_ss = []
+                        for s in obj["stylesheets"]:
+                            if isinstance(s, str) and (":host(.pn-loading):before" in s or "--plotly-icon-color" in s):
+                                continue
+                            if isinstance(s, dict) and "maplibre-gl" in str(s.get("attributes", {}).get("url", "")):
+                                continue
+                            if isinstance(s, str):
+                                s = re.sub(r"/\*.*?\*/", "", s, flags=re.DOTALL)
+                                s = re.sub(r"\s+", " ", s).strip()
+                            cleaned_ss.append(s)
+                        obj["stylesheets"] = cleaned_ss
                     if obj.get("type") == "map" and "entries" in obj:
                         new_entries = []
                         for entry in obj["entries"]:
@@ -419,6 +425,37 @@ if (document.readyState === 'loading') {
                 .decode("unicode_escape")
             )
             tree = compile(raw_py, "<wasm>", "exec", flags=ast.PyCF_ONLY_AST | ast.PyCF_ALLOW_TOP_LEVEL_AWAIT)
+
+            class _StripWasmAST(ast.NodeTransformer):
+                def visit_FunctionDef(self, node):
+                    self.generic_visit(node)
+                    node.returns = None
+                    for a in node.args.posonlyargs + node.args.args + node.args.kwonlyargs:
+                        a.annotation = None
+                    if node.args.vararg:
+                        node.args.vararg.annotation = None
+                    if node.args.kwarg:
+                        node.args.kwarg.annotation = None
+                    return node
+
+                def visit_AnnAssign(self, node):
+                    self.generic_visit(node)
+                    if node.value is not None:
+                        return ast.Assign(targets=[node.target], value=node.value, lineno=getattr(node, "lineno", 1))
+                    return None
+
+                def visit_Try(self, node):
+                    self.generic_visit(node)
+                    unparsed_try = ast.unparse(ast.Module(body=node.body, type_ignores=[]))
+                    if ("import polars" in unparsed_try or "from bubble_detector" in unparsed_try) and node.handlers:
+                        hb = node.handlers[0].body
+                        if len(hb) == 1 and isinstance(hb[0], ast.Pass):
+                            return None
+                        return hb
+                    return node
+
+            tree = _StripWasmAST().visit(tree)
+            ast.fix_missing_locations(tree)
             for node in ast.walk(tree):
                 for field in ("body", "orelse", "finalbody"):
                     stmts = getattr(node, field, None)
@@ -498,6 +535,11 @@ def sync_wasm_build_directories():
     artifacts, datasets, and service workers for local serving and deployment.
     """
     import shutil
+    try:
+        from bubble_detector import __version__
+    except Exception:
+        __version__ = "3.5.0"
+
     dist_dir = Path("dist")
     build_dir = Path("build")
     root_sw = Path("sw.js")
@@ -506,6 +548,14 @@ def sync_wasm_build_directories():
         return
 
     if root_sw.exists():
+        sw_text = root_sw.read_text(encoding="utf-8")
+        sw_updated = re.sub(
+            r"const\s+CACHE_NAME\s*=\s*['\"]bubble-detector-wasm-v[^'\"]+['\"];",
+            f"const CACHE_NAME = 'bubble-detector-wasm-v{__version__}';",
+            sw_text,
+        )
+        if sw_updated != sw_text:
+            root_sw.write_text(sw_updated, encoding="utf-8")
         shutil.copy2(root_sw, dist_dir / "sw.js")
 
     postprocess_wasm_html(dist_dir / "index.html")

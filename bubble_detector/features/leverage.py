@@ -68,17 +68,21 @@ def compute_margin_leverage_metrics(df: pl.DataFrame) -> pl.DataFrame:
         margin_debt = np.linspace(800, 1416, n, dtype=np.float32)
         df = df.with_columns(pl.Series("FINRA_Margin_Debt", margin_debt))
 
-    # YoY Margin Debt Growth (252 trading days)
-    margin_yoy = pl.col("FINRA_Margin_Debt").pct_change(n=252) * 100.0
+    # YoY Margin Debt Growth (252 trading days, with strictly causal expanding warm-up from t=0)
+    md_first = pl.col("FINRA_Margin_Debt").first()
+    expanding_md_pct = ((pl.col("FINRA_Margin_Debt") - md_first) / pl.max_horizontal(md_first, pl.lit(1e-4))) * 100.0
+    margin_yoy = (pl.col("FINRA_Margin_Debt").pct_change(n=252) * 100.0).fill_null(expanding_md_pct).fill_null(0.0).cast(pl.Float32)
 
-    # Margin Debt Velocity (20-day momentum change)
-    margin_velocity = pl.col("FINRA_Margin_Debt").pct_change(n=20) * 100.0
+    # Margin Debt Velocity (20-day momentum change, with strictly causal expanding warm-up)
+    margin_velocity = (pl.col("FINRA_Margin_Debt").pct_change(n=20) * 100.0).fill_null(expanding_md_pct).fill_null(0.0).cast(pl.Float32)
 
     # Margin Credit Exhaustion Index: Ratio of Margin Debt growth velocity relative to SPY Market Cap growth velocity
     if SP500_TICKER in df.columns:
-        spy_velocity = pl.col(SP500_TICKER).pct_change(n=20) * 100.0
+        spy_first = pl.col(SP500_TICKER).first()
+        expanding_spy_pct = ((pl.col(SP500_TICKER) - spy_first) / pl.max_horizontal(spy_first, pl.lit(1e-4))) * 100.0
+        spy_velocity = (pl.col(SP500_TICKER).pct_change(n=20) * 100.0).fill_null(expanding_spy_pct).fill_null(0.0).cast(pl.Float32)
         # High positive gap signifies dangerous debt acceleration outpacing equity value
-        leverage_gap = margin_velocity - spy_velocity
+        leverage_gap = (margin_velocity - spy_velocity).cast(pl.Float32)
     else:
         leverage_gap = margin_velocity
 
@@ -97,7 +101,7 @@ def compute_margin_leverage_metrics(df: pl.DataFrame) -> pl.DataFrame:
         .when(pl.col("Leverage_Exhaustion_Gap") > 0.0)
         .then(0.5)
         .otherwise(0.2)
-    )
+    ).cast(pl.Float32)
 
     df = df.with_columns(exhaustion_score.alias("Margin_Exhaustion_Score"))
 

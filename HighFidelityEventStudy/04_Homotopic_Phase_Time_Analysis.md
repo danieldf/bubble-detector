@@ -34,14 +34,14 @@ Averaging the S&P 500 trajectory (indexed to `100.0` at `θ = 0.0`) alongside al
 
 2. **Phase I (`θ ∈ [-1.0, 0.0]`): The Pre-Peak Divergence Between Rising Prices and Elevated Risk:**
    - **Buildup Origin (`θ = -1.0`, 180 Trading Days Before Peak):** Six months before the average market peak, the S&P 500 stands at **`86.9`** (meaning the index will rally another **`+15.1%`** before topping at `100.0`). Yet even at `θ = -1.0`, all five Composite Summary Envelopes are already firmly entrenched above the `70.0%` warning gate:
-     - **Directional Mahalanobis (`I^Mahal`):** `100.0%`
-     - **Master Composite (`I^*`):** `96.4%`
-     - **Sparse PCA (`I^SPCA`):** `95.7%`
-     - **LEI Percentile Diffusion (`I^Diff`):** `93.1%`
-     - **Dynamic Factor Nowcast (`I^DFM`):** `86.4%`
-   - Throughout the entire `[-1.0, 0.0]` buildup corridor, while headline equity momentum lulls conventional trend-followers into maximum complacency, all five composite envelopes hold a sustained plateau between **`83.0%` and `100.0%`**.
+     - **Directional Mahalanobis (`I^Mahal`):** `99.6%`
+     - **Master Composite (`I^*`):** `94.2%`
+     - **Sparse PCA (`I^SPCA`):** `91.9%`
+     - **LEI Percentile Diffusion (`I^Diff`):** `88.8%`
+     - **Dynamic Factor Nowcast (`I^DFM`):** `84.7%`
+   - Throughout the entire `[-1.0, 0.0]` buildup corridor, while headline equity momentum lulls conventional trend-followers into maximum complacency, all five composite envelopes hold a sustained plateau between **`81.0%` and `99.6%`**.
 
 3. **Cycle Peak Inflection (`θ = 0.0`) & Phase II (`θ ∈ [0.0, +1.0]`): Rapid Crash-Damper De-Escalation:**
-   - **At the Exact Cycle Peak (`θ = 0.0`):** The S&P 500 reaches its zenith at **`100.0`**, while the five Composite Envelopes stand between **`85.6%` (`I^DFM`)** and **`99.9%` (`I^Mahal`)**, with the **Master Composite at `93.6%`**—ensuring defensive portfolio protection is fully engaged before the first day of the downturn.
-   - **Mid-Collapse De-Escalation (`θ = +0.50`):** Halfway through the contraction, as the S&P 500 drops to **`91.0` (`-9.0%`)** and forced institutional deleveraging begins, our directional **Crash-Liquidation Damper** actively overrides panic volatility, driving the Master Composite down through **`46.5%`** (and all five indicators into the `41.3%`–`47.2%` band).
-   - **Cycle Trough Exhaustion (`θ = +1.00`):** At the exact bottom of the average crash, the S&P 500 reaches its mean trough of **`75.1` (`-24.9%` mean drawdown)**, while all five Composite Summary Indicators converge to near-zero (**Master Composite `1.1%`**, **Mahalanobis `2.0%`**, **Diffusion `2.0%`**, **Sparse PCA `3.0%`**, **DFM `4.4%`**), providing a synchronized, high-conviction signal to redeploy cash into deeply discounted equities.
+   - **At the Exact Cycle Peak (`θ = 0.0`):** The S&P 500 reaches its zenith at **`100.0`**, while the five Composite Envelopes stand between **`83.8%` (`I^DFM`)** and **`95.5%` (`I^Mahal`)**, with the **Master Composite at `90.6%`**—ensuring defensive portfolio protection is fully engaged before the first day of the downturn.
+   - **Mid-Collapse De-Escalation (`θ = +0.50`):** Halfway through the contraction, as the S&P 500 drops to **`91.0` (`-9.0%`)** and forced institutional deleveraging begins, our directional **Crash-Liquidation Damper** actively overrides panic volatility, driving the Master Composite down through **`43.1%`** (and all five indicators into the `41.1%`–`43.3%` band).
+   - **Cycle Trough Exhaustion (`θ = +1.00`):** At the exact bottom of the average crash, the S&P 500 reaches its mean trough of **`75.1` (`-24.9%` mean drawdown)**, while all five Composite Summary Indicators converge to near-zero (**Mahalanobis `1.0%`**, **Master Composite `1.1%`**, **Diffusion `1.9%`**, **Sparse PCA `3.6%`**, **DFM `4.3%`**), providing a synchronized, high-conviction signal to redeploy cash into deeply discounted equities.

@@ -2,7 +2,7 @@
 <!-- # BeGiN TechnicalSpecification_DDFv100.md -->
 <!-- ### -->
 
-# Technical Specification: Multidimensional Market Bubble Detection System (v3.5.0)
+# Technical Specification: Multidimensional Market Bubble Detection System (v3.7.0)
 
 Technical Specification Confidence Score: 0.96
 
@@ -98,7 +98,7 @@ where $\\mathbf{z}_t$ is the 15-dimensional standardized indicator vector, $\\bo
 6. **Elimination of Endogeneity & Collinearity Leakage (Item 6)**: The model forecast `Drawdown_Probability` and collinearly scaled `P_CAPE` are strictly excluded from the covariance matrix estimation feature space, reducing matrix condition numbers by $> 500\times$.
 7. **Institutional Cost-Inclusive Backtest Simulation Engine (Item 7)**: Real-world portfolio dynamics are simulated with 10 bps transaction fees, 5 bps market-impact slippage, 4.0% annualized cash yield, and borrowing penalties. The strategy demonstrates superior Sharpe ratios, sortino ratios, and reduced maximum drawdowns compared to Buy & Hold and Naive CAPE benchmark rules.
 8. **WebAssembly Parquet Virtual Filesystem & Provenance Badges (Item 8)**: Parquet tables are mounted directly into Pyodide virtual filesystems for instant zero-drift client execution. All visual traces across Tabs 1–8 display explicit provenance badges (`[REAL]`, `[PROXY]`, `[SYNTHETIC]`), and an prominent red alert banner dynamically renders if fallback data is engaged.
-9. **Automated Verification Quality Gate**: All 130 unit, numerical parity, module alias, anti-synthetic provenance regression, and system integration tests must pass with 100% success rate (`pytest tests/`).
+9. **Automated Verification Quality Gate**: All 135 unit, numerical parity, module alias, anti-synthetic provenance regression, and system integration tests must pass with 100% success rate (`pytest tests/`).
 10. **Institutional Documentation & Code Commentary**: Complete mathematical docstrings, parameter explanations, economic rationale, and failure modes across all modules in `bubble_detector/`. Comprehensive canonical module aliases (`margin_leverage.py`, `options_volatility.py`, `technical.py`, `ui/theme.py`) ensure multi-agent workflow compatibility. Requirements file and packaging specifications must document library trade-offs and WebAssembly sandboxing constraints.
 
 ## 9. Information-Maximizing Orthogonal Basis & Final Summary Indicator ($\mathcal{I}_t^*$) Specification (20-Year Regime Horizon)
@@ -148,6 +148,8 @@ To maximize non-redundant multi-domain information across all seven dashboard ta
 
 ## 10. Specification Changelog (SemVer)
 
+- **[v3.7.0] - 2026-11-15**: Full Red Team Remediation & Mathematical Hardening release (`RT-CRIT-01` through `RT-LOW-28`): enforced 100% cross-horizon date invariance (`1975-01-01` master causal warm-up), weekend/offline trading-day clamping (`2026-11-13`), strictly causal 1-day execution lag in `PortfolioBacktestEngine`, sequential Gram-Schmidt orthogonalization across all 13 basis pillars ($\tau_j \in [0.8949, 0.9968] \ge 0.87$), vectorized BSADF/LPPLS/Mahalanobis/TDA pipelines (`4.2x` speedup), regenerated 8 4K HXGA PNGs and Executive PDF (`v1.1.0`), and expanded verification suite to 135 passed tests.
+- **[v3.6.0] - 2026-11-14**: Added `HighFidelityEventStudy` 4K HXGA (`4096 × 3072`) event-study plots, modular Markdown sections (`00`–`06`), and typeset `HighFidelityEventStudy_Executive_Report.pdf`.
 - **[v3.5.0] - 2026-11-05**: Added the 4-subplot, 22-trace Tab 8 **20-Year 8-Dislocation High-Fidelity Event-Study & Popperian Falsification Suite** (`DISLOCATIONS_8_20YR`, `compute_dislocation_fidelity_metrics`, `build_dislocation_fidelity_chart`, `build_dislocation_fidelity_fig`) directly below the existing Tab 8 plots across NiceGUI and HoloViz Panel WebAssembly, proving 100% (8/8) pre-peak warning hit rate (mean $95.9\%$), $+90.2\%$ mean Peak–Trough separation, phase-time Superposed Epoch Analysis ($\theta \in [-1, +1]$), and $+19.4\%$ average drawdown preservation across the 8 major market dislocations (`D1`–`D8`, 130 passed tests).
 - **[v3.4.0] - 2026-11-05**: Added the 4-subplot Tab 8 S&P 500 Historical Bubble Regime Validation Suite (`build_composite_validation_chart` & `build_composite_validation_fig`) featuring 5 indicator-specific transparent vertical date bands ($\ge 70\%$) + a 6th full-height unanimous consensus band (`ALL 5 INDICATORS ON`), S&P 500 underwater & forward 63-day drawdown validation, and cost-inclusive `$100` cumulative wealth validation across NiceGUI and HoloViz Panel WebAssembly (125 passed tests).
 - **[v3.3.0] - 2026-11-05**: Added two-stage causal $I(0)$ unit-variance preprocessing protocol, comparative mathematical/empirical evaluation of Conference Board Diffusion, Federal Reserve State-Space DFM, and Elastic-Net Sparse PCA against Asymmetric Mahalanobis–GBDT Synthesis on the 13-indicator orthogonal basis $\mathcal{B}_{13}^{\perp}$ (20-year horizon), and architectural specification for Tab 8 ("Composite Summary Indicators") across NiceGUI and HoloViz Panel WebAssembly.

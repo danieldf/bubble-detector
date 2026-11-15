@@ -121,6 +121,8 @@ class StructuralBreakPredictor:
         self.calibrator = IsotonicRegression(out_of_bounds="clip")
         self.is_trained = False
         self.is_calibrated = False
+        self._trained_X: Optional[np.ndarray] = None
+        self._oof_calibrated_probs: Optional[np.ndarray] = None
 
     def _prepare_data(self, df: pl.DataFrame) -> Tuple[np.ndarray, np.ndarray]:
         """Extract features and construct forward drawdown target variable without lookahead."""
@@ -142,16 +144,17 @@ class StructuralBreakPredictor:
         X = augmented_df.select(self.FEATURE_COLS).to_numpy()
         X = np.nan_to_num(X, nan=0.0, posinf=0.0, neginf=0.0)
 
-        # Target variable y: Forward drawdown > threshold over horizon
+        # Target variable y: Forward drawdown > threshold over horizon (vectorized via sliding_window_view)
         if "SPY" in df_cols:
             prices = augmented_df["SPY"].to_numpy().astype(np.float64)
             n_p = len(prices)
             y = np.zeros(n_p, dtype=np.int32)
-            for i in range(n_p - self.horizon_days):
-                fwd_min = np.min(prices[i : i + self.horizon_days + 1])
-                dd = (fwd_min - prices[i]) / prices[i]
-                if dd < -self.drawdown_threshold:
-                    y[i] = 1
+            H = self.horizon_days
+            if n_p > H:
+                win = np.lib.stride_tricks.sliding_window_view(prices, H + 1)
+                fwd_min = np.min(win, axis=1)
+                dd = (fwd_min - prices[: n_p - H]) / np.maximum(prices[: n_p - H], 1e-8)
+                y[: n_p - H] = (dd < -self.drawdown_threshold).astype(np.int32)
         else:
             gsadf = augmented_df["GSADF_GPT_Adjusted"].to_numpy() if "GSADF_GPT_Adjusted" in df_cols else np.zeros(len(augmented_df))
             y = (gsadf > 1.45).astype(np.int32)
@@ -167,6 +170,8 @@ class StructuralBreakPredictor:
         """
         Train ML model and fit isotonic probability calibrator using expanding-window
         TimeSeriesSplit cross-validation with a purge embargo gap.
+        Stores causal out-of-fold calibrated probabilities for historical rows to prevent
+        in-sample historical look-ahead bias during inference.
         """
         logger.info(f"Training StructuralBreakPredictor with {n_splits}-fold TimeSeriesSplit (embargo={embargo_window})...")
         X, y = self._prepare_data(df)
@@ -176,7 +181,8 @@ class StructuralBreakPredictor:
 
         # Mask unobservable terminal forward return rows
         eff_embargo = max(embargo_window, self.horizon_days)
-        if len(X) > eff_embargo + 30:
+        has_terminal_mask = len(X) > eff_embargo + 30
+        if has_terminal_mask:
             X_obs = X[:-eff_embargo]
             y_obs = y[:-eff_embargo]
         else:
@@ -187,6 +193,7 @@ class StructuralBreakPredictor:
         fold_accuracies = []
         oof_preds = []
         oof_true = []
+        oof_raw_full = np.full(len(X), np.nan, dtype=np.float64)
 
         for fold, (train_idx, val_idx) in enumerate(tss.split(X_obs)):
             if len(train_idx) > eff_embargo + 10:
@@ -202,15 +209,40 @@ class StructuralBreakPredictor:
             X_train_scaled = scaler_fold.fit_transform(X_train)
             X_val_scaled = scaler_fold.transform(X_val)
 
-            model_fold = self._create_model(n_estimators=30, max_depth=3, learning_rate=0.05)
-            model_fold.fit(X_train_scaled, y_train)
+            model_fold = self._create_model(
+                n_estimators=self.n_estimators,
+                max_depth=self.max_depth,
+                learning_rate=self.learning_rate,
+            )
+            if len(np.unique(y_train)) > 1:
+                model_fold.fit(X_train_scaled, y_train)
+                val_probs = model_fold.predict_proba(X_val_scaled)[:, 1]
+            else:
+                val_probs = np.full(len(X_val), float(np.mean(y_train)), dtype=np.float64)
 
-            val_probs = model_fold.predict_proba(X_val_scaled)[:, 1]
             val_preds = (val_probs > 0.5).astype(np.int32)
             fold_accuracies.append(float(np.mean(val_preds == y_val)))
 
+            oof_raw_full[val_idx] = val_probs
             oof_preds.extend(val_probs.tolist())
             oof_true.extend(y_val.tolist())
+
+            if fold == 0:
+                # Populate initial fold's training block via causal sub-split (zero in-sample leakage)
+                first_val_start = int(val_idx[0])
+                mid = len(train_idx_purged) // 2
+                if mid > eff_embargo + 20 and len(np.unique(y_obs[: mid - eff_embargo])) > 1:
+                    s0 = RobustScaler()
+                    m0 = self._create_model(
+                        n_estimators=self.n_estimators,
+                        max_depth=self.max_depth,
+                        learning_rate=self.learning_rate,
+                    )
+                    m0.fit(s0.fit_transform(X_obs[: mid - eff_embargo]), y_obs[: mid - eff_embargo])
+                    oof_raw_full[mid:first_val_start] = m0.predict_proba(s0.transform(X_obs[mid:first_val_start]))[:, 1]
+                    oof_raw_full[:mid] = float(np.mean(y_obs[: mid - eff_embargo]))
+                else:
+                    oof_raw_full[:first_val_start] = float(np.mean(y_train)) if len(y_train) > 0 else 0.15
 
         # Fit isotonic calibrator on out-of-fold predictions
         oof_preds_arr = np.array(oof_preds, dtype=np.float64)
@@ -219,15 +251,31 @@ class StructuralBreakPredictor:
             self.calibrator.fit(oof_preds_arr, oof_true_arr)
             self.is_calibrated = True
 
-        # Final fit on all observable historical rows
+        # Final fit on all observable historical rows (strictly excluding terminal eff_embargo rows)
         X_scaled = self.scaler.fit_transform(X_obs)
-        self.model.fit(X_scaled, y_obs)
+        if len(np.unique(y_obs)) > 1:
+            self.model.fit(X_scaled, y_obs)
         self.is_trained = True
 
+        # Terminal unobservable rows were masked from X_obs, so self.model is strictly out-of-sample on them
+        if has_terminal_mask and len(np.unique(y_obs)) > 1:
+            oof_raw_full[-eff_embargo:] = self.model.predict_proba(self.scaler.transform(X[-eff_embargo:]))[:, 1]
+        nan_mask = np.isnan(oof_raw_full)
+        if np.any(nan_mask):
+            oof_raw_full[nan_mask] = float(np.mean(y_obs)) if len(y_obs) > 0 else 0.15
+
+        if self.is_calibrated:
+            self._oof_calibrated_probs = np.clip(self.calibrator.predict(oof_raw_full), 0.0, 1.0).astype(np.float32)
+            eval_oof_probs = self.calibrator.predict(oof_preds_arr)
+        else:
+            self._oof_calibrated_probs = np.clip(oof_raw_full, 0.0, 1.0).astype(np.float32)
+            eval_oof_probs = oof_preds_arr
+        self._trained_X = X.copy()
+
         mean_acc = float(np.mean(fold_accuracies))
-        
-        # Calculate Brier score and baseline
-        brier = self.compute_brier_score(oof_true_arr, oof_preds_arr) if len(oof_preds_arr) > 0 else 0.0
+
+        # Calculate calibrated Brier score and climatological baseline
+        brier = self.compute_brier_score(oof_true_arr, eval_oof_probs) if len(oof_preds_arr) > 0 else 0.0
         p_base = float(np.mean(oof_true_arr)) if len(oof_true_arr) > 0 else 0.5
         brier_baseline = float(p_base * (1.0 - p_base))
 
@@ -242,11 +290,23 @@ class StructuralBreakPredictor:
         }
 
     def predict_drawdown_probability(self, df: pl.DataFrame) -> np.ndarray:
-        """Predict calibrated structural break drawdown probabilities."""
+        """
+        Predict calibrated structural break drawdown probabilities.
+        Uses strictly causal out-of-fold calibrated predictions for historical rows seen during
+        walk-forward fitting, and out-of-sample calibrated predictions for unseen future rows.
+        """
         if not self.is_trained:
             self.fit_walk_forward(df)
 
         X, _ = self._prepare_data(df)
+        if (
+            self._trained_X is not None
+            and self._oof_calibrated_probs is not None
+            and X.shape == self._trained_X.shape
+            and np.allclose(X, self._trained_X, atol=1e-5)
+        ):
+            return self._oof_calibrated_probs.copy()
+
         X_scaled = self.scaler.transform(X)
         raw_probs = self.model.predict_proba(X_scaled)[:, 1]
 

@@ -61,6 +61,52 @@ from scipy.optimize import minimize
 
 from bubble_detector.config import logger
 
+_LPPLS_GRID_CACHE: Dict[int, Tuple[np.ndarray, np.ndarray, np.ndarray]] = {}
+
+
+def _get_lppls_grid(n: int) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """
+    Precompute and cache the Filimonov-Sornette (2013) OLS projection tensor P = (X^T X)^{-1} X^T
+    across the canonical 3D non-linear parameter grid (t_c, m, omega) for window length `n`.
+    """
+    if n in _LPPLS_GRID_CACHE:
+        return _LPPLS_GRID_CACHE[n]
+
+    t = np.arange(n, dtype=np.float64)
+    tc_offs = [4.0, 8.0, 14.0, 22.0, 32.0, 45.0, 65.0]
+    m_vals = [0.18, 0.32, 0.48, 0.64, 0.80]
+    w_vals = [5.2, 6.4, 7.8, 9.6, 11.8]
+
+    x_list: List[np.ndarray] = []
+    p_list: List[np.ndarray] = []
+    meta: List[Tuple[float, float, float, float]] = []
+
+    for tc_o in tc_offs:
+        tc = float(n) + tc_o
+        dt = tc - t
+        ln_dt = np.log(dt)
+        for m in m_vals:
+            dt_m = dt ** m
+            for om in w_vals:
+                n_osc = float((om / (2.0 * np.pi)) * np.log(tc / max(tc - (n - 1), 1e-5)))
+                if n_osc < 1.2:
+                    continue
+                w_ln = om * ln_dt
+                x_mat = np.column_stack([np.ones(n, dtype=np.float64), dt_m, dt_m * np.cos(w_ln), dt_m * np.sin(w_ln)])
+                try:
+                    p_mat = np.linalg.solve(x_mat.T @ x_mat, x_mat.T)
+                    x_list.append(x_mat)
+                    p_list.append(p_mat)
+                    meta.append((tc, m, om, n_osc))
+                except Exception:
+                    pass
+
+    x_stack = np.array(x_list, dtype=np.float64)
+    p_stack = np.array(p_list, dtype=np.float64)
+    meta_arr = np.array(meta, dtype=np.float64)
+    _LPPLS_GRID_CACHE[n] = (x_stack, p_stack, meta_arr)
+    return _LPPLS_GRID_CACHE[n]
+
 
 def calibrate_lppls_filimonov(
     log_prices: np.ndarray,
@@ -262,32 +308,62 @@ def compute_lppls_confidence_indicator(
 
     prices = df[eval_col].to_numpy()
     n = len(prices)
-    log_p = np.log(np.maximum(prices, 1e-4))
+    log_p = np.log(np.maximum(prices.astype(np.float64), 1e-4))
 
     min_w = min(windows)
     confidence = np.zeros(n, dtype=np.float32)
 
-    for i in range(min_w, n, step):
-        valid_count = 0
-        eval_count = 0
-        for w in windows:
-            if i >= w:
-                eval_count += 1
-                # Upward bubble acceleration strictly requires net price gain over lookback window
-                if log_p[i] > log_p[i - w]:
-                    slice_log_p = log_p[i - w : i + 1]
-                    fit = calibrate_lppls_filimonov(slice_log_p)
-                    if fit.get("is_valid", False):
-                        valid_count += 1
-
-        score = float(valid_count / eval_count) if eval_count > 0 else 0.0
-        confidence[i] = score
-        for s in range(1, step):
-            if i + s < n:
-                confidence[i + s] = score
-
-    # Warm-up backfill
     if n > min_w:
+        eval_indices = np.arange(min_w, n, step)
+        valid_counts = np.zeros(len(eval_indices), dtype=np.float64)
+        eval_counts = np.zeros(len(eval_indices), dtype=np.float64)
+
+        for w in windows:
+            if w >= n:
+                continue
+            w_mask = eval_indices >= w
+            eval_counts[w_mask] += 1.0
+            cand_positions = np.where(w_mask & (log_p[eval_indices] > log_p[np.maximum(0, eval_indices - w)]))[0]
+            if len(cand_positions) == 0:
+                continue
+
+            active_idx = eval_indices[cand_positions]
+            win_len = w + 1
+            x_s, p_s, meta_a = _get_lppls_grid(win_len)
+            idx_mat = active_idx[:, None] - w + np.arange(win_len)[None, :]
+            y_mat = log_p[idx_mat]
+
+            y_mean = np.mean(y_mat, axis=1, keepdims=True)
+            ss_tot = np.maximum(np.sum((y_mat - y_mean) ** 2, axis=1, keepdims=True), 1e-12)
+
+            p_flat = p_s.transpose(2, 0, 1).reshape(win_len, -1)
+            x_flat = x_s.transpose(1, 0, 2).reshape(win_len, -1)
+            k_grid = len(meta_a)
+
+            beta = (y_mat @ p_flat).reshape(len(active_idx), k_grid, 4)
+            xty = (y_mat @ x_flat).reshape(len(active_idx), k_grid, 4)
+            y_sq = np.sum(y_mat * y_mat, axis=1, keepdims=True)
+            sse = np.maximum(0.0, y_sq - np.sum(beta * xty, axis=2))
+            r2 = 1.0 - sse / ss_tot
+
+            b_param = beta[:, :, 1]
+            c_amp = np.sqrt(beta[:, :, 2] ** 2 + beta[:, :, 3] ** 2)
+            m_vec = meta_a[None, :, 1]
+            om_vec = meta_a[None, :, 2]
+            damping = (m_vec * np.abs(b_param)) / (om_vec * np.maximum(c_amp, 1e-9))
+            rel_osc = c_amp / np.maximum(np.abs(b_param), 1e-9)
+
+            valid_grid = (b_param < 0.0) & (damping >= 0.80) & (r2 >= 0.60) & (rel_osc >= 0.025)
+            is_val = np.any(valid_grid, axis=1)
+            valid_counts[cand_positions[is_val]] += 1.0
+
+        scores = np.where(eval_counts > 0, valid_counts / eval_counts, 0.0).astype(np.float32)
+        for s in range(step):
+            target_idx = eval_indices + s
+            in_bounds = target_idx < n
+            confidence[target_idx[in_bounds]] = scores[in_bounds]
+
+        # Warm-up backfill
         confidence[:min_w] = confidence[min_w]
 
     # Strictly causal 252-day rolling 90th percentile

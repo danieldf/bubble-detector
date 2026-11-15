@@ -1,6 +1,6 @@
 # =============================================================================
-# Multidimensional Market Bubble Detector & Structural Break System (v3.5.0)
-# Production & Development Requirements Specification
+# Multidimensional Market Bubble Detector & Structural Break System (v3.7.0)
+# Production & Development Requirements Specification (135-Test Suite Verified)
 # Compatible with `uv pip install -r requirements.txt` and standard pip
 # =============================================================================
 

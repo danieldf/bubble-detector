@@ -138,8 +138,9 @@ class DashboardState:
                 logger.warning(f"Failed to load cached parquet {parquet_path}: {e}. Falling back to full pipeline computation.")
 
         logger.info(f"Loading dataset for horizon '{self.selected_horizon_id}' ({start_date} to {end_date})...")
+        warmup_start = "1975-01-01"
         try:
-            df_raw = self.ingestor.fetch_market_data(start_date=start_date, end_date=end_date)
+            df_raw = self.ingestor.fetch_market_data(start_date=warmup_start, end_date=end_date)
             self.is_synthetic_fallback = bool(
                 "Is_Synthetic_Fallback" in df_raw.columns and df_raw["Is_Synthetic_Fallback"].to_numpy().any()
             )
@@ -165,7 +166,10 @@ class DashboardState:
         df_mahal = self.mahalanobis_detector.process(df_with_probs)
 
         # Compute 13-Indicator Orthogonal Basis & 5 Composite Summary Indicators (Tab 8)
-        self.df = self.summary_engine.compute_all_summary_indicators(df_mahal)
+        df_full = self.summary_engine.compute_all_summary_indicators(df_mahal)
+        import datetime as _dt
+        s_date_obj = _dt.date.fromisoformat(start_date[:10])
+        self.df = df_full.filter(pl.col("Date") >= s_date_obj)
 
         # Compute Historical Peak Validation Table and Backtest Results
         try:
@@ -884,11 +888,12 @@ def build_dislocation_fidelity_chart(state: DashboardState) -> go.Figure:
 
     # Subplot 3: Canonical Phase-Time Superposed Epoch Analysis (theta in [-1, +1]) (6 traces)
     th = fm["theta_grid"]
+    sea_spy_color = "#0F172A" if state.theme_mode == "light" else "#FFFFFF"
     fig.add_trace(
         go.Scatter(
             x=th, y=fm["sea_spy"], mode="lines",
             name="SEA Mean Normalized S&P 500 (Peak θ=0 Indexed=100) [REAL]",
-            line=dict(color="#FFFFFF", width=3.0),
+            line=dict(color=sea_spy_color, width=3.0),
         ),
         row=3, col=1,
     )
@@ -1085,7 +1090,25 @@ def create_app():
         refresh_dashboard()
 
     def export_report():
-        ui.notify("Systemic Risk Assessment Report generated! (Saved to logs/bubble_detector.log)", type="info")
+        summary = state.get_latest_summary()
+        report_md = (
+            f"# Systemic Risk Assessment Report ({summary.get('Date', 'N/A')})\n\n"
+            f"- **Horizon**: {HORIZON_METADATA[state.selected_horizon_id]['label']}\n"
+            f"- **Regime Classification**: {summary.get('Regime_Classification', 'N/A')}\n"
+            f"- **Mahalanobis Distance ($D_M$)**: {summary.get('Mahalanobis_Distance', 0.0):.2f}σ\n"
+            f"- **Signed Bubble Score ($s_t$)**: {summary.get('Bubble_Score_Signed', 0.0):+.2f}σ\n"
+            f"- **1-Year Distance Rank**: {summary.get('One_Year_Distance_Rank', 0.0) * 100.0:.1f}%\n"
+            f"- **Drawdown Probability (20D)**: {summary.get('Drawdown_Probability', 0.0) * 100.0:.1f}%\n"
+            f"- **Dynamic Equity Exposure ($w_{{equity}}$)**: {summary.get('Dynamic_Equity_Exposure', 1.0) * 100.0:.1f}%\n"
+            f"- **Primary Anomaly Driver**: {summary.get('Primary_Anomaly_Driver', 'N/A')}\n"
+            f"- **Top Anomaly Summary**: {summary.get('Anomaly_Summary', 'N/A')}\n"
+        )
+        logger.info("Exported Systemic Risk Assessment Report:\n" + report_md)
+        try:
+            ui.download(report_md.encode("utf-8"), filename=f"systemic_risk_report_{summary.get('Date', 'latest')}.md")
+        except Exception:
+            pass
+        ui.notify("Systemic Risk Assessment Report generated & logged to logs/bubble_detector.log!", type="info")
 
     with ui.column().classes('w-full min-h-screen p-4 max-w-7xl mx-auto'):
         # Prominent Red Fallback Alert Banner

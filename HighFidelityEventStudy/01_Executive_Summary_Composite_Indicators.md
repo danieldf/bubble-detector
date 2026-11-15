@@ -39,18 +39,18 @@ To ensure complete structural resilience across diverse market regimes—from cr
 
 ### 1.4 High-Level Empirical Scorecard Across the 20-Year Horizon (2006–2026)
 
-Evaluated across the complete **20-Year Global Crisis & Expansion Horizon (`2006-01-01` through `2026-11-13`, `N = 5,446` trading days)**, the table below summarizes the empirical performance of our Composite Summary Indicator suite across all eight historical market dislocations (`D1`–`D8`):
+Evaluated across the complete **20-Year Global Crisis & Expansion Horizon (`2006-01-02` through `2026-11-13`, `N = 5,445` trading days)**, the table below summarizes the empirical performance of our Composite Summary Indicator suite across all eight historical market dislocations (`D1`–`D8`):
 
 | Dislocation ID & Historical Event | Cycle Peak Date | Cycle Trough Date | Unhedged S&P 500 Drawdown | Composite-Hedged Drawdown | Net Capital Saved (`ΔDD`) | Master Pre-Peak Max (`≥70%` Gate) | Master Trough Min (`<25%` Gate) | Advance Warning Lead (Trading Days) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **D1: 2007–09 GFC & Subprime Crash** | `2007-10-09` | `2009-03-09` | `-55.2%` | `-11.8%` | **`+43.4%`** | `97.0%` | `1.4%` | **241 days** (`95.6%`) |
-| **D2: 2010 Flash Crash & Euro Debt** | `2010-04-23` | `2010-07-02` | `-15.7%` | `-3.1%` | **`+12.6%`** | `96.4%` | `3.1%` | **209 days** (`82.9%`) |
-| **D3: 2011 U.S. Sovereign Downgrade** | `2011-04-29` | `2011-10-03` | `-18.6%` | `-4.0%` | **`+14.6%`** | `96.2%` | `0.0%` | **252 days** (`100.0%`) |
-| **D4: 2015–16 China/Energy Devaluation** | `2015-07-20` | `2016-02-11` | `-13.0%` | `-3.2%` | **`+9.8%`** | `92.0%` | `0.0%` | **246 days** (`97.6%`) |
-| **D5: 2018 Volmageddon & Q4 QT Shock** | `2018-09-20` | `2018-12-24` | `-19.3%` | `-3.9%` | **`+15.5%`** | `99.3%` | `0.0%` | **228 days** (`90.5%`) |
-| **D6: 2020 COVID-19 Liquidity Shock** | `2020-02-19` | `2020-03-23` | `-33.7%` | `-7.5%` | **`+26.2%`** | `98.9%` | `4.2%` | **218 days** (`86.5%`) |
-| **D7: 2022 Rate Tightening & Tech Reset** | `2022-01-03` | `2022-10-12` | `-24.5%` | `-4.6%` | **`+19.9%`** | `93.3%` | `0.0%` | **249 days** (`98.8%`) |
-| **D8: 2025–26 AI CapEx Unwind Shock** | `2025-02-19` | `2025-04-08` | `-18.8%` | `-5.0%` | **`+13.8%`** | `97.7%` | `0.0%` | **251 days** (`99.6%`) |
-| **20-Year Ensemble Mean (`D1`–`D8`)** | — | — | **`-24.8%`** | **`-5.4%`** | **`+19.5%`** | **`96.4%`** | **`1.1%`** | **236.8 days** (`94.0%`) |
+| **D1: 2007–09 GFC & Subprime Crash** | `2007-10-09` | `2009-03-09` | `-55.2%` | `-14.4%` | **`+40.8%`** | `97.0%` | `0.0%` | **243 days** (`96.4%`) |
+| **D2: 2010 Flash Crash & Euro Debt** | `2010-04-23` | `2010-07-02` | `-15.7%` | `-3.4%` | **`+12.3%`** | `94.4%` | `0.0%` | **252 days** (`100.0%`) |
+| **D3: 2011 U.S. Sovereign Downgrade** | `2011-04-29` | `2011-10-03` | `-18.6%` | `-3.7%` | **`+14.9%`** | `99.1%` | `0.0%` | **125 days** (`49.6%`) |
+| **D4: 2015–16 China/Energy Devaluation** | `2015-07-20` | `2016-02-11` | `-13.0%` | `-4.0%` | **`+9.0%`** | `81.6%` | `0.2%` | **251 days** (`99.6%`) |
+| **D5: 2018 Volmageddon & Q4 QT Shock** | `2018-09-20` | `2018-12-24` | `-19.3%` | `-5.5%` | **`+13.8%`** | `86.4%` | `3.0%` | **210 days** (`83.3%`) |
+| **D6: 2020 COVID-19 Liquidity Shock** | `2020-02-19` | `2020-03-23` | `-33.7%` | `-7.9%` | **`+25.8%`** | `97.5%` | `5.4%` | **217 days** (`86.1%`) |
+| **D7: 2022 Rate Tightening & Tech Reset** | `2022-01-03` | `2022-10-12` | `-24.5%` | `-5.4%` | **`+19.1%`** | `98.7%` | `0.0%` | **252 days** (`100.0%`) |
+| **D8: 2025–26 AI CapEx Unwind Shock** | `2025-02-19` | `2025-04-08` | `-18.8%` | `-3.7%` | **`+15.1%`** | `99.1%` | `0.0%` | **252 days** (`100.0%`) |
+| **20-Year Ensemble Mean (`D1`–`D8`)** | — | — | **`-24.9%`** | **`-6.0%`** | **`+18.8%`** | **`94.2%`** | **`1.1%`** | **225.2 days** (`89.4%`) |
 
 In the four sections that follow, we examine each of the four flagship high-resolution 4K event-study visualizations from **Tab 8 ("Composite Summary Indicators")**, demonstrating visually and empirically how our Composite Indicators capture all eight market dislocations with extraordinary fidelity.

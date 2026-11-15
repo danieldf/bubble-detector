@@ -196,7 +196,7 @@ def style_axes_common(
     fig.text(
         0.955,
         0.015,
-        "High-Fidelity Event Study v1.0.0  •  Confidential  •  CC-BY-NC-ND 4.0",
+        "High-Fidelity Event Study v1.1.0 (Engine v3.6.0)  •  Confidential  •  CC-BY-NC-ND 4.0",
         fontsize=8.5,
         fontweight="bold",
         color=pal["subtext"],
@@ -239,16 +239,18 @@ def plot_1_scale_invariant_log_growth(
     log_spy = fm["log_spy"]
     lead_sig = fm["lead_band_sig"]
     crash_sig = fm["crash_band_sig"]
+    mean_lead = float(np.mean(fm["lead_days"]))
+    n_sessions = len(dates)
 
     style_axes_common(
         ax=ax,
         fig=fig,
         pal=pal,
         title="Executive View I: 20-Year Scale-Invariant S&P 500 Log-Growth & Warning Corridors",
-        subtitle="Logarithmic Growth Trajectory L_SPY(t) with Pre-Peak Warning Corridors (8/8 Hit Rate, 236.8d Mean Lead) & Contraction Regimes (2006–2026)",
-        xlabel="Calendar Year & Macro Regime Timeline (Daily Trading Sessions: Jan 2006 – Nov 2026, N = 5,446)",
+        subtitle=f"Logarithmic Growth Trajectory L_SPY(t) with Pre-Peak Warning Corridors (8/8 Hit Rate, {mean_lead:.1f}d Mean Lead) & Contraction Regimes (2006–2026)",
+        xlabel=f"Calendar Year & Macro Regime Timeline (Daily Trading Sessions: Jan 2006 – Nov 2026, N = {n_sessions:,})",
         ylabel="Scale-Invariant Log-Growth Index L_SPY(t)  [100 × (1 + ln(SPY_t / SPY_0)), Base = 100 at Jan 2006]",
-        footer_note="Source: Ground-Truth 20-Year Horizon (Jan 2006 – Nov 13, 2026). Amber bands = pre-peak warning windows (I_t^* >= 70%); crimson bands = contractions (D1–D8).",
+        footer_note="Source: Ground-Truth 20-Year Horizon (Jan 2, 2006 – Nov 13, 2026). Amber bands = pre-peak warning windows (I_t^* >= 70%); crimson bands = contractions (D1–D8).",
     )
 
     y_min, y_max = 25.0, 355.0
@@ -345,15 +347,18 @@ def plot_1_scale_invariant_log_growth(
     ax_right.spines["top"].set_visible(False)
 
     # Non-overlapping Labeled Callout Arrows for All 8 Dislocations
+    dd_spy = fm["dd_spy_abs"]
+    ld_days = fm["lead_days"]
+    tr_comp = fm["tr_comp"]
     peak_annotations = [
-        (0, "D1: 2007–09 GFC Peak\nOct 2007 | DD: -55.2%\nLead: 241d", (-42, 66), pal["callout_red_bg"]),
-        (1, "D2: Euro/Flash\nApr 2010 | -15.7%\nLead: 209d", (-52, 42), pal["callout_bg"]),
-        (2, "D3: US Downgrade\nApr 2011 | -18.6%\nLead: 252d", (16, 48), pal["callout_bg"]),
-        (3, "D4: China/Energy\nJul 2015 | -13.0%\nLead: 246d", (-75, 48), pal["callout_bg"]),
-        (4, "D5: Volmageddon/QT\nSep 2018 | -19.3%\nLead: 228d", (-105, 44), pal["callout_bg"]),
-        (5, "D6: COVID-19 Peak\nFeb 2020 | -33.7%\nLead: 218d", (-95, 52), pal["callout_red_bg"]),
-        (6, "D7: 2022 Rate Reset\nJan 2022 | -24.5%\nLead: 249d", (-105, 44), pal["callout_red_bg"]),
-        (7, "D8: AI CapEx Unwind\nFeb 2025 | -18.8%\nLead: 251d", (-120, 32), pal["callout_red_bg"]),
+        (0, f"D1: 2007–09 GFC Peak\nOct 2007 | DD: -{dd_spy[0]:.1f}%\nLead: {ld_days[0]:.0f}d", (-42, 66), pal["callout_red_bg"]),
+        (1, f"D2: Euro/Flash\nApr 2010 | -{dd_spy[1]:.1f}%\nLead: {ld_days[1]:.0f}d", (-52, 42), pal["callout_bg"]),
+        (2, f"D3: US Downgrade\nApr 2011 | -{dd_spy[2]:.1f}%\nLead: {ld_days[2]:.0f}d", (16, 48), pal["callout_bg"]),
+        (3, f"D4: China/Energy\nJul 2015 | -{dd_spy[3]:.1f}%\nLead: {ld_days[3]:.0f}d", (-75, 48), pal["callout_bg"]),
+        (4, f"D5: Volmageddon/QT\nSep 2018 | -{dd_spy[4]:.1f}%\nLead: {ld_days[4]:.0f}d", (-105, 44), pal["callout_bg"]),
+        (5, f"D6: COVID-19 Peak\nFeb 2020 | -{dd_spy[5]:.1f}%\nLead: {ld_days[5]:.0f}d", (-95, 52), pal["callout_red_bg"]),
+        (6, f"D7: 2022 Rate Reset\nJan 2022 | -{dd_spy[6]:.1f}%\nLead: {ld_days[6]:.0f}d", (-105, 44), pal["callout_red_bg"]),
+        (7, f"D8: AI CapEx Unwind\nFeb 2025 | -{dd_spy[7]:.1f}%\nLead: {ld_days[7]:.0f}d", (-120, 32), pal["callout_red_bg"]),
     ]
     for idx, text, offset, box_bg in peak_annotations:
         ax.annotate(
@@ -371,9 +376,9 @@ def plot_1_scale_invariant_log_growth(
 
     # Trough Re-Entry Callouts (Key Deep Bottoms)
     trough_annotations = [
-        (0, "D1 GFC Trough (Mar 2009)\nL_SPY = 44.0 | Comp = 1.4%\nMax Bottom Re-Entry", (18, -6), pal["callout_green_bg"]),
-        (5, "D6 COVID Trough (Mar 2020)\nL_SPY = 185.4 | Comp = 4.2%\nLiquidation Damper Active", (16, -44), pal["callout_green_bg"]),
-        (6, "D7 Trough (Oct 2022)\nL_SPY = 236.1 | Comp = 0.0%\nFull Re-Risking Trigger", (18, -36), pal["callout_green_bg"]),
+        (0, f"D1 GFC Trough (Mar 2009)\nL_SPY = {tr_vals[0]:.1f} | Comp = {tr_comp[0]:.1f}%\nMax Bottom Re-Entry", (18, -6), pal["callout_green_bg"]),
+        (5, f"D6 COVID Trough (Mar 2020)\nL_SPY = {tr_vals[5]:.1f} | Comp = {tr_comp[5]:.1f}%\nLiquidation Damper Active", (16, -44), pal["callout_green_bg"]),
+        (6, f"D7 Trough (Oct 2022)\nL_SPY = {tr_vals[6]:.1f} | Comp = {tr_comp[6]:.1f}%\nFull Re-Risking Trigger", (18, -36), pal["callout_green_bg"]),
     ]
     for idx, text, offset, box_bg in trough_annotations:
         ax.annotate(
@@ -408,7 +413,7 @@ def plot_1_scale_invariant_log_growth(
         "WHY LOG-GROWTH SCALE INVARIANCE MATTERS:\n"
         "• Linear charts distort 20-year history: S&P 500 (~7,544) in 2026 dwarfs the 2007 peak (~1,565) by 5×.\n"
         "• Logarithmic scaling L_SPY(t) maps equal % drawdowns (-20%) to identical vertical drops in all eras.\n"
-        "• Every contraction (crimson) is preceded by a wide pre-peak warning corridor (amber, avg. 236.8d)."
+        f"• Every contraction (crimson) is preceded by a wide pre-peak warning corridor (amber, avg. {mean_lead:.1f}d)."
     )
     ax.text(
         0.41,
@@ -449,15 +454,24 @@ def plot_2_popperian_regime_separation(
     fig, ax = plt.subplots(figsize=FIGSIZE, dpi=DPI)
     fig.subplots_adjust(left=0.075, right=0.955, top=0.885, bottom=0.130)
 
+    max_tr = float(np.max(fm["tr_comp"]))
+    mean_pk_comp = float(np.mean(fm["pk_comp"]))
+    mean_pk_mahal = float(np.mean(fm["pk_mahal"]))
+    mean_pk_dfm = float(np.mean(fm["pk_dfm"]))
+    mean_pk_diff = float(np.mean(fm["pk_diff"]))
+    mean_pk_spca = float(np.mean(fm["pk_spca"]))
+    mean_tr_comp = float(np.mean(fm["tr_comp"]))
+    mean_sep_comp = float(np.mean(fm["sep_comp"]))
+
     style_axes_common(
         ax=ax,
         fig=fig,
         pal=pal,
         title="Executive View II: 8-Dislocation Popperian Peak-vs-Trough Regime Separation",
-        subtitle="Empirical Falsification Audit: Pre-Peak Maxima Exceed 70% Warning Gate (8/8 Hits) While Crash-Trough Minima Drop Below 4.5% (<25% Target)",
+        subtitle=f"Empirical Falsification Audit: Pre-Peak Maxima Exceed 70% Warning Gate (8/8 Hits) While Crash-Trough Minima Drop to <= {max_tr:.1f}% (<25% Target)",
         xlabel="Historical Market Dislocation Regime (Chronological Sequence D1–D8 Across the 2006–2026 Horizon)",
         ylabel="Composite Regime Risk Score & Peak-to-Trough Separation Spread (%)",
-        footer_note="Source: 20-Year Dislocation Event Study (Jan 2006 – Nov 13, 2026). Pre-peak maxima evaluated over [-180d, t_peak]; crash-trough minima evaluated around t_trough.",
+        footer_note="Source: 20-Year Dislocation Event Study (Jan 2, 2006 – Nov 13, 2026). Pre-peak maxima evaluated over [-180d, t_peak]; crash-trough minima evaluated around t_trough.",
     )
 
     x = np.arange(len(DISLOCATIONS_8_20YR))
@@ -491,30 +505,30 @@ def plot_2_popperian_regime_separation(
         fm["pk_comp"],
         color=pal["sep_fill"],
         alpha=0.15 if theme == "white" else 0.17,
-        label="Master Peak-to-Trough Regime Separation Spread Δ_P-T^* (Mean = 95.3%)",
+        label=f"Master Peak-to-Trough Regime Separation Spread Δ_P-T^* (Mean = {mean_sep_comp:.1f}%)",
         zorder=2,
     )
 
     # Plot the 5 Pre-Peak Maxima Series + Separation + Trough Minima
     ax.plot(
         x, fm["pk_comp"], marker="o", markersize=10, linewidth=3.2, color=pal["comp_line"],
-        label="Pre-Peak Max: Master Composite Index I_peak^* (Mean = 96.4%)", zorder=6,
+        label=f"Pre-Peak Max: Master Composite Index I_peak^* (Mean = {mean_pk_comp:.1f}%)", zorder=6,
     )
     ax.plot(
         x, fm["pk_mahal"], marker="s", markersize=8.5, linewidth=2.3, linestyle="--", color=pal["mahal_line"],
-        label="Pre-Peak Max: Signed Mahalanobis I_peak^Mahal (Mean = 100.0%)", zorder=5,
+        label=f"Pre-Peak Max: Signed Mahalanobis I_peak^Mahal (Mean = {mean_pk_mahal:.1f}%)", zorder=5,
     )
     ax.plot(
         x, fm["pk_dfm"], marker="D", markersize=8.0, linewidth=2.3, linestyle=":", color=pal["dfm_line"],
-        label="Pre-Peak Max: Dynamic Factor Nowcast I_peak^DFM (Mean = 92.1%)", zorder=5,
+        label=f"Pre-Peak Max: Dynamic Factor Nowcast I_peak^DFM (Mean = {mean_pk_dfm:.1f}%)", zorder=5,
     )
     ax.plot(
         x, fm["pk_diff"], marker="^", markersize=8.5, linewidth=2.3, linestyle="-.", color=pal["diff_line"],
-        label="Pre-Peak Max: LEI Percentile Diffusion I_peak^Diff (Mean = 95.7%)", zorder=5,
+        label=f"Pre-Peak Max: LEI Percentile Diffusion I_peak^Diff (Mean = {mean_pk_diff:.1f}%)", zorder=5,
     )
     ax.plot(
         x, fm["pk_spca"], marker="P", markersize=9.0, linewidth=2.3, linestyle="--", color=pal["spca_line"],
-        label="Pre-Peak Max: Sparse PCA Concentration I_peak^SPCA (Mean = 94.7%)", zorder=5,
+        label=f"Pre-Peak Max: Sparse PCA Concentration I_peak^SPCA (Mean = {mean_pk_spca:.1f}%)", zorder=5,
     )
     ax.plot(
         x, fm["sep_comp"], marker="*", markersize=12, linewidth=2.8, linestyle="-", color=pal["spy_line"],
@@ -522,7 +536,7 @@ def plot_2_popperian_regime_separation(
     )
     ax.plot(
         x, fm["tr_comp"], marker="v", markersize=10, linewidth=3.0, color=pal["trough_line"],
-        label="Crash-Trough Min: Master Composite I_trough^* (Mean = 1.1%, All < 25%)", zorder=6,
+        label=f"Crash-Trough Min: Master Composite I_trough^* (Mean = {mean_tr_comp:.1f}%, All < 25%)", zorder=6,
     )
 
     # Horizontal Popperian Gate Lines
@@ -542,7 +556,7 @@ def plot_2_popperian_regime_separation(
 
     # Non-Overlapping Callout Arrows for Threshold Gates & Key Events
     ax.annotate(
-        "Popperian Pre-Peak Warning Gate (≥ 70.0%)\n100% Sensitivity: All 5 Indicators Surpass Gate Before Every Dislocation (D1–D8)",
+        "Popperian Pre-Peak Warning Gate (≥ 70.0%)\n100% Sensitivity: Master Composite Surpasses Gate Before Every Dislocation (D1–D8)",
         xy=(1.2, 70.0),
         xytext=(0.10, 54.0),
         fontsize=9.8,
@@ -554,7 +568,7 @@ def plot_2_popperian_regime_separation(
     )
 
     ax.annotate(
-        "Popperian Crash-Bottom Accumulation Floor (< 25.0%)\nZero Trough De-Risking Errors: Trough Score Collapses to 0.0%–4.2% Across All 8 Bottoms",
+        f"Popperian Crash-Bottom Accumulation Floor (< 25.0%)\nZero Trough De-Risking Errors: Trough Score Collapses to 0.0%–{max_tr:.1f}% Across All 8 Bottoms",
         xy=(5.5, 25.0),
         xytext=(3.75, 43.0),
         fontsize=9.8,
@@ -566,9 +580,9 @@ def plot_2_popperian_regime_separation(
     )
 
     ax.annotate(
-        "Max Regime Discrimination (D5: 2018 QT Shock)\nPeak 99.3% vs. Trough 0.0% → Δ = 99.3% Separation",
-        xy=(4.0, fm["pk_comp"][4]),
-        xytext=(2.10, 74.5),
+        f"D3 (2011 Sovereign Shock) & D1 (2008 GFC)\nD3 Peak {fm['pk_comp'][2]:.1f}% → Trough {fm['tr_comp'][2]:.1f}% (Δ = {fm['sep_comp'][2]:.1f}%)",
+        xy=(2.0, fm["pk_comp"][2]),
+        xytext=(1.70, 74.5),
         fontsize=9.5,
         fontweight="bold",
         color=pal["text"],
@@ -578,7 +592,7 @@ def plot_2_popperian_regime_separation(
     )
 
     ax.annotate(
-        "D8 (2025–26 AI CapEx Unwind)\nPeak 97.7% → Trough 0.0% (Δ = 97.7%)",
+        f"D8 (2025–26 AI CapEx Unwind)\nPeak {fm['pk_comp'][7]:.1f}% → Trough {fm['tr_comp'][7]:.1f}% (Δ = {fm['sep_comp'][7]:.1f}%)",
         xy=(7.0, fm["pk_comp"][7]),
         xytext=(5.25, 74.5),
         fontsize=9.5,
@@ -695,7 +709,7 @@ def plot_3_homotopic_phase_time(
 
     # Labeled Callout Arrows Placed in Clean Open Spaces
     ax.annotate(
-        "Buildup Origin (θ = -1.0 / -180d Before Peak)\n• S&P 500 at 86.9 (Rallies +15.1% into Peak)\n• Master Composite Already at 96.4% (> 70% Gate)",
+        f"Buildup Origin (θ = -1.0 / -180d Before Peak)\n• S&P 500 at {fm['sea_spy'][0]:.1f} (Rallies +{(100.0 / fm['sea_spy'][0] - 1.0) * 100.0:.1f}% into Peak)\n• Master Composite Already at {fm['sea_comp'][0]:.1f}% (> 70% Gate)",
         xy=(-1.0, fm["sea_comp"][0]),
         xytext=(-0.96, 55.0),
         fontsize=9.6,
@@ -707,7 +721,7 @@ def plot_3_homotopic_phase_time(
     )
 
     ax.annotate(
-        "Cycle Peak Inflection (θ = 0.0)\n• S&P 500 Tops at 100.0\n• All 5 Envelopes Sustain 85.6%–99.9%\n• Defensive Protection Fully Active",
+        f"Cycle Peak Inflection (θ = 0.0)\n• S&P 500 Tops at 100.0\n• Master Envelope at {fm['sea_comp'][40]:.1f}% (> 70% Gate)\n• Defensive Protection Fully Active",
         xy=(0.0, 100.0),
         xytext=(-0.42, 73.0),
         fontsize=9.6,
@@ -719,7 +733,7 @@ def plot_3_homotopic_phase_time(
     )
 
     ax.annotate(
-        "Mid-Collapse De-Escalation (θ = +0.50)\n• S&P 500 Down to 91.0 (-9.0%)\n• Composite Drops Through 46.5%\n• Crash-Liquidation Damper Engages",
+        f"Mid-Collapse De-Escalation (θ = +0.50)\n• S&P 500 Down to {fm['sea_spy'][60]:.1f} (-{100.0 - fm['sea_spy'][60]:.1f}%)\n• Composite Drops Through {fm['sea_comp'][60]:.1f}%\n• Crash-Liquidation Damper Engages",
         xy=(0.50, fm["sea_comp"][60]),
         xytext=(0.30, 73.0),
         fontsize=9.6,
@@ -731,7 +745,7 @@ def plot_3_homotopic_phase_time(
     )
 
     ax.annotate(
-        "Cycle Trough Exhaustion (θ = +1.00)\n• S&P 500 Mean Trough at 75.1 (-24.9% Mean Loss)\n• Master Composite Collapses to 1.1% (All 5 < 4.5%)\n• Triggers Aggressive Contrarian Capital Re-Entry",
+        f"Cycle Trough Exhaustion (θ = +1.00)\n• S&P 500 Mean Trough at {fm['sea_spy'][-1]:.1f} (-{100.0 - fm['sea_spy'][-1]:.1f}% Mean Loss)\n• Master Composite Collapses to {fm['sea_comp'][-1]:.1f}%\n• Triggers Aggressive Contrarian Capital Re-Entry",
         xy=(1.0, fm["sea_comp"][-1]),
         xytext=(0.12, 10.0),
         fontsize=9.6,
@@ -771,15 +785,27 @@ def plot_4_dislocation_capital(
     fig, ax = plt.subplots(figsize=FIGSIZE, dpi=DPI)
     fig.subplots_adjust(left=0.075, right=0.915, top=0.885, bottom=0.130)
 
+    dd_spy = fm["dd_spy_abs"]
+    dd_def = fm["dd_def_abs"]
+    dd_sav = fm["dd_saved"]
+    ld_pct = fm["lead_pct_yr"]
+    ld_days = fm["lead_days"]
+    mean_dd_spy = float(np.mean(dd_spy))
+    mean_dd_def = float(np.mean(dd_def))
+    mean_dd_sav = float(np.mean(dd_sav))
+    mean_ld_pct = float(np.mean(ld_pct))
+    mean_ld_days = float(np.mean(ld_days))
+    rel_dd_red = (1.0 - mean_dd_def / mean_dd_spy) * 100.0
+
     style_axes_common(
         ax=ax,
         fig=fig,
         pal=pal,
         title="Executive View IV: Dislocation Capital Preservation & Lead Cushion Profile",
-        subtitle="Institutional Portfolio Defense Across D1–D8: 78.3% Mean Drawdown Reduction (24.8% Unhedged Loss Cut to 5.4%) & 236.8-Day Mean Lead Cushion",
+        subtitle=f"Institutional Portfolio Defense Across D1–D8: {rel_dd_red:.1f}% Mean Drawdown Reduction ({mean_dd_spy:.1f}% Unhedged Loss Cut to {mean_dd_def:.1f}%) & {mean_ld_days:.1f}-Day Mean Lead Cushion",
         xlabel="Historical Market Dislocation Regime (Chronological Sequence D1–D8 Across the 2006–2026 Horizon)",
         ylabel="Peak-to-Trough Drawdown Magnitude (%) & Normalized Lead Cushion (% of 252-Day Year)",
-        footer_note="Source: 20-Year Dislocation Backtest Audit (Jan 2006 – Nov 13, 2026, 4.0% cash yield, 15 bps turnover friction). Capital saved = |DD_SPY| - |DD_Def|.",
+        footer_note="Source: 20-Year Dislocation Backtest Audit (Jan 2, 2006 – Nov 13, 2026, 4.0% cash yield, 15 bps turnover friction, 1-day execution lag). Capital saved = |DD_SPY| - |DD_Def|.",
     )
 
     x = np.arange(len(DISLOCATIONS_8_20YR))
@@ -802,12 +828,6 @@ def plot_4_dislocation_capital(
     ax.yaxis.set_minor_locator(mticker.MultipleLocator(2.5))
     ax.yaxis.set_major_formatter(mticker.FormatStrFormatter("%d%%"))
 
-    dd_spy = fm["dd_spy_abs"]
-    dd_def = fm["dd_def_abs"]
-    dd_sav = fm["dd_saved"]
-    ld_pct = fm["lead_pct_yr"]
-    ld_days = fm["lead_days"]
-
     # Shaded Area Under Unhedged and Defensive Drawdowns (Parity with Tab 8 Card 3 Subplot 4)
     ax.fill_between(
         x, 0.0, dd_spy,
@@ -821,19 +841,19 @@ def plot_4_dislocation_capital(
     # Plot the 4 Primary Traces
     ax.plot(
         x, dd_spy, marker="o", markersize=10.5, linewidth=3.2, color=pal["dd_unhedged"],
-        label="Realized Unhedged S&P 500 Dislocation Drawdown |DD_SPY| (%) [Mean = 24.8%]", zorder=6,
+        label=f"Realized Unhedged S&P 500 Dislocation Drawdown |DD_SPY| (%) [Mean = {mean_dd_spy:.1f}%]", zorder=6,
     )
     ax.plot(
         x, dd_def, marker="s", markersize=9.5, linewidth=3.0, color=pal["dd_defensive"],
-        label="Composite-Hedged Defensive Portfolio Drawdown |DD_Def| (%) [Mean = 5.4%]", zorder=6,
+        label=f"Composite-Hedged Defensive Portfolio Drawdown |DD_Def| (%) [Mean = {mean_dd_def:.1f}%]", zorder=6,
     )
     ax.plot(
         x, dd_sav, marker="D", markersize=9.0, linewidth=2.8, linestyle="--", color=pal["dd_saved"],
-        label="Dislocation Drawdown Capital Saved ΔDD_saved = |DD_SPY| - |DD_Def| (%) [Mean = +19.5%]", zorder=6,
+        label=f"Dislocation Drawdown Capital Saved ΔDD_saved = |DD_SPY| - |DD_Def| (%) [Mean = +{mean_dd_sav:.1f}%]", zorder=6,
     )
     ax.plot(
         x, ld_pct, marker="^", markersize=10.0, linewidth=2.8, linestyle=":", color=pal["lead_line"],
-        label="Early-Warning Lead Cushion (% of 252-Day Trading Year) [Mean = 94.0% / 236.8d]", zorder=6,
+        label=f"Early-Warning Lead Cushion (% of 252-Day Trading Year) [Mean = {mean_ld_pct:.1f}% / {mean_ld_days:.1f}d]", zorder=6,
     )
 
     # Secondary Right-Hand Axis in Trading Days (0 to 252d)
@@ -870,7 +890,7 @@ def plot_4_dislocation_capital(
 
     # Labeled Callout Boxes with Arrows Placed in Open Band (y = 35% to 62%)
     ax.annotate(
-        "D1 (2007–09 GFC): Flagship Capital Preservation\n• Unhedged S&P 500 Loss: -55.2%\n• Composite-Hedged Loss: -11.8%\n• Net Capital Saved: +43.4% (241d Advance Warning)",
+        f"D1 (2007–09 GFC): Flagship Capital Preservation\n• Unhedged S&P 500 Loss: -{dd_spy[0]:.1f}%\n• Composite-Hedged Loss: -{dd_def[0]:.1f}%\n• Net Capital Saved: +{dd_sav[0]:.1f}% ({ld_days[0]:.0f}d Advance Warning)",
         xy=(0.0, dd_spy[0]),
         xytext=(0.45, 52.0),
         fontsize=9.5,
@@ -882,7 +902,7 @@ def plot_4_dislocation_capital(
     )
 
     ax.annotate(
-        "D6 (2020 COVID Liquidity Shock)\n• Unhedged Loss: -33.7% vs. Hedged: -7.5%\n• Capital Saved: +26.2% (218d Warning Lead)",
+        f"D6 (2020 COVID Liquidity Shock)\n• Unhedged Loss: -{dd_spy[5]:.1f}% vs. Hedged: -{dd_def[5]:.1f}%\n• Capital Saved: +{dd_sav[5]:.1f}% ({ld_days[5]:.0f}d Warning Lead)",
         xy=(5.0, dd_spy[5]),
         xytext=(2.30, 36.0),
         fontsize=9.5,
@@ -894,7 +914,7 @@ def plot_4_dislocation_capital(
     )
 
     ax.annotate(
-        "D7 (2022 Rate Reset) & D8 (2025–26 AI Unwind)\n• D7 Saved: +19.9% (24.5% → 4.6%, 249d Lead)\n• D8 Saved: +13.8% (18.8% → 5.0%, 251d Lead)",
+        f"D7 (2022 Rate Reset) & D8 (2025–26 AI Unwind)\n• D7 Saved: +{dd_sav[6]:.1f}% ({dd_spy[6]:.1f}% → {dd_def[6]:.1f}%, {ld_days[6]:.0f}d Lead)\n• D8 Saved: +{dd_sav[7]:.1f}% ({dd_spy[7]:.1f}% → {dd_def[7]:.1f}%, {ld_days[7]:.0f}d Lead)",
         xy=(6.0, dd_spy[6]),
         xytext=(4.75, 42.0),
         fontsize=9.5,

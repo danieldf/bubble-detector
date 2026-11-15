@@ -48,10 +48,11 @@ This module combines Algebraic Topology (Persistent Homology) and Multi-Resoluti
    - Wavelet Spectral Entropy: H_{wav} = - sum_k (P_k / sum P_j) * ln(P_k / sum P_j)
 """
 
-from typing import Tuple, List, Optional
+from typing import Tuple, List, Optional, Dict
 import numpy as np
 import polars as pl
 from bubble_detector.config import SP500_TICKER, logger
+from bubble_detector.features.utils import takens_embedding as _takens_embedding_vec
 
 try:
     from ripser import ripser
@@ -59,18 +60,38 @@ try:
 except ImportError:
     HAS_RIPSER = False
 
+_WAVELET_MATRIX_CACHE: Dict[Tuple[int, Tuple[float, ...], float], Tuple[List[np.ndarray], List[np.ndarray]]] = {}
+
 
 def _takens_embedding(series: np.ndarray, delay: int = 2, dimension: int = 3) -> np.ndarray:
     """Transform 1D time series into Takens' delay-coordinate high-dimensional point cloud."""
-    n = len(series)
-    if n <= (dimension - 1) * delay:
-        return np.zeros((1, dimension), dtype=np.float32)
+    return _takens_embedding_vec(series, delay=delay, dimension=dimension)
 
-    point_cloud = []
-    for i in range(n - (dimension - 1) * delay):
-        point = [series[i + j * delay] for j in range(dimension)]
-        point_cloud.append(point)
-    return np.array(point_cloud, dtype=np.float32)
+
+def _get_morlet_toeplitz_matrices(
+    win_len: int,
+    scales: np.ndarray,
+    omega0: float = 6.0,
+) -> Tuple[List[np.ndarray], List[np.ndarray]]:
+    """Precompute and cache complex Morlet wavelet convolution matrices for window length `win_len`."""
+    key = (win_len, tuple(float(s) for s in scales), float(omega0))
+    if key in _WAVELET_MATRIX_CACHE:
+        return _WAVELET_MATRIX_CACHE[key]
+
+    eye_l = np.eye(win_len, dtype=np.float64)
+    m_real: List[np.ndarray] = []
+    m_imag: List[np.ndarray] = []
+    for s in scales:
+        half_len = min(win_len, int(np.ceil(3.0 * s)))
+        t = np.arange(-half_len, half_len + 1, dtype=np.float64)
+        wavelet = (np.pi ** -0.25) * np.exp(1j * omega0 * t / s) * np.exp(-0.5 * (t / s) ** 2) / np.sqrt(s)
+        start = (len(wavelet) - 1) // 2
+        mat = np.array([np.convolve(eye_l[k], wavelet, mode="full")[start : start + win_len] for k in range(win_len)])
+        m_real.append(mat.real.copy())
+        m_imag.append(mat.imag.copy())
+
+    _WAVELET_MATRIX_CACHE[key] = (m_real, m_imag)
+    return m_real, m_imag
 
 
 def _compute_rips_persistence_diagrams(point_cloud: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
@@ -163,7 +184,7 @@ def _compute_morlet_wavelet_energy_and_entropy(
 ) -> Tuple[float, float]:
     """
     Compute Continuous Morlet Wavelet scaleogram energy and spectral Shannon entropy
-    using pure NumPy convolution without external C-dependencies.
+    using precomputed Toeplitz Morlet wavelet operators.
         W(s, tau) = 1/sqrt(s) int r(t) psi*((t-tau)/s) dt
         P_k = mean(|W(s_k, tau)|^2)
         H_wav = - sum (P_k / sum P_j) * ln(P_k / sum P_j)
@@ -172,15 +193,13 @@ def _compute_morlet_wavelet_energy_and_entropy(
     if n < 4:
         return 0.0, 0.0
 
+    r_arr = np.asarray(returns, dtype=np.float64)
+    m_real, m_imag = _get_morlet_toeplitz_matrices(n, scales, omega0)
     power_k = np.zeros(len(scales), dtype=np.float64)
-    for idx, s in enumerate(scales):
-        half_len = min(n, int(np.ceil(3.0 * s)))
-        t = np.arange(-half_len, half_len + 1, dtype=np.float64)
-        wavelet = (np.pi ** -0.25) * np.exp(1j * omega0 * t / s) * np.exp(-0.5 * (t / s) ** 2) / np.sqrt(s)
-        conv = np.convolve(returns, wavelet, mode="full")
-        start = (len(wavelet) - 1) // 2
-        w_s = conv[start : start + n]
-        power_k[idx] = np.mean(np.abs(w_s) ** 2)
+    for idx in range(len(scales)):
+        re = r_arr @ m_real[idx]
+        im = r_arr @ m_imag[idx]
+        power_k[idx] = np.mean(re * re + im * im)
 
     total_power = np.sum(power_k)
     energy = float(total_power / len(scales))
@@ -218,25 +237,39 @@ def compute_tda_wavelet_complexity(
     wavelet_complexity = np.zeros(n, dtype=np.float32)
     wavelet_spectral_entropy = np.zeros(n, dtype=np.float32)
 
-    for i in range(window_size, n):
-        win_returns = returns[i - window_size : i + 1]
-
-        # 1. Takens' Delay Coordinate Embedding (m=3, tau=2)
-        cloud = _takens_embedding(win_returns, delay=2, dimension=3)
-
-        # 2. Vietoris-Rips Persistent Homology Barcodes & Persistence Landscape
-        h0, h1 = _compute_rips_persistence_diagrams(cloud)
-        l2_norm, p_entropy = _compute_persistence_landscape_and_entropy(h0, h1)
-        tda_l2_norms[i] = l2_norm
-        tda_entropy[i] = p_entropy
-
-        # 3. Morlet Wavelet Transform Scaleogram Energy & Spectral Shannon Entropy
-        w_energy, w_entropy = _compute_morlet_wavelet_energy_and_entropy(win_returns)
-        wavelet_complexity[i] = w_energy
-        wavelet_spectral_entropy[i] = w_entropy
-
-    # Warm-up backfill for initial window
     if n > window_size:
+        win_len = window_size + 1
+        idx_mat = np.arange(window_size, n)[:, None] - window_size + np.arange(win_len)[None, :]
+        r_windows = returns[idx_mat].astype(np.float64)
+
+        # Vectorized Morlet Wavelet Transform across all rolling windows simultaneously
+        scales = np.array([2.0, 4.0, 8.0, 16.0, 32.0, 64.0], dtype=np.float64)
+        m_real, m_imag = _get_morlet_toeplitz_matrices(win_len, scales, omega0=6.0)
+        power_all = np.zeros((n - window_size, len(scales)), dtype=np.float64)
+        for idx_s in range(len(scales)):
+            re = r_windows @ m_real[idx_s]
+            im = r_windows @ m_imag[idx_s]
+            power_all[:, idx_s] = np.mean(re * re + im * im, axis=1)
+
+        tot_p = np.sum(power_all, axis=1)
+        wavelet_complexity[window_size:] = (tot_p / len(scales)).astype(np.float32)
+        p_norm = power_all / np.maximum(tot_p[:, None], 1e-12)
+        ent_all = np.where(
+            tot_p > 1e-12,
+            -np.sum(np.where(p_norm > 1e-12, p_norm * np.log(np.maximum(p_norm, 1e-12)), 0.0), axis=1),
+            0.0,
+        )
+        wavelet_spectral_entropy[window_size:] = ent_all.astype(np.float32)
+
+        for i in range(window_size, n):
+            win_returns = r_windows[i - window_size]
+            cloud = _takens_embedding(win_returns, delay=2, dimension=3)
+            h0, h1 = _compute_rips_persistence_diagrams(cloud)
+            l2_norm, p_entropy = _compute_persistence_landscape_and_entropy(h0, h1)
+            tda_l2_norms[i] = l2_norm
+            tda_entropy[i] = p_entropy
+
+        # Warm-up backfill for initial window
         tda_l2_norms[:window_size] = tda_l2_norms[window_size]
         tda_entropy[:window_size] = tda_entropy[window_size]
         wavelet_complexity[:window_size] = wavelet_complexity[window_size]

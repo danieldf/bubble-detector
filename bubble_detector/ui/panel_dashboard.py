@@ -554,7 +554,8 @@ def generate_wasm_dataset(start_date: str, end_date: str) -> Dict[str, Any]:
         from bubble_detector.models.composite_summary import CompositeSummaryEngine
 
         ingestor = DataIngestor()
-        df_raw = ingestor.fetch_market_data(start_date=start_date, end_date=end_date)
+        warmup_start = "1975-01-01" if str(start_date)[:4] >= "1976" else start_date
+        df_raw = ingestor.fetch_market_data(start_date=warmup_start, end_date=end_date)
         df_raw = compute_technical_indicators(df_raw)
         df_raw = compute_macro_valuations(df_raw)
         df_raw = compute_margin_leverage_metrics(df_raw)
@@ -573,6 +574,8 @@ def generate_wasm_dataset(start_date: str, end_date: str) -> Dict[str, Any]:
 
         summary_engine = CompositeSummaryEngine()
         df_raw = summary_engine.compute_all_summary_indicators(df_raw)
+        s_date_obj = datetime.date.fromisoformat(str(start_date)[:10])
+        df_raw = df_raw.filter(pl.col("Date") >= s_date_obj)
 
         _IS_SYNTHETIC_FALLBACK_ACTIVE = False
         out_dict = {}

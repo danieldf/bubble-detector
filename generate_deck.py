@@ -28,7 +28,8 @@ def create_presentation():
     blank_layout = prs.slide_layouts[6]  # Blank layout
 
     # Image paths
-    workspace_dir = "/Users/danielsflscientific.com/Downloads/Merrill"
+    from pathlib import Path
+    workspace_dir = str(Path(__file__).resolve().parent)
     finra_img_path = os.path.join(workspace_dir, "finra.png")
     vol_img_path = os.path.join(workspace_dir, "impliedvolatilitymetric.png")
 

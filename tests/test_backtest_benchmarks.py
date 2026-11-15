@@ -83,3 +83,37 @@ def test_exposure_rule_vs_naive_cape():
     assert abs(res_dyn.max_drawdown) < abs(res_bh.max_drawdown), (
         f"Dynamic MDD ({res_dyn.max_drawdown:.2%}) did not improve upon Buy & Hold MDD ({res_bh.max_drawdown:.2%})"
     )
+
+
+def test_strictly_causal_one_day_execution_lag():
+    """
+    RT-CRIT-02: Verify that PortfolioBacktestEngine applies signal weights[t - 1] (end of day t-1)
+    to day t's return, preventing same-day close-to-close lookahead bias.
+    """
+    dates = [f"2020-01-{i+1:02d}" for i in range(25)]
+    spy = [100.0] * 10 + [50.0] * 15  # -50% crash at index 10
+    cape = [30.0] * 10 + [15.0] * 15
+    # Signal drops to 0.0 at index 9 close (before index 10 crash) -> crash avoided
+    w_avoided = [1.0] * 9 + [0.0] * 16
+    # Signal drops to 0.0 at index 10 close (on the day of the crash) -> TOO LATE for index 10 return!
+    w_late = [1.0] * 10 + [0.0] * 15
+
+    df_avoided = pl.DataFrame({
+        "Date": dates,
+        "SPY": spy,
+        "Shiller_CAPE": cape,
+        "Dynamic_Equity_Exposure": w_avoided,
+    })
+    df_late = pl.DataFrame({
+        "Date": dates,
+        "SPY": spy,
+        "Shiller_CAPE": cape,
+        "Dynamic_Equity_Exposure": w_late,
+    })
+    engine = PortfolioBacktestEngine(fee_bps=0.0, slippage_bps=0.0, annual_cash_yield=0.0)
+    res_avoided = engine.run_backtest(df_avoided)["dynamic"]
+    res_late = engine.run_backtest(df_late)["dynamic"]
+
+    assert np.isclose(res_avoided.equity_curve[-1], 1.0, atol=1e-4)
+    assert np.isclose(res_late.equity_curve[-1], 0.5, atol=1e-4)
+

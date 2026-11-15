@@ -26,66 +26,110 @@ of lookahead leakage in feature scaling and time-series normalization.
    Vectorized lag embedding mapping 1D series into N-dimensional phase space manifolds.
 """
 
-from typing import List, Tuple, Sequence, Any
+from typing import List, Tuple, Sequence, Any, Optional
 import numpy as np
 
-def calculate_adf_stat(prices: np.ndarray) -> float:
-    """
-    Calculate Augmented Dickey-Fuller t-statistic for right-tailed explosive root testing.
 
-    Model:
-        \\Delta y_t = \\alpha + \\gamma \\cdot y_{t-1} + e_t, \\quad y_t = \\ln(P_t)
-        \\text{Test}: \\quad H_0: \\gamma = 0 \\quad \\text{vs.} \\quad H_1: \\gamma > 0
-        t = \\frac{\\hat{\\gamma}}{\\text{SE}(\\hat{\\gamma})}
+def calculate_adf_stat(series: np.ndarray, lag_order: Optional[int] = None) -> float:
+    """
+    Calculate Augmented Dickey-Fuller t-statistic for right-tailed explosive root testing
+    (H0: gamma = 0 vs H1: gamma > 0 in Delta y_t = mu + gamma * y_{t-1} + sum psi_j Delta y_{t-j} + e_t).
+
+    Supports dynamic lag length selection k in {0, 1} via Akaike Information Criterion (AIC)
+    evaluated on the common truncated sample.
 
     Parameters
     ----------
-    prices : np.ndarray
-        Array of price levels.
+    series : np.ndarray
+        Price or valuation multiple time series.
+    lag_order : Optional[int]
+        Specific lag order (0 or 1). If None, automatically selects optimal lag via AIC.
 
     Returns
     -------
     float
-        Calculated ADF t-statistic.
+        Right-tailed ADF t-statistic.
     """
-    if len(prices) < 15:
+    n = len(series)
+    if n < 12:
         return 0.0
-    
-    y = np.log(np.maximum(prices, 1e-4))
+
+    y = np.log(np.maximum(series, 1e-4))
     dy = np.diff(y)
     y_lag = y[:-1]
-    
-    # OLS regression dy = alpha + gamma * y_lag
-    X = np.column_stack([np.ones(len(y_lag)), y_lag])
-    try:
-        beta, residuals, rank, s = np.linalg.lstsq(X, dy, rcond=None)
-        gamma = beta[1]
-        
-        # Calculate standard error of gamma
-        df = len(dy) - 2
-        if df <= 0:
-            return 0.0
-        
-        sigma_sq = np.sum((dy - X @ beta) ** 2) / df
-        cov_matrix = sigma_sq * np.linalg.pinv(X.T @ X)
-        se_gamma = np.sqrt(np.maximum(cov_matrix[1, 1], 1e-8))
-        
-        t_stat = gamma / se_gamma
-        return float(t_stat)
-    except Exception:
+
+    # Model k=0: Delta y_t = mu + gamma * y_{t-1} + e_t
+    n_k0 = len(dy)
+    y_bar = np.mean(y_lag)
+    dy_bar = np.mean(dy)
+    ss_yy = np.sum((y_lag - y_bar) ** 2)
+
+    if ss_yy < 1e-9:
         return 0.0
+
+    gamma_0 = float(np.sum((y_lag - y_bar) * (dy - dy_bar)) / ss_yy)
+    mu_0 = float(dy_bar - gamma_0 * y_bar)
+    res_0 = dy - (mu_0 + gamma_0 * y_lag)
+    sse_0 = float(np.sum(res_0 ** 2))
+    df_0 = max(1, n_k0 - 2)
+    sigma2_0 = sse_0 / df_0
+    se_gamma_0 = float(np.sqrt(max(sigma2_0 / ss_yy, 1e-9)))
+    t_stat_0 = gamma_0 / se_gamma_0
+
+    if lag_order == 0 or n < 16:
+        return t_stat_0
+
+    # Model k=1: Delta y_t = mu + gamma * y_{t-1} + psi_1 * Delta y_{t-1} + e_t
+    y_lag1 = y_lag[1:]
+    dy_target = dy[1:]
+    dy_lag1 = dy[:-1]
+    n_k1 = len(dy_target)
+
+    X1 = np.column_stack([np.ones(n_k1, dtype=np.float64), y_lag1, dy_lag1])
+    try:
+        XtX = X1.T @ X1
+        XtY = X1.T @ dy_target
+        beta_1 = np.linalg.solve(XtX, XtY)
+        res_1 = dy_target - X1 @ beta_1
+        sse_1 = float(np.sum(res_1 ** 2))
+        df_1 = max(1, n_k1 - 3)
+        sigma2_1 = sse_1 / df_1
+        inv_XtX = np.linalg.inv(XtX)
+        se_gamma_1 = float(np.sqrt(max(sigma2_1 * inv_XtX[1, 1], 1e-9)))
+        t_stat_1 = float(beta_1[1] / se_gamma_1)
+
+        if lag_order == 1:
+            return t_stat_1
+
+        y_bar1 = np.mean(y_lag1)
+        dy_bar1 = np.mean(dy_target)
+        ss_yy1 = np.sum((y_lag1 - y_bar1) ** 2)
+        if ss_yy1 > 1e-9:
+            gamma_0_com = float(np.sum((y_lag1 - y_bar1) * (dy_target - dy_bar1)) / ss_yy1)
+            mu_0_com = float(dy_bar1 - gamma_0_com * y_bar1)
+            res_0_com = dy_target - (mu_0_com + gamma_0_com * y_lag1)
+            sse_0_com = float(np.sum(res_0_com ** 2))
+        else:
+            sse_0_com = sse_0
+
+        aic_0 = n_k1 * np.log(max(sse_0_com / n_k1, 1e-12)) + 4.0
+        aic_1 = n_k1 * np.log(max(sse_1 / n_k1, 1e-12)) + 6.0
+
+        return t_stat_1 if aic_1 < aic_0 else t_stat_0
+    except Exception:
+        return t_stat_0
+
 
 def takens_embedding(series: np.ndarray, delay: int = 2, dimension: int = 3) -> np.ndarray:
     """Transform 1D time series into Takens delay-coordinate high-dimensional point cloud."""
-    n = len(series)
-    if n <= (dimension - 1) * delay:
-        return np.zeros((1, dimension))
-    
-    point_cloud = []
-    for i in range(n - (dimension - 1) * delay):
-        point = [series[i + j * delay] for j in range(dimension)]
-        point_cloud.append(point)
-    return np.array(point_cloud)
+    arr = np.asarray(series, dtype=np.float32)
+    n = len(arr)
+    m = n - (dimension - 1) * delay
+    if m <= 0:
+        return np.zeros((1, dimension), dtype=np.float32)
+    idx = np.arange(m)[:, None] + np.arange(dimension)[None, :] * delay
+    return arr[idx]
+
 
 def normalize_tda_indicator(
     tda_array: np.ndarray,
@@ -98,24 +142,18 @@ def normalize_tda_indicator(
     Eradicates full-sample 50-year forward lookahead bias.
     """
     arr = np.asarray(tda_array, dtype=np.float64)
-    n = len(arr)
-    if n == 0:
+    if len(arr) == 0:
         return np.array([], dtype=np.float32)
 
-    # Strictly causal expanding-window bounds
     exp_min = np.minimum.accumulate(arr)
     exp_max = np.maximum.accumulate(arr)
     exp_span = exp_max - exp_min
 
-    scaled = np.zeros(n, dtype=np.float64)
-    # Warm-up default anchor for early points before variation establishes
-    for i in range(n):
-        span_i = exp_span[i]
-        if span_i < 1e-6:
-            scaled[i] = (target_min + target_max) / 2.0
-        else:
-            scaled[i] = target_min + (arr[i] - exp_min[i]) / span_i * (target_max - target_min)
-
+    scaled = np.where(
+        exp_span < 1e-6,
+        (target_min + target_max) / 2.0,
+        target_min + (arr - exp_min) / np.maximum(exp_span, 1e-6) * (target_max - target_min),
+    )
     scaled = np.clip(scaled, 0.20, target_max)
     return np.nan_to_num(scaled, nan=target_min).astype(np.float32)
 

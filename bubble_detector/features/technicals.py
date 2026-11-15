@@ -77,39 +77,49 @@ def compute_technical_indicators(
 
     logger.info(f"Computing technical indicators for '{target_col}'...")
 
-    # Calculate Moving Averages
+    # Calculate Moving Averages (strictly causal expanding warm-up via min_samples=1)
     df = df.with_columns([
-        pl.col(target_col).rolling_mean(window_size=20).alias(f"{target_col}_MA20"),
-        pl.col(target_col).rolling_mean(window_size=50).alias(f"{target_col}_MA50"),
-        pl.col(target_col).rolling_mean(window_size=200).alias(f"{target_col}_MA200"),
+        pl.col(target_col).rolling_mean(window_size=20, min_samples=1).cast(pl.Float32).alias(f"{target_col}_MA20"),
+        pl.col(target_col).rolling_mean(window_size=50, min_samples=1).cast(pl.Float32).alias(f"{target_col}_MA50"),
+        pl.col(target_col).rolling_mean(window_size=200, min_samples=1).cast(pl.Float32).alias(f"{target_col}_MA200"),
     ])
 
-    # Calculate Bollinger Bands
+    # Calculate Bollinger Bands & canonical %B = (P - Lower) / (Upper - Lower)
     ma20 = pl.col(f"{target_col}_MA20")
-    std20 = pl.col(target_col).rolling_std(window_size=bb_window)
+    std20 = pl.col(target_col).rolling_std(window_size=bb_window, min_samples=2).fill_null(0.0)
+    bb_upper = ma20 + bb_std * std20
+    bb_lower = ma20 - bb_std * std20
 
     df = df.with_columns([
-        (ma20 + bb_std * std20).alias(f"{target_col}_BB_Upper"),
-        (ma20 - bb_std * std20).alias(f"{target_col}_BB_Lower"),
-        ((pl.col(target_col) - ma20) / (2.0 * std20 + 1e-8)).alias(f"{target_col}_BB_PctB"),
+        bb_upper.cast(pl.Float32).alias(f"{target_col}_BB_Upper"),
+        bb_lower.cast(pl.Float32).alias(f"{target_col}_BB_Lower"),
+        (
+            pl.when((bb_upper - bb_lower).abs() > 1e-6)
+            .then((pl.col(target_col) - bb_lower) / (bb_upper - bb_lower + 1e-8))
+            .otherwise(0.5)
+        ).fill_null(0.5).cast(pl.Float32).alias(f"{target_col}_BB_PctB"),
     ])
 
     # Calculate RSI
-    delta = pl.col(target_col).diff()
+    delta = pl.col(target_col).diff().fill_null(0.0)
     gain = pl.when(delta > 0).then(delta).otherwise(0.0)
     loss = pl.when(delta < 0).then(-delta).otherwise(0.0)
 
-    avg_gain = gain.rolling_mean(window_size=rsi_window)
-    avg_loss = loss.rolling_mean(window_size=rsi_window)
+    avg_gain = gain.rolling_mean(window_size=rsi_window, min_samples=1)
+    avg_loss = loss.rolling_mean(window_size=rsi_window, min_samples=1)
 
     rs = avg_gain / (avg_loss + 1e-8)
-    rsi = 100.0 - (100.0 / (1.0 + rs))
+    rsi = (
+        pl.when((avg_gain + avg_loss) > 1e-8)
+        .then(100.0 - (100.0 / (1.0 + rs)))
+        .otherwise(50.0)
+    ).fill_null(50.0).cast(pl.Float32)
 
     df = df.with_columns(rsi.alias(f"{target_col}_RSI14"))
 
     # Rolling Volatility (20-day annualized)
-    returns = pl.col(target_col).pct_change()
-    roll_vol = returns.rolling_std(window_size=20) * np.sqrt(252.0)
+    returns = pl.col(target_col).pct_change().fill_null(0.0)
+    roll_vol = (returns.rolling_std(window_size=20, min_samples=2).fill_null(0.01) * np.sqrt(252.0)).cast(pl.Float32)
     df = df.with_columns(roll_vol.alias(f"{target_col}_Vol20D"))
 
     return df

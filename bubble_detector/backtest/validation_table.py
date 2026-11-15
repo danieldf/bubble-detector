@@ -98,6 +98,38 @@ HISTORICAL_CRASH_EVENTS = [
     },
 ]
 
+def _compute_empirical_false_alarm_rate(
+    dm_arr: np.ndarray,
+    score_arr: np.ndarray,
+    spy_arr: np.ndarray,
+    alert_threshold_dm: float = 5.5,
+    alert_threshold_score: float = 1.5,
+) -> float:
+    """
+    Count distinct 252-day-separated bubble alert episodes that are NOT followed within
+    the subsequent 252 trading days by a >= 10% S&P 500 drawdown.
+    """
+    n = len(spy_arr)
+    if n < 20:
+        return 0.0
+    alert_mask = (dm_arr >= alert_threshold_dm) & (score_arr >= alert_threshold_score)
+    episodes: List[int] = []
+    last_ep = -252
+    for idx in np.where(alert_mask)[0]:
+        if int(idx) - last_ep >= 252:
+            episodes.append(int(idx))
+            last_ep = int(idx)
+    unconfirmed = 0
+    for idx in episodes:
+        seg = spy_arr[idx : min(n, idx + 253)]
+        run_pk = np.maximum.accumulate(seg)
+        max_dd = float(np.min((seg - run_pk) / np.maximum(run_pk, 1e-6)))
+        if max_dd > -0.10:
+            unconfirmed += 1
+    years = max(1.0, float(n) / 252.0)
+    return round(float(unconfirmed) / years, 2)
+
+
 def generate_historical_validation_table(
     df: pl.DataFrame,
     alert_threshold_dm: float = 4.5,
@@ -107,14 +139,14 @@ def generate_historical_validation_table(
     Generate the Falsifiable Historical Peak Validation Event Study Table.
     Matches observed model signals against benchmark crash events within the dataset's date span.
     """
-    df_pd = df.to_pandas()
-    df_pd["Date_str"] = pd.to_datetime(df_pd["Date"]).dt.strftime("%Y-%m-%d")
-    df_pd = df_pd.sort_values("Date_str").reset_index(drop=True)
+    dates = np.array([str(d)[:10] for d in df["Date"].to_list()])
+    order = np.argsort(dates)
+    dates = dates[order]
+    dm_arr = df["Mahalanobis_Distance"].to_numpy()[order] if "Mahalanobis_Distance" in df.columns else np.zeros(len(df))
+    score_arr = df["Bubble_Score_Signed"].to_numpy()[order] if "Bubble_Score_Signed" in df.columns else dm_arr
+    spy_arr = df["SPY"].to_numpy()[order] if "SPY" in df.columns else np.ones(len(df))
 
-    dates = df_pd["Date_str"].to_numpy()
-    dm_arr = df_pd["Mahalanobis_Distance"].to_numpy() if "Mahalanobis_Distance" in df_pd.columns else np.zeros(len(df_pd))
-    score_arr = df_pd["Bubble_Score_Signed"].to_numpy() if "Bubble_Score_Signed" in df_pd.columns else dm_arr
-    spy_arr = df_pd["SPY"].to_numpy() if "SPY" in df_pd.columns else np.ones(len(df_pd))
+    empirical_fa_rate = _compute_empirical_false_alarm_rate(dm_arr, score_arr, spy_arr)
 
     start_date_data = dates[0]
     end_date_data = dates[-1]
@@ -146,7 +178,7 @@ def generate_historical_validation_table(
 
         if len(alert_indices) > 0:
             first_alert_idx = alert_indices[0]
-            first_alert_date = window_dates[first_alert_idx]
+            first_alert_date = str(window_dates[first_alert_idx])
             lead_time_days = int(peak_idx - (lookback_start + first_alert_idx))
             # Convert trading days to approximate calendar days
             lead_time_cal = int(lead_time_days * (365.25 / 252.0))
@@ -182,20 +214,22 @@ def generate_historical_validation_table(
             "Realized_Drawdown_Pct": round(realized_dd, 1),
             "Contraction_Trading_Days": contraction_days,
             "Contraction_Calendar_Days": contraction_cal,
+            "_empirical_false_alarm_rate": empirical_fa_rate,
         })
 
     return event_results
 
 def compute_validation_summary_statistics(
     event_results: List[Dict[str, Any]],
-    total_years: float = 50.0
+    total_years: float = 50.0,
+    df: Optional[pl.DataFrame] = None,
 ) -> Dict[str, Any]:
     """
     Compute empirical distribution summaries:
     - Median Lead Time (Alarm -> Peak)
     - Median Contraction Time (Peak -> Trough)
     - Event Warning Hit Rate
-    - Annual False Alarm Rate
+    - Empirical Annual False Alarm Rate (unconfirmed alert episodes per year)
     """
     if len(event_results) == 0:
         return {
@@ -214,9 +248,16 @@ def compute_validation_summary_statistics(
     median_lead = float(np.median(leads)) if len(leads) > 0 else 0.0
     median_contraction = float(np.median(contractions)) if len(contractions) > 0 else 0.0
 
-    # False alarm estimate: historical rate of alarms not followed by >15% drawdown
-    false_alarms = max(0, int(total_years * 0.18))
-    false_alarm_rate = round(false_alarms / max(1.0, total_years), 2)
+    if df is not None and "SPY" in df.columns:
+        dm_arr = df["Mahalanobis_Distance"].to_numpy() if "Mahalanobis_Distance" in df.columns else np.zeros(len(df))
+        score_arr = df["Bubble_Score_Signed"].to_numpy() if "Bubble_Score_Signed" in df.columns else dm_arr
+        spy_arr = df["SPY"].to_numpy()
+        false_alarm_rate = _compute_empirical_false_alarm_rate(dm_arr, score_arr, spy_arr)
+    elif "_empirical_false_alarm_rate" in event_results[0]:
+        false_alarm_rate = float(event_results[0]["_empirical_false_alarm_rate"])
+    else:
+        unconfirmed_events = sum(1 for r in event_results if not r["Warning_Triggered"])
+        false_alarm_rate = round(float(unconfirmed_events) / max(1.0, total_years), 2)
 
     return {
         "median_lead_days": median_lead,

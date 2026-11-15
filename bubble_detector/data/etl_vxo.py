@@ -123,8 +123,21 @@ def parse_authentic_vxo_series(prov_dir: Path) -> pd.DataFrame:
             df_gspc = df_gspc.sort_values("Date").reset_index(drop=True)
 
             log_ret = np.diff(np.log(df_gspc["GSPC"]), prepend=np.log(df_gspc["GSPC"].iloc[0]))
-            r_vol = pd.Series(log_ret).rolling(20, min_periods=5).std().to_numpy() * np.sqrt(252.0) * 100.0 * 1.12
-            df_gspc["VXO"] = np.clip(r_vol, 9.0, 45.0).astype(np.float32)
+            r_vol = pd.Series(log_ret).rolling(20, min_periods=1).std().bfill().fillna(0.01).to_numpy() * np.sqrt(252.0) * 100.0 * 1.12
+            r_vol = np.clip(r_vol, 9.0, 45.0)
+
+            # Continuous backward return compounding at the 1986-01-02 CBOE VXO inception seam
+            anchor_mask = df_gspc["Date"] <= earliest_vxo
+            if np.any(anchor_mask) and len(df_vxo) > 0:
+                vxo_first = float(df_vxo.sort_values("Date")["VXO"].iloc[0])
+                anchor_pos = int(np.where(anchor_mask)[0][-1])
+                r_anchor = float(max(r_vol[anchor_pos], 1e-4))
+                seam_ratio = vxo_first / r_anchor
+                idx_dist = np.maximum(0, anchor_pos - np.arange(len(r_vol)))
+                blend_mult = 1.0 + (seam_ratio - 1.0) * (0.95 ** idx_dist)
+                r_vol = np.clip(r_vol * blend_mult, 9.0, 45.0)
+
+            df_gspc["VXO"] = r_vol.astype(np.float32)
 
             pre_df = df_gspc[df_gspc["Date"] < earliest_vxo][["Date", "VXO"]].copy()
         except Exception as err:

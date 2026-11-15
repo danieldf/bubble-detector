@@ -121,3 +121,21 @@ def test_dashboard_state_horizon_switching(tmp_path):
     assert len_opt3 > 5000
     assert len_opt2 > 2500
 
+
+def test_weekend_and_offline_clamping():
+    """RT-CRIT-05: Verify Saturday and Sunday dates automatically clamp to the preceding Friday trading close."""
+    from bubble_detector.data.date_horizons import clamp_to_trading_day
+
+    sat = datetime.date(2026, 11, 14)  # Saturday
+    sun = datetime.date(2026, 11, 15)  # Sunday
+    fri = datetime.date(2026, 11, 13)  # Friday
+
+    assert clamp_to_trading_day(sat) == fri
+    assert clamp_to_trading_day(sun) == fri
+    assert clamp_to_trading_day(fri) == fri
+
+    start_sun, end_sun = get_dynamic_50yr_date_range("2026-11-15")
+    assert end_sun == "2026-11-13"
+    assert start_sun == "1976-11-13"
+
+

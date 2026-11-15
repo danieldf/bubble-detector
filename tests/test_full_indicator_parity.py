@@ -161,3 +161,60 @@ def test_all_7_tabs_plot_trace_parity(horizon_id):
                 err_msg=f"Trace value drift in {chart_name} trace {i} ({n_tr.name})"
             )
 
+
+def test_cross_horizon_date_invariance_and_zero_nulls():
+    """
+    RT-CRIT-04 & RT-CRIT-06: Assert 0 nulls across all 99 columns in all 3 horizon Parquet datasets,
+    and 100% bitwise cross-horizon date invariance for every overlapping trading date.
+    """
+    from pathlib import Path
+    import polars as pl
+
+    prov_dir = Path(__file__).resolve().parent.parent / "data" / "provenance"
+    df_50 = pl.read_parquet(prov_dir / "market_data_50yr.parquet")
+    df_20 = pl.read_parquet(prov_dir / "market_data_20yr.parquet")
+    df_mod = pl.read_parquet(prov_dir / "market_data_modern.parquet")
+
+    for name, df in [("50yr", df_50), ("20yr", df_20), ("modern", df_mod)]:
+        total_nulls = sum(df[c].null_count() for c in df.columns)
+        assert total_nulls == 0, f"Expected 0 nulls in {name}, found {total_nulls}"
+
+    # Verify bitwise identity across overlapping dates
+    for name_a, df_a, name_b, df_b in [
+        ("50yr", df_50, "20yr", df_20),
+        ("20yr", df_20, "modern", df_mod),
+    ]:
+        start_b = df_b["Date"][0]
+        df_a_slice = df_a.filter(pl.col("Date") >= start_b)
+        assert df_a_slice.shape == df_b.shape, f"Shape mismatch between {name_a} slice and {name_b}"
+        for col in df_b.columns:
+            if col == "Date" or df_b[col].dtype in (pl.String, pl.Boolean):
+                assert df_a_slice[col].to_list() == df_b[col].to_list()
+            else:
+                diff = np.max(np.abs(df_a_slice[col].to_numpy() - df_b[col].to_numpy()))
+                assert diff == 0.0, f"Cross-horizon drift in {col} between {name_a} and {name_b}: max_diff={diff}"
+
+
+def test_dislocation_fidelity_chart_light_dark_contrast():
+    """
+    RT-MED-16: Verify Subplot 3 S&P 500 trajectory trace uses high-contrast #0F172A in Light Mode
+    and #FFFFFF in Dark Mode in NiceGUI figure builder.
+    """
+    from bubble_detector.ui.dashboard import build_dislocation_fidelity_chart
+
+    state = DashboardState(load_data=False)
+    state.load_data("option_3")
+
+    state.theme_mode = "light"
+    fig_light = build_dislocation_fidelity_chart(state)
+    spy_traces_light = [t for t in fig_light.data if t.name and "SEA Mean Normalized S&P 500" in t.name]
+    assert len(spy_traces_light) == 1
+    assert spy_traces_light[0].line.color == "#0F172A"
+
+    state.theme_mode = "dark"
+    fig_dark = build_dislocation_fidelity_chart(state)
+    spy_traces_dark = [t for t in fig_dark.data if t.name and "SEA Mean Normalized S&P 500" in t.name]
+    assert len(spy_traces_dark) == 1
+    assert spy_traces_dark[0].line.color == "#FFFFFF"
+
+

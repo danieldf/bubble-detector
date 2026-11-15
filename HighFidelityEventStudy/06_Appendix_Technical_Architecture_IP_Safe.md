@@ -67,14 +67,14 @@ In a conventional risk model, indicators are combined without regard to whether 
 **Our Architectural Solution:**
 1. **Pre-Registered Directional Polarity Alignment:** Every one of the 13 orthogonalized pillars is aligned according to its pre-registered **bubble-buildup polarity**—distinguishing indicators that rise during speculative complacency (e.g., compressed front-month volatility slope, elevated tail skew, accelerating margin velocity, and valuation stretch) from indicators that spike during acute panic.
 2. **Orthant Partitioning (Separating Euphoria from Capitulation):** At every time step `t`, the aligned signal vector is partitioned into a **Speculative Euphoria Orthant** (measuring pre-peak overheating) and a **Capitulation Stress Orthant** (measuring active crash liquidation and deep undervaluation).
-3. **Automated Crash-Liquidation Damping at Market Troughs:** When equity prices experience a severe drawdown alongside capitulation-orthant signatures, the **Crash-Liquidation Damper** automatically attenuates the composite bubble score—driving the Master Composite Index down to **`0.0%–4.2%`** at every historical trough (`D1`–`D8`). This structural mechanism guarantees that the system **de-risks ahead of market peaks (`≥ 70%`)** and **re-risks at market troughs (`< 25%`)**, achieving the `95.3%` average peak-to-trough separation documented in Section 3.
+3. **Automated Crash-Liquidation Damping at Market Troughs:** When equity prices experience a severe drawdown alongside capitulation-orthant signatures, the **Crash-Liquidation Damper** automatically attenuates the composite bubble score—driving the Master Composite Index down to **`0.0%–5.4%`** at every historical trough (`D1`–`D8`). This structural mechanism guarantees that the system **de-risks ahead of market peaks (`≥ 70%`)** and **re-risks at market troughs (`< 25%`)**, achieving the `93.2%` average peak-to-trough separation documented in Section 3.
 
 ---
 
 ### A.6 License & Confidentiality Attestation
 
 - **Document Title:** *High-Fidelity 20-Year Dislocation Event Study & Composite Regime Synthesis (2006–2026)*
-- **Version:** `v1.0.0` (SemVer) — Data Horizon Updated Through **November 13, 2026**
+- **Version:** `v1.1.0` (SemVer, Engine `v3.6.0`) — Data Horizon Updated Through **November 13, 2026**
 - **Security Classification:** **CONFIDENTIAL — PROPRIETARY INTELLECTUAL PROPERTY**
 - **License Terms:** Licensed under **Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (`CC-BY-NC-ND 4.0`)**.
   - **Attribution (`BY`):** Any permitted internal reference must credit the *Market Bubble Detector & Structural Break System Research Team*.

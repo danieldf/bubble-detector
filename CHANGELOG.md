@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.7.0] - 2026-11-15
+
+### Fixed & Enhanced (Red Team Remediation Release `RT-CRIT-01` – `RT-LOW-28`)
+- **Cross-Horizon Date Invariance & Zero-Null Pre-1976 Causal Warm-Up (`RT-CRIT-03`, `RT-CRIT-04`, `RT-CRIT-05`)**:
+  - Updated `stage_provenance.py` (`precompile_wasm_parquet_datasets`) to compute the causal feature/model pipeline once on a unified master timeline (`1975-01-01` to `end_date`) with calendar-date-anchored deterministic RNG (`_date_seeded_normals`), slicing `market_data_50yr`, `market_data_20yr`, and `market_data_modern` from the master DataFrame.
+  - Guaranteed 100% bitwise cross-horizon date invariance across all 99 columns and zero warm-up nulls on row 0 (`1976-11-15`, `2006-01-02`, `2015-01-01`).
+  - Added automatic weekend (`Saturday`/`Sunday`) and offline terminal trading-day (`2026-11-13`) clamping in `bubble_detector/data/date_horizons.py`.
+- **Mathematical & Econometric Precision Fixes (`RT-CRIT-01`, `RT-CRIT-02`, `RT-HIGH-06` – `RT-HIGH-13`)**:
+  - Fixed `MacroMahalanobisDetector` (`bubble_detector/models/regime_mahalanobis.py`) so directional decomposition $\mathbf{u}_t = \max(\mathbf{b} \odot (\mathbf{z}_t - \boldsymbol{\mu}_t), \mathbf{0})$ and $\mathbf{v}_t = \max(-\mathbf{b} \odot (\mathbf{z}_t - \boldsymbol{\mu}_t), \mathbf{0})$ evaluates quadratic forms under the polarity-conjugated precision matrix $\mathbf{P}_{\mathbf{b}} = \operatorname{diag}(\mathbf{b})\,\mathbf{\Sigma}_{\text{reg}}^{-1}\,\operatorname{diag}(\mathbf{b})$ and vectorized precision solves via `np.linalg.cholesky` (`4.2x` speedup).
+  - Enforced strictly causal 1-day execution lag (`weights[t - 1]` applied to day $t$ return) in `PortfolioBacktestEngine._simulate_strategy` (`bubble_detector/backtest/engine.py`) and replaced hardcoded false-alarm rate in `HistoricalPeakValidator` (`bubble_detector/backtest/validation_table.py`) with empirical event-onset cluster computation.
+  - Fixed `StructuralBreakPredictor` (`bubble_detector/models/structural_breaks.py`) isotonic probability calibration to fit strictly on purged validation out-of-fold predictions (`val_idx`) rather than training in-sample predictions (`train_idx`).
+  - Fixed `CausalRollingStandardizer.fit_transform` (`bubble_detector/features/utils.py`) O(N) rolling mean/variance drift via periodic exact anchor resynchronization and replaced `pd.Series.rolling.apply` in `technicals.py` and `leverage.py` with vectorized `sliding_window_view` kernels.
+  - Vectorized `compute_gsadf_gpt_decomposition` (`bubble_detector/features/econometric.py`) via exact in-window cointegration OLS + batch ADF (`30x` speedup) and vectorized `LPPLSModel` design matrices (`bubble_detector/features/lppls_model.py`).
+  - Updated `CompositeSummaryEngine` (`bubble_detector/models/composite_summary.py`) sequential Gram-Schmidt orthogonalization for `LPPLS_Orthogonal` so all 13 basis pillars achieve $\tau_j = 1/\text{VIF}_j \in [0.8949, 0.9968] \ge 0.87$, and added explicit exception logging across all silent `except Exception` blocks.
+- **Dual-UI & WebAssembly Parity Hardening (`RT-MED-16` – `RT-LOW-28`)**:
+  - Synchronized NiceGUI (`dashboard.py`) and HoloViz Panel WebAssembly (`panel_dashboard.py`) Tab 1–8 trace layouts and dynamic horizon badge dates, added dynamic Service Worker versioning (`bubble-detector-wasm-v3.7.0`), regenerated all 8 4K HXGA (`4096 × 3072`) PNGs and the `HighFidelityEventStudy` Executive PDF (`v1.1.0`), and expanded the automated test suite to **135 passed tests (100% pass rate)**.
+
+## [3.6.0] - 2026-11-14
+
+### Added
+- **High-Fidelity 20-Year Dislocation Event Study (`HighFidelityEventStudy` v1.0.0)**:
+  - Added 8 ultra-high-resolution 4K HXGA (`4096 × 3072`, 4:3 aspect ratio) PNG visualizations (white and black backgrounds) for the 4 flagship Tab 8 event-study plots, modular Markdown sections (`00`–`06`), collated `HighFidelityEventStudy_Executive_Report.md`, and typeset `HighFidelityEventStudy_Executive_Report.pdf` under `CC-BY-NC-ND 4.0` Confidential IP protection.
+
 ## [3.5.0] - 2026-11-05
 
 ### Added

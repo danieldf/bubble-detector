@@ -105,24 +105,23 @@ class PortfolioBacktestEngine:
         Execute comparative backtest across Dynamic Exposure, Buy & Hold, and Naive CAPE rule.
         """
         logger.info("Executing cost-inclusive comparative portfolio backtest...")
-        df_pd = df.to_pandas()
-        dates = [str(d)[:10] for d in df_pd["Date"].to_list()]
-        n = len(df_pd)
+        dates = [str(d)[:10] for d in df["Date"].to_list()]
+        n = len(df)
 
         if n < 20:
             raise ValueError("Insufficient observations for backtest simulation.")
 
         # Equity price series
-        prices = df_pd[target_col].to_numpy().astype(np.float64)
+        prices = df[target_col].to_numpy().astype(np.float64)
         eq_returns = np.diff(prices) / prices[:-1]
         eq_returns = np.insert(eq_returns, 0, 0.0)
 
         # CAPE for Naive Rule
-        cape_series = df_pd[cape_col].to_numpy().astype(np.float64) if cape_col in df_pd.columns else np.full(n, 25.0)
+        cape_series = df[cape_col].to_numpy().astype(np.float64) if cape_col in df.columns else np.full(n, 25.0)
 
         # Dynamic Exposure weights
-        if exposure_col in df_pd.columns:
-            weights_dynamic = df_pd[exposure_col].to_numpy().astype(np.float64)
+        if exposure_col in df.columns:
+            weights_dynamic = df[exposure_col].to_numpy().astype(np.float64)
         else:
             weights_dynamic = np.ones(n, dtype=np.float64)
 
@@ -158,7 +157,11 @@ class PortfolioBacktestEngine:
         weights: np.ndarray,
         strategy_name: str
     ) -> BacktestResult:
-        """Simulate single portfolio with frictions, cash yields, and rebalancing costs."""
+        """
+        Simulate single portfolio with frictions, cash yields, and rebalancing costs.
+        Enforces strict 1-day execution lag: signal observed at close t-1 (`weights[t - 1]`)
+        earns the close-to-close return from t-1 to t (`eq_returns[t]`).
+        """
         n = len(eq_returns)
         portfolio_val = np.ones(n, dtype=np.float64)
         port_returns = np.zeros(n, dtype=np.float64)
@@ -167,7 +170,7 @@ class PortfolioBacktestEngine:
 
         prev_w = float(weights[0])
         for t in range(1, n):
-            raw_w = float(weights[t])
+            raw_w = float(weights[t - 1])
             if abs(raw_w - prev_w) >= self.rebalance_threshold:
                 target_w = raw_w
                 delta_w = abs(target_w - prev_w)

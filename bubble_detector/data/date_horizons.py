@@ -44,28 +44,63 @@ behavior without crashing POSIX or browser WASM runtime environments.
 """
 
 import datetime
+import os
+from pathlib import Path
 from typing import Dict, Any, Tuple, Optional, Union
 
-def get_current_date(override: Optional[Union[datetime.date, str]] = None) -> datetime.date:
+_STAGED_TERMINAL_TRADING_DATE = datetime.date(2026, 11, 13)
+
+
+def clamp_to_trading_day(dt: datetime.date) -> datetime.date:
     """
-    Return the operational execution date, allowing deterministic historical backtesting overrides.
+    Clamp Saturday (weekday=5) or Sunday (weekday=6) back to the preceding Friday trading close.
+    """
+    if dt.weekday() == 5:
+        return dt - datetime.timedelta(days=1)
+    if dt.weekday() == 6:
+        return dt - datetime.timedelta(days=2)
+    return dt
+
+
+def get_current_date(
+    override: Optional[Union[datetime.date, str]] = None,
+    clamp_weekend: bool = True,
+) -> datetime.date:
+    """
+    Return the operational execution trading date, allowing deterministic historical backtesting overrides.
 
     Parameters
     ----------
     override : Optional[Union[datetime.date, str]]
         Optional ISO date string ('YYYY-MM-DD') or datetime.date object. When provided,
         pins the system clock to a fixed point in time, enabling leak-free historical audits.
+    clamp_weekend : bool
+        When True (default), automatically clamps Saturday/Sunday dates to the preceding
+        Friday market close.
 
     Returns
     -------
     datetime.date
-        The active operational date.
+        The active operational trading date.
     """
     if override is not None:
-        if isinstance(override, str):
-            return datetime.date.fromisoformat(override)
-        return override
-    return datetime.date.today()
+        dt = datetime.date.fromisoformat(override) if isinstance(override, str) else override
+        return clamp_to_trading_day(dt) if clamp_weekend else dt
+
+    env_override = os.environ.get("BUBBLE_DETECTOR_DATE")
+    if env_override:
+        dt = datetime.date.fromisoformat(env_override.strip())
+        return clamp_to_trading_day(dt) if clamp_weekend else dt
+
+    dt = datetime.date.today()
+    if clamp_weekend:
+        dt = clamp_to_trading_day(dt)
+
+    # Anchor to the staged provenance dataset's terminal trading close when running offline
+    prov_dir = Path(__file__).resolve().parent.parent.parent / "data" / "provenance"
+    if (prov_dir / "market_data_50yr.parquet").exists() and dt > _STAGED_TERMINAL_TRADING_DATE:
+        return _STAGED_TERMINAL_TRADING_DATE
+    return dt
 
 def get_dynamic_50yr_date_range(today: Optional[Union[datetime.date, str]] = None) -> Tuple[str, str]:
     """

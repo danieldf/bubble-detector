@@ -179,7 +179,13 @@ def parse_fred_macro_series(prov_dir: Path) -> Tuple[pd.DataFrame, pd.DataFrame,
         inc_series = 60000.0 * (1.0 + 0.02 * (years_m - 1984.0))
 
     raw_ratio = (cs_series / np.maximum(inc_series, 1000.0))
-    norm_factor = 7.11 / raw_ratio[-1] if len(raw_ratio) > 0 and raw_ratio[-1] > 0 else 1.0
+    # Anchor scaling constant to the fixed historical Case-Shiller base date (2000-01-01, CSUSHPINSA=100.0)
+    # where U.S. median price-to-income ratio stood at ~2.51x, avoiding terminal-sample lookahead bias.
+    base_mask = (dates_m == pd.Timestamp("2000-01-01"))
+    if np.any(base_mask) and raw_ratio[base_mask][0] > 0:
+        norm_factor = 2.510391 / float(raw_ratio[base_mask][0])
+    else:
+        norm_factor = 1846.6443
     housing_pti = np.clip(raw_ratio * norm_factor, 2.5, 8.0).astype(np.float32)
     cs_available_dates = dates_m + pd.offsets.MonthEnd(1) + pd.Timedelta(days=60)
 

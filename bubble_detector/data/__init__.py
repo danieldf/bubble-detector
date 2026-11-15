@@ -42,11 +42,13 @@ and cliff-free time series splicing:
 """
 
 from .date_horizons import (
+    clamp_to_trading_day,
     get_current_date,
     get_dynamic_50yr_date_range,
     get_dynamic_horizon_metadata,
     HORIZON_OPTION_1_ID,
     HORIZON_OPTION_2_ID,
+    HORIZON_OPTION_3_ID,
     DEFAULT_START_DATE,
     DEFAULT_END_DATE,
     HORIZON_METADATA,
@@ -63,11 +65,13 @@ __all__ = [
     "get_fred_data",
     "get_finra_margin_debt",
     "get_vxo_data",
+    "clamp_to_trading_day",
     "get_current_date",
     "get_dynamic_50yr_date_range",
     "get_dynamic_horizon_metadata",
     "HORIZON_OPTION_1_ID",
     "HORIZON_OPTION_2_ID",
+    "HORIZON_OPTION_3_ID",
     "DEFAULT_START_DATE",
     "DEFAULT_END_DATE",
     "HORIZON_METADATA",

@@ -141,88 +141,86 @@ def norm_cdf_numpy(x: np.ndarray) -> np.ndarray:
 
 
 def causal_ffill_clean(arr: np.ndarray, default_val: float = 0.0) -> np.ndarray:
-    """Strictly causal forward-fill of NaN/Inf values without look-ahead bfill."""
+    """Strictly causal forward-fill of NaN/Inf values without look-ahead bfill (vectorized)."""
     x = np.asarray(arr, dtype=np.float64).copy()
-    n = len(x)
-    last = default_val
-    # Find first finite value if index 0 is NaN, using only causal default if none yet
-    for i in range(n):
-        if np.isfinite(x[i]):
-            last = x[i]
-        else:
-            x[i] = last
+    if len(x) == 0:
+        return x
+    mask = ~np.isfinite(x)
+    if not np.any(mask):
+        return x
+    idx = np.where(~mask, np.arange(len(x)), -1)
+    np.maximum.accumulate(idx, out=idx)
+    valid = idx >= 0
+    x[mask & valid] = x[idx[mask & valid]]
+    x[mask & (~valid)] = default_val
     return x
 
 
 def causal_stationary_unit_variance(arr: np.ndarray, window: int = 252) -> np.ndarray:
     """
     Two-stage strictly causal I(0) stationarization and unit-variance standardization (mean=0, var=1).
-    Strictly F_t-measurable (prefix-invariant: output[:T] == f(arr[:T])).
+    Strictly F_t-measurable (prefix-invariant: output[:T] == f(arr[:T])), vectorized via O(N) prefix sums.
     """
     x = causal_ffill_clean(arr, default_val=0.0)
     n = len(x)
-    z1 = np.zeros(n, dtype=np.float64)
+    if n == 0:
+        return np.zeros(0, dtype=np.float64)
 
-    # Running expanding Welford accumulators for zero-lookahead expanding mean & std
-    exp_sum = 0.0
-    exp_sum_sq = 0.0
+    cs1 = np.empty(n + 1, dtype=np.float64)
+    cs2 = np.empty(n + 1, dtype=np.float64)
+    cs1[0] = 0.0
+    cs2[0] = 0.0
+    np.cumsum(x, out=cs1[1:])
+    np.cumsum(x * x, out=cs2[1:])
 
-    for t in range(n):
-        val = x[t]
-        exp_sum += val
-        exp_sum_sq += val * val
-        count_exp = t + 1
-        exp_mean = exp_sum / count_exp
-        if count_exp >= 2:
-            exp_var = max((exp_sum_sq - count_exp * exp_mean * exp_mean) / (count_exp - 1), 0.0)
-            exp_std = max(np.sqrt(exp_var), 1e-6)
-        else:
-            exp_std = 1.0
+    idx_end = np.arange(1, n + 1, dtype=np.float64)
+    exp_mean = cs1[1:] / idx_end
+    exp_var = np.zeros(n, dtype=np.float64)
+    if n >= 2:
+        exp_var[1:] = np.maximum((cs2[2:] - idx_end[1:] * exp_mean[1:] * exp_mean[1:]) / (idx_end[1:] - 1.0), 0.0)
+    exp_std = np.maximum(np.sqrt(exp_var), 1e-6)
+    exp_std[0] = 1.0
 
-        start = max(0, t - window + 1)
-        m = t - start + 1
-        if m < 20:
-            mu_t = exp_mean
-            sd_t = exp_std
-        else:
-            seg = x[start : t + 1]
-            r_mean = float(np.mean(seg))
-            r_std = float(np.std(seg, ddof=1))
-            if r_std < 0.20 * exp_std:
-                sd_t = max(exp_std, 1e-6)
-            else:
-                sd_t = r_std
-            mu_t = r_mean
+    starts = np.maximum(0, np.arange(n) - window + 1)
+    m = (np.arange(n) - starts + 1).astype(np.float64)
+    r_sum = cs1[1:] - cs1[starts]
+    r_sum2 = cs2[1:] - cs2[starts]
+    r_mean = r_sum / m
+    r_var = np.maximum((r_sum2 - m * r_mean * r_mean) / np.maximum(m - 1.0, 1.0), 0.0)
+    r_std = np.sqrt(r_var)
 
-        z1[t] = np.clip((val - mu_t) / sd_t, -4.5, 4.5)
+    use_exp = m < 20
+    mu_t = np.where(use_exp, exp_mean, r_mean)
+    sd_roll = np.where(r_std < 0.20 * exp_std, np.maximum(exp_std, 1e-6), r_std)
+    sd_t = np.where(use_exp, exp_std, sd_roll)
+    z1 = np.clip((x - mu_t) / sd_t, -4.5, 4.5)
 
     # Stage 2: Causal expanding-mean & 504-day scale calibration to enforce E[z]=0, Var(z)=1
-    z_out = np.zeros(n, dtype=np.float64)
-    z_sum = 0.0
-    z_sum_sq = 0.0
-    for t in range(n):
-        zv = z1[t]
-        z_sum += zv
-        z_sum_sq += zv * zv
-        c_exp = t + 1
-        m_cal = z_sum / c_exp if c_exp >= 20 else 0.0
-        if c_exp >= 20:
-            v_exp = max((z_sum_sq - c_exp * (z_sum / c_exp) ** 2) / (c_exp - 1), 0.0)
-            s_exp = max(np.sqrt(v_exp), 1e-4)
-        else:
-            s_exp = 1.0
+    z_cs1 = np.empty(n + 1, dtype=np.float64)
+    z_cs2 = np.empty(n + 1, dtype=np.float64)
+    z_cs1[0] = 0.0
+    z_cs2[0] = 0.0
+    np.cumsum(z1, out=z_cs1[1:])
+    np.cumsum(z1 * z1, out=z_cs2[1:])
 
-        s504_start = max(0, t - 504 + 1)
-        m504 = t - s504_start + 1
-        if m504 >= 30:
-            s_504 = float(np.std(z1[s504_start : t + 1], ddof=1))
-            s_cal = s_504 if s_504 >= 0.70 * s_exp else s_exp
-        else:
-            s_cal = s_exp
+    m_cal = np.where(idx_end >= 20, z_cs1[1:] / idx_end, 0.0)
+    v_exp = np.where(
+        idx_end >= 20,
+        np.maximum((z_cs2[1:] - idx_end * (z_cs1[1:] / idx_end) ** 2) / np.maximum(idx_end - 1.0, 1.0), 0.0),
+        1.0,
+    )
+    s_exp = np.where(idx_end >= 20, np.maximum(np.sqrt(v_exp), 1e-4), 1.0)
 
-        z_out[t] = np.clip((zv - m_cal) / s_cal, -4.5, 4.5)
+    s504 = np.maximum(0, np.arange(n) - 504 + 1)
+    m504 = (np.arange(n) - s504 + 1).astype(np.float64)
+    s504_sum = z_cs1[1:] - z_cs1[s504]
+    s504_sum2 = z_cs2[1:] - z_cs2[s504]
+    s504_mean = s504_sum / m504
+    s504_var = np.maximum((s504_sum2 - m504 * s504_mean * s504_mean) / np.maximum(m504 - 1.0, 1.0), 0.0)
+    s_504 = np.sqrt(s504_var)
+    s_cal = np.where((m504 >= 30) & (s_504 >= 0.70 * s_exp), s_504, s_exp)
 
-    return z_out
+    return np.clip((z1 - m_cal) / s_cal, -4.5, 4.5)
 
 
 def causal_gram_schmidt(
@@ -233,72 +231,93 @@ def causal_gram_schmidt(
 ) -> np.ndarray:
     """
     Strictly causal rolling Ridge-stabilized OLS Gram-Schmidt projection P_perp^(252)(y | anchors).
-    Guarantees zero look-ahead bias and unit-variance residual calibration.
+    Guarantees zero look-ahead bias and unit-variance residual calibration, vectorized via O(N) prefix sums.
     """
     n = len(y_z)
+    if n == 0:
+        return np.zeros(0, dtype=np.float64)
     k = len(anchors_z)
     X = np.column_stack(anchors_z)
-    res = np.zeros(n, dtype=np.float64)
-    eye_k = np.eye(k, dtype=np.float64)
+    starts = np.maximum(0, np.arange(n) - window + 1)
+    m = (np.arange(n) - starts + 1).astype(np.float64)
 
-    for t in range(n):
-        start = max(0, t - window + 1)
-        m = t - start + 1
-        if m < k + 15:
-            res[t] = y_z[t]
-        else:
-            X_w = X[start : t + 1]
-            y_w = y_z[start : t + 1]
-            XtX = X_w.T @ X_w + (ridge * m) * eye_k
-            Xty = X_w.T @ y_w
-            beta = np.linalg.solve(XtX, Xty)
-            e_w = y_w - X_w @ beta
-            sd_e = float(np.std(e_w, ddof=1))
-            if sd_e < 1e-6:
-                res[t] = 0.0
-            else:
-                res[t] = (e_w[-1] - float(np.mean(e_w))) / sd_e
+    cs_y = np.empty(n + 1, dtype=np.float64)
+    cs_yy = np.empty(n + 1, dtype=np.float64)
+    cs_y[0] = 0.0
+    cs_yy[0] = 0.0
+    np.cumsum(y_z, out=cs_y[1:])
+    np.cumsum(y_z * y_z, out=cs_yy[1:])
+
+    cs_X = np.zeros((n + 1, k), dtype=np.float64)
+    np.cumsum(X, axis=0, out=cs_X[1:])
+
+    cs_Xy = np.zeros((n + 1, k), dtype=np.float64)
+    np.cumsum(X * y_z[:, np.newaxis], axis=0, out=cs_Xy[1:])
+
+    XX_outer = X[:, :, np.newaxis] * X[:, np.newaxis, :]
+    cs_XX = np.zeros((n + 1, k, k), dtype=np.float64)
+    np.cumsum(XX_outer, axis=0, out=cs_XX[1:])
+
+    s_y = cs_y[1:] - cs_y[starts]
+    s_yy = cs_yy[1:] - cs_yy[starts]
+    s_X = cs_X[1:] - cs_X[starts]
+    S_Xy = cs_Xy[1:] - cs_Xy[starts]
+    S_XX = cs_XX[1:] - cs_XX[starts]
+
+    eye_k = np.eye(k, dtype=np.float64)
+    XtX = S_XX + (ridge * m)[:, np.newaxis, np.newaxis] * eye_k[np.newaxis, :, :]
+    beta = np.linalg.solve(XtX, S_Xy[:, :, np.newaxis])[:, :, 0]
+
+    e_last = y_z - np.sum(X * beta, axis=1)
+    e_mean = (s_y - np.sum(s_X * beta, axis=1)) / m
+    b_S_Xy = np.sum(beta * S_Xy, axis=1)
+    b_S_XX_b = np.einsum("ni,nij,nj->n", beta, S_XX, beta)
+    sum_e2 = s_yy - 2.0 * b_S_Xy + b_S_XX_b
+    var_e = np.maximum((sum_e2 - m * e_mean * e_mean) / np.maximum(m - 1.0, 1.0), 0.0)
+    sd_e = np.sqrt(var_e)
+
+    res = np.where(
+        m < (k + 15),
+        y_z,
+        np.where(sd_e < 1e-6, 0.0, (e_last - e_mean) / np.maximum(sd_e, 1e-6)),
+    )
 
     # Causal unit-variance calibration of residual
-    z_out = np.zeros(n, dtype=np.float64)
-    r_sum = 0.0
-    r_sum_sq = 0.0
-    for t in range(n):
-        rv = res[t]
-        r_sum += rv
-        r_sum_sq += rv * rv
-        c_exp = t + 1
-        m_cal = r_sum / c_exp if c_exp >= 20 else 0.0
-        if c_exp >= 20:
-            v_exp = max((r_sum_sq - c_exp * (r_sum / c_exp) ** 2) / (c_exp - 1), 0.0)
-            s_exp = max(np.sqrt(v_exp), 0.15)
-        else:
-            s_exp = 1.0
+    r_cs1 = np.empty(n + 1, dtype=np.float64)
+    r_cs2 = np.empty(n + 1, dtype=np.float64)
+    r_cs1[0] = 0.0
+    r_cs2[0] = 0.0
+    np.cumsum(res, out=r_cs1[1:])
+    np.cumsum(res * res, out=r_cs2[1:])
 
-        s504_start = max(0, t - 504 + 1)
-        m504 = t - s504_start + 1
-        if m504 >= 30:
-            s_504 = float(np.std(res[s504_start : t + 1], ddof=1))
-            s_cal = s_504 if s_504 >= 0.15 else s_exp
-        else:
-            s_cal = s_exp
+    idx_end = np.arange(1, n + 1, dtype=np.float64)
+    m_cal = np.where(idx_end >= 20, r_cs1[1:] / idx_end, 0.0)
+    v_exp = np.where(
+        idx_end >= 20,
+        np.maximum((r_cs2[1:] - idx_end * (r_cs1[1:] / idx_end) ** 2) / np.maximum(idx_end - 1.0, 1.0), 0.0),
+        1.0,
+    )
+    s_exp = np.where(idx_end >= 20, np.maximum(np.sqrt(v_exp), 0.15), 1.0)
 
-        z_out[t] = np.clip((rv - m_cal) / s_cal, -4.5, 4.5)
+    s504 = np.maximum(0, np.arange(n) - 504 + 1)
+    m504 = (np.arange(n) - s504 + 1).astype(np.float64)
+    s504_sum = r_cs1[1:] - r_cs1[s504]
+    s504_sum2 = r_cs2[1:] - r_cs2[s504]
+    s504_mean = s504_sum / m504
+    s504_var = np.maximum((s504_sum2 - m504 * s504_mean * s504_mean) / np.maximum(m504 - 1.0, 1.0), 0.0)
+    s_504 = np.sqrt(s504_var)
+    s_cal = np.where((m504 >= 30) & (s_504 >= 0.15), s_504, s_exp)
 
-    return z_out
+    return np.clip((res - m_cal) / s_cal, -4.5, 4.5)
 
 
-def compute_orthogonal_basis_and_summaries_numpy(
+def _compute_orthogonal_basis_matrix(
     raw_cols: Dict[str, np.ndarray],
     window: int = 252,
-) -> Dict[str, np.ndarray]:
+) -> Tuple[np.ndarray, Dict[str, np.ndarray], np.ndarray]:
     """
-    Pure-NumPy deterministic engine computing the 13-indicator orthogonal basis (B_13^perp)
-    and the 5 Best Summary Indicators (`Composite_Summary_Index`, `Mahalanobis_Summary_Index`,
-    `DFM_Summary_Index`, `Diffusion_Summary_Index`, `SPCA_Summary_Index`), plus
-    `SPCA_Active_Pillars` and `Crash_Liquidation_Damper`.
-
-    Executes identically in server-side Python and client-side Pyodide WebAssembly.
+    Shared deterministic builder for the 13-dimensional orthogonal matrix Z_orth in R^{n x 13}
+    and the 5 Gram-Schmidt orthogonalized residual columns.
     """
     spy = np.asarray(raw_cols.get("SPY", np.ones(100)), dtype=np.float64)
     n = len(spy)
@@ -308,7 +327,6 @@ def compute_orthogonal_basis_and_summaries_numpy(
             return np.asarray(raw_cols[name], dtype=np.float64)
         return np.full(n, fallback_val, dtype=np.float64)
 
-    # 1. Extract & causally standardize root & candidate series
     z_cape = causal_stationary_unit_variance(_get("Shiller_CAPE", 25.0), window=window)
 
     if "Margin_Debt_Velocity_20D" in raw_cols:
@@ -346,13 +364,12 @@ def compute_orthogonal_basis_and_summaries_numpy(
 
     lppls_arr = _get("LPPLS_Confidence", 0.1)
     z_lppls_raw = causal_stationary_unit_variance(lppls_arr, window=window)
-    z_lppls_orth = causal_gram_schmidt(z_lppls_raw, [z_cape], window=window)
+    z_lppls_orth = causal_gram_schmidt(z_lppls_raw, [z_cape, z_md_vel_orth, z_vix_slope_orth], window=window)
 
     z_tda_ent = causal_stationary_unit_variance(_get("TDA_Persistence_Entropy", 2.0), window=window)
     z_wav_ent = causal_stationary_unit_variance(_get("Wavelet_Spectral_Entropy", 2.0), window=window)
     z_liq_mom = causal_stationary_unit_variance(_get("Liquidity_Momentum", 0.0), window=window)
 
-    # Assemble 13-dimensional orthogonal matrix Z_orth in R^{n x 13}
     Z_orth = np.column_stack(
         [
             z_cape,
@@ -370,6 +387,47 @@ def compute_orthogonal_basis_and_summaries_numpy(
             z_liq_mom,
         ]
     )
+    orth_cols = {
+        "Margin_Debt_Velocity_Orth": z_md_vel_orth.astype(np.float32),
+        "OVX_VIX_Orthogonal": z_ovx_vix_orth.astype(np.float32),
+        "VIX_Slope_Orthogonal": z_vix_slope_orth.astype(np.float32),
+        "Housing_PTI_Orthogonal": z_hpti_orth.astype(np.float32),
+        "LPPLS_Orthogonal": z_lppls_orth.astype(np.float32),
+    }
+    return Z_orth, orth_cols, spy
+
+
+def compute_orthogonal_basis_and_summaries_numpy(
+    raw_cols: Dict[str, np.ndarray],
+    window: int = 252,
+) -> Dict[str, np.ndarray]:
+    """
+    Pure-NumPy deterministic engine computing the 13-indicator orthogonal basis (B_13^perp)
+    and the 5 Best Summary Indicators (`Composite_Summary_Index`, `Mahalanobis_Summary_Index`,
+    `DFM_Summary_Index`, `Diffusion_Summary_Index`, `SPCA_Summary_Index`), plus
+    `SPCA_Active_Pillars` and `Crash_Liquidation_Damper`.
+
+    Executes identically in server-side Python and client-side Pyodide WebAssembly.
+    """
+    Z_orth, orth_cols, spy = _compute_orthogonal_basis_matrix(raw_cols, window=window)
+    n = len(spy)
+    if n == 0:
+        z0 = np.zeros(0, dtype=np.float32)
+        return {
+            **orth_cols,
+            "Composite_Summary_Index": z0,
+            "Mahalanobis_Summary_Index": z0,
+            "DFM_Summary_Index": z0,
+            "Diffusion_Summary_Index": z0,
+            "SPCA_Summary_Index": z0,
+            "SPCA_Active_Pillars": z0,
+            "Crash_Liquidation_Damper": z0,
+        }
+
+    def _get(name: str, fallback_val: float = 0.0) -> np.ndarray:
+        if name in raw_cols and raw_cols[name] is not None:
+            return np.asarray(raw_cols[name], dtype=np.float64)
+        return np.full(n, fallback_val, dtype=np.float64)
 
     b_vec = np.array([DIRECTION_VECTOR_B_13[col] for col in INDICATORS_13_ORTHOGONAL], dtype=np.float64)
     w_norm = INFORMATION_WEIGHTS_13.copy()
@@ -384,101 +442,104 @@ def compute_orthogonal_basis_and_summaries_numpy(
     Z_tilde = Z_orth * b_vec[np.newaxis, :]
     U_pos = np.maximum(Z_tilde, 0.0)
     V_neg = np.maximum(-Z_tilde, 0.0)
+    U_weighted = U_pos * sqrt_w[np.newaxis, :]
 
-    # Output arrays
-    I_mahal = np.zeros(n, dtype=np.float64)
-    I_diffusion = np.zeros(n, dtype=np.float64)
+    # --------------------------------------------------------------------------
+    # A. Vectorized Asymmetric Precision Mahalanobis & Crash Liquidation Damper
+    # --------------------------------------------------------------------------
+    cs_Z = np.zeros((n + 1, 13), dtype=np.float64)
+    np.cumsum(Z_tilde, axis=0, out=cs_Z[1:])
+    ZZ_outer = Z_tilde[:, :, np.newaxis] * Z_tilde[:, np.newaxis, :]
+    cs_ZZ = np.zeros((n + 1, 13, 13), dtype=np.float64)
+    np.cumsum(ZZ_outer, axis=0, out=cs_ZZ[1:])
+
+    starts_cov = np.maximum(0, np.arange(n) - window + 1)
+    m_cov = (np.arange(n) - starts_cov + 1).astype(np.float64)
+    sum_Z = cs_Z[1:] - cs_Z[starts_cov]
+    sum_ZZ = cs_ZZ[1:] - cs_ZZ[starts_cov]
+    mean_Z = sum_Z / m_cov[:, np.newaxis]
+    S_emp = (sum_ZZ - m_cov[:, np.newaxis, np.newaxis] * (mean_Z[:, :, np.newaxis] * mean_Z[:, np.newaxis, :])) / np.maximum(
+        m_cov[:, np.newaxis, np.newaxis] - 1.0, 1.0
+    )
+    Cov_all = np.where((m_cov < 20)[:, np.newaxis, np.newaxis], eye_13[np.newaxis, :, :], 0.85 * S_emp + 0.15 * eye_13[np.newaxis, :, :])
+    Prec_all = np.linalg.inv(Cov_all)
+    M_all = Prec_all * (sqrt_w[np.newaxis, :, np.newaxis] * sqrt_w[np.newaxis, np.newaxis, :])
+
+    M_ones = np.sum(M_all, axis=2)  # (n, 13)
+    denom_s = np.sqrt(np.maximum(np.sum(M_ones, axis=1), 1e-6))
+    s_all_vec = np.sum(M_ones * Z_tilde, axis=1) / denom_s
+
+    d_b_vec = np.sqrt(np.maximum(np.einsum("ni,nij,nj->n", U_pos, M_all, U_pos), 0.0))
+    d_c_vec = np.sqrt(np.maximum(np.einsum("ni,nij,nj->n", V_neg, M_all, V_neg), 0.0))
+
+    eff_z = s_all_vec + 0.45 * (d_b_vec - d_c_vec)
+    p_struct = norm_cdf_numpy((eff_z - 0.85) / 1.45)
+
+    spy_peak63 = np.array([max(float(np.max(spy[max(0, t - 62) : t + 1])), 1e-4) for t in range(n)], dtype=np.float64)
+    dd63 = (spy - spy_peak63) / spy_peak63
+    excess_crash = np.maximum(d_c_vec - d_b_vec, 0.0) + np.maximum(-s_all_vec - 0.40, 0.0) + np.maximum((-dd63 - 0.16) * 12.0, 0.0)
+    lambda_crash = np.exp(-0.35 * (excess_crash ** 2))
+    I_mahal = 100.0 * p_struct * lambda_crash
+
+    # --------------------------------------------------------------------------
+    # B. Vectorized Conference Board Percentile-Rank & 63-Day Momentum Diffusion
+    # --------------------------------------------------------------------------
+    starts_63 = np.maximum(0, np.arange(n) - 63 + 1)
+    m_63 = (np.arange(n) - starts_63 + 1).astype(np.float64)
+    mean_Z63 = (cs_Z[1:] - cs_Z[starts_63]) / m_63[:, np.newaxis]
+    dz63_all = Z_tilde - mean_Z63
+    rank_mat = norm_cdf_numpy(Z_tilde)
+
+    cb_disc = np.where(
+        (rank_mat >= 0.70) | ((rank_mat >= 0.58) & (dz63_all > 0.05)),
+        1.0,
+        np.where((rank_mat <= 0.30) | ((rank_mat <= 0.42) & (dz63_all < -0.05)), 0.0, 0.5),
+    )
+    sig_c = 1.0 / (1.0 + np.exp(-(Z_tilde + 0.25 * dz63_all) / 0.55))
+    diff_c = 0.5 * cb_disc + 0.5 * sig_c
+    b_diff = diff_c @ w_prob
+    I_diffusion = (100.0 / (1.0 + np.exp(-(b_diff - 0.50) / 0.065))) * lambda_crash
+
+    # --------------------------------------------------------------------------
+    # C. Batched Perron-Frobenius Conic Upper-Orthant Matrix C_{t,+}^{(126)}
+    #    Shared by Causal State-Space DFM & Conic Elastic-Net Sparse PCA
+    # --------------------------------------------------------------------------
+    UU_outer = U_weighted[:, :, np.newaxis] * U_weighted[:, np.newaxis, :]
+    cs_UU = np.zeros((n + 1, 13, 13), dtype=np.float64)
+    np.cumsum(UU_outer, axis=0, out=cs_UU[1:])
+    starts_126 = np.maximum(0, np.arange(n) - 126 + 1)
+    m_126 = (np.arange(n) - starts_126 + 1).astype(np.float64)
+    C_pos_all = (cs_UU[1:] - cs_UU[starts_126]) / m_126[:, np.newaxis, np.newaxis] + 0.05 * eye_13[np.newaxis, :, :]
+    evals_all, evecs_all = np.linalg.eigh(C_pos_all)
+
     I_dfm = np.zeros(n, dtype=np.float64)
     I_spca = np.zeros(n, dtype=np.float64)
     spca_active_pillars = np.zeros(n, dtype=np.float64)
-    lambda_crash = np.zeros(n, dtype=np.float64)
 
-    # Precompute Gaussian copula marginal ranks r_{t,j} = Phi(Z_tilde_{t,j}) for Diffusion Index
-    rank_mat = norm_cdf_numpy(Z_tilde)
-
-    # State variables for Causal AR(2) Kalman Filter (DFM)
     f_prev1 = 0.0
     f_prev2 = 0.0
     P_prev = 1.0
     phi1, phi2 = 0.78, 0.17
     q_var = 1.0 - (phi1 + phi2) ** 2
     l1_gamma = 0.25
+    unif_13 = ones_13 / np.sqrt(13.0)
 
     for t in range(n):
-        # ----------------------------------------------------------------------
-        # A. Asymmetric Precision Mahalanobis & Crash-Bottom Liquidation Damper
-        # ----------------------------------------------------------------------
-        start_cov = max(0, t - window + 1)
-        m_cov = t - start_cov + 1
-        if m_cov < 20:
-            Cov_t = eye_13
-        else:
-            seg_z = Z_tilde[start_cov : t + 1]
-            S_emp = np.cov(seg_z, rowvar=False)
-            Cov_t = 0.85 * S_emp + 0.15 * eye_13
-
-        Prec_t = np.linalg.inv(Cov_t)
-        M_t = W_diag_sqrt @ Prec_t @ W_diag_sqrt
-        denom_s = np.sqrt(max(float(ones_13.T @ M_t @ ones_13), 1e-6))
-        s_t = float(ones_13.T @ M_t @ Z_tilde[t]) / denom_s
-
-        u_t = U_pos[t]
-        v_t = V_neg[t]
-        d_b = np.sqrt(max(float(u_t.T @ M_t @ u_t), 0.0))
-        d_c = np.sqrt(max(float(v_t.T @ M_t @ v_t), 0.0))
-
-        eff_z = s_t + 0.45 * (d_b - d_c)
-        p_struct_t = float(norm_cdf_numpy(np.array([(eff_z - 0.85) / 1.45]))[0])
-
-        s63_dd = max(0, t - 63 + 1)
-        spy_peak63 = max(float(np.max(spy[s63_dd : t + 1])), 1e-4)
-        dd63_t = (spy[t] - spy_peak63) / spy_peak63
-        excess_crash = max(d_c - d_b, 0.0) + max(-s_t - 0.40, 0.0) + max((-dd63_t - 0.16) * 12.0, 0.0)
-        lam_c = float(np.exp(-0.35 * (excess_crash ** 2)))
-        lambda_crash[t] = lam_c
-        I_mahal[t] = 100.0 * p_struct_t * lam_c
-
-        # ----------------------------------------------------------------------
-        # B. Conference Board Percentile-Rank & 63-Day Momentum Diffusion Index
-        # ----------------------------------------------------------------------
-        s63 = max(0, t - 63 + 1)
-        dz63 = Z_tilde[t] - np.mean(Z_tilde[s63 : t + 1], axis=0)
-        r_t = rank_mat[t]
-        z_t = Z_tilde[t]
-
-        cb_disc = np.where(
-            (r_t >= 0.70) | ((r_t >= 0.58) & (dz63 > 0.05)),
-            1.0,
-            np.where((r_t <= 0.30) | ((r_t <= 0.42) & (dz63 < -0.05)), 0.0, 0.5),
-        )
-        sig_c = 1.0 / (1.0 + np.exp(-(z_t + 0.25 * dz63) / 0.55))
-        diff_c = 0.5 * cb_disc + 0.5 * sig_c
-        b_diff = float(np.dot(diff_c, w_prob))
-        I_diffusion[t] = (100.0 / (1.0 + np.exp(-(b_diff - 0.50) / 0.065))) * lam_c
-
-        # ----------------------------------------------------------------------
-        # C. Perron-Frobenius Conic Upper-Orthant Matrix C_{t,+}^{(126)}
-        #    Shared by Causal State-Space DFM & Conic Elastic-Net Sparse PCA
-        # ----------------------------------------------------------------------
-        s126 = max(0, t - 126 + 1)
-        seg_u = U_pos[s126 : t + 1] * sqrt_w[np.newaxis, :]
-        m126 = len(seg_u)
-        y_pos_t = u_t * sqrt_w
-
-        if m126 < 15:
-            lam_dfm = ones_13 / np.sqrt(13.0)
+        y_pos_t = U_weighted[t]
+        lam_c = lambda_crash[t]
+        if m_126[t] < 15:
+            lam_dfm = unif_13
             R_diag = np.full(13, 0.5, dtype=np.float64)
-            beta_sp = ones_13 / np.sqrt(13.0)
+            beta_sp = unif_13
         else:
-            C_pos = (seg_u.T @ seg_u) / float(m126) + 0.05 * eye_13
-            evals, evecs = np.linalg.eigh(C_pos)
-            v_max = evecs[:, -1]
+            C_pos = C_pos_all[t]
+            v_max = evecs_all[t, :, -1]
             if np.sum(v_max) < 0.0:
                 v_max = -v_max
             lam_raw = np.maximum(v_max, 0.0)
             norm_l = float(np.linalg.norm(lam_raw))
-            lam_dfm = lam_raw / norm_l if norm_l > 1e-8 else ones_13 / np.sqrt(13.0)
-            r_vec = np.diag(C_pos) - (lam_dfm ** 2) * evals[-1]
+            lam_dfm = lam_raw / norm_l if norm_l > 1e-8 else unif_13
+            r_vec = np.diag(C_pos) - (lam_dfm ** 2) * evals_all[t, -1]
             R_diag = np.maximum(r_vec, 0.15)
 
             # Conic Alternating Soft-Thresholding for Sparse PCA (Zou, Hastie & Tibshirani 2006)
@@ -536,11 +597,7 @@ def compute_orthogonal_basis_and_summaries_numpy(
 
     return {
         # 5 Causal Gram-Schmidt Orthogonalized Basis Columns
-        "Margin_Debt_Velocity_Orth": z_md_vel_orth.astype(np.float32),
-        "OVX_VIX_Orthogonal": z_ovx_vix_orth.astype(np.float32),
-        "VIX_Slope_Orthogonal": z_vix_slope_orth.astype(np.float32),
-        "Housing_PTI_Orthogonal": z_hpti_orth.astype(np.float32),
-        "LPPLS_Orthogonal": z_lppls_orth.astype(np.float32),
+        **orth_cols,
         # 5 Selected Best Summary Indicators (Tab 8)
         "Composite_Summary_Index": np.clip(I_star, 0.0, 100.0).astype(np.float32),
         "Mahalanobis_Summary_Index": np.clip(I_mahal, 0.0, 100.0).astype(np.float32),
@@ -573,74 +630,46 @@ class CompositeSummaryEngine:
                 raw_cols[col] = df[col].to_numpy()
             except Exception:
                 pass
-        spy = np.asarray(raw_cols.get("SPY", np.ones(len(df))), dtype=np.float64)
-        n = len(spy)
+        Z_orth, _, _ = _compute_orthogonal_basis_matrix(raw_cols, window=self.rolling_window)
+        return Z_orth
 
-        def _get(name: str, fallback_val: float = 0.0) -> np.ndarray:
-            if name in raw_cols and raw_cols[name] is not None:
-                return np.asarray(raw_cols[name], dtype=np.float64)
-            return np.full(n, fallback_val, dtype=np.float64)
+    def get_orthogonal_pillar_attribution(
+        self,
+        df: pl.DataFrame,
+        row_idx: int = -1,
+        top_k: int = 5,
+    ) -> List[Dict[str, Any]]:
+        """
+        Return the ranked B_13^perp pillar contributions at row `row_idx`, sorted by
+        weighted positive bubble orthant contribution u_{t,j} * sqrt(w_j) and |z_tilde_{t,j}|.
+        """
+        Z_orth = self.get_standardized_orthogonal_matrix(df)
+        if len(Z_orth) == 0:
+            return []
+        z_row = Z_orth[row_idx]
+        b_vec = np.array([DIRECTION_VECTOR_B_13[col] for col in INDICATORS_13_ORTHOGONAL], dtype=np.float64)
+        w_norm = 13.0 * INFORMATION_WEIGHTS_13 / np.sum(INFORMATION_WEIGHTS_13)
+        sqrt_w = np.sqrt(w_norm)
 
-        w = self.rolling_window
-        z_cape = causal_stationary_unit_variance(_get("Shiller_CAPE", 25.0), window=w)
-        if "Margin_Debt_Velocity_20D" in raw_cols:
-            md_vel_arr = _get("Margin_Debt_Velocity_20D", 0.0)
-        else:
-            md_arr = causal_ffill_clean(_get("FINRA_Margin_Debt", 800.0), 800.0)
-            md_vel_arr = np.zeros(n, dtype=np.float64)
-            if n > 20:
-                md_vel_arr[20:] = (md_arr[20:] - md_arr[:-20]) / np.maximum(np.abs(md_arr[:-20]), 1e-6) * 100.0
-        z_md_vel_raw = causal_stationary_unit_variance(md_vel_arr, window=w)
-        z_md_vel_orth = causal_gram_schmidt(z_md_vel_raw, [z_cape], window=w)
+        z_tilde = z_row * b_vec
+        u_weighted = np.maximum(z_tilde, 0.0) * sqrt_w
+        scores = np.where(u_weighted > 0.0, u_weighted + 10.0, np.abs(z_tilde) * sqrt_w)
+        order = np.argsort(scores)[::-1][: max(1, min(top_k, len(INDICATORS_13_ORTHOGONAL)))]
 
-        z_gsadf = causal_stationary_unit_variance(_get("GSADF_Stat", 0.0), window=w)
-        z_gsadf_gpt = causal_stationary_unit_variance(_get("GSADF_GPT_Adjusted", 0.0), window=w)
-        z_skew = causal_stationary_unit_variance(_get("^SKEW", 130.0), window=w)
-
-        vix_slope_arr = _get("VIX_Term_Structure_Slope", 0.1)
-        z_vix_slope_raw = causal_stationary_unit_variance(vix_slope_arr, window=w)
-        z_vix_slope_orth = causal_gram_schmidt(z_vix_slope_raw, [z_cape], window=w)
-
-        ovx_vix_arr = _get("OVX_VIX_CrossAsset_Ratio", 1.5)
-        z_ovx_vix_raw = causal_stationary_unit_variance(ovx_vix_arr, window=w)
-        z_ovx_vix_orth = causal_gram_schmidt(z_ovx_vix_raw, [z_vix_slope_raw, z_cape], window=w)
-
-        hpti_arr = _get("Housing_Price_to_Income", 5.0)
-        z_hpti_raw = causal_stationary_unit_variance(hpti_arr, window=w)
-        z_hpti_orth = causal_gram_schmidt(z_hpti_raw, [z_cape], window=w)
-
-        if "XLK_SPY_Ratio" in raw_cols:
-            xlk_spy_arr = _get("XLK_SPY_Ratio", 0.3)
-        else:
-            xlk_arr = _get("XLK", 100.0)
-            xlk_spy_arr = xlk_arr / np.maximum(spy, 1e-6)
-        z_xlk_spy = causal_stationary_unit_variance(xlk_spy_arr, window=w)
-
-        lppls_arr = _get("LPPLS_Confidence", 0.1)
-        z_lppls_raw = causal_stationary_unit_variance(lppls_arr, window=w)
-        z_lppls_orth = causal_gram_schmidt(z_lppls_raw, [z_cape], window=w)
-
-        z_tda_ent = causal_stationary_unit_variance(_get("TDA_Persistence_Entropy", 2.0), window=w)
-        z_wav_ent = causal_stationary_unit_variance(_get("Wavelet_Spectral_Entropy", 2.0), window=w)
-        z_liq_mom = causal_stationary_unit_variance(_get("Liquidity_Momentum", 0.0), window=w)
-
-        return np.column_stack(
-            [
-                z_cape,
-                z_md_vel_orth,
-                z_gsadf,
-                z_gsadf_gpt,
-                z_skew,
-                z_ovx_vix_orth,
-                z_vix_slope_orth,
-                z_hpti_orth,
-                z_xlk_spy,
-                z_lppls_orth,
-                z_tda_ent,
-                z_wav_ent,
-                z_liq_mom,
-            ]
-        )
+        out: List[Dict[str, Any]] = []
+        for idx in order:
+            name = INDICATORS_13_ORTHOGONAL[idx]
+            out.append(
+                {
+                    "indicator": name,
+                    "z_orthogonal": float(z_row[idx]),
+                    "z_polarity_aligned": float(z_tilde[idx]),
+                    "conic_contribution": float(u_weighted[idx]),
+                    "information_weight": float(w_norm[idx]),
+                    "confidence": float(CONFIDENCE_SCORES_13[name]),
+                }
+            )
+        return out
 
     def compute_all_summary_indicators(self, df: pl.DataFrame) -> pl.DataFrame:
         """

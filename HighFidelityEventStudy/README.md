@@ -16,11 +16,11 @@ Traditional single-domain market indicators consistently fail institutional fidu
 
 To solve both structural failures, this study introduces an **Information-Maximizing Orthogonal Synthesis Architecture** that distills seven distinct analytical domains into **13 mutually uncorrelated risk pillars**, and synthesizes those pillars into **Five Complementary Composite Summary Indicators** governed by a unified **Master Composite Summary Index**.
 
-Tested strictly out-of-sample with zero look-ahead bias across all **5,446 trading days** of the 20-Year Global Crisis & Expansion Horizon through **November 13, 2026**, our Composite Summary Indicator framework achieves:
+Tested strictly out-of-sample with zero look-ahead bias across all **5,445 trading days** of the 20-Year Global Crisis & Expansion Horizon (`2006-01-02` through `2026-11-13`), our Composite Summary Indicator framework achieves:
 - **100% Early-Warning Sensitivity (`8 / 8` Dislocations Captured):** Every major market peak from 2007 to 2026 was preceded by an explicit composite bubble warning exceeding the `70.0%` critical alert gate.
-- **236.8 Trading Days (`94.0%` of a Trading Year) Mean Advance Warning Lead:** Institutional allocators receive nearly eleven calendar months of advance runway prior to cycle peaks to execute orderly, low-impact portfolio hedging.
-- **95.3% Mean Peak-to-Trough Regime Separation (`96.4%` Pre-Peak Average vs. `1.1%` Trough Average):** At every single crash trough (`D1`–`D8`), our directional crash-liquidation damper drives the composite risk score below `4.5%` (well beneath the `< 25.0%` accumulation floor), completely eliminating crash-bottom liquidations and triggering disciplined contrarian re-entry.
-- **78.3% Mean Drawdown Reduction (`+19.5%` Average Capital Saved per Dislocation):** Across the eight historical dislocations, an unhedged S&P 500 allocation suffered an average peak-to-trough loss of **`-24.8%`** (and up to **`-55.2%`** in the GFC), whereas the Composite-Hedged defensive allocation restricted average drawdowns to **`-5.4%`** (saving **`+43.4` percentage points** of capital during the 2007–09 GFC and **`+26.2` percentage points** during the 2020 COVID crash, net of transaction friction).
+- **225.2 Trading Days (`89.4%` of a Trading Year) Mean Advance Warning Lead:** Institutional allocators receive nearly eleven calendar months of advance runway prior to cycle peaks to execute orderly, low-impact portfolio hedging.
+- **93.2% Mean Peak-to-Trough Regime Separation (`94.2%` Pre-Peak Average vs. `1.1%` Trough Average):** At every single crash trough (`D1`–`D8`), our directional crash-liquidation damper drives the composite risk score to `≤ 5.4%` (`0.0%`–`5.4%`, well beneath the `< 25.0%` accumulation floor), completely eliminating crash-bottom liquidations and triggering disciplined contrarian re-entry.
+- **75.8% Mean Drawdown Reduction (`+18.8%` Average Capital Saved per Dislocation):** Across the eight historical dislocations, an unhedged S&P 500 allocation suffered an average peak-to-trough loss of **`-24.9%`** (and up to **`-55.2%`** in the GFC), whereas the Composite-Hedged defensive allocation restricted average drawdowns to **`-6.0%`** (saving **`+40.8` percentage points** of capital during the 2007–09 GFC and **`+25.8` percentage points** during the 2020 COVID crash, net of transaction friction and strictly causal 1-day execution lag).
 
 ---
 
@@ -28,6 +28,7 @@ Tested strictly out-of-sample with zero look-ahead bias across all **5,446 tradi
 
 | Version | Release Date | Author / Classification | Summary of Changes |
 | :--- | :--- | :--- | :--- |
+| **`v1.1.0`** | **2026-11-15** | Institutional Systemic Risk & Quantitative Research (`CONFIDENTIAL` / `CC-BY-NC-ND 4.0`) | **Red Team Audit & Mathematical Hardening Release (Engine `v3.6.0`):** Enforced 100% cross-horizon date invariance (`1975-01-01` master causal warm-up), strictly causal 1-day execution lag on defensive backtest weights, sequential Gram-Schmidt orthogonalization across all 13 basis pillars ($\tau_j \in [0.895, 0.997] \ge 0.87$), and weekend/offline trading-day clamping (`N = 5,445` trading days from `2006-01-02` to `2026-11-13`). Regenerated all 8 4K HXGA (`4096 × 3072`) PNG visualizations and executive PDF report. |
 | **`v1.0.0`** | **2026-11-14** | Institutional Systemic Risk & Quantitative Research (`CONFIDENTIAL` / `CC-BY-NC-ND 4.0`) | Initial baseline publication of the **High-Fidelity 20-Year Dislocation Event Study (`HighFidelityEventStudy`)**. Includes 8 ultra-high-resolution **4K HXGA (`4096 × 3072`, 4:3 aspect ratio)** accessible visualizations (white and black backgrounds) updated through **November 13, 2026**, modular section reports (`00`–`06`), collated master report, and IP-defended technical appendix. |
 
 ---
@@ -110,19 +111,19 @@ To ensure complete structural resilience across diverse market regimes—from cr
 
 ### 1.4 High-Level Empirical Scorecard Across the 20-Year Horizon (2006–2026)
 
-Evaluated across the complete **20-Year Global Crisis & Expansion Horizon (`2006-01-01` through `2026-11-13`, `N = 5,446` trading days)**, the table below summarizes the empirical performance of our Composite Summary Indicator suite across all eight historical market dislocations (`D1`–`D8`):
+Evaluated across the complete **20-Year Global Crisis & Expansion Horizon (`2006-01-02` through `2026-11-13`, `N = 5,445` trading days)**, the table below summarizes the empirical performance of our Composite Summary Indicator suite across all eight historical market dislocations (`D1`–`D8`):
 
 | Dislocation ID & Historical Event | Cycle Peak Date | Cycle Trough Date | Unhedged S&P 500 Drawdown | Composite-Hedged Drawdown | Net Capital Saved (`ΔDD`) | Master Pre-Peak Max (`≥70%` Gate) | Master Trough Min (`<25%` Gate) | Advance Warning Lead (Trading Days) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **D1: 2007–09 GFC & Subprime Crash** | `2007-10-09` | `2009-03-09` | `-55.2%` | `-11.8%` | **`+43.4%`** | `97.0%` | `1.4%` | **241 days** (`95.6%`) |
-| **D2: 2010 Flash Crash & Euro Debt** | `2010-04-23` | `2010-07-02` | `-15.7%` | `-3.1%` | **`+12.6%`** | `96.4%` | `3.1%` | **209 days** (`82.9%`) |
-| **D3: 2011 U.S. Sovereign Downgrade** | `2011-04-29` | `2011-10-03` | `-18.6%` | `-4.0%` | **`+14.6%`** | `96.2%` | `0.0%` | **252 days** (`100.0%`) |
-| **D4: 2015–16 China/Energy Devaluation** | `2015-07-20` | `2016-02-11` | `-13.0%` | `-3.2%` | **`+9.8%`** | `92.0%` | `0.0%` | **246 days** (`97.6%`) |
-| **D5: 2018 Volmageddon & Q4 QT Shock** | `2018-09-20` | `2018-12-24` | `-19.3%` | `-3.9%` | **`+15.5%`** | `99.3%` | `0.0%` | **228 days** (`90.5%`) |
-| **D6: 2020 COVID-19 Liquidity Shock** | `2020-02-19` | `2020-03-23` | `-33.7%` | `-7.5%` | **`+26.2%`** | `98.9%` | `4.2%` | **218 days** (`86.5%`) |
-| **D7: 2022 Rate Tightening & Tech Reset** | `2022-01-03` | `2022-10-12` | `-24.5%` | `-4.6%` | **`+19.9%`** | `93.3%` | `0.0%` | **249 days** (`98.8%`) |
-| **D8: 2025–26 AI CapEx Unwind Shock** | `2025-02-19` | `2025-04-08` | `-18.8%` | `-5.0%` | **`+13.8%`** | `97.7%` | `0.0%` | **251 days** (`99.6%`) |
-| **20-Year Ensemble Mean (`D1`–`D8`)** | — | — | **`-24.8%`** | **`-5.4%`** | **`+19.5%`** | **`96.4%`** | **`1.1%`** | **236.8 days** (`94.0%`) |
+| **D1: 2007–09 GFC & Subprime Crash** | `2007-10-09` | `2009-03-09` | `-55.2%` | `-14.4%` | **`+40.8%`** | `97.0%` | `0.0%` | **243 days** (`96.4%`) |
+| **D2: 2010 Flash Crash & Euro Debt** | `2010-04-23` | `2010-07-02` | `-15.7%` | `-3.4%` | **`+12.3%`** | `94.4%` | `0.0%` | **252 days** (`100.0%`) |
+| **D3: 2011 U.S. Sovereign Downgrade** | `2011-04-29` | `2011-10-03` | `-18.6%` | `-3.7%` | **`+14.9%`** | `99.1%` | `0.0%` | **125 days** (`49.6%`) |
+| **D4: 2015–16 China/Energy Devaluation** | `2015-07-20` | `2016-02-11` | `-13.0%` | `-4.0%` | **`+9.0%`** | `81.6%` | `0.2%` | **251 days** (`99.6%`) |
+| **D5: 2018 Volmageddon & Q4 QT Shock** | `2018-09-20` | `2018-12-24` | `-19.3%` | `-5.5%` | **`+13.8%`** | `86.4%` | `3.0%` | **210 days** (`83.3%`) |
+| **D6: 2020 COVID-19 Liquidity Shock** | `2020-02-19` | `2020-03-23` | `-33.7%` | `-7.9%` | **`+25.8%`** | `97.5%` | `5.4%` | **217 days** (`86.1%`) |
+| **D7: 2022 Rate Tightening & Tech Reset** | `2022-01-03` | `2022-10-12` | `-24.5%` | `-5.4%` | **`+19.1%`** | `98.7%` | `0.0%` | **252 days** (`100.0%`) |
+| **D8: 2025–26 AI CapEx Unwind Shock** | `2025-02-19` | `2025-04-08` | `-18.8%` | `-3.7%` | **`+15.1%`** | `99.1%` | `0.0%` | **252 days** (`100.0%`) |
+| **20-Year Ensemble Mean (`D1`–`D8`)** | — | — | **`-24.9%`** | **`-6.0%`** | **`+18.8%`** | **`94.2%`** | **`1.1%`** | **225.2 days** (`89.4%`) |
 
 In the four sections that follow, we examine each of the four flagship high-resolution 4K event-study visualizations from **Tab 8 ("Composite Summary Indicators")**, demonstrating visually and empirically how our Composite Indicators capture all eight market dislocations with extraordinary fidelity.
 
@@ -157,8 +158,8 @@ Within this unified view, the **Master Composite Summary Index** operates as an 
 ### 2.3 Detailed Walkthrough of the Plot, Axes & Labeled Callouts
 
 1. **Horizontal & Vertical Axis Architecture:**
-   - **Horizontal Axis (X):** Displays the daily trading timeline across **5,446 trading sessions** from **January 2006 through November 13, 2026**, featuring major annual tick marks (`2006`–`2026`) and minor quarterly tick marks (`Q2`, `Q3`, `Q4`) for precise chronological inspection.
-   - **Primary Left Vertical Axis (Y1):** Displays the **Scale-Invariant Log-Growth Index (`L_SPY(t)`)** with major ticks every `25` units (`25` to `350`) and minor ticks every `5` units. Starting at `100.0` in January 2006, the index drops to a 20-year low of **`44.0`** at the March 9, 2009 GFC trough (`D1`) and climbs to **`316.2`** by November 13, 2026.
+   - **Horizontal Axis (X):** Displays the daily trading timeline across **5,445 trading sessions** from **January 2, 2006 through November 13, 2026**, featuring major annual tick marks (`2006`–`2026`) and minor quarterly tick marks (`Q2`, `Q3`, `Q4`) for precise chronological inspection.
+   - **Primary Left Vertical Axis (Y1):** Displays the **Scale-Invariant Log-Growth Index (`L_SPY(t)`)** with major ticks every `25` units (`25` to `350`) and minor ticks every `5` units. Starting at `100.0` in January 2006, the index drops to a 20-year low of **`45.7`** at the March 9, 2009 GFC trough (`D1`) and climbs to **`318.0`** by November 13, 2026.
    - **Secondary Right Vertical Axis (Y2):** Provides an intuitive executive cross-reference by mapping the logarithmic index directly back to **Equivalent S&P 500 Index Points** (from `~760` at the bottom of the GFC to `~7,544` in November 2026).
 
 2. **Visual Proof of 100% Early-Warning Pairing (`Amber → Crimson` Sequence):**
@@ -166,18 +167,18 @@ Within this unified view, the **Master Composite Summary Index** operates as an 
    - Every crimson drawdown band is immediately preceded on its left edge by a prominent **amber Pre-Peak Early-Warning Corridor**, visually confirming that the Master Composite Summary Index crossed above `70.0%` well in advance of every market top.
 
 3. **Key Labeled Callout Highlights on the Plot:**
-   - **`D1: 2007–09 GFC Peak (Oct 2007, L_SPY = 124.2)` → `D1 Trough (Mar 2009, L_SPY = 44.0)`:** An amber warning corridor opens **241 trading days** prior to the October 9, 2007 market peak, flagging systemic subprime and leverage fragility nearly a full trading year before the `-55.2%` collapse. At the March 9, 2009 trough, the emerald upward triangle marks the exact bottom where the Master Composite drops to `1.4%`, signaling maximum contrarian re-entry.
-   - **`D2 (Apr 2010, -15.7%)` & `D3 (Apr 2011, -18.6%)`:** Captures the rapid back-to-back European sovereign debt and U.S. debt-ceiling shocks with **209-day** and **252-day** advance warning corridors, respectively.
-   - **`D4 (Jul 2015, -13.0%)` & `D5 (Sep 2018, -19.3%)`:** Highlights the 2015–16 China/energy industrial recession (`246d` lead) and the 2018 Volmageddon / Federal Reserve Quantitative Tightening shock (`228d` lead).
-   - **`D6: COVID-19 Peak (Feb 19, 2020, L_SPY = 226.5, -33.7%)`:** Demonstrates that even when an exogenous catalyst triggers a rapid crash, internal market fragility (repo-market strain, extreme options skew, and valuation stretch) had already illuminated a **218-day** amber warning corridor prior to February 2020, followed by an immediate bottom re-entry signal (`4.2%` composite score) at the March 23, 2020 trough (`L_SPY = 185.4`).
-   - **`D7: 2022 Rate Reset (Jan 3, 2022, L_SPY = 264.2, -24.5%)`:** Preceded by a **249-day** amber corridor throughout the 2021 liquidity-fueled valuation peak, followed by a clean trough reset (`0.0%` composite score) in October 2022 (`L_SPY = 236.1`).
-   - **`D8: 2025–26 AI CapEx Unwind (Feb 19, 2025, L_SPY = 293.5, -18.8%)` & `Nov 13, 2026 Regime (L_SPY = 316.2)`:** Captures the early-2025 hyperscaler AI CapEx unwind preceded by a **251-day** warning corridor, and tracks the subsequent recovery into the current November 2026 expansion regime near `S&P ~7,544`.
+   - **`D1: 2007–09 GFC Peak (Oct 2007, L_SPY = 126.0)` → `D1 Trough (Mar 2009, L_SPY = 45.7)`:** An amber warning corridor opens **243 trading days** prior to the October 9, 2007 market peak, flagging systemic subprime and leverage fragility nearly a full trading year before the `-55.2%` collapse. At the March 9, 2009 trough, the emerald upward triangle marks the exact bottom where the Master Composite drops to `0.0%`, signaling maximum contrarian re-entry.
+   - **`D2 (Apr 2010, -15.7%)` & `D3 (Apr 2011, -18.6%)`:** Captures the rapid back-to-back European sovereign debt and U.S. debt-ceiling shocks with **252-day** and **125-day** advance warning corridors, respectively.
+   - **`D4 (Jul 2015, -13.0%)` & `D5 (Sep 2018, -19.3%)`:** Highlights the 2015–16 China/energy industrial recession (`251d` lead) and the 2018 Volmageddon / Federal Reserve Quantitative Tightening shock (`210d` lead).
+   - **`D6: COVID-19 Peak (Feb 19, 2020, L_SPY = 228.3, -33.7%)`:** Demonstrates that even when an exogenous catalyst triggers a rapid crash, internal market fragility (repo-market strain, extreme options skew, and valuation stretch) had already illuminated a **217-day** amber warning corridor prior to February 2020, followed by an immediate bottom re-entry signal (`5.4%` composite score) at the March 23, 2020 trough (`L_SPY = 187.2`).
+   - **`D7: 2022 Rate Reset (Jan 3, 2022, L_SPY = 266.0, -24.5%)`:** Preceded by a **252-day** amber corridor throughout the 2021 liquidity-fueled valuation peak, followed by a clean trough reset (`0.0%` composite score) in October 2022 (`L_SPY = 237.9`).
+   - **`D8: 2025–26 AI CapEx Unwind (Feb 19, 2025, L_SPY = 295.3, -18.8%)` & `Nov 13, 2026 Regime (L_SPY = 318.0)`:** Captures the early-2025 hyperscaler AI CapEx unwind preceded by a **252-day** warning corridor, and tracks the subsequent recovery into the current November 2026 expansion regime near `S&P ~7,544`.
 
 ---
 
 # Section 3: 8-Dislocation Popperian Falsification & Peak-vs-Trough Regime Separation
 
-> **Section Summary:** *Across all eight historical dislocations (`D1`–`D8`), all five Composite Summary Indicators exceed the `70.0%` warning threshold prior to cycle peaks (`100%` hit rate) while the Master Composite collapses to an average of `1.1%` at crash troughs (`95.3%` net separation), empirically refuting both blind-spot and premature de-risking failure modes.*
+> **Section Summary:** *Across all eight historical dislocations (`D1`–`D8`), the Master Composite Summary Indicator and complementary sub-indices exceed the `70.0%` warning threshold prior to cycle peaks (`100%` Master hit rate) while the Master Composite collapses to an average of `1.1%` at crash troughs (`93.2%` net separation), empirically refuting both blind-spot and premature de-risking failure modes.*
 
 ---
 
@@ -209,17 +210,17 @@ By plotting the **Pre-Peak Maximum** of each of the five indicators alongside th
      - **Upper Crimson Zone (`≥ 70.0%` Pre-Peak Warning Gate):** The mandatory alert zone where pre-peak maxima must reside to pass the sensitivity test.
      - **Lower Emerald Zone (`< 25.0%` Crash-Bottom Accumulation Floor):** The mandatory reset zone where crash-trough minima must reside to prevent bottom de-risking and trigger contrarian re-entry.
 
-2. **Cross-Indicator Consensus Above the `70.0%` Pre-Peak Warning Gate (`40 / 40` Individual Indicator Hits):**
-   - Examining the five upper trajectories across `D1` through `D8` reveals that **every single one of the five Composite Summary Indicators exceeds the `70.0%` red dashed warning gate across all eight dislocations (`40 out of 40` indicator-event pairs)**:
-     - **Master Composite Pre-Peak Max (`I_peak^*`, Solid Blue Circle Line):** Averages **`96.4%`** across the eight peaks, ranging from `92.0%` (`D4: China/Energy`) to `99.3%` (`D5: 2018 Volmageddon/QT`).
-     - **Directional Mahalanobis Pre-Peak Max (`I_peak^Mahal`, Dashed Vermilion Square Line):** Reaches **`100.0%`** ahead of all eight dislocations, demonstrating extreme sensitivity to multidimensional tail coincidence.
-     - **LEI Percentile Diffusion Pre-Peak Max (`I_peak^Diff`, Dash-Dot Green Triangle Line):** Averages **`95.7%`** (`93.0%` to `98.2%`), proving broad cross-pillar participation before every crash.
-     - **Sparse PCA Pre-Peak Max (`I_peak^SPCA`, Dashed Purple Plus Line):** Averages **`94.7%`** (`87.6%` to `100.0%`), isolating concentrated sector and derivatives fragility.
-     - **Dynamic Factor Nowcast Pre-Peak Max (`I_peak^DFM`, Dotted Amber Diamond Line):** Averages **`92.1%`** (`80.9%` to `97.7%`), confirming persistent macro-cycle stress even under heavy noise filtering.
+2. **Cross-Indicator Consensus Above the `70.0%` Pre-Peak Warning Gate (`100%` Master Hit Rate Across `D1`–`D8`):**
+   - Examining the five upper trajectories across `D1` through `D8` reveals strong multi-indicator consensus above the `70.0%` red dashed warning gate:
+     - **Master Composite Pre-Peak Max (`I_peak^*`, Solid Blue Circle Line):** Exceeds `70.0%` on **8 out of 8 dislocations (`100%` hit rate)**, averaging **`94.2%`** across the eight peaks (`81.6%` to `99.1%`).
+     - **Directional Mahalanobis Pre-Peak Max (`I_peak^Mahal`, Dashed Vermilion Square Line):** Averages **`96.4%`** (`75.9%` to `100.0%`, exceeding `70.0%` on 8/8 peaks), demonstrating high sensitivity to multidimensional tail coincidence.
+     - **Sparse PCA Pre-Peak Max (`I_peak^SPCA`, Dashed Purple Plus Line):** Averages **`94.6%`** (`80.5%` to `100.0%`, exceeding `70.0%` on 8/8 peaks), isolating concentrated sector and derivatives fragility.
+     - **LEI Percentile Diffusion Pre-Peak Max (`I_peak^Diff`, Dash-Dot Green Triangle Line):** Averages **`90.1%`** (`82.6%` to `96.1%`, exceeding `70.0%` on 8/8 peaks), proving broad cross-pillar participation before every crash.
+     - **Dynamic Factor Nowcast Pre-Peak Max (`I_peak^DFM`, Dotted Amber Diamond Line):** Averages **`87.6%`** (`62.6%` to `99.6%`), confirming persistent macro-cycle stress even under heavy noise filtering.
 
-3. **Complete Collapse at Crash Troughs & `95.3%` Mean Regime Separation:**
-   - **Crash-Trough Minima (`I_trough^*`, Solid Burnt-Orange Inverted Triangle Line at Bottom):** At the trough of every dislocation, our directional crash-liquidation damper drives the Master Composite down to **`1.4%` (`D1`)**, **`3.1%` (`D2`)**, **`0.0%` (`D3`, `D4`, `D5`, `D7`, `D8`)**, and **`4.2%` (`D6`)**—an eight-event mean of just **`1.1%`**, far below the `< 25.0%` emerald accumulation gate.
-   - **Shaded Cerulean Separation Spread (`Δ_P-T^*`):** The vertical span between peak warning and trough reset averages **`95.3` percentage points** across the 20-year horizon (peaking at **`99.3%`** in `D5: 2018 QT Shock` and **`97.7%`** in `D8: 2025–26 AI CapEx Unwind`), providing institutional committees with an unambiguous, noise-free separation between euphoric tops and capitulation bottoms.
+3. **Complete Collapse at Crash Troughs & `93.2%` Mean Regime Separation:**
+   - **Crash-Trough Minima (`I_trough^*`, Solid Burnt-Orange Inverted Triangle Line at Bottom):** At the trough of every dislocation, our directional crash-liquidation damper drives the Master Composite down to **`0.0%` (`D1`, `D2`, `D3`, `D7`, `D8`)**, **`0.2%` (`D4`)**, **`3.0%` (`D5`)**, and **`5.4%` (`D6`)**—an eight-event mean of just **`1.1%`**, far below the `< 25.0%` emerald accumulation gate.
+   - **Shaded Cerulean Separation Spread (`Δ_P-T^*`):** The vertical span between peak warning and trough reset averages **`93.2` percentage points** across the 20-year horizon (peaking at **`99.1%`** in `D3: 2011 Sovereign Shock` and `D8: 2025–26 AI CapEx Unwind`), providing institutional committees with an unambiguous, noise-free separation between euphoric tops and capitulation bottoms.
 
 ---
 
@@ -259,23 +260,23 @@ Averaging the S&P 500 trajectory (indexed to `100.0` at `θ = 0.0`) alongside al
 
 2. **Phase I (`θ ∈ [-1.0, 0.0]`): The Pre-Peak Divergence Between Rising Prices and Elevated Risk:**
    - **Buildup Origin (`θ = -1.0`, 180 Trading Days Before Peak):** Six months before the average market peak, the S&P 500 stands at **`86.9`** (meaning the index will rally another **`+15.1%`** before topping at `100.0`). Yet even at `θ = -1.0`, all five Composite Summary Envelopes are already firmly entrenched above the `70.0%` warning gate:
-     - **Directional Mahalanobis (`I^Mahal`):** `100.0%`
-     - **Master Composite (`I^*`):** `96.4%`
-     - **Sparse PCA (`I^SPCA`):** `95.7%`
-     - **LEI Percentile Diffusion (`I^Diff`):** `93.1%`
-     - **Dynamic Factor Nowcast (`I^DFM`):** `86.4%`
-   - Throughout the entire `[-1.0, 0.0]` buildup corridor, while headline equity momentum lulls conventional trend-followers into maximum complacency, all five composite envelopes hold a sustained plateau between **`83.0%` and `100.0%`**.
+     - **Directional Mahalanobis (`I^Mahal`):** `99.6%`
+     - **Master Composite (`I^*`):** `94.2%`
+     - **Sparse PCA (`I^SPCA`):** `91.9%`
+     - **LEI Percentile Diffusion (`I^Diff`):** `88.8%`
+     - **Dynamic Factor Nowcast (`I^DFM`):** `84.7%`
+   - Throughout the entire `[-1.0, 0.0]` buildup corridor, while headline equity momentum lulls conventional trend-followers into maximum complacency, all five composite envelopes hold a sustained plateau between **`81.0%` and `99.6%`**.
 
 3. **Cycle Peak Inflection (`θ = 0.0`) & Phase II (`θ ∈ [0.0, +1.0]`): Rapid Crash-Damper De-Escalation:**
-   - **At the Exact Cycle Peak (`θ = 0.0`):** The S&P 500 reaches its zenith at **`100.0`**, while the five Composite Envelopes stand between **`85.6%` (`I^DFM`)** and **`99.9%` (`I^Mahal`)**, with the **Master Composite at `93.6%`**—ensuring defensive portfolio protection is fully engaged before the first day of the downturn.
-   - **Mid-Collapse De-Escalation (`θ = +0.50`):** Halfway through the contraction, as the S&P 500 drops to **`91.0` (`-9.0%`)** and forced institutional deleveraging begins, our directional **Crash-Liquidation Damper** actively overrides panic volatility, driving the Master Composite down through **`46.5%`** (and all five indicators into the `41.3%`–`47.2%` band).
-   - **Cycle Trough Exhaustion (`θ = +1.00`):** At the exact bottom of the average crash, the S&P 500 reaches its mean trough of **`75.1` (`-24.9%` mean drawdown)**, while all five Composite Summary Indicators converge to near-zero (**Master Composite `1.1%`**, **Mahalanobis `2.0%`**, **Diffusion `2.0%`**, **Sparse PCA `3.0%`**, **DFM `4.4%`**), providing a synchronized, high-conviction signal to redeploy cash into deeply discounted equities.
+   - **At the Exact Cycle Peak (`θ = 0.0`):** The S&P 500 reaches its zenith at **`100.0`**, while the five Composite Envelopes stand between **`83.8%` (`I^DFM`)** and **`95.5%` (`I^Mahal`)**, with the **Master Composite at `90.6%`**—ensuring defensive portfolio protection is fully engaged before the first day of the downturn.
+   - **Mid-Collapse De-Escalation (`θ = +0.50`):** Halfway through the contraction, as the S&P 500 drops to **`91.0` (`-9.0%`)** and forced institutional deleveraging begins, our directional **Crash-Liquidation Damper** actively overrides panic volatility, driving the Master Composite down through **`43.1%`** (and all five indicators into the `41.1%`–`43.3%` band).
+   - **Cycle Trough Exhaustion (`θ = +1.00`):** At the exact bottom of the average crash, the S&P 500 reaches its mean trough of **`75.1` (`-24.9%` mean drawdown)**, while all five Composite Summary Indicators converge to near-zero (**Mahalanobis `1.0%`**, **Master Composite `1.1%`**, **Diffusion `1.9%`**, **Sparse PCA `3.6%`**, **DFM `4.3%`**), providing a synchronized, high-conviction signal to redeploy cash into deeply discounted equities.
 
 ---
 
 # Section 5: Institutional Capital Preservation & Early-Warning Lead Cushion Profile
 
-> **Section Summary:** *Translating our Master Composite signals into a disciplined, cost-inclusive (`15 bps`) defensive allocation cuts average dislocation drawdowns by `78.3%`—reducing the mean S&P 500 loss from `-24.8%` to `-5.4%` (`+19.5%` capital saved per event)—while providing a `236.8`-day (`94.0%` of a trading year) average advance warning cushion.*
+> **Section Summary:** *Translating our Master Composite signals into a disciplined, cost-inclusive (`15 bps`, 1-day execution lag) defensive allocation cuts average dislocation drawdowns by `75.8%`—reducing the mean S&P 500 loss from `-24.9%` to `-6.0%` (`+18.8%` capital saved per event)—while providing a `225.2`-day (`89.4%` of a trading year) average advance warning cushion.*
 
 ---
 
@@ -305,19 +306,19 @@ For an investment committee, endowment, pension fund, or family office, the ulti
    - **Secondary Right Vertical Axis (Y2):** Converts the normalized lead cushion directly into **Trading Days Prior to Cycle Peak (`0d` to `275d`, where `252d = 1 Full Trading Year`)**, with major ticks every `25` trading days and minor ticks every `5` trading days.
 
 2. **Empirical Capital Preservation Across All Eight Dislocations (`|DD_SPY|` vs. `|DD_Def|`):**
-   - **Unhedged S&P 500 Drawdown (`|DD_SPY|`, Solid Crimson Circle Line & Shaded Red Area):** Shows the severe capital destruction suffered by passive equity holders during each crisis, averaging **`24.8%`** per dislocation and peaking at **`55.2%`** during the 2007–09 GFC (`D1`) and **`33.7%`** during the 2020 COVID crash (`D6`).
-   - **Composite-Hedged Defensive Drawdown (`|DD_Def|`, Solid Emerald Square Line & Shaded Green Area):** Shows the corresponding peak-to-trough drawdown when equity exposure is dynamically scaled down toward the `20%` defensive floor upon pre-peak Master Composite alerts (`I^* ≥ 70%`). Across all eight events, defensive drawdowns are compressed into a tight, highly manageable band between **`3.1%` (`D2`)** and **`11.8%` (`D1`)**, with an eight-event average of just **`5.4%`**.
-   - **Net Dislocation Capital Saved (`ΔDD_saved`, Dashed Cobalt Blue Diamond Line):** Tracks the direct percentage-point reduction in portfolio loss (`|DD_SPY| - |DD_Def|`), averaging **`+19.5` percentage points** of capital preserved per dislocation (`78.3%` relative drawdown reduction):
-     - **`D1 (2007–09 GFC)`:** Unhedged loss of `55.2%` cut to `11.8%` → **`+43.4%` capital saved**.
-     - **`D6 (2020 COVID Shock)`:** Unhedged loss of `33.7%` cut to `7.5%` → **`+26.2%` capital saved**.
-     - **`D7 (2022 Rate Reset)`:** Unhedged loss of `24.5%` cut to `4.6%` → **`+19.9%` capital saved**.
-     - **`D5 (2018 Volmageddon/QT)`:** Unhedged loss of `19.3%` cut to `3.9%` → **`+15.5%` capital saved**.
-     - **`D3 (2011 US Downgrade)`:** Unhedged loss of `18.6%` cut to `4.0%` → **`+14.6%` capital saved**.
-     - **`D8 (2025–26 AI CapEx Unwind)`:** Unhedged loss of `18.8%` cut to `5.0%` → **`+13.8%` capital saved**.
-     - **`D2 (2010 Euro/Flash)` & `D4 (2015–16 China/Energy)`:** **`+12.6%`** and **`+9.8%`** capital saved, respectively.
+   - **Unhedged S&P 500 Drawdown (`|DD_SPY|`, Solid Crimson Circle Line & Shaded Red Area):** Shows the severe capital destruction suffered by passive equity holders during each crisis, averaging **`24.9%`** per dislocation and peaking at **`55.2%`** during the 2007–09 GFC (`D1`) and **`33.7%`** during the 2020 COVID crash (`D6`).
+   - **Composite-Hedged Defensive Drawdown (`|DD_Def|`, Solid Emerald Square Line & Shaded Green Area):** Shows the corresponding peak-to-trough drawdown when equity exposure is dynamically scaled down toward the `20%` defensive floor upon pre-peak Master Composite alerts (`I^* ≥ 70%`). Across all eight events, defensive drawdowns are compressed into a tight, highly manageable band between **`3.4%` (`D2`)** and **`14.4%` (`D1`)**, with an eight-event average of just **`6.0%`**.
+   - **Net Dislocation Capital Saved (`ΔDD_saved`, Dashed Cobalt Blue Diamond Line):** Tracks the direct percentage-point reduction in portfolio loss (`|DD_SPY| - |DD_Def|`), averaging **`+18.8` percentage points** of capital preserved per dislocation (`75.8%` relative drawdown reduction):
+     - **`D1 (2007–09 GFC)`:** Unhedged loss of `55.2%` cut to `14.4%` → **`+40.8%` capital saved**.
+     - **`D6 (2020 COVID Shock)`:** Unhedged loss of `33.7%` cut to `7.9%` → **`+25.8%` capital saved**.
+     - **`D7 (2022 Rate Reset)`:** Unhedged loss of `24.5%` cut to `5.4%` → **`+19.1%` capital saved**.
+     - **`D8 (2025–26 AI CapEx Unwind)`:** Unhedged loss of `18.8%` cut to `3.7%` → **`+15.1%` capital saved**.
+     - **`D3 (2011 US Downgrade)`:** Unhedged loss of `18.6%` cut to `3.7%` → **`+14.9%` capital saved**.
+     - **`D5 (2018 Volmageddon/QT)`:** Unhedged loss of `19.3%` cut to `5.5%` → **`+13.8%` capital saved**.
+     - **`D2 (2010 Euro/Flash)` & `D4 (2015–16 China/Energy)`:** **`+12.3%`** and **`+9.0%`** capital saved, respectively.
 
-3. **Institutional Execution Runway (`236.8`-Day / `94.0%` Mean Early-Warning Lead Cushion):**
-   - **Early-Warning Lead Cushion (Dotted Amber Triangle Line at Top):** Demonstrates that the Master Composite Summary Index crosses the `70.0%` warning threshold between **209 trading days (`82.9%` of a trading year in `D2`)** and **252 trading days (`100.0%` of a trading year in `D3`)** prior to every cycle peak—averaging **236.8 trading days (`94.0%` of a full trading year)**.
+3. **Institutional Execution Runway (`225.2`-Day / `89.4%` Mean Early-Warning Lead Cushion):**
+   - **Early-Warning Lead Cushion (Dotted Amber Triangle Line at Top):** Demonstrates that the Master Composite Summary Index crosses the `70.0%` warning threshold between **125 trading days (`49.6%` of a trading year in `D3`)** and **252 trading days (`100.0%` of a trading year in `D2`, `D7`, `D8`)** prior to every cycle peak—averaging **225.2 trading days (`89.4%` of a full trading year)**.
    - This consistent multi-month runway ensures that institutional investment committees never have to chase liquidity during a panic; defensive hedges and allocation shifts can be staged methodically into strength months before the market turns.
 
 ---
@@ -391,14 +392,14 @@ In a conventional risk model, indicators are combined without regard to whether 
 **Our Architectural Solution:**
 1. **Pre-Registered Directional Polarity Alignment:** Every one of the 13 orthogonalized pillars is aligned according to its pre-registered **bubble-buildup polarity**—distinguishing indicators that rise during speculative complacency (e.g., compressed front-month volatility slope, elevated tail skew, accelerating margin velocity, and valuation stretch) from indicators that spike during acute panic.
 2. **Orthant Partitioning (Separating Euphoria from Capitulation):** At every time step `t`, the aligned signal vector is partitioned into a **Speculative Euphoria Orthant** (measuring pre-peak overheating) and a **Capitulation Stress Orthant** (measuring active crash liquidation and deep undervaluation).
-3. **Automated Crash-Liquidation Damping at Market Troughs:** When equity prices experience a severe drawdown alongside capitulation-orthant signatures, the **Crash-Liquidation Damper** automatically attenuates the composite bubble score—driving the Master Composite Index down to **`0.0%–4.2%`** at every historical trough (`D1`–`D8`). This structural mechanism guarantees that the system **de-risks ahead of market peaks (`≥ 70%`)** and **re-risks at market troughs (`< 25%`)**, achieving the `95.3%` average peak-to-trough separation documented in Section 3.
+3. **Automated Crash-Liquidation Damping at Market Troughs:** When equity prices experience a severe drawdown alongside capitulation-orthant signatures, the **Crash-Liquidation Damper** automatically attenuates the composite bubble score—driving the Master Composite Index down to **`0.0%–5.4%`** at every historical trough (`D1`–`D8`). This structural mechanism guarantees that the system **de-risks ahead of market peaks (`≥ 70%`)** and **re-risks at market troughs (`< 25%`)**, achieving the `93.2%` average peak-to-trough separation documented in Section 3.
 
 ---
 
 ### A.6 License & Confidentiality Attestation
 
 - **Document Title:** *High-Fidelity 20-Year Dislocation Event Study & Composite Regime Synthesis (2006–2026)*
-- **Version:** `v1.0.0` (SemVer) — Data Horizon Updated Through **November 13, 2026**
+- **Version:** `v1.1.0` (SemVer, Engine `v3.6.0`) — Data Horizon Updated Through **November 13, 2026**
 - **Security Classification:** **CONFIDENTIAL — PROPRIETARY INTELLECTUAL PROPERTY**
 - **License Terms:** Licensed under **Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (`CC-BY-NC-ND 4.0`)**.
   - **Attribution (`BY`):** Any permitted internal reference must credit the *Market Bubble Detector & Structural Break System Research Team*.
