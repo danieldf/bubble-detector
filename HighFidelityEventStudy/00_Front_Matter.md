@@ -8,7 +8,7 @@
 
 ## Executive Summary Abstract
 
-Over the past twenty years (**January 2006 – November 2026**), global equity markets have navigated eight major structural dislocations—spanning the **2007–09 Global Financial Crisis (`D1`, `-55.2%`)**, the **2010 Eurozone & Flash Crash (`D2`, `-15.7%`)**, the **2011 U.S. Sovereign Debt Downgrade (`D3`, `-18.6%`)**, the **2015–16 China & Energy Devaluation (`D4`, `-13.0%`)**, the **2018 Volmageddon & Quantitative Tightening Shock (`D5`, `-19.3%`)**, the **2020 COVID-19 Liquidity Shock (`D6`, `-33.7%`)**, the **2022 Rate-Tightening & Technology Reset (`D7`, `-24.5%`)**, and the **2025–26 AI CapEx Unwind Shock (`D8`, `-18.8%`)**.
+Over the past twenty years (**January 2, 2006 – November 13, 2026**), global equity markets have navigated eight major structural dislocations—spanning the **2007–09 Global Financial Crisis (`D1`, `-55.2%` total-return drawdown)**, the **2010 Eurozone & Flash Crash (`D2`, `-15.7%`)**, the **2011 U.S. Sovereign Debt Downgrade (`D3`, `-18.6%`)**, the **2015–16 China & Energy Devaluation (`D4`, `-13.0%`)**, the **2018 Q4 Federal Reserve Quantitative Tightening & Trade-War Shock (`D5`, `-19.3%`)**, the **2020 COVID-19 Liquidity Shock (`D6`, `-33.7%`)**, the **2022 Rate-Tightening & Technology Reset (`D7`, `-24.5%`)**, and the **Early-2025 Tariff & AI CapEx Reset (`D8`, `-18.8%`)**.
 
 Traditional single-domain market indicators consistently fail institutional fiduciaries in two ways:
 1. **Multicollinear Redundancy & False Alarms:** Conventional valuation, volatility, and momentum indicators often measure overlapping market phenomena, generating premature or conflicting signals during healthy multi-year expansions.
@@ -16,11 +16,11 @@ Traditional single-domain market indicators consistently fail institutional fidu
 
 To solve both structural failures, this study introduces an **Information-Maximizing Orthogonal Synthesis Architecture** that distills seven distinct analytical domains into **13 mutually uncorrelated risk pillars**, and synthesizes those pillars into **Five Complementary Composite Summary Indicators** governed by a unified **Master Composite Summary Index**.
 
-Tested strictly out-of-sample with zero look-ahead bias across all **5,445 trading days** of the 20-Year Global Crisis & Expansion Horizon (`2006-01-02` through `2026-11-13`), our Composite Summary Indicator framework achieves:
-- **100% Early-Warning Sensitivity (`8 / 8` Dislocations Captured):** Every major market peak from 2007 to 2026 was preceded by an explicit composite bubble warning exceeding the `70.0%` critical alert gate.
-- **225.2 Trading Days (`89.4%` of a Trading Year) Mean Advance Warning Lead:** Institutional allocators receive nearly eleven calendar months of advance runway prior to cycle peaks to execute orderly, low-impact portfolio hedging.
+Tested strictly out-of-sample with zero look-ahead bias across all **5,445 weekday business sessions (`5,250` NYSE exchange sessions with causal holiday forward-fill)** of the 20-Year Global Crisis & Expansion Horizon (`2006-01-02` through `2026-11-13`), our Composite Summary Indicator framework achieves:
+- **100% Early-Warning Sensitivity (`8 / 8` Dislocations Captured):** Every major market peak from 2007 to 2026 was preceded by an explicit composite bubble warning exceeding the `70.0%` critical alert gate (while spending only `14.86%` of all days at or above `70.0%` across the full 20-year timeline, with today's November 13, 2026 reading at a neutral **`45.4%`**).
+- **225.2 Business Days (`89.4%` of a 252-Day Year) Mean Advance Warning Lead:** Institutional allocators receive nearly eleven calendar months of advance runway prior to cycle peaks to execute orderly, low-impact portfolio hedging.
 - **93.2% Mean Peak-to-Trough Regime Separation (`94.2%` Pre-Peak Average vs. `1.1%` Trough Average):** At every single crash trough (`D1`–`D8`), our directional crash-liquidation damper drives the composite risk score to `≤ 5.4%` (`0.0%`–`5.4%`, well beneath the `< 25.0%` accumulation floor), completely eliminating crash-bottom liquidations and triggering disciplined contrarian re-entry.
-- **75.8% Mean Drawdown Reduction (`+18.8%` Average Capital Saved per Dislocation):** Across the eight historical dislocations, an unhedged S&P 500 allocation suffered an average peak-to-trough loss of **`-24.9%`** (and up to **`-55.2%`** in the GFC), whereas the Composite-Hedged defensive allocation restricted average drawdowns to **`-6.0%`** (saving **`+40.8` percentage points** of capital during the 2007–09 GFC and **`+25.8` percentage points** during the 2020 COVID crash, net of transaction friction and strictly causal 1-day execution lag).
+- **75.8% Mean Drawdown Reduction (`+18.8%` Average Capital Saved per Dislocation):** Across the eight historical dislocations, an unhedged S&P 500 total-return allocation (`SPY`) suffered an average peak-to-trough loss of **`-24.9%`** (and up to **`-55.2%`** in the GFC), whereas the Composite-Hedged defensive allocation restricted average drawdowns to **`-6.0%`** (`-6.5%` under historical 3-month Treasury bill cash yields), saving **`+40.8` percentage points** of capital during the 2007–09 GFC and **`+25.8` percentage points** during the 2020 COVID crash, net of transaction friction and strictly causal 1-day execution lag.
 
 ---
 
@@ -28,7 +28,8 @@ Tested strictly out-of-sample with zero look-ahead bias across all **5,445 tradi
 
 | Version | Release Date | Author / Classification | Summary of Changes |
 | :--- | :--- | :--- | :--- |
-| **`v1.1.0`** | **2026-11-15** | Institutional Systemic Risk & Quantitative Research (`CONFIDENTIAL` / `CC-BY-NC-ND 4.0`) | **Red Team Audit & Mathematical Hardening Release (Engine `v3.6.0`):** Enforced 100% cross-horizon date invariance (`1975-01-01` master causal warm-up), strictly causal 1-day execution lag on defensive backtest weights, sequential Gram-Schmidt orthogonalization across all 13 basis pillars ($\tau_j \in [0.895, 0.997] \ge 0.87$), and weekend/offline trading-day clamping (`N = 5,445` trading days from `2006-01-02` to `2026-11-13`). Regenerated all 8 4K HXGA (`4096 × 3072`) PNG visualizations and executive PDF report. |
+| **`v1.2.0`** | **2026-11-15** | Institutional Systemic Risk & Quantitative Research (`CONFIDENTIAL` / `CC-BY-NC-ND 4.0`) | **Institutional Due-Diligence Q&A & Report Harmonization Release (Engine `v3.7.0`):** Added **Appendix B: Institutional Due-Diligence & Third-Party Technical Q&A (`07_Appendix_B_Third_Party_Inquiries_QA.md`)** providing executive and IP-safe technical answers across all 6 third-party audit areas (full-period `2006–2026` crossing & false-alarm audit across all 66 de-clustered crossings, `180d` vs. `252d` vs. uncapped lead times, historical T-Bill cash yield reruns, pre-2006 `1987/1990/1998/2000` crisis audits, damper ON/OFF & threshold sensitivity matrices, live November 13, 2026 readings, and `graphify` architecture governance vs. TDA Pillar 11). Harmonized Plot 1 (`252d` amber corridors & `$100` total-return wealth axis), Plot 3 (bounded in-window SEA envelopes satisfying Jensen's inequality), event labels (`D5` Q4 2018 QT Shock, `D8` Early-2025 Tariff & AI CapEx Reset), and 1-decimal rounding across all sections and 4K PNGs. |
+| **`v1.1.0`** | **2026-11-15** | Institutional Systemic Risk & Quantitative Research (`CONFIDENTIAL` / `CC-BY-NC-ND 4.0`) | **Red Team Audit & Mathematical Hardening Release (Engine `v3.7.0`):** Enforced 100% cross-horizon date invariance (`1975-01-01` master causal warm-up), strictly causal 1-day execution lag on defensive backtest weights, sequential Gram-Schmidt orthogonalization across all 13 basis pillars ($\tau_j \in [0.895, 0.997] \ge 0.87$), and weekend/offline trading-day clamping (`N = 5,445` business sessions from `2006-01-02` to `2026-11-13`). Regenerated all 8 4K HXGA (`4096 × 3072`) PNG visualizations and executive PDF report. |
 | **`v1.0.0`** | **2026-11-14** | Institutional Systemic Risk & Quantitative Research (`CONFIDENTIAL` / `CC-BY-NC-ND 4.0`) | Initial baseline publication of the **High-Fidelity 20-Year Dislocation Event Study (`HighFidelityEventStudy`)**. Includes 8 ultra-high-resolution **4K HXGA (`4096 × 3072`, 4:3 aspect ratio)** accessible visualizations (white and black backgrounds) updated through **November 13, 2026**, modular section reports (`00`–`06`), collated master report, and IP-defended technical appendix. |
 
 ---
@@ -60,10 +61,17 @@ Tested strictly out-of-sample with zero look-ahead bias across all **5,445 tradi
    - *5.2 Executive Explanation of Dynamic Defensive Sizing & Fiduciary Lead Cushion*
    - *5.3 High-Resolution 4K Visualization: Dislocation Capital Preservation (`04_Dislocation_Capital_white.png`)*
    - *5.4 Detailed Walkthrough of Unhedged vs. Defensive Drawdowns, Saved Capital & Lead Horizons*
-6. **[Appendix: Architectural Principles & Methodological Justification (IP-Protected Technical Overview)](#appendix-architectural-principles--methodological-justification-ip-protected-technical-overview)**
+6. **[Appendix A: Architectural Principles & Methodological Justification (IP-Protected Technical Overview)](#appendix-a-architectural-principles--methodological-justification-ip-protected-technical-overview)**
    - *A.1 Scope & Intellectual Property Boundary*
    - *A.2 Eliminating Look-Ahead Bias & Non-Stationary Drift via Causal Standardization*
    - *A.3 Eliminating Multicollinearity via Sequential Cross-Domain Orthogonalization*
    - *A.4 Structural Mechanics of the Five Complementary Summary Engines*
    - *A.5 Directional Polarity Alignment & The Crash-Liquidation Damper*
    - *A.6 License & Confidentiality Attestation (`CC-BY-NC-ND 4.0`)*
+7. **[Appendix B: Institutional Due-Diligence & Third-Party Technical Q&A (IP-Protected Audit)](#appendix-b-institutional-due-diligence--third-party-technical-qa-ip-protected-audit)**
+   - *B.1 Full-Period Score Distribution, False-Alarm Audit & Forward Return/Drawdown Profiles (2006–2026)*
+   - *B.2 Lead-Time Definitions, Window Caps (180d vs. 252d vs. Uncapped) & Pre-Peak Duty Cycles*
+   - *B.3 Defensive Backtest Mechanics, Re-Entry Causality, 20-Year Portfolio Metrics & Actual T-Bill Rerun*
+   - *B.4 Out-of-Sample Walk-Forward Integrity, Pre-2006 Crises (1987–2002), Damper Ablation, Parameter Sensitivity & Version Lineage*
+   - *B.5 Resolution of Calendar, Total-Return Scaling, Envelope Jensen Inequality & Event Nomenclature Conventions*
+   - *B.6 Current Live Regime Readings (November 13, 2026) & Knowledge-Graph (`graphify`) vs. Topological Signal Architecture*

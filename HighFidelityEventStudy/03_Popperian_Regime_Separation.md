@@ -27,7 +27,7 @@ By plotting the **Pre-Peak Maximum** of each of the five indicators alongside th
 ### 3.3 Detailed Walkthrough of the Plot, Axes & Labeled Callouts
 
 1. **Horizontal & Vertical Axis Architecture:**
-   - **Horizontal Axis (X):** Enumerates the eight chronological market dislocation regimes (**`D1: 2007–09 GFC`** through **`D8: 2025–26 AI CapEx Unwind`**) along with their exact peak-to-trough calendar windows.
+   - **Horizontal Axis (X):** Enumerates the eight chronological market dislocation regimes (**`D1: 2007–09 GFC`** through **`D8: Early-2025 Tariff & AI CapEx Reset`**) along with their exact peak-to-trough calendar windows.
    - **Vertical Axis (Y):** Displays the **Composite Regime Risk Score (`0%` to `100%`)** with major ticks every `10%` and minor ticks every `2.5%`. Two horizontal Popperian falsification boundaries divide the chart into three actionable institutional zones:
      - **Upper Crimson Zone (`≥ 70.0%` Pre-Peak Warning Gate):** The mandatory alert zone where pre-peak maxima must reside to pass the sensitivity test.
      - **Lower Emerald Zone (`< 25.0%` Crash-Bottom Accumulation Floor):** The mandatory reset zone where crash-trough minima must reside to prevent bottom de-risking and trigger contrarian re-entry.
@@ -38,8 +38,8 @@ By plotting the **Pre-Peak Maximum** of each of the five indicators alongside th
      - **Directional Mahalanobis Pre-Peak Max (`I_peak^Mahal`, Dashed Vermilion Square Line):** Averages **`96.4%`** (`75.9%` to `100.0%`, exceeding `70.0%` on 8/8 peaks), demonstrating high sensitivity to multidimensional tail coincidence.
      - **Sparse PCA Pre-Peak Max (`I_peak^SPCA`, Dashed Purple Plus Line):** Averages **`94.6%`** (`80.5%` to `100.0%`, exceeding `70.0%` on 8/8 peaks), isolating concentrated sector and derivatives fragility.
      - **LEI Percentile Diffusion Pre-Peak Max (`I_peak^Diff`, Dash-Dot Green Triangle Line):** Averages **`90.1%`** (`82.6%` to `96.1%`, exceeding `70.0%` on 8/8 peaks), proving broad cross-pillar participation before every crash.
-     - **Dynamic Factor Nowcast Pre-Peak Max (`I_peak^DFM`, Dotted Amber Diamond Line):** Averages **`87.6%`** (`62.6%` to `99.6%`), confirming persistent macro-cycle stress even under heavy noise filtering.
+     - **Dynamic Factor Nowcast Pre-Peak Max (`I_peak^DFM`, Dotted Amber Diamond Line):** Averages **`87.7%`** (`62.6%` to `99.6%`), confirming persistent macro-cycle stress even under heavy noise filtering.
 
 3. **Complete Collapse at Crash Troughs & `93.2%` Mean Regime Separation:**
    - **Crash-Trough Minima (`I_trough^*`, Solid Burnt-Orange Inverted Triangle Line at Bottom):** At the trough of every dislocation, our directional crash-liquidation damper drives the Master Composite down to **`0.0%` (`D1`, `D2`, `D3`, `D7`, `D8`)**, **`0.2%` (`D4`)**, **`3.0%` (`D5`)**, and **`5.4%` (`D6`)**—an eight-event mean of just **`1.1%`**, far below the `< 25.0%` emerald accumulation gate.
-   - **Shaded Cerulean Separation Spread (`Δ_P-T^*`):** The vertical span between peak warning and trough reset averages **`93.2` percentage points** across the 20-year horizon (peaking at **`99.1%`** in `D3: 2011 Sovereign Shock` and `D8: 2025–26 AI CapEx Unwind`), providing institutional committees with an unambiguous, noise-free separation between euphoric tops and capitulation bottoms.
+   - **Shaded Cerulean Separation Spread (`Δ_P-T^*`):** The vertical span between peak warning and trough reset averages **`93.2` percentage points** across the 20-year horizon (peaking at **`99.1%`** in `D3: 2011 Sovereign Shock` and `D8: Early-2025 Tariff & AI CapEx Reset`), providing institutional committees with an unambiguous, noise-free separation between euphoric tops and capitulation bottoms.

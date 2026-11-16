@@ -6,9 +6,9 @@
     "semantic_hash": "74704117ab390aba7b2f5f1807ead6aa"
   },
   "GEMINI.md": {
-    "mtime": 1794767658.3185906,
-    "seen": 1794767710.2537038,
-    "ast_hash": "3fc4b020c9098f2f2965220117d1e917",
+    "mtime": 1794768284.37925,
+    "seen": 1794768340.512929,
+    "ast_hash": "7301f45fdfa380d6167bc5454a98fdf7",
     "semantic_hash": ""
   },
   "MarketBubble_DDFv100.md": {
@@ -24,9 +24,9 @@
     "semantic_hash": ""
   },
   "agvi_TechnicalSpecification_DDFv100.md": {
-    "mtime": 1794767615.673446,
-    "seen": 1794767710.253771,
-    "ast_hash": "687b0cac78465c69476d57aade4a255a",
+    "mtime": 1794768288.514599,
+    "seen": 1794768340.51311,
+    "ast_hash": "d29cca1e5244528128aa6c3b95c5b5b1",
     "semantic_hash": ""
   },
   "finra.png": {
@@ -42,9 +42,9 @@
     "semantic_hash": "78538ef52a859a3bf27399ac2e57cc65"
   },
   "bubble_detector/__init__.py": {
-    "mtime": 1794762763.018967,
-    "seen": 1794767710.253221,
-    "ast_hash": "09a1346ee93b25eb606a62505437ef25",
+    "mtime": 1794768278.769648,
+    "seen": 1794768340.5120609,
+    "ast_hash": "46388f9bb479cd85bc6bb461d15fc10e",
     "semantic_hash": ""
   },
   "bubble_detector/config.py": {
@@ -234,9 +234,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1794767654.733723,
-    "seen": 1794767710.253749,
-    "ast_hash": "06bbe3c596468b6334b2e156d6c80760",
+    "mtime": 1794768280.9160345,
+    "seen": 1794768340.513088,
+    "ast_hash": "6b287bc52900758e3b24a2909d06e0d3",
     "semantic_hash": ""
   },
   "tests/test_full_indicator_parity.py": {
@@ -258,15 +258,15 @@
     "semantic_hash": ""
   },
   "pyproject.toml": {
-    "mtime": 1794698827.5336332,
-    "seen": 1794698846.9085922,
-    "ast_hash": "5da25edf09911d537e0a5d5c5b45914f",
+    "mtime": 1794768277.7521682,
+    "seen": 1794768340.512567,
+    "ast_hash": "c235d605725c234851de7f8a4801596d",
     "semantic_hash": ""
   },
   "requirements.txt": {
-    "mtime": 1794767607.8808837,
-    "seen": 1794767710.253772,
-    "ast_hash": "dcb18fb1345db0d71ca046b39aefdc8b",
+    "mtime": 1794768285.7377217,
+    "seen": 1794768340.51311,
+    "ast_hash": "68865adec2fbb9f4af77d7b0e81d3012",
     "semantic_hash": ""
   },
   "bubble_detector/data/date_horizons.py": {
@@ -443,9 +443,9 @@
     "semantic_hash": ""
   },
   "sw.js": {
-    "mtime": 1794765243.0632613,
-    "seen": 1794767710.2534568,
-    "ast_hash": "ae40f9d7dfc35088a311ac5ea4bea257",
+    "mtime": 1794768339.6150455,
+    "seen": 1794768340.512579,
+    "ast_hash": "3919f8406fe163985eab13726743c95c",
     "semantic_hash": ""
   },
   "tests/test_ui_ux_wasm_optimizations.py": {
@@ -503,9 +503,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794767656.084286,
-    "seen": 1794767710.2537038,
-    "ast_hash": "898a7fc3c17a3c5f6b2373933e24b07d",
+    "mtime": 1794768283.2656212,
+    "seen": 1794768340.512928,
+    "ast_hash": "df10be0b4f24c30ff6354f50711b402b",
     "semantic_hash": ""
   },
   "tests/conftest.py": {

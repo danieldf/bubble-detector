@@ -39,18 +39,18 @@ To ensure complete structural resilience across diverse market regimes—from cr
 
 ### 1.4 High-Level Empirical Scorecard Across the 20-Year Horizon (2006–2026)
 
-Evaluated across the complete **20-Year Global Crisis & Expansion Horizon (`2006-01-02` through `2026-11-13`, `N = 5,445` trading days)**, the table below summarizes the empirical performance of our Composite Summary Indicator suite across all eight historical market dislocations (`D1`–`D8`):
+Evaluated across the complete **20-Year Global Crisis & Expansion Horizon (`2006-01-02` through `2026-11-13`, `N = 5,445` weekday business sessions / `5,250` NYSE exchange sessions)**, the table below summarizes the empirical performance of our Composite Summary Indicator suite across all eight historical market dislocations (`D1`–`D8`, where drawdowns reflect dividend-reinvested S&P 500 total-return series `SPY`):
 
-| Dislocation ID & Historical Event | Cycle Peak Date | Cycle Trough Date | Unhedged S&P 500 Drawdown | Composite-Hedged Drawdown | Net Capital Saved (`ΔDD`) | Master Pre-Peak Max (`≥70%` Gate) | Master Trough Min (`<25%` Gate) | Advance Warning Lead (Trading Days) |
+| Dislocation ID & Historical Event | Cycle Peak Date | Cycle Trough Date | Unhedged S&P 500 Total-Return Drawdown | Composite-Hedged Drawdown | Net Capital Saved (`ΔDD`) | Master Pre-Peak Max (`≥70%` Gate) | Master Trough Min (`<25%` Gate) | Advance Warning Lead (252d Window / 180d Window) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **D1: 2007–09 GFC & Subprime Crash** | `2007-10-09` | `2009-03-09` | `-55.2%` | `-14.4%` | **`+40.8%`** | `97.0%` | `0.0%` | **243 days** (`96.4%`) |
-| **D2: 2010 Flash Crash & Euro Debt** | `2010-04-23` | `2010-07-02` | `-15.7%` | `-3.4%` | **`+12.3%`** | `94.4%` | `0.0%` | **252 days** (`100.0%`) |
-| **D3: 2011 U.S. Sovereign Downgrade** | `2011-04-29` | `2011-10-03` | `-18.6%` | `-3.7%` | **`+14.9%`** | `99.1%` | `0.0%` | **125 days** (`49.6%`) |
-| **D4: 2015–16 China/Energy Devaluation** | `2015-07-20` | `2016-02-11` | `-13.0%` | `-4.0%` | **`+9.0%`** | `81.6%` | `0.2%` | **251 days** (`99.6%`) |
-| **D5: 2018 Volmageddon & Q4 QT Shock** | `2018-09-20` | `2018-12-24` | `-19.3%` | `-5.5%` | **`+13.8%`** | `86.4%` | `3.0%` | **210 days** (`83.3%`) |
-| **D6: 2020 COVID-19 Liquidity Shock** | `2020-02-19` | `2020-03-23` | `-33.7%` | `-7.9%` | **`+25.8%`** | `97.5%` | `5.4%` | **217 days** (`86.1%`) |
-| **D7: 2022 Rate Tightening & Tech Reset** | `2022-01-03` | `2022-10-12` | `-24.5%` | `-5.4%` | **`+19.1%`** | `98.7%` | `0.0%` | **252 days** (`100.0%`) |
-| **D8: 2025–26 AI CapEx Unwind Shock** | `2025-02-19` | `2025-04-08` | `-18.8%` | `-3.7%` | **`+15.1%`** | `99.1%` | `0.0%` | **252 days** (`100.0%`) |
-| **20-Year Ensemble Mean (`D1`–`D8`)** | — | — | **`-24.9%`** | **`-6.0%`** | **`+18.8%`** | **`94.2%`** | **`1.1%`** | **225.2 days** (`89.4%`) |
+| **D1: 2007–09 GFC & Subprime Crash** | `2007-10-09` | `2009-03-09` | `-55.2%` | `-14.4%` | **`+40.8%`** | `97.0%` | `0.0%` | **243d** (`96.4%`) / `160d` |
+| **D2: 2010 Flash Crash & Euro Debt** | `2010-04-23` | `2010-07-02` | `-15.7%` | `-3.4%` | **`+12.3%`** | `94.4%` | `0.0%` | **252d** (`100.0%`) / `173d` |
+| **D3: 2011 U.S. Sovereign Downgrade** | `2011-04-29` | `2011-10-03` | `-18.6%` | `-3.7%` | **`+14.9%`** | `99.1%` | `0.0%` | **125d** (`49.6%`) / `125d` |
+| **D4: 2015–16 China/Energy Devaluation** | `2015-07-20` | `2016-02-11` | `-13.0%` | `-4.0%` | **`+9.0%`** | `81.6%` | `0.2%` | **251d** (`99.6%`) / `42d` |
+| **D5: 2018 Q4 Fed QT & Trade-War Shock** | `2018-09-20` | `2018-12-24` | `-19.3%` | `-5.5%` | **`+13.8%`** | `86.3%` | `3.0%` | **210d** (`83.3%`) / `150d` |
+| **D6: 2020 COVID-19 Liquidity Shock** | `2020-02-19` | `2020-03-23` | `-33.7%` | `-7.9%` | **`+25.8%`** | `97.5%` | `5.4%` | **217d** (`86.1%`) / `155d` |
+| **D7: 2022 Rate Tightening & Tech Reset** | `2022-01-03` | `2022-10-12` | `-24.5%` | `-5.4%` | **`+19.1%`** | `98.7%` | `0.0%` | **252d** (`100.0%`) / `180d` |
+| **D8: Early-2025 Tariff & AI CapEx Reset** | `2025-02-19` | `2025-04-08` | `-18.8%` | `-3.7%` | **`+15.0%`** | `99.1%` | `0.0%` | **252d** (`100.0%`) / `144d` |
+| **20-Year Ensemble Mean (`D1`–`D8`)** | — | — | **`-24.9%`** | **`-6.0%`** | **`+18.8%`** | **`94.2%`** | **`1.1%`** | **225.2d** (`89.4%`) / `141.1d` |
 
 In the four sections that follow, we examine each of the four flagship high-resolution 4K event-study visualizations from **Tab 8 ("Composite Summary Indicators")**, demonstrating visually and empirically how our Composite Indicators capture all eight market dislocations with extraordinary fidelity.

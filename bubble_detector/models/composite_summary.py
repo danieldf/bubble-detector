@@ -985,8 +985,9 @@ def compute_dislocation_fidelity_metrics(
         trough_vals.append(float(log_spy[i_tr]))
 
         s_pre180 = max(0, i_pk - 180)
-        hits180 = np.where(c_arr[s_pre180 : i_pk + 1] >= threshold)[0]
-        i_alert = (s_pre180 + int(hits180[0])) if len(hits180) > 0 else max(0, i_pk - 45)
+        s_pre252 = max(0, i_pk - 252)
+        hits252 = np.where(c_arr[s_pre252 : i_pk + 1] >= threshold)[0]
+        i_alert = (s_pre252 + int(hits252[0])) if len(hits252) > 0 else max(0, i_pk - 45)
         lead_band_sig[i_alert : i_pk + 1] = 1
         crash_band_sig[i_pk : i_tr + 1] = 1
 
@@ -996,6 +997,7 @@ def compute_dislocation_fidelity_metrics(
         pk_d_v = float(np.max(d_arr[s_pre180 : i_pk + 1]))
         pk_df_v = float(np.max(df_arr[s_pre180 : i_pk + 1]))
         pk_s_v = float(np.max(s_arr[s_pre180 : i_pk + 1]))
+        pk_vals_m = [pk_c_v, pk_m_v, pk_d_v, pk_df_v, pk_s_v]
         tr_c_v = float(np.min(c_arr[max(0, i_tr - 10) : min(n, i_tr + 11)]))
 
         pk_comp_l.append(pk_c_v)
@@ -1020,8 +1022,6 @@ def compute_dislocation_fidelity_metrics(
         dd_def_l.append(dd_d_abs)
         dd_saved_l.append(max(dd_s_abs - dd_d_abs, 0.0))
 
-        s_pre252 = max(0, i_pk - 252)
-        hits252 = np.where(c_arr[s_pre252 : i_pk + 1] >= threshold)[0]
         ld_days = float(i_pk - (s_pre252 + int(hits252[0]))) if len(hits252) > 0 else 0.0
         lead_days_l.append(ld_days)
         lead_pct_l.append(min(ld_days / 252.0 * 100.0, 100.0))
@@ -1037,9 +1037,10 @@ def compute_dislocation_fidelity_metrics(
         sea_spy_list.append(s_curve)
 
         for m_idx, (raw_m, env_m) in enumerate(zip(ind_raws, ind_envs)):
-            c_neg = env_m[s_pre180 : i_pk + 1] if i_pk > s_pre180 else np.array([env_m[i_pk], env_m[i_pk]])
+            cap_m = pk_vals_m[m_idx]
+            c_neg = np.minimum(env_m[s_pre180 : i_pk + 1], cap_m) if i_pk > s_pre180 else np.array([cap_m, cap_m])
             tr_min_m = float(np.min(raw_m[max(0, i_tr - 10) : min(n, i_tr + 11)]))
-            pk_val_m = float(env_m[i_pk])
+            pk_val_m = float(min(env_m[i_pk], cap_m))
             raw_pos = np.interp(
                 th_p, t_pos, raw_m[i_pk : i_tr + 1] if i_tr > i_pk else np.array([pk_val_m, tr_min_m])
             )

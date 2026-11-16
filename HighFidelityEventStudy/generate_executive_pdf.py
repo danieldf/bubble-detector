@@ -52,7 +52,7 @@ TYPST_PREAMBLE = r"""// Institutional Executive Report Typst Stylesheet (CC-BY-N
       #set text(size: 8pt, fill: rgb("#475569"))
       #grid(
         columns: (2fr, 1fr),
-        align(left)[Market Bubble Detector & Structural Break System • Horizon Through Nov 13, 2026 • v1.1.0 (Engine v3.6.0)],
+        align(left)[Market Bubble Detector & Structural Break System • Horizon Through Nov 13, 2026 • v1.2.0 (Engine v3.7.0)],
         align(right)[*Page #pg of #total*],
       )
     ]
@@ -182,7 +182,7 @@ def build_pdf() -> Path:
     # and insert pagebreaks before each major `# Section` / `# Appendix` heading (`= Section ...` / `= Appendix...`)
     typ_body = typ_body.replace("#divider()", "#v(4pt)\n#horizontalrule\n#v(4pt)")
     typ_body = re.sub(
-        r"\n(= Section [1-5]:|= Appendix:)",
+        r"\n(= Section [1-5]:|= Appendix [AB]:|= Appendix:)",
         r"\n#pagebreak()\n\1",
         typ_body,
     )

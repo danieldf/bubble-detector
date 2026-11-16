@@ -535,10 +535,14 @@ def sync_wasm_build_directories():
     artifacts, datasets, and service workers for local serving and deployment.
     """
     import shutil
+    import sys
+    _root_dir = str(Path(__file__).resolve().parent.parent.parent)
+    if _root_dir not in sys.path:
+        sys.path.insert(0, _root_dir)
     try:
         from bubble_detector import __version__
     except Exception:
-        __version__ = "3.5.0"
+        __version__ = "3.7.0"
 
     dist_dir = Path("dist")
     build_dir = Path("build")

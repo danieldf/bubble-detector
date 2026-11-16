@@ -33,13 +33,13 @@ Averaging the S&P 500 trajectory (indexed to `100.0` at `θ = 0.0`) alongside al
    - **Vertical Axis (Y):** Displays both the **Normalized S&P 500 Price Trajectory** (indexed so `SPY(θ = 0.0) = 100.0%`) and the **Composite Warning Envelope Score (`0%` to `100%`)** on a shared `0%`–`110%` scale, with a dashed red horizontal threshold line at the **`70.0%` critical warning gate**.
 
 2. **Phase I (`θ ∈ [-1.0, 0.0]`): The Pre-Peak Divergence Between Rising Prices and Elevated Risk:**
-   - **Buildup Origin (`θ = -1.0`, 180 Trading Days Before Peak):** Six months before the average market peak, the S&P 500 stands at **`86.9`** (meaning the index will rally another **`+15.1%`** before topping at `100.0`). Yet even at `θ = -1.0`, all five Composite Summary Envelopes are already firmly entrenched above the `70.0%` warning gate:
-     - **Directional Mahalanobis (`I^Mahal`):** `99.6%`
-     - **Master Composite (`I^*`):** `94.2%`
-     - **Sparse PCA (`I^SPCA`):** `91.9%`
-     - **LEI Percentile Diffusion (`I^Diff`):** `88.8%`
-     - **Dynamic Factor Nowcast (`I^DFM`):** `84.7%`
-   - Throughout the entire `[-1.0, 0.0]` buildup corridor, while headline equity momentum lulls conventional trend-followers into maximum complacency, all five composite envelopes hold a sustained plateau between **`81.0%` and `99.6%`**.
+   - **Buildup Origin (`θ = -1.0`, 180 Business Days Before Peak):** Roughly eight calendar months before the average market peak, the S&P 500 stands at **`86.9`** (meaning the index will rally another **`+15.1%`** before topping at `100.0`). Yet even at `θ = -1.0`, all five in-window causal 126-day trailing warning envelopes (`E_126(t) = min(max_{τ ∈ [t-125, t]} I(τ), I_peak,180)`) are already firmly entrenched above the `70.0%` warning gate—and strictly bounded by each indicator's 180-day pre-peak maximum average in full compliance with Jensen's inequality (`max_θ E[E_126(θ)] ≤ E[max_θ I(θ)]`):
+     - **Directional Mahalanobis (`I^Mahal`):** `96.0%` at `θ = -1.0` (`max = 96.4% ≤ 96.4%` mean peak)
+     - **Master Composite (`I^*`):** `91.4%` at `θ = -1.0` (`max = 94.1% ≤ 94.2%` mean peak)
+     - **LEI Percentile Diffusion (`I^Diff`):** `87.4%` at `θ = -1.0` (`max = 89.0% ≤ 90.1%` mean peak)
+     - **Sparse PCA (`I^SPCA`):** `86.9%` at `θ = -1.0` (`max = 93.8% ≤ 94.6%` mean peak)
+     - **Dynamic Factor Nowcast (`I^DFM`):** `77.8%` at `θ = -1.0` (`max = 85.6% ≤ 87.7%` mean peak)
+   - Throughout the entire `[-1.0, 0.0]` buildup corridor, while headline equity momentum lulls conventional trend-followers into maximum complacency, all five composite warning envelopes hold a sustained plateau between **`77.8%` and `96.4%`**.
 
 3. **Cycle Peak Inflection (`θ = 0.0`) & Phase II (`θ ∈ [0.0, +1.0]`): Rapid Crash-Damper De-Escalation:**
    - **At the Exact Cycle Peak (`θ = 0.0`):** The S&P 500 reaches its zenith at **`100.0`**, while the five Composite Envelopes stand between **`83.8%` (`I^DFM`)** and **`95.5%` (`I^Mahal`)**, with the **Master Composite at `90.6%`**—ensuring defensive portfolio protection is fully engaged before the first day of the downturn.

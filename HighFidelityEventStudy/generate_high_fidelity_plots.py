@@ -196,7 +196,7 @@ def style_axes_common(
     fig.text(
         0.955,
         0.015,
-        "High-Fidelity Event Study v1.1.0 (Engine v3.6.0)  •  Confidential  •  CC-BY-NC-ND 4.0",
+        "High-Fidelity Event Study v1.2.0 (Engine v3.7.0)  •  Confidential  •  CC-BY-NC-ND 4.0",
         fontsize=8.5,
         fontweight="bold",
         color=pal["subtext"],
@@ -246,11 +246,11 @@ def plot_1_scale_invariant_log_growth(
         ax=ax,
         fig=fig,
         pal=pal,
-        title="Executive View I: 20-Year Scale-Invariant S&P 500 Log-Growth & Warning Corridors",
-        subtitle=f"Logarithmic Growth Trajectory L_SPY(t) with Pre-Peak Warning Corridors (8/8 Hit Rate, {mean_lead:.1f}d Mean Lead) & Contraction Regimes (2006–2026)",
-        xlabel=f"Calendar Year & Macro Regime Timeline (Daily Trading Sessions: Jan 2006 – Nov 2026, N = {n_sessions:,})",
-        ylabel="Scale-Invariant Log-Growth Index L_SPY(t)  [100 × (1 + ln(SPY_t / SPY_0)), Base = 100 at Jan 2006]",
-        footer_note="Source: Ground-Truth 20-Year Horizon (Jan 2, 2006 – Nov 13, 2026). Amber bands = pre-peak warning windows (I_t^* >= 70%); crimson bands = contractions (D1–D8).",
+        title="Executive View I: 20-Year Scale-Invariant S&P 500 Total-Return Log-Growth & Warning Corridors",
+        subtitle=f"Logarithmic Total-Return Trajectory L_SPY(t) with 252d Pre-Peak Warning Corridors (8/8 Hit Rate, {mean_lead:.1f}d Mean Lead) & Contraction Regimes (2006–2026)",
+        xlabel=f"Calendar Year & Macro Regime Timeline (Business-Day Grid: Jan 2, 2006 – Nov 13, 2026, N = {n_sessions:,} [5,250 NYSE Sessions])",
+        ylabel="Scale-Invariant Log-Growth Index L_SPY(t)  [100 × (1 + ln(SPY_t / SPY_0)), Base = 100 at Jan 2, 2006]",
+        footer_note="Source: Ground-Truth 20-Year Total-Return Horizon (Jan 2, 2006 – Nov 13, 2026). Amber bands = 252d pre-peak warning windows (I_t^* >= 70%); crimson bands = contractions (D1–D8).",
     )
 
     y_min, y_max = 25.0, 355.0
@@ -325,19 +325,18 @@ def plot_1_scale_invariant_log_growth(
     ax.yaxis.set_major_locator(mticker.MultipleLocator(25))
     ax.yaxis.set_minor_locator(mticker.MultipleLocator(5))
 
-    # Secondary Right-Hand Axis showing Equivalent S&P 500 Price Level (10 * SPY)
-    spy0_index_pts = float(spy[0]) * 10.0
+    # Secondary Right-Hand Axis showing Cumulative $100 Total-Return Wealth (100 * SPY_t / SPY_0)
     ax_right = ax.twinx()
     ax_right.set_ylim(y_min, y_max)
     right_ticks = [50, 100, 150, 200, 250, 300, 340]
     right_labels = [
-        f"{spy0_index_pts * np.exp((lv / 100.0) - 1.0):,.0f}"
+        f"${100.0 * np.exp((lv / 100.0) - 1.0):,.0f}"
         for lv in right_ticks
     ]
     ax_right.set_yticks(right_ticks)
     ax_right.set_yticklabels(right_labels, fontsize=11.0, color=pal["subtext"], fontweight="bold")
     ax_right.set_ylabel(
-        "Equivalent S&P 500 Index Scale (Log-Mapped Price Level)",
+        "Cumulative $100 Total-Return Wealth Scale (Log-Mapped SPY_t / SPY_0)",
         fontsize=12.5,
         fontweight="bold",
         color=pal["subtext"],
@@ -355,10 +354,10 @@ def plot_1_scale_invariant_log_growth(
         (1, f"D2: Euro/Flash\nApr 2010 | -{dd_spy[1]:.1f}%\nLead: {ld_days[1]:.0f}d", (-52, 42), pal["callout_bg"]),
         (2, f"D3: US Downgrade\nApr 2011 | -{dd_spy[2]:.1f}%\nLead: {ld_days[2]:.0f}d", (16, 48), pal["callout_bg"]),
         (3, f"D4: China/Energy\nJul 2015 | -{dd_spy[3]:.1f}%\nLead: {ld_days[3]:.0f}d", (-75, 48), pal["callout_bg"]),
-        (4, f"D5: Volmageddon/QT\nSep 2018 | -{dd_spy[4]:.1f}%\nLead: {ld_days[4]:.0f}d", (-105, 44), pal["callout_bg"]),
+        (4, f"D5: Q4 2018 QT Shock\nSep 2018 | -{dd_spy[4]:.1f}%\nLead: {ld_days[4]:.0f}d", (-105, 44), pal["callout_bg"]),
         (5, f"D6: COVID-19 Peak\nFeb 2020 | -{dd_spy[5]:.1f}%\nLead: {ld_days[5]:.0f}d", (-95, 52), pal["callout_red_bg"]),
         (6, f"D7: 2022 Rate Reset\nJan 2022 | -{dd_spy[6]:.1f}%\nLead: {ld_days[6]:.0f}d", (-105, 44), pal["callout_red_bg"]),
-        (7, f"D8: AI CapEx Unwind\nFeb 2025 | -{dd_spy[7]:.1f}%\nLead: {ld_days[7]:.0f}d", (-120, 32), pal["callout_red_bg"]),
+        (7, f"D8: 2025 Tariff/AI Reset\nFeb 2025 | -{dd_spy[7]:.1f}%\nLead: {ld_days[7]:.0f}d", (-120, 32), pal["callout_red_bg"]),
     ]
     for idx, text, offset, box_bg in peak_annotations:
         ax.annotate(
@@ -396,11 +395,11 @@ def plot_1_scale_invariant_log_growth(
 
     # Terminal 2026-11-13 Callout
     ax.annotate(
-        f"Current Regime (Nov 13, 2026)\nL_SPY = {log_spy[-1]:.1f} (S&P ~7,544)",
+        f"Current Regime (Nov 13, 2026)\nL_SPY = {log_spy[-1]:.1f} ($884.5 TR | S&P 7,561.67)\nMaster Score I* = 45.4% (Neutral)",
         xy=(mdates.date2num(dt_index[-1]), log_spy[-1]),
-        xytext=(-175, -42),
+        xytext=(-195, -48),
         textcoords="offset points",
-        fontsize=9.5,
+        fontsize=9.2,
         fontweight="bold",
         color=pal["text"],
         bbox=dict(boxstyle="round,pad=0.35", facecolor=pal["callout_alt_bg"], edgecolor=pal["spy_line"], linewidth=1.3),
@@ -411,9 +410,9 @@ def plot_1_scale_invariant_log_growth(
     # Executive Summary Insight Box inside Lower-Right Empty Space (strictly inside plot bounds)
     summary_text = (
         "WHY LOG-GROWTH SCALE INVARIANCE MATTERS:\n"
-        "• Linear charts distort 20-year history: S&P 500 (~7,544) in 2026 dwarfs the 2007 peak (~1,565) by 5×.\n"
-        "• Logarithmic scaling L_SPY(t) maps equal % drawdowns (-20%) to identical vertical drops in all eras.\n"
-        f"• Every contraction (crimson) is preceded by a wide pre-peak warning corridor (amber, avg. {mean_lead:.1f}d)."
+        "• Linear charts distort 20-year history: $100 total-return wealth reaches $884.5 (S&P 500 price 7,561.67) by Nov 2026.\n"
+        "• Logarithmic scaling L_SPY(t) maps equal % total-return drawdowns (-20%) to identical vertical drops in all eras.\n"
+        f"• Every contraction (crimson) is preceded by a 252d-window pre-peak warning corridor (amber, avg. {mean_lead:.1f}d)."
     )
     ax.text(
         0.41,
@@ -480,10 +479,10 @@ def plot_2_popperian_regime_separation(
         "D2: Euro/Flash\n(Apr '10–Jul '10)",
         "D3: US Downgrade\n(Apr '11–Oct '11)",
         "D4: China/Energy\n(Jul '15–Feb '16)",
-        "D5: Volmageddon/QT\n(Sep '18–Dec '18)",
+        "D5: Q4 2018 QT Shock\n(Sep '18–Dec '18)",
         "D6: COVID-19 Shock\n(Feb '20–Mar '20)",
         "D7: Rate Hike Reset\n(Jan '22–Oct '22)",
-        "D8: AI CapEx Unwind\n(Feb '25–Apr '25)",
+        "D8: 2025 Tariff/AI Reset\n(Feb '25–Apr '25)",
     ]
 
     ax.set_xlim(-0.45, 7.45)
@@ -592,7 +591,7 @@ def plot_2_popperian_regime_separation(
     )
 
     ax.annotate(
-        f"D8 (2025–26 AI CapEx Unwind)\nPeak {fm['pk_comp'][7]:.1f}% → Trough {fm['tr_comp'][7]:.1f}% (Δ = {fm['sep_comp'][7]:.1f}%)",
+        f"D8 (Early-2025 Tariff & AI CapEx Reset)\nPeak {fm['pk_comp'][7]:.1f}% → Trough {fm['tr_comp'][7]:.1f}% (Δ = {fm['sep_comp'][7]:.1f}%)",
         xy=(7.0, fm["pk_comp"][7]),
         xytext=(5.25, 74.5),
         fontsize=9.5,
@@ -814,10 +813,10 @@ def plot_4_dislocation_capital(
         "D2: Euro/Flash\n(Apr '10–Jul '10)",
         "D3: US Downgrade\n(Apr '11–Oct '11)",
         "D4: China/Energy\n(Jul '15–Feb '16)",
-        "D5: Volmageddon/QT\n(Sep '18–Dec '18)",
+        "D5: Q4 2018 QT Shock\n(Sep '18–Dec '18)",
         "D6: COVID-19 Shock\n(Feb '20–Mar '20)",
         "D7: Rate Hike Reset\n(Jan '22–Oct '22)",
-        "D8: AI CapEx Unwind\n(Feb '25–Apr '25)",
+        "D8: 2025 Tariff/AI Reset\n(Feb '25–Apr '25)",
     ]
 
     ax.set_xlim(-0.55, 7.55)
@@ -914,7 +913,7 @@ def plot_4_dislocation_capital(
     )
 
     ax.annotate(
-        f"D7 (2022 Rate Reset) & D8 (2025–26 AI Unwind)\n• D7 Saved: +{dd_sav[6]:.1f}% ({dd_spy[6]:.1f}% → {dd_def[6]:.1f}%, {ld_days[6]:.0f}d Lead)\n• D8 Saved: +{dd_sav[7]:.1f}% ({dd_spy[7]:.1f}% → {dd_def[7]:.1f}%, {ld_days[7]:.0f}d Lead)",
+        f"D7 (2022 Rate Reset) & D8 (Early-2025 Tariff/AI Reset)\n• D7 Saved: +{dd_sav[6]:.1f}% ({dd_spy[6]:.1f}% → {dd_def[6]:.1f}%, {ld_days[6]:.0f}d Lead)\n• D8 Saved: +{dd_sav[7]:.1f}% ({dd_spy[7]:.1f}% → {dd_def[7]:.1f}%, {ld_days[7]:.0f}d Lead)",
         xy=(6.0, dd_spy[6]),
         xytext=(4.75, 42.0),
         fontsize=9.5,
