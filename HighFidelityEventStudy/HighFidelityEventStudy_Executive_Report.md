@@ -418,7 +418,7 @@ In a conventional risk model, indicators are combined without regard to whether 
 
 # Appendix B: Institutional Due-Diligence & Third-Party Technical Q&A (IP-Protected Audit)
 
-> **Appendix B Summary & IP Notice:** *This Appendix addresses the six categories of institutional due-diligence inquiries submitted during external review—spanning (1) Full-Period False-Alarm & Forward Return/Drawdown Profiles, (2) Lead-Time Definitions & Window Alignment, (3) Defensive Backtest Mechanics & Historical Treasury-Bill Reruns, (4) Out-of-Sample Walk-Forward Integrity, Pre-2006 Crisis Audits, Damper Ablations & Parameter Sensitivity, (5) Report Harmonization & Scaling Conventions, and (6) Live November 13, 2026 Regime Readings & Knowledge-Graph Architecture. Every inquiry is answered first at the **Executive Summary Level**, followed by an **IP-Protected Technical Justification** that substantiates all empirical claims while safeguarding proprietary parameterizations under `CC-BY-NC-ND 4.0` Confidential IP protection.*
+> **Appendix B Summary & IP Notice:** *This Appendix addresses the six categories of institutional due-diligence inquiries submitted during external review—spanning (1) Full-Period False-Alarm & Forward Return/Drawdown Profiles, (2) Lead-Time Definitions & Window Alignment, (3) Defensive Backtest Mechanics & Historical Treasury-Bill Reruns, (4) Out-of-Sample Walk-Forward Integrity, Pre-2006 Crisis Audits, Damper Ablations & Parameter Sensitivity, (5) Report Harmonization & Scaling Conventions, and (6) Live November 13, 2026 Regime Readings. Every inquiry is answered first at the **Executive Summary Level**, followed by an **IP-Protected Technical Justification** that substantiates all empirical claims while safeguarding proprietary parameterizations under `CC-BY-NC-ND 4.0` Confidential IP protection.*
 
 ---
 
@@ -469,14 +469,6 @@ To provide full visibility into the daily behavior of the Master Composite Score
 | **2024** | `262` | `41.5%` | `46.4%` | `99.1%` | `0.0%` | `56` | `21.4%` | `+24.9%` | `-8.4%` |
 | **2025** | `261` | `32.5%` | `26.8%` | `97.5%` | `0.0%` | `34` | `13.0%` | `+17.7%` | `-18.8%` |
 | **2026** *(to Nov 13)* | `227` | `42.3%` | `46.4%` | `98.6%` | `0.0%` | `33` | `14.5%` | `+11.5%` | `-8.9%` |
-
-#### High-Resolution 4K Visualization: Scale-Invariant Log-Growth vs. Smooth Causal Master Composite Envelope (`4096 × 3072`)
-
-To visually audit the full-period behavior of the **Master Composite Index (`I^*`)** across all 5,445 business-day sessions—both inside and outside the eight dislocation windows—**Appendix B View I** below plots the **Scale-Invariant Total-Return Log-Growth Index (`L_SPY(t)`)** on the **Primary Left Vertical Axis (Y1)** (`25` to `350`, major ticks every `25` units, minor ticks every `5` units; `100.0` on January 2, 2006, `45.7` at the March 9, 2009 GFC trough `D1`, and `318.0` on November 13, 2026) directly against the bold **Smooth Causal Master Composite Warning Envelope / 21-Day Regime Trajectory (`I^*`)** on the **Secondary Right Vertical Axis (Y2)** (`0%` to `100%`), preserving all amber early-warning corridors, crimson contraction corridors (`D1`–`D8`), and red/green peak and trough callout arrows:
-
-![Appendix B View I: Scale-Invariant S&P 500 Log-Growth vs. Smooth Causal Master Composite Envelope (I*)](./05_Log_Growth_vs_Master_Composite_white.png)
-
-*(Note: A dark-theme pure-black background 4K companion image is also archived in this folder at [`05_Log_Growth_vs_Master_Composite_black.png`](./05_Log_Growth_vs_Master_Composite_black.png).)*
 
 ---
 
@@ -588,7 +580,7 @@ When raw, unsmoothed daily observations of the **Master Composite Index (`I^*`)*
 2. **High-Frequency Derivatives & Microstructure Sensors ("Market Seismograph"):** Unlike slow-moving quarterly valuation ratios (such as CAPE alone), our 13 orthogonal pillars intentionally include **daily options tail-risk skew (`^SKEW`), VIX term-structure inversions (`VIX1D/VIX3M`), cross-asset volatility ratios (`OVX/VIX`), and 3D topological herding (`TDA`)**. When institutional options desks suddenly bid up crash protection or dealer gamma flips, the raw daily Master Composite registers an immediate **"seismic tremor" (`80%–99%`)**. When short-term volatility mean-reverts a few days later while the equity index keeps grinding higher, the raw daily reading relaxes toward its `~32%` baseline.
 
 **How is a rapidly pulsing daily score used to predict a new dislocation without whipsawing the portfolio?**
-**We never trade on a raw single-day tick in isolation.** Just as geophysicists do not evacuate a city on a single 1-second seismograph twitch—and do not cancel an evacuation just because the needle briefly swings back through zero between foreshocks—our decision engine passes the raw daily `I^*` pulses through **three causal signal-processing filters** (illustrated by the bold crimson regime curve in **Appendix B View I** above) that convert rapid foreshock pulses into a smooth, stable early warning:
+**We never trade on a raw single-day tick in isolation.** Just as geophysicists do not evacuate a city on a single 1-second seismograph twitch—and do not cancel an evacuation just because the needle briefly swings back through zero between foreshocks—our decision engine passes the raw daily `I^*` pulses through **three causal signal-processing filters** (illustrated by the bold crimson regime curve in **Appendix B View I** below) that convert rapid foreshock pulses into a smooth, stable early warning:
 1. **The Causal Trailing Warning Envelope (`E_W(t)` — "Peak-Hold Memory"):** Once the Master Composite fires a `≥ 70%` warning pulse, our trailing envelope (`max of I^* over the trailing window`) *latches* that warning in memory. Even if the raw daily score oscillates down to `30%` the next week while equities grind toward a final blow-off top, the **Warning Corridor stays ON** and defensive portfolio protection stays locked in (`19.3%` annual turnover—less than one full rebalance per year).
 2. **Pulse Density & Multi-Day Persistence ("Foreshock Clustering"):** Isolated 1–2 day spikes in calm bull markets have low density (`1–3` active days per quarter). Approaching a true market dislocation, the frequency of `≥ 70%` pulses accelerates dramatically—rising from isolated ticks to **`30–196` active days** inside the pre-peak window.
 3. **Cross-Indicator Consensus (`4 of 5` or `ALL 5 ON`):** Combining the fast-reacting Master Composite (`I^*`) with our slowest, smoothest indicator—the **Dynamic Factor Nowcast (`I^DFM`, a central-bank AR(2) Kalman filter)**—and requiring **4 or 5 Summary Indicators to be `≥ 70%` simultaneously** filters out transient daily microstructure chatter while retaining a **100% (`8 / 8`) hit rate** on major dislocations.
@@ -601,6 +593,14 @@ To predict a **new** dislocation in real time at day $t$ with zero look-ahead bi
    By blending the 63-day causal trailing envelope (`0.90 × E_63(t) + 0.10 × EMA_21(t)`) with our macro liquidity-cushion factor (`M2_YoY_Growth` & `Liquidity_Momentum`) and asymmetric attack/release state smoothing (`α_attack = 0.28, α_release = 0.055`), the smooth regime trajectory on **Appendix B View I** eliminates single-day seismic needles while surging to **`84.9%–98.8%`** ahead of **all `8 / 8` dislocations** (`D1 = 92.5%`, `D2 = 85.9%`, `D3 = 93.0%`, `D4 = 85.8%`, `D5 = 84.9%`, `D6 = 96.0%`, `D7 = 98.8%`, `D8 = 97.0%`) and resetting below `10.0%` at **all `8 / 8` crash troughs** (`0.0%` to `9.2% < 25.0%`).
 3. **Filter 3 — Multi-Timescale Ensemble Consensus (`I^*` + `I^DFM` + `I^Diff` + `I^Mahal` + `I^SPCA`):**
    Each of the five summary indicators operates as a band-pass filter at a distinct characteristic frequency: **`I^Mahal`** and **`I^SPCA`** capture high-frequency (`1–3d`) joint tail coincidences and sector crowding, **`I^Diff`** captures medium-frequency (`63d`) cross-pillar breadth, and **`I^DFM`** applies a state-space **AR(2) Kalman Filter ($\phi_1 = 0.78, \phi_2 = 0.17$)** to extract the slow multi-quarter macro cycle. Requiring `≥ 4 of 5` (or `5 of 5`) consensus suppresses isolated single-indicator oscillations while locking in protection ahead of every major crash.
+
+#### High-Resolution 4K Visualization: Scale-Invariant Log-Growth vs. Smooth Causal Master Composite Envelope (`4096 × 3072`)
+
+To visually audit the full-period behavior of the **Master Composite Index (`I^*`)** across all 5,445 business-day sessions—both inside and outside the eight dislocation windows—**Appendix B View I** below plots the **Scale-Invariant Total-Return Log-Growth Index (`L_SPY(t)`)** on the **Primary Left Vertical Axis (Y1)** (`25` to `350`, major ticks every `25` units, minor ticks every `5` units; `100.0` on January 2, 2006, `45.7` at the March 9, 2009 GFC trough `D1`, and `318.0` on November 13, 2026) directly against the bold **Smooth Causal Master Composite Warning Envelope / 21-Day Regime Trajectory (`I^*`)** on the **Secondary Right Vertical Axis (Y2)** (`0%` to `100%`), preserving all amber early-warning corridors, crimson contraction corridors (`D1`–`D8`), and red/green peak and trough callout arrows:
+
+![Appendix B View I: Scale-Invariant S&P 500 Log-Growth vs. Smooth Causal Master Composite Envelope (I*)](./05_Log_Growth_vs_Master_Composite_white.png)
+
+*(Note: A dark-theme pure-black background 4K companion image is also archived in this folder at [`05_Log_Growth_vs_Master_Composite_black.png`](./05_Log_Growth_vs_Master_Composite_black.png).)*
 
 ---
 
@@ -713,9 +713,9 @@ We evaluate all three portfolio rules across the full 20-year horizon (`2006-01-
 | **4b. Dislocation Envelope Capital-Shield (`w_def`, Actual T-Bill)** | **`$241.3`** | **`4.31%`** | **`4.84%`** | **`-16.51%`** | **`0.53`** | **`19.3%`** |
 | **5. Naive Valuation Benchmark (`CAPE > 30` Cash, `< 20` Buy, Actual T-Bill)** | `$301.4` | `5.24%` | `14.38%` | `-55.19%` | `0.23` | `4.8%` |
 
-**Table B.3b — Episode-by-Episode Defensive Drawdown (`|DD_Def|`) & Saved Capital: Flat `4.00%` Cash vs. Actual Historical 3M T-Bill Yields**
+**Table B.3b — Episode-by-Episode Defensive Drawdown (`DD_Def`) & Saved Capital: Flat `4.00%` Cash vs. Actual Historical 3M T-Bill Yields**
 
-| Dislocation Event | Unhedged `|DD_SPY|` | Historical 3M T-Bill Yield in Window | `|DD_Def|` (`4.0%` Cash) | `|DD_Def|` (Actual T-Bill) | Saved `ΔDD` (`4.0%` Cash) | Saved `ΔDD` (Actual T-Bill) |
+| Dislocation Event | Unhedged Drawdown (`DD_SPY`) | Historical 3M T-Bill Yield in Window | Defensive Drawdown (`DD_Def`, `4.0%` Cash) | Defensive Drawdown (`DD_Def`, Actual T-Bill) | Saved `ΔDD` (`4.0%` Cash) | Saved `ΔDD` (Actual T-Bill) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **D1: 2007–09 GFC (`Oct '07–Mar '09`)** | `55.19%` | `4.36% → 0.15%` | `14.39%` | **`16.49%`** | `+40.80%` | **`+38.70%`** |
 | **D2: 2010 Euro/Flash (`Apr '10–Jul '10`)** | `15.70%` | `0.14%` | `3.40%` | **`3.96%`** | `+12.30%` | **`+11.74%`** |
@@ -795,7 +795,7 @@ The framework is highly robust to threshold and window perturbations—there is 
 | **`W = 180` Business Days (~8.5 Months)** | **`8 / 8` Hits** (`144.8d`) | **`8 / 8` Hits** (`144.1d`) | **`8 / 8` Hits** (`141.1d`) | **`8 / 8` Hits** (`139.9d`) | **`8 / 8` Hits** (`127.9d`) | `7 / 8` Hits (`110.0d`) |
 | **`W = 252` Business Days (~1 Year)** | **`8 / 8` Hits** (`225.8d`) | **`8 / 8` Hits** (`225.2d`) | **`8 / 8` Hits** (`225.2d`) | **`8 / 8` Hits** (`224.4d`) | **`8 / 8` Hits** (`224.4d`) | **`8 / 8` Hits** (`223.0d`) |
 | **Full-Horizon Duty Cycle (`% of All Days`)** | `24.19%` | `19.34%` | `14.86%` | **`10.93%`** | **`7.79%`** | **`5.22%`** |
-| **Conditional 18m Dislocation Risk (`P(DD ≤ -12.5% | I^* ≥ Gate)`)** | `60.4%` | `63.1%` | `66.0%` | **`69.6%`** | **`71.2%`** | **`75.4%`** |
+| **Conditional 18m Dislocation Risk (`P(DD ≤ -12.5% given I^* ≥ Gate)`)** | `60.4%` | `63.1%` | `66.0%` | **`69.6%`** | **`71.2%`** | **`75.4%`** |
 
 #### High-Resolution 4K Visualization: Multi-Threshold Stratified Pre-Peak Warning Corridors (`75%`, `80%`, `85%`) & Dislocation Risk (`4096 × 3072`)
 
@@ -853,7 +853,7 @@ Every single presentation inconsistency identified by the reviewer in Section 5 
 
 ---
 
-## B.6 Current Live Readings (`November 13, 2026`) & Role of the Knowledge-Graph Engine
+## B.6 Current Live Regime Readings (`November 13, 2026`)
 
 ### Q6.1: What Is the Master Score Today (`November 13, 2026`)?
 
@@ -872,17 +872,3 @@ As of the terminal close on **Friday, November 13, 2026** (with the S&P 500 at *
 | **5. Sparse PCA Concentration Index (`I^SPCA`)** | **`7.05%`** | `< 25.0%` (`Quiescent`) | Low localized concentration (`Active Coalition = 3 / 13` pillars) |
 | **6. Crash-Liquidation Damper (`Λ_Crash`)** | **`100.00%`** | `100% = Inactive` (`No Crash`) | Market at all-time high (`0.0%` underwater drawdown) |
 | **7. Recommended Tactical Equity Exposure** | **`100.0%` (`w_def`) / `105.0%` (`w_tac`)** | `100%–105%` (`Full Exposure`) | Maintain full benchmark equity allocation |
-
----
-
-### Q6.2: Does the Knowledge-Graph Engine (`graphify`) Feed the Quantitative Signal at All?
-
-#### Executive-Level Answer
-**No—the `graphify` knowledge-graph engine does NOT feed market data into the quantitative bubble signal.** In our system architecture, there is a strict separation of duties between **Software Architecture Governance (`graphify`)** and **Market Topological Signal Extraction (Pillars 11 & 12)**:
-1. **`graphify` (AST Software Architecture Knowledge Graph):** `graphify` is an engineering verification and codebase-dependency graph (`1,123` AST nodes, `2,506` edges, `66` module communities in `graphify-out/`) used by our engineering team and CI/CD pipeline to audit cross-module dependencies, verify zero data-leakage pathways between ETL/model/backtest layers, and maintain architectural parity between the server-side NiceGUI workstation and client-side WebAssembly build.
-2. **How Market Network & Geometric Structure Enters the Signal (**Pillar 11 `TDA_Persistence_Entropy`** & **Pillar 12 `Wavelet_Spectral_Entropy`**):** While `graphify` monitors the *codebase*, the *market's* own geometric and network synchronization is captured mathematically inside the 13-pillar orthogonal basis via **Topological Data Analysis (TDA)**—specifically **Pillar 11 (`TDA_Persistence_Entropy`)**, which computes Vietoris–Rips persistent homology ($H_0$ connected components and $H_1$ topological loops) on 3D Takens time-delay embeddings of market returns, and **Pillar 12 (`Wavelet_Spectral_Entropy`)**, which measures frequency-domain herding across Morlet wavelet scales.
-
-#### IP-Protected Technical Justification
-Keeping the software knowledge graph (`graphify`) strictly decoupled from the quantitative market-signal pipeline (`bubble_detector/features/` and `bubble_detector/models/`) is an intentional institutional safeguard:
-- **Deterministic Numerical Reproducibility:** The 13 quantitative pillars depend solely on point-in-time market and macroeconomic series (`Shiller`, `FRED`, `FINRA`, `CBOE`, `Exchange Feeds`), guaranteeing that the Master Composite Score is 100% reproducible from raw market data alone.
-- **Topological Market Signal via Persistent Homology (`Pillar 11`):** During speculative bubble buildups, cross-asset return trajectories collapse onto lower-dimensional synchronized manifolds (herding), causing a measurable drop in **Bubenik Persistence Entropy** (`Pillar 11`, $b_{11} = -1$, orthogonal tolerance $\tau_{11} = 0.9698 \ge 0.87$) and **Wavelet Shannon Spectral Entropy** (`Pillar 12`, $b_{12} = -1$, $\tau_{12} = 0.9840 \ge 0.87$). Thus, topological regime intelligence is embedded directly in **Pillars 11 and 12** of the 13-indicator orthogonal basis $\mathcal{B}_{13}^\perp$.
