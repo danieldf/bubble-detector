@@ -6,9 +6,9 @@
     "semantic_hash": "74704117ab390aba7b2f5f1807ead6aa"
   },
   "GEMINI.md": {
-    "mtime": 1794768284.37925,
-    "seen": 1794768340.512929,
-    "ast_hash": "7301f45fdfa380d6167bc5454a98fdf7",
+    "mtime": 1794963669.5736752,
+    "seen": 1794963722.916242,
+    "ast_hash": "2b9f08890eaf04588f30a64b22c1107e",
     "semantic_hash": ""
   },
   "MarketBubble_DDFv100.md": {
@@ -42,9 +42,9 @@
     "semantic_hash": "78538ef52a859a3bf27399ac2e57cc65"
   },
   "bubble_detector/__init__.py": {
-    "mtime": 1794768278.769648,
-    "seen": 1794768340.5120609,
-    "ast_hash": "46388f9bb479cd85bc6bb461d15fc10e",
+    "mtime": 1794963661.369566,
+    "seen": 1794963722.915478,
+    "ast_hash": "762251ea58824159152293d7bfbebedd",
     "semantic_hash": ""
   },
   "bubble_detector/config.py": {
@@ -234,9 +234,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1794768280.9160345,
-    "seen": 1794768340.513088,
-    "ast_hash": "6b287bc52900758e3b24a2909d06e0d3",
+    "mtime": 1794963668.1956043,
+    "seen": 1794963722.916401,
+    "ast_hash": "244c5d3f2e590ce46b82005457ad7f6f",
     "semantic_hash": ""
   },
   "tests/test_full_indicator_parity.py": {
@@ -258,9 +258,9 @@
     "semantic_hash": ""
   },
   "pyproject.toml": {
-    "mtime": 1794768277.7521682,
-    "seen": 1794768340.512567,
-    "ast_hash": "c235d605725c234851de7f8a4801596d",
+    "mtime": 1794963659.8508055,
+    "seen": 1794963722.915909,
+    "ast_hash": "65cc7e5e664b426586108aeb9e459d02",
     "semantic_hash": ""
   },
   "requirements.txt": {
@@ -389,8 +389,8 @@
     "semantic_hash": ""
   },
   "data/provenance/market_data_modern.json": {
-    "mtime": 1794879621.1188865,
-    "seen": 1794879628.907777,
+    "mtime": 1794955360.6946502,
+    "seen": 1794963722.9158988,
     "ast_hash": "b1c609425733c763d2e48685d11b635a",
     "semantic_hash": ""
   },
@@ -401,9 +401,9 @@
     "semantic_hash": ""
   },
   "bubble_detector/ui/postprocess_wasm.py": {
-    "mtime": 1794796129.2882006,
-    "seen": 1794796233.074108,
-    "ast_hash": "bed5a093a81da7df3ba7ce6cfc8d1fd6",
+    "mtime": 1794963662.5338547,
+    "seen": 1794963722.9158652,
+    "ast_hash": "480a4908d194c2c03388648ffdc9eb74",
     "semantic_hash": ""
   },
   ".agents/rules/system_architecture.md": {
@@ -443,9 +443,9 @@
     "semantic_hash": ""
   },
   "sw.js": {
-    "mtime": 1794796204.3122995,
-    "seen": 1794796233.0741708,
-    "ast_hash": "2949614b4a153d2b1ada61509b6551cd",
+    "mtime": 1794963663.729501,
+    "seen": 1794963722.915919,
+    "ast_hash": "5e9bcbcbfe1d2e4fc40c085ca4915bd6",
     "semantic_hash": ""
   },
   "tests/test_ui_ux_wasm_optimizations.py": {
@@ -503,9 +503,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794768283.2656212,
-    "seen": 1794768340.512928,
-    "ast_hash": "df10be0b4f24c30ff6354f50711b402b",
+    "mtime": 1794963670.8384106,
+    "seen": 1794963722.916241,
+    "ast_hash": "da5141d7bcd3e9a0dfd364de08d7c51b",
     "semantic_hash": ""
   },
   "tests/conftest.py": {
@@ -575,15 +575,15 @@
     "semantic_hash": ""
   },
   "HighFidelityEventStudy/HighFidelityEventStudy_Executive_Report.md": {
-    "mtime": 1794879563.3061175,
-    "seen": 1794879628.908257,
-    "ast_hash": "2540e24b3e870eb7e0fb980b4c3bedc6",
+    "mtime": 1794951607.6622152,
+    "seen": 1794955338.7226748,
+    "ast_hash": "e70a29d3d607e6663b18f37c8080041b",
     "semantic_hash": ""
   },
   "HighFidelityEventStudy/README.md": {
-    "mtime": 1794879563.3062625,
-    "seen": 1794879628.908257,
-    "ast_hash": "2540e24b3e870eb7e0fb980b4c3bedc6",
+    "mtime": 1794951607.662355,
+    "seen": 1794955338.722676,
+    "ast_hash": "e70a29d3d607e6663b18f37c8080041b",
     "semantic_hash": ""
   },
   "HighFidelityEventStudy/01_Scale_Invariant_Log_Growth_black.png": {
@@ -641,15 +641,15 @@
     "semantic_hash": ""
   },
   "HighFidelityEventStudy/HighFidelityEventStudy_Executive_Report.pdf": {
-    "mtime": 1794879565.07594,
-    "seen": 1794879628.908352,
-    "ast_hash": "08caa0064e0217b6cdd7f60544626ee2",
+    "mtime": 1794951608.917801,
+    "seen": 1794955338.72279,
+    "ast_hash": "58cf2d3cc1cff5bd6216aaa4d385e608",
     "semantic_hash": ""
   },
   "HighFidelityEventStudy/07_Appendix_B_Third_Party_Inquiries_QA.md": {
-    "mtime": 1794879455.511975,
-    "seen": 1794879628.908256,
-    "ast_hash": "87cabcb32f0c84e6d40b139efd583eaa",
+    "mtime": 1794951580.2763495,
+    "seen": 1794955338.722674,
+    "ast_hash": "2e6b5156357d6691b4645987b623419f",
     "semantic_hash": ""
   },
   "HighFidelityEventStudy/05_Log_Growth_vs_Master_Composite_black.png": {
@@ -674,6 +674,24 @@
     "mtime": 1794879378.1992228,
     "seen": 1794879628.9083588,
     "ast_hash": "54d783b18c8b58009edba862cb4cf11f",
+    "semantic_hash": ""
+  },
+  "HighFidelityEventStudy/generate_whitepaper_pdf.py": {
+    "mtime": 1794954912.0079253,
+    "seen": 1794955338.721573,
+    "ast_hash": "24d7dfbee781a96dc75f0e1acbad934d",
+    "semantic_hash": ""
+  },
+  "HighFidelityEventStudy/HighFidelityEventStudy_WhitePaper.md": {
+    "mtime": 1794955223.1148753,
+    "seen": 1794955338.7226748,
+    "ast_hash": "c9ea01cf24acad0cfe38f01bbccda934",
+    "semantic_hash": ""
+  },
+  "HighFidelityEventStudy/HighFidelityEventStudy_WhitePaper.pdf": {
+    "mtime": 1794955250.6627512,
+    "seen": 1794955338.722791,
+    "ast_hash": "4d8dd2faa2d3f99cb631efaf9f8286ae",
     "semantic_hash": ""
   }
 }

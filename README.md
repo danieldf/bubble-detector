@@ -2,7 +2,7 @@
 
 [![Deploy WebAssembly Dashboard](https://github.com/danieldf/bubble-detector/actions/workflows/deploy.yml/badge.svg)](https://github.com/danieldf/bubble-detector/actions/workflows/deploy.yml)
 [![Live WebAssembly Dashboard](https://img.shields.io/badge/Live_Dashboard-GitHub_Pages-0288D1?style=flat&logo=github)](https://danieldf.github.io/bubble-detector/)
-[![Version](https://img.shields.io/badge/Version-v3.7.0-4CAF50?style=flat)](https://github.com/danieldf/bubble-detector/releases/tag/v3.7.0)
+[![Version](https://img.shields.io/badge/Version-v3.8.0-4CAF50?style=flat)](https://github.com/danieldf/bubble-detector/releases/tag/v3.8.0)
 [![Python Version](https://img.shields.io/badge/Python-3.11%2B%20%7C%203.14-blue?style=flat&logo=python)](https://www.python.org/)
 [![Tests](https://img.shields.io/badge/Tests-135%20Passed%20(100%25)-success?style=flat)](https://github.com/danieldf/bubble-detector/actions)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey.svg)](LICENSE)

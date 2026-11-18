@@ -18,7 +18,7 @@ Key Architectural Components:
 - ui: Dual interactive runtime dashboards: NiceGUI server-side and HoloViz Panel WebAssembly (Pyodide), featuring 8 synchronized analytical tabs.
 """
 
-__version__ = "3.7.0"
+__version__ = "3.8.0"
 
 from bubble_detector.data.date_horizons import (
     HORIZON_OPTION_1_ID,

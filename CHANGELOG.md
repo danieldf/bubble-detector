@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.8.0] - 2026-11-17
+
+### Added
+- **Institutional White Paper for Family Offices, Wealth Managers & Strategic Partners (`HighFidelityEventStudy_WhitePaper.md` & `HighFidelityEventStudy_WhitePaper.pdf`)**:
+  - Authored and typeset a 38-page publication-ready institutional White Paper (*"Asymmetric Systemic-Risk Intelligence & Capital Preservation: A 20-Year Out-of-Sample Dislocation Study for Family Offices, Wealth Managers & Strategic Partners (2006–2026)"*) by **Daniel D Ferrante, PhD** under `CC-BY-NC-ND 4.0` Confidential IP protection.
+  - Structured in a **crescendo of specialization** across dedicated Title, Executive Abstract, Table of Contents, nine self-contained Sections (`Sections 1–9`, each starting on a new page with concrete fiduciary/portfolio illustrations), and a dedicated final **Confidentiality, Intellectual Property Boundary & Attribution Colophon** page.
+  - Automated PDF typesetting via `HighFidelityEventStudy/generate_whitepaper_pdf.py` (Pandoc + Typst institutional pipeline).
+- **Institutional Due-Diligence Q&A Appendix (`07_Appendix_B_Third_Party_Inquiries_QA.md`) & 4 Additional 4K HXGA (`4096 × 3072`) Plots**:
+  - Added **Appendix B: Institutional Due-Diligence & Third-Party Technical Q&A** to `HighFidelityEventStudy_Executive_Report.md` and `HighFidelityEventStudy_Executive_Report.pdf`, addressing false-alarm duty cycles (`14.86%` across `5,445` sessions), 66 de-clustered crossings (`C01–C66`), causal trailing supremum warning envelope mechanics, QE-cushioned intermediate pullbacks (`I1–I3`), lead-time horizons (`180d`, `252d`, uncapped), historical 3-month Treasury Bill (`DTB3`) backtest reruns, pre-2006 historical crisis validation (`1987`, `1990`, `1998`, `2000–02`, achieving `12 / 12` crises captured), Crash-Liquidation Damper ($\Lambda_{\text{Crash}}$) ablation proofs, and 2D parameter sensitivity grids.
+  - Generated 4 new 4K HXGA (`4096 × 3072`) visualizations (`05_Log_Growth_vs_Master_Composite_{white,black}.png` and `06_Multi_Threshold_Warning_Corridors_75_80_85_{white,black}.png`, bringing the 4K visual suite to 12 PNGs).
+
 ## [3.7.0] - 2026-11-15
 
 ### Fixed & Enhanced (Red Team Remediation Release `RT-CRIT-01` – `RT-LOW-28`)
