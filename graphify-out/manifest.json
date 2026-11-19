@@ -6,9 +6,9 @@
     "semantic_hash": "74704117ab390aba7b2f5f1807ead6aa"
   },
   "GEMINI.md": {
-    "mtime": 1794963669.5736752,
-    "seen": 1794963722.916242,
-    "ast_hash": "2b9f08890eaf04588f30a64b22c1107e",
+    "mtime": 1795048562.9205363,
+    "seen": 1795048628.832345,
+    "ast_hash": "5f8e4efa403d958f25034a1232f7eddd",
     "semantic_hash": ""
   },
   "MarketBubble_DDFv100.md": {
@@ -42,9 +42,9 @@
     "semantic_hash": "78538ef52a859a3bf27399ac2e57cc65"
   },
   "bubble_detector/__init__.py": {
-    "mtime": 1794963661.369566,
-    "seen": 1794963722.915478,
-    "ast_hash": "762251ea58824159152293d7bfbebedd",
+    "mtime": 1795048557.5864308,
+    "seen": 1795048628.831564,
+    "ast_hash": "eb4d453b88d3f1e0ae1bfbf703eb7c1b",
     "semantic_hash": ""
   },
   "bubble_detector/config.py": {
@@ -234,9 +234,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1794963668.1956043,
-    "seen": 1794963722.916401,
-    "ast_hash": "244c5d3f2e590ce46b82005457ad7f6f",
+    "mtime": 1795048561.7024407,
+    "seen": 1795048628.832507,
+    "ast_hash": "7f131d887f967b88ed7b2183daf21f32",
     "semantic_hash": ""
   },
   "tests/test_full_indicator_parity.py": {
@@ -258,9 +258,9 @@
     "semantic_hash": ""
   },
   "pyproject.toml": {
-    "mtime": 1794963659.8508055,
-    "seen": 1794963722.915909,
-    "ast_hash": "65cc7e5e664b426586108aeb9e459d02",
+    "mtime": 1795048556.1117156,
+    "seen": 1795048628.83201,
+    "ast_hash": "fa079817ef06910b9fc4a883b06a15d1",
     "semantic_hash": ""
   },
   "requirements.txt": {
@@ -389,8 +389,8 @@
     "semantic_hash": ""
   },
   "data/provenance/market_data_modern.json": {
-    "mtime": 1794955360.6946502,
-    "seen": 1794963722.9158988,
+    "mtime": 1795047267.923417,
+    "seen": 1795047275.854291,
     "ast_hash": "b1c609425733c763d2e48685d11b635a",
     "semantic_hash": ""
   },
@@ -401,9 +401,9 @@
     "semantic_hash": ""
   },
   "bubble_detector/ui/postprocess_wasm.py": {
-    "mtime": 1794963662.5338547,
-    "seen": 1794963722.9158652,
-    "ast_hash": "480a4908d194c2c03388648ffdc9eb74",
+    "mtime": 1795048558.9844072,
+    "seen": 1795048628.8319511,
+    "ast_hash": "d10cc6a4e2a4911dec724bb4bc607659",
     "semantic_hash": ""
   },
   ".agents/rules/system_architecture.md": {
@@ -443,9 +443,9 @@
     "semantic_hash": ""
   },
   "sw.js": {
-    "mtime": 1794963663.729501,
-    "seen": 1794963722.915919,
-    "ast_hash": "5e9bcbcbfe1d2e4fc40c085ca4915bd6",
+    "mtime": 1795048560.4808953,
+    "seen": 1795048628.832021,
+    "ast_hash": "b042d7d0400edd8fbc9f850aecaaf3d3",
     "semantic_hash": ""
   },
   "tests/test_ui_ux_wasm_optimizations.py": {
@@ -503,9 +503,9 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794963670.8384106,
-    "seen": 1794963722.916241,
-    "ast_hash": "da5141d7bcd3e9a0dfd364de08d7c51b",
+    "mtime": 1795048565.805163,
+    "seen": 1795048628.832344,
+    "ast_hash": "05c66395afe01ab9e2ef4b0ea2a73982",
     "semantic_hash": ""
   },
   "tests/conftest.py": {
@@ -692,6 +692,150 @@
     "mtime": 1794955250.6627512,
     "seen": 1794955338.722791,
     "ast_hash": "4d8dd2faa2d3f99cb631efaf9f8286ae",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/data/empirical_study_results.json": {
+    "mtime": 1795045712.4757533,
+    "seen": 1795047275.853833,
+    "ast_hash": "6e7bf54a85487dfc12de251c6aba73b4",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/scripts/generate_sector_4k_plots.py": {
+    "mtime": 1795046314.9869347,
+    "seen": 1795047275.853834,
+    "ast_hash": "bff579fb55c1491e97aef8401aa0ff12",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/scripts/generate_sector_pdf.py": {
+    "mtime": 1795047190.6377451,
+    "seen": 1795047275.853835,
+    "ast_hash": "eaee520b1fe75f00473f38750ced8e03",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/scripts/run_full_sector_study.py": {
+    "mtime": 1795045633.9227078,
+    "seen": 1795047275.853835,
+    "ast_hash": "145defe6a414f7d6182b4bab45940a1e",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/scripts/stage_sector_data.py": {
+    "mtime": 1795034250.6044981,
+    "seen": 1795037506.825547,
+    "ast_hash": "e2c2eed33ac8798d03ca50e72e9692b9",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/SectorDislocation_TechnicalReport.md": {
+    "mtime": 1795048564.1158743,
+    "seen": 1795048628.8325078,
+    "ast_hash": "4a495cd8c9be4a99a8c0f9da12b61051",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/01_Sleeve_Taxonomy_Pareto_Frontier_black.png": {
+    "mtime": 1795046343.4943025,
+    "seen": 1795047275.855053,
+    "ast_hash": "67a0a6475ec709dc2efa77d7e3e42880",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/01_Sleeve_Taxonomy_Pareto_Frontier_white.png": {
+    "mtime": 1795046337.6873322,
+    "seen": 1795047275.8550541,
+    "ast_hash": "8b5d6eb2ec7abce7da04bb75540d3a1a",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/02_Flagship_Sector_Dislocation_Trajectories_black.png": {
+    "mtime": 1795046344.125663,
+    "seen": 1795047275.855055,
+    "ast_hash": "29c1e0110fb096589fe99c854344173c",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/02_Flagship_Sector_Dislocation_Trajectories_white.png": {
+    "mtime": 1795046338.3539991,
+    "seen": 1795047275.855055,
+    "ast_hash": "38ec35adc24f92b7999bd1b7cc758ab5",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/03_12_Event_Sector_Popperian_Matrix_black.png": {
+    "mtime": 1795046344.6321034,
+    "seen": 1795047275.8550558,
+    "ast_hash": "b45b46fd36a3e43ddc84f32827b71712",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/03_12_Event_Sector_Popperian_Matrix_white.png": {
+    "mtime": 1795046338.8961582,
+    "seen": 1795047275.8550558,
+    "ast_hash": "f41b19b26da0b67fde389a1e11f61a63",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/04_Sector_ETFs_vs_Single_Stocks_Granularity_black.png": {
+    "mtime": 1795046345.193662,
+    "seen": 1795047275.855057,
+    "ast_hash": "bc6c91d15dfc58ca7c743bd296b9ac97",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/04_Sector_ETFs_vs_Single_Stocks_Granularity_white.png": {
+    "mtime": 1795046339.6364381,
+    "seen": 1795047275.855057,
+    "ast_hash": "bcc9011c8fc5a5f7edb30dc63b5e58df",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/05_Signal_Mapping_Portfolio_Wealth_Drawdown_black.png": {
+    "mtime": 1795046345.8160756,
+    "seen": 1795047275.855058,
+    "ast_hash": "a65b7efff3ab791510035377ec0e5122",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/05_Signal_Mapping_Portfolio_Wealth_Drawdown_white.png": {
+    "mtime": 1795046340.281612,
+    "seen": 1795047275.855058,
+    "ast_hash": "e9bf83b7676552fc3b1019e67a186f4d",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/06_Sector_8Pillar_Coalition_Anatomy_black.png": {
+    "mtime": 1795046346.5285206,
+    "seen": 1795047275.855059,
+    "ast_hash": "2a44bb9b00eeaa1c9c6e050cb0d564a1",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/06_Sector_8Pillar_Coalition_Anatomy_white.png": {
+    "mtime": 1795046341.033189,
+    "seen": 1795047275.8550599,
+    "ast_hash": "d7a3fdc507ed6f43f98698ae4d534bff",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/07_Sector_5Engines_Homotopic_SEA_black.png": {
+    "mtime": 1795046347.1823108,
+    "seen": 1795047275.855061,
+    "ast_hash": "ffca98b9a9ee05011c158753eb3c4c03",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/07_Sector_5Engines_Homotopic_SEA_white.png": {
+    "mtime": 1795046341.665803,
+    "seen": 1795047275.855061,
+    "ast_hash": "9baaa29c44aa19c3c477cc210e5354a7",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/08_6Sleeve_vs_7Sleeve_XLY_Diagnostic_black.png": {
+    "mtime": 1795046347.8399074,
+    "seen": 1795047275.855062,
+    "ast_hash": "c41fc518ba51ec12d55f3e390a8a4c10",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/08_6Sleeve_vs_7Sleeve_XLY_Diagnostic_white.png": {
+    "mtime": 1795046342.2902703,
+    "seen": 1795047275.855062,
+    "ast_hash": "0665f04b99750f5659d516df3824af33",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/09_20Yr_Cross_Sector_Regime_Thermogram_black.png": {
+    "mtime": 1795046348.3650854,
+    "seen": 1795047275.855063,
+    "ast_hash": "3c774f4ff6f51eff9e43e0ad0c9e320d",
+    "semantic_hash": ""
+  },
+  "SectorDislocationStudy/09_20Yr_Cross_Sector_Regime_Thermogram_white.png": {
+    "mtime": 1795046342.8297102,
+    "seen": 1795047275.855063,
+    "ast_hash": "f72dd771a25b2a199efdcade942007e7",
     "semantic_hash": ""
   }
 }

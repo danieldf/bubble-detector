@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.9.0] - 2026-11-18
+
+### Added
+- **Cross-Sectional Sector Dislocation Technical Report (`SectorDislocationStudy/SectorDislocation_TechnicalReport.md` & `.pdf`, `v1.1.0`, 34 Pages)**:
+  - Authored and typeset *"Cross-Sectional Sector Dislocation Intelligence: Co-Primary 6-Sleeve & 7-Sleeve Orthogonal Taxonomies, Bifurcated Signal Synthesis & Fiduciary Mapping Mechanics (2006–2026)"* by **Daniel D Ferrante, PhD** under `CC-BY-NC-ND 4.0` Confidential IP protection, enforcing the strict $\gamma \ge 0.87$ epistemological confidence and non-redundancy gate (`96 / 96` orthogonal sleeve/sector pillars passing $\tau_{k,j} \in [0.9258, 0.9963] \ge 0.87$).
+  - Established and benchmarked **two co-primary orthogonal sleeve taxonomies** head-to-head across `2006-01-02` to `2026-11-13` ($N = 5,445$ business sessions; `1999-01-01` causal warm-up, $N = 7,271$):
+    1. **`S_6^⊥` (Structurally-Anchored Orthogonal 6-Sleeve, $\gamma = 0.96$ — Parsimony & Bear-Rally Defense Leader):** Achieves $R_{1\text{d}}^2 = 0.9272$, $R_{21\text{d}}^2 = 0.9357$, $R_{\text{DD}}^2 = 0.9744$, $\tau_{\min}^{\perp} = 0.9953$, $\eta_{\text{spec}}^{\perp} = 0.9982$, `0` sign flips; `M4` Decoupled Cash Shield delivers **`0.70` Sharpe**, **`0.95` Sortino**, **`9.18%` CAGR (`9.67%` at `4%` cash)**, and **`-19.66%` MaxDD** (`+35.53%` saved vs. `SPY`, Calmar `0.47`), while `M3` Core-Satellite Active Tilt delivers **`10.27%` CAGR (`10.48%` at `4%` cash)** and **`0.63` Sharpe**.
+    2. **`T5 / S_7^⊥` (Granular Factor 7-Sleeve Splitting Standalone `XLY`, $\gamma = 0.94$ — Spanning & Attribution Leader):** Splits `S1` into `T5-S1 Compute & Digital (XLK/XLC, 26%)` and `T5-S2 Consumer Discretionary (XLY, 10%)`, lifting spanning to $R_{1\text{d}}^2 = 0.9421$, $R_{21\text{d}}^2 = 0.9516$, and **$R_{\text{DD}}^2 = 0.9820$** ($\tau_{\min} = 0.9694 / 0.9681$), capturing Q4-2021 `XLY` stimulus mania (`97.5%` $\to$ `-36.3%` in 2022) and live Nov 2026 divergence (`Compute 45.3%` vs. `Consumer 61.8%`), while achieving **`0.67` Sharpe** (`-25.11%` MaxDD) on `M4` and **`10.04%` CAGR (`0.61` Sharpe)** on `M3`.
+  - Validated `12 / 12` (`100%`) sector dislocation detection (`SD01`–`SD12`, `91.1%` pre-peak mean, `0.25%` trough mean, `90.8%` separation, `217.8d` lead), 2022 `XLE` (`+64.3%`) anti-bubble exemption (`40.3%` Q4-2021 mean `< 70%`), 11-ETF vs. 46-single-stock granularity falsification (`P7` Breadth reworking), and added **`Appendix B: Executive Compendium of Selected Indicators, 20-Year Empirical Performance & Structural Intuition`**.
+- **18 Ultra-High-Resolution 4K HUXGA (`6400 × 4800`, 4:3 Aspect Ratio) Visual Artifacts**:
+  - Generated and verified `9` white-theme + `9` black-theme `6400 × 4800` PNGs (`01` Taxonomy Pareto Frontier, `02` Multi-Sector Trajectories, `03` 12-Event Popperian Matrix, `04` ETFs vs. Single Stocks, `05` Dual-Taxonomy Portfolio Wealth & Drawdowns, `06` 8-Pillar Coalition Anatomy, `07` Sector Homotopic Phase-Time SEA, `08` `S_6^⊥` vs. `T5` `XLY` Diagnostic, and `09` 20-Year Cross-Sectional Regime Thermogram & Indicator Scorecard).
+
 ## [3.8.0] - 2026-11-17
 
 ### Added

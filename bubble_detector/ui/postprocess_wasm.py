@@ -542,7 +542,7 @@ def sync_wasm_build_directories():
     try:
         from bubble_detector import __version__
     except Exception:
-        __version__ = "3.8.0"
+        __version__ = "3.9.0"
 
     dist_dir = Path("dist")
     build_dir = Path("build")

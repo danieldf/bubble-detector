@@ -14,6 +14,7 @@ build/
 dist/
 *.parquet
 !data/provenance/*.parquet
+!SectorDislocationStudy/data/*.parquet
 
 # Testing & Coverage
 .pytest_cache/
@@ -34,6 +35,7 @@ CRC_18*.pdf
 Holdings_*.csv
 *.pdf
 !HighFidelityEventStudy/*.pdf
+!SectorDislocationStudy/*.pdf
 Holdings_*.csv
 
 .solomd/
