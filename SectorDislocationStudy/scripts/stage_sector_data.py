@@ -2,7 +2,7 @@
 """
 Stage Authentic GICS-11 Sector ETFs, Sub-Sector Sleeves, T-Bill Yields, and Single-Stock Panel
 aligned strictly with the `market_data_50yr.parquet` / `market_data_20yr.parquet` timeline
-(`1999-01-04` warm-up through `2026-11-13`, with 20-year audit window `2006-01-02` to `2026-11-13`, N=5,445).
+(`1999-01-04` warm-up through `2026-11-23`, with 20-year audit window `2006-01-02` to `2026-11-23`, N=5,451).
 
 Strictly enforces:
   1. Zero synthetic Gaussian bumps.
@@ -94,25 +94,25 @@ def backward_splice(target: pd.Series, proxy: pd.Series) -> tuple[pd.Series, pd.
 
 
 def main() -> None:
-    # 1. Load canonical master dataset from provenance (1975-01-01 -> 2026-11-13)
+    # 1. Load canonical master dataset from provenance (1975-01-01 -> 2026-11-23)
     master_pl = pl.read_parquet(ROOT_DIR / "data" / "provenance" / "market_data_50yr.parquet")
     master_pd = master_pl.to_pandas()
     master_pd["Date"] = pd.to_datetime(master_pd["Date"])
     master_pd = master_pd.set_index("Date").sort_index()
 
-    # Slice from 1999-01-01 -> 2026-11-13 (gives >7 years of causal warm-up prior to 2006-01-02)
-    master_slice = master_pd.loc["1999-01-01":"2026-11-13"].copy()
+    # Slice from 1999-01-01 -> 2026-11-23 (gives >7 years of causal warm-up prior to 2006-01-02)
+    master_slice = master_pd.loc["1999-01-01":"2026-11-23"].copy()
     target_dates = master_slice.index
     print(f"Master slice timeline: {target_dates[0].date()} -> {target_dates[-1].date()} (N={len(target_dates)})")
 
     all_Stocks = sorted({s for lst in SINGLE_STOCKS_BY_SECTOR.values() for s in lst})
     all_tickers = sorted(set(GICS_11 + THEMATIC_PROXIES + all_Stocks))
 
-    print(f"Downloading {len(all_tickers)} tickers from yfinance (1998-12-15 -> 2026-11-16)...")
+    print(f"Downloading {len(all_tickers)} tickers from yfinance (1998-12-15 -> 2026-11-24)...")
     raw = yf.download(
         all_tickers,
         start="1998-12-15",
-        end="2026-11-16",
+        end="2026-11-24",
         auto_adjust=True,
         progress=False,
         threads=True,
@@ -187,7 +187,7 @@ def main() -> None:
     merged = pd.concat([master_slice[keep_master_cols], sector_df], axis=1)
     merged.to_parquet(DATA_DIR / "sector_master_panel_1999_2026.parquet")
 
-    audit_20yr = merged.loc["2006-01-02":"2026-11-13"]
+    audit_20yr = merged.loc["2006-01-02":"2026-11-23"]
     print(f"Saved sector_master_panel_1999_2026.parquet: full={merged.shape}, 20yr={audit_20yr.shape}")
     print(f"Saved single_stocks_1999_2026.parquet: {stocks_df.shape}")
 

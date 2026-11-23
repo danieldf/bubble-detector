@@ -39,7 +39,7 @@ To ensure complete structural resilience across diverse market regimes—from cr
 
 ### 1.4 High-Level Empirical Scorecard Across the 20-Year Horizon (2006–2026)
 
-Evaluated across the complete **20-Year Global Crisis & Expansion Horizon (`2006-01-02` through `2026-11-13`, `N = 5,445` weekday business sessions / `5,250` NYSE exchange sessions)**, the table below summarizes the empirical performance of our Composite Summary Indicator suite across all eight historical market dislocations (`D1`–`D8`, where drawdowns reflect dividend-reinvested S&P 500 total-return series `SPY`):
+Evaluated across the complete **20-Year Global Crisis & Expansion Horizon (`2006-01-02` through `2026-11-23`, `N = 5,451` weekday business sessions / `5,256` NYSE exchange sessions)**, the table below summarizes the empirical performance of our Composite Summary Indicator suite across all eight historical market dislocations (`D1`–`D8`, where drawdowns reflect dividend-reinvested S&P 500 total-return series `SPY`):
 
 | Dislocation ID & Historical Event | Cycle Peak Date | Cycle Trough Date | Unhedged S&P 500 Total-Return Drawdown | Composite-Hedged Drawdown | Net Capital Saved (`ΔDD`) | Master Pre-Peak Max (`≥70%` Gate) | Master Trough Min (`<25%` Gate) | Advance Warning Lead (252d Window / 180d Window) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |

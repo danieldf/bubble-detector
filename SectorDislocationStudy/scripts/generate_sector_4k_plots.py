@@ -108,7 +108,7 @@ def add_header_footer(fig: plt.Figure, pal: dict[str, str], title: str, subtitle
         bbox=dict(boxstyle="round,pad=0.32", facecolor=pal["badge_bg"], edgecolor=pal["border"], lw=0.8),
     )
     fig.text(0.035, 0.013, footer, fontsize=7.4, color=pal["sub"], ha="left", va="bottom", style="italic")
-    fig.text(0.965, 0.013, "4K HUXGA (6400 × 4800, 4:3)  •  Horizon: 2006-01-02 – 2026-11-13 (N = 5,445)",
+    fig.text(0.965, 0.013, "4K HUXGA (6400 × 4800, 4:3)  •  Horizon: 2006-01-02 – 2026-11-23 (N = 5,451)",
              fontsize=7.6, fontweight="bold", color=pal["sub"], ha="right", va="bottom")
 
 
@@ -148,7 +148,7 @@ def plot_01_taxonomy_pareto(art: dict, df_m: pd.DataFrame, theme: str) -> None:
         fig, pal,
         "Figure 1: Cross-Sectional Sleeve Dimensionality & Co-Primary Basis Audit (S_6^⊥ 6-Sleeve vs. T5 7-Sleeve)",
         "Empirical Proof Under the Mandatory >= 0.87 Gate: Why Both S_6^⊥ (K = 6 Parsimony Core) and T5 (K = 7 Granular Factor) Pass Co-Optimally",
-        "Authentic GICS-11 Select Sector SPDR ETFs & SPY (1999–2026 causal warm-up; 2006–2026 out-of-sample audit, N = 5,445).",
+        "Authentic GICS-11 Select Sector SPDR ETFs & SPY (1999–2026 causal warm-up; 2006–2026 out-of-sample audit, N = 5,451).",
     )
 
     ax1 = fig.add_subplot(gs[0, 0])
@@ -194,7 +194,7 @@ def plot_01_taxonomy_pareto(art: dict, df_m: pd.DataFrame, theme: str) -> None:
     ax2 = fig.add_subplot(gs[0, 1])
     style_ax(ax2, pal)
     gics_11 = ["XLK", "XLC", "XLY", "XLI", "XLB", "XLF", "XLE", "XLV", "XLP", "XLU", "XLRE"]
-    mask20 = (df_m.index >= "2006-01-02") & (df_m.index <= "2026-11-13")
+    mask20 = (df_m.index >= "2006-01-02") & (df_m.index <= "2026-11-23")
     rets11 = pd.DataFrame({c: np.log(df_m[c] / df_m[c].shift(1)).fillna(0.0) for c in gics_11}).loc[mask20]
     corr11 = rets11.corr().to_numpy()
     im = ax2.imshow(corr11, cmap="RdYlBu_r", vmin=0.25, vmax=1.0, aspect="auto")
@@ -514,8 +514,8 @@ def plot_04_etf_vs_single_stocks(art: dict, theme: str) -> None:
 
     ax3 = fig.add_subplot(gs[1, 0])
     style_ax(ax3, pal)
-    stocks_df = pd.read_parquet(DATA_DIR / "single_stocks_1999_2026.parquet").loc["2006-01-02":"2026-11-13"].ffill().bfill()
-    df_m = pd.read_parquet(DATA_DIR / "sector_master_panel_1999_2026.parquet").loc["2006-01-02":"2026-11-13"]
+    stocks_df = pd.read_parquet(DATA_DIR / "single_stocks_1999_2026.parquet").loc["2006-01-02":"2026-11-23"].ffill().bfill()
+    df_m = pd.read_parquet(DATA_DIR / "sector_master_panel_1999_2026.parquet").loc["2006-01-02":"2026-11-23"]
     for tkr, col, lbl, lw in [
         ("XLF", pal["emerald"], "XLF Financials Sector ETF (Full Secular Recovery to New Highs)", 2.3),
         ("JPM", pal["blue"], "JPM (Survivor Winner)", 1.5),
@@ -563,15 +563,15 @@ def plot_05_signal_mapping_backtest(df_ts: pd.DataFrame, art: dict, theme: str) 
     fig = plt.figure(figsize=FIGSIZE, dpi=DPI)
     gs = fig.add_gridspec(3, 1, height_ratios=[1.28, 0.95, 0.92], left=0.060, right=0.808, top=0.892, bottom=0.060, hspace=0.24)
 
+    dates = df_ts.index
+    bt = art["backtest_summary"]["irx"]
+
     add_header_footer(
         fig, pal,
         "Figure 5: Signal Mapping Mechanics & 20-Year Portfolio Performance — S_6^⊥ (6-Sleeve) vs. T5 (7-Sleeve)",
         "Head-to-Head Out-of-Sample Comparison (2006–2026, 15 bps Friction, 1d Causal Lag, Actual IRX T-Bills): M4 Cash Shield & M3 Active Tilt vs. M1/M2 & SPY",
-        "S_6^⊥ M4 (Sharpe 0.70, MaxDD -19.66%, Calmar 0.47) & T5 M4 (Sharpe 0.67, MaxDD -25.11%) both outperform SPY (Sharpe 0.54, MaxDD -55.19%).",
+        f"S_6^⊥ M4 (Sharpe {bt['M4_Fiduciary_6S']['sharpe']:.2f}, MaxDD {bt['M4_Fiduciary_6S']['max_dd']:.2f}%, Calmar {bt['M4_Fiduciary_6S']['calmar']:.2f}) & T5 M4 (Sharpe {bt['M4_Fiduciary_7S']['sharpe']:.2f}, MaxDD {bt['M4_Fiduciary_7S']['max_dd']:.2f}%) both outperform SPY (Sharpe {bt['SPY_BuyHold']['sharpe']:.2f}, MaxDD {bt['SPY_BuyHold']['max_dd']:.2f}%).",
     )
-
-    dates = df_ts.index
-    bt = art["backtest_summary"]["irx"]
 
     ax1 = fig.add_subplot(gs[0, 0])
     style_ax(ax1, pal)
@@ -608,7 +608,7 @@ def plot_05_signal_mapping_backtest(df_ts: pd.DataFrame, art: dict, theme: str) 
     ax2.axhline(-20.0, color=pal["emerald"], ls="--", lw=1.3, label="-20% Fiduciary Ceiling")
     ax2.set_ylim(-60, 3)
     ax2.set_ylabel("Underwater Drawdown (%)", fontsize=9.1, fontweight="bold", color=pal["text"])
-    ax2.set_title("B. Underwater Drawdowns — S_6^⊥ Caps GFC Drawdown at -19.66% vs. -25.11% on T5 (Sep-'08 XLY Bear Bounce) & -55.19% on SPY",
+    ax2.set_title(f"B. Underwater Drawdowns — S_6^⊥ Caps Drawdown at {bt['M4_Fiduciary_6S']['max_dd']:.2f}% vs. {bt['M4_Fiduciary_7S']['max_dd']:.2f}% on T5 (Sep-'08 XLY Bear Bounce) & {bt['SPY_BuyHold']['max_dd']:.2f}% on SPY",
                   fontsize=10.0, fontweight="bold", color=pal["text"], loc="left", pad=5)
     ax2.legend(loc="upper left", bbox_to_anchor=(1.01, 1.03), fontsize=7.2, frameon=True, facecolor=pal["panel"], edgecolor=pal["grid"], labelcolor=pal["text"])
 
@@ -630,7 +630,7 @@ def plot_05_signal_mapping_backtest(df_ts: pd.DataFrame, art: dict, theme: str) 
     ax3.xaxis.set_major_locator(mdates.YearLocator(2))
     ax3.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
     ax3.set_ylabel("S_6^⊥ Allocation (%)", fontsize=9.1, fontweight="bold", color=pal["text"])
-    ax3.set_title("C. S_6^⊥ (6-Sleeve) M4 Schmitt-Trigger Allocation Dynamics (143.8%/yr Turnover; T5 7-Sleeve Allocation Shown in Figure 8)",
+    ax3.set_title(f"C. S_6^⊥ (6-Sleeve) M4 Schmitt-Trigger Allocation Dynamics ({bt['M4_Fiduciary_6S']['ann_turnover']:.1f}%/yr Turnover; T5 7-Sleeve Allocation Shown in Figure 8)",
                   fontsize=10.0, fontweight="bold", color=pal["text"], loc="left", pad=5)
     ax3.legend(loc="upper left", bbox_to_anchor=(1.01, 1.02), fontsize=7.3, frameon=True, facecolor=pal["panel"], edgecolor=pal["grid"], labelcolor=pal["text"])
 
@@ -693,7 +693,7 @@ def plot_06_8pillar_coalition_anatomy(df_ts: pd.DataFrame, art: dict, theme: str
     # Bottom 3 Archetype Panels: (B) XLK 2019–2026, (C) XLE 2013–2024, (D) XLF 2006–2012
     archetypes = [
         (
-            0, "XLK", "2019-01-01", "2026-11-13",
+            0, "XLK", "2019-01-01", "2026-11-23",
             "B. Tech Archetype (XLK, 2019–2026):\nBSADF + ^VXN Skew + Narrow Breadth (P7)",
             [("P2+P3 Explosiveness", ["Upos_XLK_P2", "Upos_XLK_P3"], pal["crimson"]),
              ("P7 Breadth Crowding", ["Upos_XLK_P7"], pal["purple"]),
@@ -893,11 +893,12 @@ def plot_08_6sleeve_vs_7sleeve_xly(df_ts: pd.DataFrame, art: dict, theme: str) -
     fig = plt.figure(figsize=FIGSIZE, dpi=DPI)
     gs = fig.add_gridspec(2, 2, height_ratios=[1.15, 1.0], left=0.060, right=0.962, top=0.892, bottom=0.068, hspace=0.31, wspace=0.22)
 
+    bt_irx = art["backtest_summary"]["irx"]
     add_header_footer(
         fig, pal,
         "Figure 8: Co-Primary Taxonomy Diagnostic — S_6^⊥ (6-Sleeve) vs. T5 / S_7^⊥ (Granular 7-Sleeve Splitting XLY)",
         "Structural Decoupling of Compute & Digital Platforms (XLK/XLC, 26%) from Household Consumer Discretionary (XLY, 10%) Over 2006–2026",
-        "T5 maximizes regime attribution & drawdown spanning (98.20%), while S_6^⊥ maximizes GFC bear-rally whipsaw immunity (-19.66% vs. -25.11% MaxDD).",
+        f"T5 maximizes regime attribution & drawdown spanning (98.20%), while S_6^⊥ maximizes GFC bear-rally whipsaw immunity ({bt_irx['M4_Fiduciary_6S']['max_dd']:.2f}% vs. {bt_irx['M4_Fiduciary_7S']['max_dd']:.2f}% MaxDD).",
     )
 
     dates = df_ts.index
@@ -907,14 +908,17 @@ def plot_08_6sleeve_vs_7sleeve_xly(df_ts: pd.DataFrame, art: dict, theme: str) -
     env_s6 = smooth_envelope(df_ts["Score_S1_Tech_Growth"].to_numpy())
     env_t5_tech = smooth_envelope(df_ts["Score_T5_S1_Compute_Digital"].to_numpy())
     env_t5_xly = smooth_envelope(df_ts["Score_T5_S2_Consumer_Disc"].to_numpy())
+    live_t5_tech = float(df_ts["Score_T5_S1_Compute_Digital"].iloc[-1])
+    live_t5_xly = float(df_ts["Score_T5_S2_Consumer_Disc"].iloc[-1])
+    live_s6 = float(df_ts["Score_S1_Tech_Growth"].iloc[-1])
 
     ax1.axhline(70.0, color=pal["crimson"], lw=1.7, ls="--", label="Critical Pre-Peak Warning Gate (70.0%)")
     ax1.axhline(25.0, color=pal["emerald"], lw=1.5, ls=":", label="Contrarian Trough Floor (25.0%)")
     ax1.fill_between(dates, env_t5_tech, env_t5_xly, color=pal["purple"], alpha=0.14,
                      label="Compute (XLK/XLC) vs. Consumer (XLY) Regime Divergence Spread")
-    ax1.plot(dates, env_t5_tech, color=pal["blue"], lw=2.3, label="T5-S1: Secular Compute & Digital (XLK/XLC, 26% Base | Live Nov'26 = 45.3%)")
-    ax1.plot(dates, env_t5_xly, color=pal["crimson"], lw=2.1, label="T5-S2: Household Consumer Discretionary (XLY Solo, 10% Base | Live Nov'26 = 61.8%)")
-    ax1.plot(dates, env_s6, color=pal["emerald"], ls="--", lw=1.8, alpha=0.90, label="S_6^⊥-S1: Merged Growth Sleeve (XLK/XLC/XLY, 36% Base | Live Nov'26 = 68.4%)")
+    ax1.plot(dates, env_t5_tech, color=pal["blue"], lw=2.3, label=f"T5-S1: Secular Compute & Digital (XLK/XLC, 26% Base | Live Nov 23 = {live_t5_tech:.1f}%)")
+    ax1.plot(dates, env_t5_xly, color=pal["crimson"], lw=2.1, label=f"T5-S2: Household Consumer Discretionary (XLY Solo, 10% Base | Live Nov 23 = {live_t5_xly:.1f}%)")
+    ax1.plot(dates, env_s6, color=pal["emerald"], ls="--", lw=1.8, alpha=0.90, label=f"S_6^⊥-S1: Merged Growth Sleeve (XLK/XLC/XLY, 36% Base | Live Nov 23 = {live_s6:.1f}%)")
 
     # Key structural annotations
     i_21 = dates.get_indexer([pd.Timestamp("2021-11-19")], method="nearest")[0]
@@ -934,8 +938,8 @@ def plot_08_6sleeve_vs_7sleeve_xly(df_ts: pd.DataFrame, art: dict, theme: str) -
         arrowprops=dict(arrowstyle="->", color=pal["amber"], lw=1.4),
     )
     ax1.annotate(
-        "Nov 2026 Live Split:\nCompute = 45.3% (Healthy)\nConsumer XLY = 61.8% (Watch)",
-        xy=(dates[-1], env_t5_tech[-1]), xytext=(pd.Timestamp("2022-09-01"), 9.5),
+        f"Nov 23, 2026 Live Split:\nCompute = {live_t5_tech:.1f}% (Damper Reset)\nConsumer XLY = {live_t5_xly:.1f}% (Alert ≥70%!)",
+        xy=(dates[-1], env_t5_tech[-1]), xytext=(pd.Timestamp("2022-07-01"), 9.5),
         fontsize=7.5, fontweight="bold", color=pal["text"],
         bbox=dict(boxstyle="round,pad=0.28", facecolor=pal["card_blue"], edgecolor=pal["blue"], lw=1.0),
         arrowprops=dict(arrowstyle="->", color=pal["blue"], lw=1.4),
@@ -1002,7 +1006,7 @@ def plot_08_6sleeve_vs_7sleeve_xly(df_ts: pd.DataFrame, art: dict, theme: str) -
     ax3.xaxis.set_major_locator(mdates.YearLocator(3))
     ax3.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
     ax3.set_ylabel("T5 7-Sleeve Allocation (%)", fontsize=9.1, fontweight="bold", color=pal["text"])
-    ax3.set_title("C. T5 (7-Sleeve) M4 Dynamic Allocation (148.7%/yr Turnover; Independent XLY Shielding)", fontsize=10.0, fontweight="bold", color=pal["text"], pad=8)
+    ax3.set_title(f"C. T5 (7-Sleeve) M4 Dynamic Allocation ({bt_irx['M4_Fiduciary_7S']['ann_turnover']:.1f}%/yr Turnover; Independent XLY Shielding)", fontsize=10.0, fontweight="bold", color=pal["text"], pad=8)
     ax3.legend(loc="lower left", ncol=2, fontsize=6.6, framealpha=0.92, facecolor=pal["bg"], edgecolor=pal["grid"], labelcolor=pal["text"])
 
     save_exact_huxga(fig, PLOTS_DIR / f"08_6Sleeve_vs_7Sleeve_XLY_Diagnostic_{theme}.png", pal["bg"])
@@ -1028,14 +1032,14 @@ def plot_09_20yr_regime_thermogram(df_ts: pd.DataFrame, art: dict, theme: str) -
     ax1 = fig.add_subplot(gs_top[0, 0])
     style_ax(ax1, pal)
     strip_cols = [
-        ("Broad_I_Star", "Broad Market SPY (I^*) [Live: 45.4%]"),
-        ("Score_T5_S1_Compute_Digital", "T5-S1: Compute XLK/XLC [Live: 45.3%]"),
-        ("Score_T5_S2_Consumer_Disc", "T5-S2: Consumer XLY [Live: 61.8%]"),
-        ("Score_T5_S3_Industrial_CapEx", "S2/T5-S3: Industrials XLI/XLB [Live: 63.8%]"),
-        ("Score_T5_S4_Energy_Supply", "S3/T5-S4: Energy XLE [Live: 48.6%]"),
-        ("Score_T5_S5_Financial_Credit", "S4/T5-S5: Financials XLF [Live: 72.8%]"),
-        ("Score_T5_S6_Rate_RealEstate", "S5/T5-S6: REIT/Util XLRE/XLU [Live: 16.5%]"),
-        ("Score_T5_S7_Defensive_Quality", "S6/T5-S7: Health/Staples [Live: 73.7%]"),
+        ("Broad_I_Star", f"Broad Market SPY (I^*) [Live: {df_ts['Broad_I_Star'].iloc[-1]:.1f}%]"),
+        ("Score_T5_S1_Compute_Digital", f"T5-S1: Compute XLK/XLC [Live: {df_ts['Score_T5_S1_Compute_Digital'].iloc[-1]:.1f}%]"),
+        ("Score_T5_S2_Consumer_Disc", f"T5-S2: Consumer XLY [Live: {df_ts['Score_T5_S2_Consumer_Disc'].iloc[-1]:.1f}%]"),
+        ("Score_T5_S3_Industrial_CapEx", f"S2/T5-S3: Industrials XLI/XLB [Live: {df_ts['Score_T5_S3_Industrial_CapEx'].iloc[-1]:.1f}%]"),
+        ("Score_T5_S4_Energy_Supply", f"S3/T5-S4: Energy XLE [Live: {df_ts['Score_T5_S4_Energy_Supply'].iloc[-1]:.1f}%]"),
+        ("Score_T5_S5_Financial_Credit", f"S4/T5-S5: Financials XLF [Live: {df_ts['Score_T5_S5_Financial_Credit'].iloc[-1]:.1f}%]"),
+        ("Score_T5_S6_Rate_RealEstate", f"S5/T5-S6: REIT/Util XLRE/XLU [Live: {df_ts['Score_T5_S6_Rate_RealEstate'].iloc[-1]:.1f}%]"),
+        ("Score_T5_S7_Defensive_Quality", f"S6/T5-S7: Health/Staples [Live: {df_ts['Score_T5_S7_Defensive_Quality'].iloc[-1]:.1f}%]"),
     ]
     # Resample to monthly-half / 10-business-day smooth regime windows for razor-sharp visual legibility
     df_strip = pd.DataFrame({c: smooth_envelope(df_ts[c].to_numpy()) for c, _ in strip_cols}, index=df_ts.index)

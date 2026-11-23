@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-End-to-End Empirical Sector Dislocation Study Engine (1999–2026, Out-of-Sample Audit 2006-01-02 to 2026-11-13).
+End-to-End Empirical Sector Dislocation Study Engine (1999–2026, Out-of-Sample Audit 2006-01-02 to 2026-11-23).
 
 Implements and audits every architectural step against the >= 0.87 Confidence Cutoff for BOTH Co-Primary
 Taxonomies:
@@ -602,7 +602,7 @@ def evaluate_sleeve_suite(
             "mean_score": round(float(s20.mean()), 2),
             "median_score": round(float(np.median(s20)), 2),
             "duty_70_pct": round(duty, 2),
-            "live_2026_11_13": round(float(s20[-1]), 2),
+            "live_2026_11_23": round(float(s20[-1]), 2),
         })
         print(
             f"  {s_key:24s} (w={cfg['w_bench']*100:4.1f}%): tau_min={sm['tau_min']:.4f}, "
@@ -763,7 +763,7 @@ def run_taxonomy_backtest(
 def main() -> None:
     df = pd.read_parquet(DATA_DIR / "sector_master_panel_1999_2026.parquet")
     stocks = pd.read_parquet(DATA_DIR / "single_stocks_1999_2026.parquet")
-    mask_20 = (df.index >= "2006-01-02") & (df.index <= "2026-11-13")
+    mask_20 = (df.index >= "2006-01-02") & (df.index <= "2026-11-23")
 
     # 1A. Co-Primary Architecture 1: S_6^perp (Optimal 6 Sleeves)
     sleeve6_prices, sleeve6_results, pillar_audit_6 = evaluate_sleeve_suite(
@@ -797,7 +797,7 @@ def main() -> None:
             "mean_score": round(float(s20.mean()), 2),
             "median_score": round(float(np.median(s20)), 2),
             "duty_70_pct": round(float(np.mean(s20 >= 70.0) * 100.0), 2),
-            "live_2026_11_13": round(float(s20[-1]), 2),
+            "live_2026_11_23": round(float(s20[-1]), 2),
         })
         print(
             f"  {sec:5s} ({cfg['name']:30s}): tau_min={sm['tau_min']:.4f}, eta={sm['eta_spec']:.4f} | "

@@ -58,7 +58,7 @@ TYPST_PREAMBLE = r"""// Institutional White Paper Typst Stylesheet (CC-BY-NC-ND 
       #set text(size: 7.8pt, fill: rgb("#475569"))
       #grid(
         columns: (2fr, 1fr),
-        align(left)[Daniel D Ferrante, PhD • Institutional White Paper v1.2.0 (Engine v3.7.0) • November 17, 2026],
+        align(left)[Daniel D Ferrante, PhD • Institutional White Paper v1.2.0 (Engine v3.9.0) • Updated November 23, 2026],
         align(right)[*Page #pg of #total*],
       )
     ]
@@ -203,8 +203,8 @@ TYPST_PREAMBLE = r"""// Institutional White Paper Typst Stylesheet (CC-BY-NC-ND 
       columns: (1fr, 1fr),
       row-gutter: 6pt,
       text(size: 9.5pt, fill: rgb("#E2E8F0"))[*Author:* Daniel D Ferrante, PhD],
-      text(size: 9.5pt, fill: rgb("#E2E8F0"))[*Publication Date:* November 17, 2026],
-      text(size: 8.8pt, fill: rgb("#94A3B8"))[*Release Version:* White Paper v1.2.0 (Engine v3.7.0)],
+      text(size: 9.5pt, fill: rgb("#E2E8F0"))[*Publication Date:* November 23, 2026],
+      text(size: 8.8pt, fill: rgb("#94A3B8"))[*Release Version:* White Paper v1.2.0 (Engine v3.9.0)],
       text(size: 8.8pt, fill: rgb("#94A3B8"))[*Target Audience:* Family Offices, RIAs & Strategic Partners],
     )
   ],
@@ -242,10 +242,10 @@ TYPST_PREAMBLE = r"""// Institutional White Paper Typst Stylesheet (CC-BY-NC-ND 
   ],
   block(width: 100%, fill: rgb("#F8FAFC"), stroke: 0.75pt + rgb("#CBD5E1"), inset: 9pt, radius: 4pt)[
     #align(center)[
-      #text(size: 14pt, weight: "bold", fill: rgb("#0F172A"))[45.4% (Neutral)] \
+      #text(size: 14pt, weight: "bold", fill: rgb("#047857"))[7.4% (Damper Reset)] \
       #v(2pt)
-      #text(size: 7.6pt, weight: "bold", fill: rgb("#334155"))[Live Score (Nov 13, 2026)] \
-      #text(size: 7.0pt, fill: rgb("#64748B"))[S&P 500 at 7,561.67]
+      #text(size: 7.6pt, weight: "bold", fill: rgb("#334155"))[Live Score (Nov 23, 2026)] \
+      #text(size: 7.0pt, fill: rgb("#64748B"))[S&P 500 at 7,237.17]
     ]
   ],
 )
@@ -282,8 +282,8 @@ TYPST_PREAMBLE = r"""// Institutional White Paper Typst Stylesheet (CC-BY-NC-ND 
   [
     #set text(size: 8.3pt, fill: rgb("#334155"))
     *Evaluation Scope & Verification Summary:*
-    - *Primary Out-of-Sample Audit Horizon:* January 2, 2006 – November 13, 2026 (`N = 5,445` weekday business sessions / `5,250` NYSE exchange sessions with causal holiday forward-fill).
-    - *Master Causal Warm-Up & Out-of-Era Stress Horizon:* January 1, 1975 – November 13, 2026 (`N = 13,045` business sessions), capturing 1987 Black Monday, 1990 S&L/Gulf War, 1998 LTCM, and 2000–02 Dot-Com crashes.
+    - *Primary Out-of-Sample Audit Horizon:* January 2, 2006 – November 23, 2026 (`N = 5,451` weekday business sessions / `5,256` NYSE exchange sessions with causal holiday forward-fill).
+    - *Master Causal Warm-Up & Out-of-Era Stress Horizon:* January 1, 1975 – November 23, 2026 (`N = 13,045` 50-year rolling business sessions), capturing 1987 Black Monday, 1990 S&L/Gulf War, 1998 LTCM, and 2000–02 Dot-Com crashes.
     - *Production Software Verification:* Dual-runtime server (`NiceGUI`) and zero-server browser (`Pyodide WebAssembly`) architecture passing `135 / 135` automated econometric, anti-leakage, and numerical-parity regression tests.
   ],
 )

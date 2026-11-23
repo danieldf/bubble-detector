@@ -4,7 +4,7 @@ High-Fidelity 4K (HXGA 4096x3072, 4:3 Aspect Ratio) Event-Study Plot Generator.
 
 Generates 8 publication-grade 4K PNG visualizations (4 plots x 2 themes: white & black backgrounds)
 for the last 4 plots in Tab 8 ('Composite Summary Indicators') across the 20-Year Global Crisis
-& Expansion Horizon (2006-01-01 to 2026-11-13):
+& Expansion Horizon (2006-01-01 to 2026-11-23):
   1. Scale-Invariant Log-Growth (`01_Scale_Invariant_Log_Growth_{white,black}.png`)
   2. 8-Dislocation Popperian (`02_8_Dislocation_Popperian_{white,black}.png`)
   3. Homotopic Phase-Time (`03_Homotopic_Phase_Time_{white,black}.png`)
@@ -196,7 +196,7 @@ def style_axes_common(
     fig.text(
         0.955,
         0.015,
-        "High-Fidelity Event Study v1.2.0 (Engine v3.7.0)  •  Confidential  •  CC-BY-NC-ND 4.0",
+        "High-Fidelity Event Study v1.2.0 (Engine v3.9.0)  •  Confidential  •  CC-BY-NC-ND 4.0",
         fontsize=8.0,
         fontweight="bold",
         color=pal["subtext"],
@@ -248,9 +248,9 @@ def plot_1_scale_invariant_log_growth(
         pal=pal,
         title="Executive View I: 20-Year Scale-Invariant S&P 500 Total-Return Log-Growth & Warning Corridors",
         subtitle=f"Logarithmic Total-Return Trajectory L_SPY(t) with 252d Pre-Peak Warning Corridors (8/8 Hit Rate, {mean_lead:.1f}d Mean Lead) & Contraction Regimes (2006–2026)",
-        xlabel=f"Calendar Year & Macro Regime Timeline (Business-Day Grid: Jan 2, 2006 – Nov 13, 2026, N = {n_sessions:,} [5,250 NYSE Sessions])",
+        xlabel=f"Calendar Year & Macro Regime Timeline (Business-Day Grid: Jan 2, 2006 – Nov 23, 2026, N = {n_sessions:,} [5,256 NYSE Sessions])",
         ylabel="Scale-Invariant Log-Growth Index L_SPY(t)  [100 × (1 + ln(SPY_t / SPY_0)), Base = 100 at Jan 2, 2006]",
-        footer_note="Source: Ground-Truth 20-Year Total-Return Horizon (Jan 2, 2006 – Nov 13, 2026). Amber bands = 252d pre-peak warning windows (I_t^* >= 70%); crimson bands = contractions (D1–D8).",
+        footer_note="Source: Ground-Truth 20-Year Total-Return Horizon (Jan 2, 2006 – Nov 23, 2026). Amber bands = 252d pre-peak warning windows (I_t^* >= 70%); crimson bands = contractions (D1–D8).",
     )
 
     y_min, y_max = 25.0, 355.0
@@ -393,11 +393,12 @@ def plot_1_scale_invariant_log_growth(
             zorder=8,
         )
 
-    # Terminal 2026-11-13 Callout
+    # Terminal 2026-11-23 Callout
+    tr_wealth_last = 100.0 * float(spy[-1]) / float(spy[0])
     ax.annotate(
-        f"Current Regime (Nov 13, 2026)\nL_SPY = {log_spy[-1]:.1f} ($884.5 TR | S&P 7,561.67)\nMaster Score I* = 45.4% (Neutral)",
+        f"Current Regime (Nov 23, 2026)\nL_SPY = {log_spy[-1]:.1f} (${tr_wealth_last:.1f} TR | S&P 7,237.17)\nMaster Score I* = 7.4% (Damper Reset <25%)",
         xy=(mdates.date2num(dt_index[-1]), log_spy[-1]),
-        xytext=(-175, -88),
+        xytext=(-182, -88),
         textcoords="offset points",
         fontsize=9.0,
         fontweight="bold",
@@ -410,7 +411,7 @@ def plot_1_scale_invariant_log_growth(
     # Executive Summary Insight Box inside Lower-Right Empty Space (strictly inside plot bounds)
     summary_text = (
         "WHY LOG-GROWTH SCALE INVARIANCE MATTERS:\n"
-        "• Linear charts distort 20-year history: $100 total-return wealth reaches $884.5 (S&P 500 price 7,561.67) by Nov 2026.\n"
+        f"• Linear charts distort 20-year history: $100 total-return wealth reaches ${tr_wealth_last:.1f} (S&P 500 price 7,237.17) by Nov 23, 2026.\n"
         "• Logarithmic scaling L_SPY(t) maps equal % total-return drawdowns (-20%) to identical vertical drops in all eras.\n"
         f"• Every contraction (crimson) is preceded by a 252d-window pre-peak warning corridor (amber, avg. {mean_lead:.1f}d)."
     )
@@ -470,7 +471,7 @@ def plot_2_popperian_regime_separation(
         subtitle=f"Empirical Falsification Audit: Pre-Peak Maxima Exceed 70% Warning Gate (8/8 Hits) While Crash-Trough Minima Drop to <= {max_tr:.1f}% (<25% Target)",
         xlabel="Historical Market Dislocation Regime (Chronological Sequence D1–D8 Across the 2006–2026 Horizon)",
         ylabel="Composite Regime Risk Score & Peak-to-Trough Separation Spread (%)",
-        footer_note="Source: 20-Year Dislocation Event Study (Jan 2, 2006 – Nov 13, 2026). Pre-peak maxima evaluated over [-180d, t_peak]; crash-trough minima evaluated around t_trough.",
+        footer_note="Source: 20-Year Dislocation Event Study (Jan 2, 2006 – Nov 23, 2026). Pre-peak maxima evaluated over [-180d, t_peak]; crash-trough minima evaluated around t_trough.",
     )
 
     x = np.arange(len(DISLOCATIONS_8_20YR))
@@ -804,7 +805,7 @@ def plot_4_dislocation_capital(
         subtitle=f"Institutional Portfolio Defense Across D1–D8: {rel_dd_red:.1f}% Mean Drawdown Reduction ({mean_dd_spy:.1f}% Unhedged Loss Cut to {mean_dd_def:.1f}%) & {mean_ld_days:.1f}-Day Mean Lead Cushion",
         xlabel="Historical Market Dislocation Regime (Chronological Sequence D1–D8 Across the 2006–2026 Horizon)",
         ylabel="Peak-to-Trough Drawdown Magnitude (%) & Normalized Lead Cushion (% of 252-Day Year)",
-        footer_note="Source: 20-Year Dislocation Backtest Audit (Jan 2, 2006 – Nov 13, 2026, 4.0% cash yield, 15 bps turnover friction, 1-day execution lag). Capital saved = |DD_SPY| - |DD_Def|.",
+        footer_note="Source: 20-Year Dislocation Backtest Audit (Jan 2, 2006 – Nov 23, 2026, 4.0% cash yield, 15 bps turnover friction, 1-day execution lag). Capital saved = |DD_SPY| - |DD_Def|.",
     )
 
     x = np.arange(len(DISLOCATIONS_8_20YR))
@@ -1013,7 +1014,7 @@ def plot_5_log_growth_vs_master_composite(
         pal=pal,
         title="Appendix B View I: Scale-Invariant S&P 500 Log-Growth vs. Master Composite Index (I*)",
         subtitle=f"Full-Horizon Audit (2006–2026, N = {n_sessions:,}): L_SPY(t) (Left Y1) & Smooth Causal Master Composite Envelope I_t^* (Right Y2: 8/8 Hits >= 70%, 8/8 Troughs < 25%)",
-        xlabel=f"Calendar Year & Macro Regime Timeline (Business-Day Sessions: Jan 2, 2006 – Nov 13, 2026, N = {n_sessions:,} [5,250 NYSE Sessions])",
+        xlabel=f"Calendar Year & Macro Regime Timeline (Business-Day Sessions: Jan 2, 2006 – Nov 23, 2026, N = {n_sessions:,} [5,256 NYSE Sessions])",
         ylabel="Scale-Invariant Total-Return Log-Growth Index L_SPY(t)  [100 × (1 + ln(SPY_t / SPY_0)), Base = 100 at Jan 2, 2006]",
         footer_note="Source: 20-Year Horizon (2006–2026). Left Y1 = L_SPY(t); Right Y2 = Smooth Causal Master Composite Envelope I_t^* (0%–100%).",
     )
@@ -1222,11 +1223,11 @@ def plot_5_log_growth_vs_master_composite(
         zorder=8,
     )
 
-    # Terminal 2026-11-13 Callout
+    # Terminal 2026-11-23 Callout
     ax.annotate(
-        f"Current Regime (Nov 13, 2026)\nL_SPY = {log_spy[-1]:.1f} (S&P 7,561.67)\nMaster Score I* = {comp_arr[-1]:.1f}% (Neutral)",
+        f"Current Regime (Nov 23, 2026)\nL_SPY = {log_spy[-1]:.1f} (S&P 7,237.17)\nMaster Score I* = {comp_arr[-1]:.1f}% (Damper Reset <25%)",
         xy=(mdates.date2num(dt_index[-1]), log_spy[-1]),
-        xytext=(-175, -88),
+        xytext=(-182, -88),
         textcoords="offset points",
         fontsize=9.0,
         fontweight="bold",
@@ -1241,7 +1242,7 @@ def plot_5_log_growth_vs_master_composite(
         "SMOOTH CAUSAL WARNING ENVELOPE & INTER-CORRIDOR CROSSING ANATOMY (2006–2026):\n"
         f"• D1–D8 Major Dislocations: All 8 pre-peak corridors surge to 85.8%–98.8% (mean 94.2% raw max) & reset < 25% at troughs.\n"
         "• Inter-Corridor Crossings (I1: 2012–13, I2: Early 2018, I3: 2023): Preceded real -5.7% to -10.1% pullbacks cushioned by QE/MA50.\n"
-        f"• Live Nov 13, 2026 Reading: L_SPY = {log_spy[-1]:.1f} (S&P 7,561.67) with Master Composite I^* = {comp_arr[-1]:.1f}% (Neutral Zone)."
+        f"• Live Nov 23, 2026 Reading: L_SPY = {log_spy[-1]:.1f} (S&P 7,237.17) with Master Composite I^* = {comp_arr[-1]:.1f}% (Post-VIX-35.9 Damper Reset)."
     )
     ax.text(
         0.40,
@@ -1354,9 +1355,9 @@ def plot_6_multi_threshold_corridors_75_80_85(
         pal=pal,
         title="Appendix B View II: Multi-Threshold Warning Corridors (75%, 80%, 85%) & Dislocation Risk",
         subtitle=f"Three-Slice Stratified Warning Corridors (Bottom ≥75%: {risk_75:.1f}% Risk | Middle ≥80%: {risk_80:.1f}% Risk | Top ≥85%: {risk_85:.1f}% Risk) & D1–D8 Corridor Risk",
-        xlabel=f"Calendar Year & Macro Regime Timeline (Business-Day Sessions: Jan 2, 2006 – Nov 13, 2026, N = {n:,} [5,250 NYSE Sessions])",
+        xlabel=f"Calendar Year & Macro Regime Timeline (Business-Day Sessions: Jan 2, 2006 – Nov 23, 2026, N = {n:,} [5,256 NYSE Sessions])",
         ylabel="Scale-Invariant Total-Return Log-Growth Index L_SPY(t)  [100 × (1 + ln(SPY_t / SPY_0)), Base = 100 at Jan 2, 2006]",
-        footer_note="Source: 20-Year Horizon (Jan 2, 2006 – Nov 13, 2026). Pre-peak corridors split into 3 vertical slices (I* >= 75%, >= 80%, >= 85%) with dislocation risk labels.",
+        footer_note="Source: 20-Year Horizon (Jan 2, 2006 – Nov 23, 2026). Pre-peak corridors split into 3 vertical slices (I* >= 75%, >= 80%, >= 85%) with dislocation risk labels.",
     )
 
     y_min, y_max = 25.0, 355.0
@@ -1555,11 +1556,12 @@ def plot_6_multi_threshold_corridors_75_80_85(
             zorder=8,
         )
 
-    # Terminal 2026-11-13 Callout
+    # Terminal 2026-11-23 Callout
+    tr_wealth_last = 100.0 * float(spy_arr[-1]) / float(spy_arr[0])
     ax.annotate(
-        f"Current Regime (Nov 13, 2026)\nL_SPY = {log_spy[-1]:.1f} ($884.5 TR | S&P 7,561.67)\nMaster Score I* = {comp_arr[-1]:.1f}% (<75% Slice)",
+        f"Current Regime (Nov 23, 2026)\nL_SPY = {log_spy[-1]:.1f} (${tr_wealth_last:.1f} TR | S&P 7,237.17)\nMaster Score I* = {comp_arr[-1]:.1f}% (<75% Slice)",
         xy=(mdates.date2num(dt_index[-1]), log_spy[-1]),
-        xytext=(-175, -88),
+        xytext=(-182, -88),
         textcoords="offset points",
         fontsize=8.9,
         fontweight="bold",

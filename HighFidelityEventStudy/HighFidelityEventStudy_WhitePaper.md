@@ -3,9 +3,9 @@
 **Solving Sequence-of-Returns Risk and Crash-Bottom Liquidation via Orthogonal 13-Pillar Regime Synthesis**
 
 - **Author:** Daniel D Ferrante, PhD
-- **Publication Date:** November 17, 2026
-- **Document Classification:** Institutional White Paper & Strategic Investment Memorandum (`v1.2.0` | Engine `v3.7.0`)
-- **Evaluation Horizon:** 20-Year Modern Global Crisis Horizon (`January 2, 2006 – November 13, 2026`, `N = 5,445` Weekday Business Sessions / `5,250` NYSE Exchange Sessions) with Out-of-Era Validation (`1975–2005`, `N = 13,045` Sessions)
+- **Publication Date:** November 23, 2026
+- **Document Classification:** Institutional White Paper & Strategic Investment Memorandum (`v1.2.0` | Engine `v3.9.0`)
+- **Evaluation Horizon:** 20-Year Modern Global Crisis Horizon (`January 2, 2006 – November 23, 2026`, `N = 5,451` Weekday Business Sessions / `5,256` NYSE Exchange Sessions) with Out-of-Era Validation (`1975–2005`, `N = 13,045` Sessions)
 
 > **CONFIDENTIALITY & PROPRIETARY INTELLECTUAL PROPERTY DISCLAIMER (`CC-BY-NC-ND 4.0`)**  
 > **CLASSIFICATION: CONFIDENTIAL — PROPRIETARY INTELLECTUAL PROPERTY**  
@@ -24,9 +24,9 @@ Yet conventional risk-management frameworks consistently fail wealth fiduciaries
 
 To resolve both structural failures, this White Paper presents an **Information-Maximizing Orthogonal Regime Synthesis Architecture** (`Engine v3.7.0`). Rather than relying on a single indicator or a redundant average of correlated metrics, our framework extracts **13 mutually orthogonalized risk pillars** across seven distinct financial domains—macro valuation, margin leverage, econometric bubble explosiveness (`GSADF`), log-periodic power-law criticality (`LPPLS`), options tail-risk skew, topological data analysis (`TDA`), and global liquidity—and synthesizes them into **Five Complementary Composite Summary Indicators** governed by a unified **Master Composite Summary Index ($\mathcal{I}_t^*$)**.
 
-Tested strictly out-of-sample with **zero look-ahead bias** and a **1-day causal execution lag** across all **5,445 weekday business sessions (`5,250` NYSE exchange sessions)** from **January 2, 2006 through November 13, 2026**—and further validated across **four pre-2006 historical crises (`1987`, `1990`, `1998`, `2000–02`)** on a 50-year warm-up timeline (`1975–2026`)—the architecture delivers five institutional breakthroughs:
+Tested strictly out-of-sample with **zero look-ahead bias** and a **1-day causal execution lag** across all **5,451 weekday business sessions (`5,256` NYSE exchange sessions)** from **January 2, 2006 through November 23, 2026**—and further validated across **four pre-2006 historical crises (`1987`, `1990`, `1998`, `2000–02`)** on a 50-year warm-up timeline (`1975–2026`)—the architecture delivers five institutional breakthroughs:
 - **100% Dislocation Detection Sensitivity (`8 / 8` Modern Crises + `4 / 4` Pre-2006 Crises = `12 / 12` Captured):** Every major S&P 500 dislocation (`> 12.5%` drawdown) from 1987 through 2026 was preceded by an explicit Master Composite warning exceeding the `70.0%` critical alert gate (`94.2%` mean pre-peak maximum across `D1`–`D8`; `97.9%` across `1987–2002`).
-- **High Full-Cycle Selectivity (`14.86%` Duty Cycle Over 20 Years):** Outside pre-dislocation build-ups, the Master Composite remains quiet—spending **`85.14%` of all trading days below `70.0%`** (`34.7%` 20-year mean) and sitting at a neutral **`45.4%`** as of **November 13, 2026** (with the S&P 500 at **`7,561.67`**).
+- **High Full-Cycle Selectivity (`14.82%` Duty Cycle Over 20 Years):** Outside pre-dislocation build-ups, the Master Composite remains quiet—spending **`85.18%` of all trading days below `70.0%`** (`34.7%` 20-year mean) and sitting at **`7.4%`** (*Damper Reset `< 25%`*) as of **November 23, 2026** (with the S&P 500 at **`7,237.17`** following the Nov 20 `VIX = 35.89` volatility flush).
 - **Nearly Eleven Months of Advance Fiduciary Runway (`225.2` Business Days Mean Lead):** Wealth managers receive an average of **`225.2` business days (`89.4%` of a standard 252-day trading year)** of advance warning prior to cycle peaks, enabling tax-aware, low-turnover (`19.3%/yr`) portfolio de-risking without emergency fire-sales.
 - **Zero Crash-Bottom Liquidations (`93.2%` Peak-to-Trough Regime Separation):** At **all `8 / 8` crash troughs**, our directional **Crash-Liquidation Damper ($\Lambda_{\text{Crash}}$)** suppresses panic-volatility distortion and drives the Master Composite score down to **`0.0%–5.4%` (`1.1%` mean, well below `< 25.0%`)**, triggering contrarian re-entry.
 - **75.8% Mean Drawdown Reduction (`+18.8%` Capital Saved per Dislocation):** Net of `15 bps` transaction costs and 1-day lag, our defensive capital-shield rule cuts average dislocation drawdowns from **`-24.9%` to `-6.0%`** (`-6.5%` using actual 3-month T-Bill yields)—saving **`+40.8%`** in the GFC and **`+25.8%`** in COVID, while our **Dynamic Tactical Overlay (`w_tac`)** captures **`95%` of S&P 500 CAGR (`10.16%` vs. `10.62%`)** with `> 10%` lower maximum drawdown.
@@ -41,7 +41,7 @@ This White Paper is organized in a **crescendo of specialization**—beginning w
    - *1.1 Why Asymmetric Drawdowns Destroy Generational Wealth*
    - *1.2 Why Conventional Risk Models Fail Family Offices and Wealth Managers*
    - *1.3 Executive Overview of the Five Complementary Composite Summary Indicators*
-   - *1.4 The 20-Year Empirical Scorecard (2006–2026) & Live November 13, 2026 Market Posture*
+   - *1.4 The 20-Year Empirical Scorecard (2006–2026) & Live November 23, 2026 Market Posture*
 2. **[Section 2: Tangible Capital Preservation — Portfolio Mechanics, Lead Runway & Treasury-Bill Audits](#section-2-tangible-capital-preservation--portfolio-mechanics-lead-runway--treasury-bill-audits)**
    - *2.1 Two-Tier Portfolio Architecture: Capital-Shield (`w_def`) vs. Dynamic Tactical Overlay (`w_tac`)*
    - *2.2 High-Resolution 4K Audit: Dislocation Capital Preservation & Lead Runway (`Figure 1`)*
@@ -105,7 +105,7 @@ When a Family Office or retiree portfolio must simultaneously fund a **`4.0%` to
 
 ## 1.2 Why Conventional Risk Models Fail Family Offices and Wealth Managers
 
-Over the past two decades (**January 2, 2006 – November 13, 2026**), global equity markets experienced eight major structural dislocations (`D1`–`D8`). Faced with these recurring shocks, wealth managers have traditionally relied on three flawed defenses:
+Over the past two decades (**January 2, 2006 – November 23, 2026**), global equity markets experienced eight major structural dislocations (`D1`–`D8`). Faced with these recurring shocks, wealth managers have traditionally relied on three flawed defenses:
 
 1. **Static 60/40 Stock-Bond Diversification (Failed in Inflationary Rate Shocks):** For forty years, allocators assumed U.S. Treasuries would automatically rally whenever equities fell. In **2022 (`D7`)**, when inflation and Federal Reserve tightening drove both stocks (`-24.5%`) and long-duration Treasuries (`-25%+`) down simultaneously, static 60/40 portfolios suffered their worst joint drawdown in modern history.
 2. **Continuous Put-Option Tail Hedging (Prohibitive Premium Bleed):** Buying rolling out-of-the-money S&P 500 put options costs **`200` to `400` basis points per year** in implied-volatility premium decay during calm bull markets—eroding up to a third of long-term equity risk premia over a 20-year horizon.
@@ -139,9 +139,9 @@ Rather than forcing a single mathematical lens onto every type of market crisis,
 
 ---
 
-## 1.4 The 20-Year Empirical Scorecard (2006–2026) & Live November 13, 2026 Market Posture
+## 1.4 The 20-Year Empirical Scorecard (2006–2026) & Live November 23, 2026 Market Posture
 
-**Table 1.1** summarizes the out-of-sample performance of the **Master Composite Summary Index ($\mathcal{I}_t^*$)** and its companion engines across all eight major S&P 500 dislocations from **January 2, 2006 through November 13, 2026**, while **Table 1.2** reports the live institutional telemetry as of the terminal market close on **Friday, November 13, 2026**:
+**Table 1.1** summarizes the out-of-sample performance of the **Master Composite Summary Index ($\mathcal{I}_t^*$)** and its companion engines across all eight major S&P 500 dislocations from **January 2, 2006 through November 23, 2026**, while **Table 1.2** reports the live institutional telemetry as of the terminal market close on **Monday, November 23, 2026**:
 
 **Table 1.1 — 20-Year Out-of-Sample Empirical Scorecard Across All Eight Major Dislocations (`D1`–`D8`, `2006–2026`)**
 
@@ -157,17 +157,17 @@ Rather than forcing a single mathematical lens onto every type of market crisis,
 | **D8: 2025 Tariff/AI Reset (`Feb '25 – Apr '25`)** | `-18.8%` | **`-3.7%`** | **`+15.0%`** | **`99.1%`** / `99.1%` | **`0.0%`** | `+99.1%` | **`252d`** / `144d` |
 | **8-Dislocation Ensemble Mean (`100%` Hit Rate)** | **`-24.9%`** | **`-6.0%`** | **`+18.8%`** | **`94.2%`** / **`97.0%`** | **`1.1%`** | **`+93.2%`** | **`225.2d`** / **`141.1d`** |
 
-**Table 1.2 — Live Institutional Regime Telemetry Snapshot as of Market Close on `November 13, 2026` (`S&P 500 = 7,561.67`)**
+**Table 1.2 — Live Institutional Regime Telemetry Snapshot as of Market Close on `November 23, 2026` (`S&P 500 = 7,237.17`)**
 
-| Summary Indicator / Portfolio Allocation Metric | Live Reading (`2026-11-13`) | Operational Gate / Zone | Current Fiduciary Interpretation |
+| Summary Indicator / Portfolio Allocation Metric | Live Reading (`2026-11-23`) | Operational Gate / Zone | Current Fiduciary Interpretation |
 | :--- | :---: | :---: | :--- |
-| **1. Master Composite Summary Index ($\mathcal{I}_t^*$)** | **`45.43%` (`45.4%`)** | `< 70.0%` Gate (`Neutral Zone`) | Healthy expansion; **`24.6%` safety buffer** below bubble alert gate |
-| **2. Directional Mahalanobis Index ($\mathcal{I}_t^{\text{Mahal}}$)** | **`59.47%`** | `< 70.0%` Gate (`Elevated-Normal`) | Moderate valuation/skew stretch (`Shiller CAPE = 41.37`), below tail alert |
-| **3. LEI Percentile Diffusion Index ($\mathcal{I}_t^{\text{Diff}}$)** | **`51.64%`** | `< 70.0%` Gate (`Neutral Breadth`) | Balanced cross-pillar breadth (`~half` of pillars near historical median) |
-| **4. Dynamic Factor Nowcast Index ($\mathcal{I}_t^{\text{DFM}}$)** | **`24.17%`** | `< 25.0%` (`Low Macro Stress`) | Latent macro-cycle stress remains benign following the early-2025 reset |
-| **5. Sparse PCA Concentration Index ($\mathcal{I}_t^{\text{SPCA}}$)** | **`7.05%`** | `< 25.0%` (`Quiescent`) | Low localized concentration (`Active Coalition = 3 / 13` pillars) |
-| **6. Crash-Liquidation Damper ($\Lambda_{\text{Crash}}$)** | **`100.00%`** | `100% = Inactive` (`No Crash`) | Market at all-time high (`L_SPY = 318.0`, `0.0%` underwater drawdown) |
-| **7. Recommended Fiduciary Equity Exposure** | **`100.0%` (`w_def`) / `105.0%` (`w_tac`)** | `100%–105%` (`Full Exposure`) | Maintain full benchmark equity allocation; no defensive de-risking active |
+| **1. Master Composite Summary Index ($\mathcal{I}_t^*$)** | **`7.36%` (`7.4%`)** | `< 25.0%` Floor (`Damper Reset`) | Post-`VIX 35.89` liquidation damper active; zero bubble exhaustion |
+| **2. Directional Mahalanobis Index ($\mathcal{I}_t^{\text{Mahal}}$)** | **`5.08%`** | `< 25.0%` Floor (`Damper Reset`) | Panic volatility spike filtered out by $\Lambda_{\text{Crash}}$ |
+| **3. LEI Percentile Diffusion Index ($\mathcal{I}_t^{\text{Diff}}$)** | **`30.68%`** | `< 70.0%` Gate (`Low-Neutral`) | Cross-pillar breadth moderated into low-neutral zone |
+| **4. Dynamic Factor Nowcast Index ($\mathcal{I}_t^{\text{DFM}}$)** | **`8.47%`** | `< 25.0%` (`Low Macro Stress`) | Latent macro-cycle stress attenuated during pullback |
+| **5. Sparse PCA Concentration Index ($\mathcal{I}_t^{\text{SPCA}}$)** | **`3.25%`** | `< 25.0%` (`Quiescent`) | Low localized concentration (`Active Coalition = 5 / 13` pillars) |
+| **6. Crash-Liquidation Damper ($\Lambda_{\text{Crash}}$)** | **`47.80%`** | `Active Attenuation` (`< 100%`) | Engaged during Nov 20 `VIX = 35.89` flush (`SPY -8.6%` off Nov peak) |
+| **7. Recommended Fiduciary Equity Exposure** | **`100.0%` (`w_def`) / `105.0%` (`w_tac`)** | `100%–105%` (`Full Exposure`) | `w_def` holds `100%` (`E_180 < 70%`); zero panic de-risking |
 
 \newpage
 
@@ -217,13 +217,13 @@ During institutional due diligence, quantitative reviewers often ask two sharp q
 
 ## 2.4 Full 20-Year Backtest Performance & Actual Historical 3-Month Treasury-Bill Reruns
 
-To verify that our capital-preservation results do not depend on an idealized flat `4.00%` cash yield assumption during the zero-interest-rate policy (`ZIRP`) era (`2009–2015` and `2020–2021`), we audit all portfolio strategies across the full 20-year horizon (`2006-01-02` to `2026-11-13`, `15 bps` cost, `1d` execution lag) under **both** the flat `4.00%` cash yield and **actual historical 3-Month U.S. Treasury Bill yields (`DTB3`, which averaged `1.88%` over 2006–2026)**:
+To verify that our capital-preservation results do not depend on an idealized flat `4.00%` cash yield assumption during the zero-interest-rate policy (`ZIRP`) era (`2009–2015` and `2020–2021`), we audit all portfolio strategies across the full 20-year horizon (`2006-01-02` to `2026-11-23`, `15 bps` cost, `1d` execution lag) under **both** the flat `4.00%` cash yield and **actual historical 3-Month U.S. Treasury Bill yields (`DTB3`, which averaged `1.88%` over 2006–2026)**:
 
-**Table 2.1 — Full 20-Year Portfolio Performance Comparison (`2006-01-02` to `2026-11-13`, `15 bps` Cost, `1d` Lag: Flat `4.0%` Cash vs. Actual Historical 3M T-Bill Yields)**
+**Table 2.1 — Full 20-Year Portfolio Performance Comparison (`2006-01-02` to `2026-11-23`, `15 bps` Cost, `1d` Lag: Flat `4.0%` Cash vs. Actual Historical 3M T-Bill Yields)**
 
 | Portfolio Strategy & Cash-Yield Assumption | Final `$100` Wealth | CAGR (`%`) | Annualized Vol (`%`) | Max Drawdown (`%`) | Sharpe Ratio | Annual Turnover (`%/yr`) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1. Unhedged Buy-and-Hold S&P 500 Total Return (`SPY`)** | **`$884.5`** | **`10.62%`** | `18.85%` | `-55.19%` | `0.35` *(4%)* / `0.46` *(TBill)* | `0.0%` |
+| **1. Unhedged Buy-and-Hold S&P 500 Total Return (`SPY`)** | **`$846.9`** | **`10.38%`** | `18.89%` | `-55.19%` | `0.41` *(4%)* / `0.53` *(TBill)* | `0.0%` |
 | **2a. Dynamic Consensus Tactical Overlay (`w_tac`, `4.0%` Cash)** | **`$753.7`** | **`10.16%`** | `19.27%` | **`-44.95%`** | `0.32` | `1,548.4%` |
 | **2b. Dynamic Consensus Tactical Overlay (`w_tac`, Actual T-Bill)** | **`$737.5`** | **`10.05%`** | `19.27%` | **`-45.30%`** | **`0.43`** | `1,548.4%` |
 | **3a. Signed Mahalanobis Exposure (`w_mahal`, `4.0%` Cash, `2%` Deadband)** | **`$665.1`** | **`9.17%`** | **`14.84%`** | **`-43.42%`** | `0.35` | `824.2%` |
@@ -254,7 +254,7 @@ Replacing the flat `4.00%` cash rate with actual historical 3-month Treasury Bil
 
 ## 3.1 Why Linear Price Charts Distort Multi-Decade Fiduciary Risk
 
-When evaluating a 20-year equity track record (`2006–2026`) over which a `$100` initial investment in the S&P 500 Total-Return Index (`SPY`) grew **`8.85-fold` to `$884.5`** (with the price-only S&P 500 Index closing at **`7,561.67`** on November 13, 2026), standard linear-scale price charts create a severe visual illusion:
+When evaluating a 20-year equity track record (`2006–2026`) over which a `$100` initial investment in the S&P 500 Total-Return Index (`SPY`) grew **`8.47-fold` to `$846.9`** (with the price-only S&P 500 Index closing at **`7,237.17`** on November 23, 2026), standard linear-scale price charts create a severe visual illusion:
 - On a linear axis, the catastrophic **2007–09 Global Financial Crisis (`D1`, `-55.2%` total-return loss)** is squashed into the bottom-left corner of the chart and looks visually smaller than a routine `-5%` dip in 2026!
 - To restore mathematical fairness across decades, we map the dividend-reinvested S&P 500 total-return trajectory ($\text{SPY}_t$) onto the **Scale-Invariant Logarithmic Growth Index ($\mathcal{L}_{\text{SPY}}(t)$)**:
   $$\mathcal{L}_{\text{SPY}}(t) = 100 \times \left[1 + \ln\!\left(\frac{\text{SPY}_t}{\text{SPY}_0}\right)\right], \qquad \mathcal{L}_{\text{SPY}}(t_0) = 100.0 \quad (\text{January 2, 2006})$$
@@ -268,7 +268,7 @@ When evaluating a 20-year equity track record (`2006–2026`) over which a `$100
 
 ## 3.2 High-Resolution 4K Audit: Scale-Invariant Log-Growth & Dual-Phase Corridors (`Figure 2`)
 
-**Figure 2 (`01_Scale_Invariant_Log_Growth_white.png`)** plots $\mathcal{L}_{\text{SPY}}(t)$ on the **Primary Left Axis (Y1)** and the corresponding **Cumulative `$100` Total-Return Wealth (`$100 × SPY_t / SPY_0`, reaching `$884.5` on Nov 13, 2026)** on the **Secondary Right Axis (Y2)** across all **5,445 weekday business sessions (`5,250` NYSE exchange sessions with causal holiday forward-fill)**. Each of the eight major dislocations (`D1`–`D8`) is framed by its dual-phase regime corridor:
+**Figure 2 (`01_Scale_Invariant_Log_Growth_white.png`)** plots $\mathcal{L}_{\text{SPY}}(t)$ on the **Primary Left Axis (Y1)** and the corresponding **Cumulative `$100` Total-Return Wealth (`$100 × SPY_t / SPY_0`, reaching `$846.9` on Nov 23, 2026)** on the **Secondary Right Axis (Y2)** across all **5,451 weekday business sessions (`5,256` NYSE exchange sessions with causal holiday forward-fill)**. Each of the eight major dislocations (`D1`–`D8`) is framed by its dual-phase regime corridor:
 1. **Amber Pre-Peak Early-Warning Corridor (`[t_first_alert, t_peak]` within the `252d` window):** Begins on the exact session the Master Composite Index crosses `≥ 70.0%` prior to the cycle top (`mean width = 225.2` business days).
 2. **Crimson Peak-to-Trough Contraction Corridor (`[t_peak, t_trough]`):** Spans the realized market sell-off from the cycle peak (**orange-red downward triangle $\blacktriangledown$**) to the cycle trough (**emerald-green upward triangle $\blacktriangle$**), where our Crash-Liquidation Damper resets the score below `25.0%` (`mean = 1.1%`).
 
@@ -303,7 +303,7 @@ When evaluating a 20-year equity track record (`2006–2026`) over which a `$100
    - *Contraction & Trough Reset:* Reset to **`0.0%`** at the October 12, 2022 bear-market low, saving **`+19.1%`** (`-5.4%` vs. `-24.5%`).
 8. **`D8` — Early-2025 Tariff & AI CapEx Valuation Reset (`Peak: Feb 19, 2025 | Trough: Apr 8, 2025 | Drawdown: -18.8%`):**
    - *Pre-Peak Warning:* Crossed `≥ 70.0%` **`252` business days prior (`2024-03-04`)** and **`144` business days prior (`2024-08-01`)** in the 180d window, reaching **`99.1%`** as AI hyperscaler concentration (`I^SPCA = 100.0%`) and options skew left the index vulnerable to the February–April 2025 tariff shock.
-   - *Contraction & Trough Reset:* Dropped to **`0.0%`** at the April 8, 2025 trough, saving **`+15.0%`** (`-3.7%` vs. `-18.8%`) and allowing full participation in the rally to `7,561.67` by November 13, 2026.
+   - *Contraction & Trough Reset:* Dropped to **`0.0%`** at the April 8, 2025 trough, saving **`+15.0%`** (`-3.7%` vs. `-18.8%`) and allowing full participation in the subsequent expansion through November 23, 2026 (`7,237.17`).
 
 ---
 
@@ -325,7 +325,7 @@ To ensure complete mathematical precision, **Advance Warning Lead** is defined a
 | **D8 (`2025-02-19`)** | `2024-08-01` | **`144d`** | `25 / 181d` (`13.8%`) | `2024-03-04` | **`252d`** | `34 / 253d` (`13.4%`) | `2023-01-12` | `549d` |
 | **Ensemble Mean** | — | **`141.1d`** | **`34.6 / 181d` (`19.1%`)** | — | **`225.2d`** | **`52.3 / 253d` (`20.7%`)** | — | **`457.8d`** |
 
-*(Calendar Note: The multi-asset pipeline aligns global equity, FRED, and credit series on a uniform Monday–Friday weekday business grid of **`5,445` sessions** from `2006-01-02` to `2026-11-13`, causally forward-filling the `195` NYSE holidays across the **`5,250` exchange sessions**; thus, a `252`-business-day window corresponds to `~243` NYSE trading sessions.)*
+*(Calendar Note: The multi-asset pipeline aligns global equity, FRED, and credit series on a uniform Monday–Friday weekday business grid of **`5,451` sessions** from `2006-01-02` to `2026-11-23`, causally forward-filling the `195` NYSE holidays across the **`5,256` exchange sessions**; thus, a `252`-business-day window corresponds to `~243` NYSE trading sessions.)*
 
 \newpage
 
@@ -338,7 +338,7 @@ In institutional wealth management, fiduciary Investment Committees rarely execu
 A critical question for any quantitative regime indicator is therefore:
 - *Does the model's success depend on a fragile, "knife-edge" `70.0%` cutoff, or does raising the warning bar to **`75.0%`, `80.0%`, and `85.0%`** preserve `100%` crisis detection while monotonically increasing the conditional probability of an imminent market dislocation?*
 
-Empirically, across the `252`-day pre-peak lookback window, raising the alert threshold from `70.0%` to **`75.0%`, `80.0%`, and `85.0%`** preserves a **`100%` (`8 / 8`) dislocation hit rate** (`corridor pre-peak maxima range from 91.2% in D5 to 99.1% in D3, D7, and D8`), while the **Conditional 18-Month Dislocation Risk Probability**—defined as the empirical probability $\mathbb{P}(\text{MaxDD}_{18\text{m}} \le -12.5\% \mid \mathcal{I}_t^* \ge \gamma)$ across all 5,445 sessions—rises monotonically across the three higher tiers:
+Empirically, across the `252`-day pre-peak lookback window, raising the alert threshold from `70.0%` to **`75.0%`, `80.0%`, and `85.0%`** preserves a **`100%` (`8 / 8`) dislocation hit rate** (`corridor pre-peak maxima range from 91.2% in D5 to 99.1% in D3, D7, and D8`), while the **Conditional 18-Month Dislocation Risk Probability**—defined as the empirical probability $\mathbb{P}(\text{MaxDD}_{18\text{m}} \le -12.5\% \mid \mathcal{I}_t^* \ge \gamma)$ across all 5,451 sessions—rises monotonically across the three higher tiers:
 1. **Bottom Tier Slice ($\mathcal{I}_t^* \ge 75.0\%$, Warm Gold):** **`69.6%` Dislocation Risk** (`8 / 8` Peaks Captured, `224.4d` Mean Lead, `10.93%` Full-Horizon Duty Cycle).
 2. **Middle Tier Slice ($\mathcal{I}_t^* \ge 80.0\%$, Rich Amber):** **`71.2%` Dislocation Risk** (`8 / 8` Peaks Captured, `224.4d` Mean Lead, `7.79%` Full-Horizon Duty Cycle).
 3. **Top Tier Slice ($\mathcal{I}_t^* \ge 85.0\%$, Deep Flame Orange):** **`75.4%` Dislocation Risk** (`8 / 8` Peaks Captured, `223.0d` Mean Lead, `5.22%` Full-Horizon Duty Cycle).
@@ -385,19 +385,19 @@ Similarly, on the crash-trough accumulation side, **100% (`8 / 8`) of historical
 
 Any indicator can claim a `100%` hit rate on historical market crashes if it simply stays at `90%` all the time. Therefore, the most important due-diligence test for Family Offices and Wealth Managers is examining **what the score did on the other `85%` of days outside the eight known peaks**.
 
-Across the full 20-year horizon (**January 2, 2006 – November 13, 2026**, `N = 5,445` business sessions):
-- The **Master Composite Summary Index ($\mathcal{I}_t^*$)** spent **only `14.86%` of all sessions (`809 / 5,445` days)** at or above `70.0%`, while spending **`85.14%` of all sessions below `70.0%`** and **`44.37%` (`2,416` days) below the `25.0%` accumulation floor**.
-- Its full-period unconditional mean is **`34.72%`** (median **`31.99%`**). When unanimous five-indicator agreement (`ALL 5 ON ≥ 70.0%`) is required, the active duty cycle drops to just **`4.61%` of all trading days (`251 / 5,445` sessions)**.
+Across the full 20-year horizon (**January 2, 2006 – November 23, 2026**, `N = 5,451` business sessions):
+- The **Master Composite Summary Index ($\mathcal{I}_t^*$)** spent **only `14.82%` of all sessions (`808 / 5,451` days)** at or above `70.0%`, while spending **`85.18%` of all sessions below `70.0%`** and **`44.41%` (`2,421` days) below the `25.0%` accumulation floor**.
+- Its full-period unconditional mean is **`34.70%`** (median **`32.01%`**). When unanimous five-indicator agreement (`ALL 5 ON ≥ 70.0%`) is required, the active duty cycle drops to just **`3.91%` of all trading days (`213 / 5,451` sessions)**.
 
-**Table 5.1 — Full-Period Duty Cycle & Distributional Moments Across All 5 Summary Indicators (`2006-01-02` to `2026-11-13`, `N = 5,445`)**
+**Table 5.1 — Full-Period Duty Cycle & Distributional Moments Across All 5 Summary Indicators (`2006-01-02` to `2026-11-23`, `N = 5,451`)**
 
-| Summary Indicator | Sessions `≥ 70.0%` (Alert) | Share `≥ 70.0%` | Sessions `< 25.0%` (Accumulation) | Share `< 25.0%` | 20-Year Mean | 20-Year Median | Live Reading (`2026-11-13`) |
+| Summary Indicator | Sessions `≥ 70.0%` (Alert) | Share `≥ 70.0%` | Sessions `< 25.0%` (Accumulation) | Share `< 25.0%` | 20-Year Mean | 20-Year Median | Live Reading (`2026-11-23`) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1. Master Composite ($\mathcal{I}_t^*$)** | `809 / 5,445` | **`14.86%`** | `2,416 / 5,445` | **`44.37%`** | `34.72%` | `31.99%` | **`45.43%`** |
-| **2. Directional Mahalanobis ($\mathcal{I}_t^{\text{Mahal}}$)** | `814 / 5,445` | **`14.95%`** | `2,743 / 5,445` | **`50.38%`** | `32.15%` | `24.74%` | **`59.47%`** |
-| **3. Dynamic Factor Nowcast ($\mathcal{I}_t^{\text{DFM}}$)** | `821 / 5,445` | **`15.08%`** | `2,684 / 5,445` | **`49.29%`** | `32.27%` | `25.78%` | **`24.17%`** |
-| **4. LEI Percentile Diffusion ($\mathcal{I}_t^{\text{Diff}}$)** | `949 / 5,445` | **`17.43%`** | `1,988 / 5,445` | **`36.51%`** | `39.07%` | `38.62%` | **`51.64%`** |
-| **5. Sparse PCA Concentration ($\mathcal{I}_t^{\text{SPCA}}$)** | `707 / 5,445` | **`12.98%`** | `3,214 / 5,445` | **`59.03%`** | `26.49%` | `13.64%` | **`7.05%`** |
+| **1. Master Composite ($\mathcal{I}_t^*$)** | `808 / 5,451` | **`14.82%`** | `2,421 / 5,451` | **`44.41%`** | `34.70%` | `32.01%` | **`7.36%`** |
+| **2. Directional Mahalanobis ($\mathcal{I}_t^{\text{Mahal}}$)** | `814 / 5,451` | **`14.93%`** | `2,748 / 5,451` | **`50.41%`** | `32.12%` | `24.71%` | **`5.08%`** |
+| **3. Dynamic Factor Nowcast ($\mathcal{I}_t^{\text{DFM}}$)** | `823 / 5,451` | **`15.10%`** | `2,696 / 5,451` | **`49.46%`** | `32.23%` | `25.69%` | **`8.47%`** |
+| **4. LEI Percentile Diffusion ($\mathcal{I}_t^{\text{Diff}}$)** | `953 / 5,451` | **`17.48%`** | `1,994 / 5,451` | **`36.58%`** | `39.04%` | `38.52%` | **`30.68%`** |
+| **5. Sparse PCA Concentration ($\mathcal{I}_t^{\text{SPCA}}$)** | `704 / 5,451` | **`12.92%`** | `3,224 / 5,451` | **`59.15%`** | `26.45%` | `13.53%` | **`3.25%`** |
 
 **Table 5.2** provides the complete year-by-year distribution of the daily Master Composite Score from 2006 through 2026 alongside each year's realized S&P 500 total return and maximum intra-year drawdown:
 
@@ -425,7 +425,7 @@ Across the full 20-year horizon (**January 2, 2006 – November 13, 2026**, `N =
 | **2023** | `260` | `31.9%` | `29.7%` | `89.4%` | `0.0%` | `33` | `12.7%` | `+26.2%` | `-10.0%` |
 | **2024** | `262` | `41.5%` | `46.4%` | `99.1%` | `0.0%` | `56` | `21.4%` | `+24.9%` | `-8.4%` |
 | **2025** | `261` | `32.5%` | `26.8%` | `97.5%` | `0.0%` | `34` | `13.0%` | `+17.7%` | `-18.8%` |
-| **2026** *(to Nov 13)* | `227` | `42.3%` | `46.4%` | `98.6%` | `0.0%` | `33` | `14.5%` | `+11.5%` | `-8.9%` |
+| **2026** *(to Nov 23)* | `233` | `41.6%` | `46.0%` | `98.6%` | `0.0%` | `33` | `14.2%` | `+6.7%` | `-11.5%` |
 
 ---
 
@@ -445,7 +445,7 @@ How does a wealth manager use a rapidly pulsing daily sensor without whipsawing 
 
 ## 5.3 High-Resolution 4K Audit: Log-Growth vs. Smooth Causal Master Composite Envelope (`Figure 4`)
 
-**Figure 4 (`05_Log_Growth_vs_Master_Composite_white.png`)** plots the **Scale-Invariant Total-Return Log-Growth Index (`L_SPY(t)`)** on the **Primary Left Axis (Y1)** directly against the bold **Smooth Causal Master Composite Warning Envelope (`I^*`)** on the **Secondary Right Axis (Y2)** across all 5,445 sessions (`2006–2026`):
+**Figure 4 (`05_Log_Growth_vs_Master_Composite_white.png`)** plots the **Scale-Invariant Total-Return Log-Growth Index (`L_SPY(t)`)** on the **Primary Left Axis (Y1)** directly against the bold **Smooth Causal Master Composite Warning Envelope (`I^*`)** on the **Secondary Right Axis (Y2)** across all 5,451 sessions (`2006–2026`):
 
 ![Figure 4: Scale-Invariant S&P 500 Log-Growth vs. Smooth Causal Master Composite Envelope (I*)](./05_Log_Growth_vs_Master_Composite_white.png)
 
@@ -733,7 +733,7 @@ We are actively engaging with select **Single- and Multi-Family Offices**, **Ind
 # Confidentiality, Intellectual Property Boundary & Attribution Colophon
 
 > **DOCUMENT TITLE:** *Asymmetric Systemic-Risk Intelligence & Capital Preservation: A 20-Year Out-of-Sample Dislocation Study for Family Offices, Wealth Managers & Strategic Partners (2006–2026)*  
-> **DOCUMENT VERSION:** White Paper Release `v1.2.0` (Quantitative Engine `v3.7.0`)  
+> **DOCUMENT VERSION:** White Paper Release `v1.2.0` (Quantitative Engine `v3.9.0`)  
 > **CLASSIFICATION:** `CONFIDENTIAL — PROPRIETARY INTELLECTUAL PROPERTY & TRADE SECRET ARCHITECTURE`  
 > **LICENSE:** **Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (`CC-BY-NC-ND 4.0`)**
 
@@ -758,5 +758,5 @@ The historical simulations, out-of-sample event studies, and cost-inclusive port
 
 ### 4. Author & Publication Attestation
 
-- **Author:** **Daniel D Ferrante, PhD**  |  **Publication Date:** **November 17, 2026**
+- **Author:** **Daniel D Ferrante, PhD**  |  **Publication Date:** **November 23, 2026**
 - **Copyright & Licensing:** © 2026 **Daniel D Ferrante, PhD**. All Rights Reserved under `CC-BY-NC-ND 4.0`.

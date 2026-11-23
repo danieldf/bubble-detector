@@ -52,7 +52,7 @@ TYPST_PREAMBLE = r"""// Institutional Sector Dislocation Technical Report Styles
       #set text(size: 7.5pt, fill: rgb("#475569"))
       #grid(
         columns: (3.2fr, 0.8fr),
-        align(left)[Daniel D Ferrante, PhD • November 18, 2026 • Sector Dislocation Report v1.1.0 (4K HUXGA 6400×4800, Cutoff >= 0.87)],
+        align(left)[Daniel D Ferrante, PhD • Updated November 23, 2026 • Sector Dislocation Report v1.1.0 (4K HUXGA 6400×4800, Cutoff >= 0.87)],
         align(right)[*Page #pg of #total*],
       )
     ]

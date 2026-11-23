@@ -48,7 +48,7 @@ import os
 from pathlib import Path
 from typing import Dict, Any, Tuple, Optional, Union
 
-_STAGED_TERMINAL_TRADING_DATE = datetime.date(2026, 11, 13)
+_STAGED_TERMINAL_TRADING_DATE = datetime.date(2026, 11, 23)
 
 
 def clamp_to_trading_day(dt: datetime.date) -> datetime.date:

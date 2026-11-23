@@ -204,7 +204,120 @@ def sync_parquet_to_json(recompute: bool = False):
             print(f"Synced {p_name} to {j_name} across provenance, build, and dist directories.")
 
 
+def refresh_upstream_raw_provenance(end_date: str = None):
+    """
+    Refresh upstream raw provenance files (FRED CSVs, FINRA xlsx, Shiller xls,
+    GSPC daily raw quotes, and unified yfinance multi-ticker quotes `yf_quotes_raw.parquet`)
+    with strict validation guards so existing ground-truth files are never corrupted on network errors.
+    """
+    import io
+    import urllib.request
+    import pandas as pd
+    import yfinance as yf
+    from bubble_detector.config import SP500_TICKER, SECTOR_TICKERS, VOLATILITY_TICKERS
+    from bubble_detector.data.etl_shiller import SHILLER_URL
+    from bubble_detector.data.etl_finra import FINRA_URL
+
+    PROVENANCE_DIR.mkdir(parents=True, exist_ok=True)
+    e_dt = end_date or HORIZON_METADATA[HORIZON_OPTION_1_ID]["end_date"]
+    yf_end = (pd.Timestamp(e_dt) + pd.Timedelta(days=1)).strftime("%Y-%m-%d")
+
+    # 1. Refresh FRED CSV series safely
+    import subprocess
+    fred_series = [
+        ("GDP", PROVENANCE_DIR / "fred_gdp.csv"),
+        ("CSUSHPINSA", PROVENANCE_DIR / "fred_csushpinsa.csv"),
+        ("MEHOINUSA672N", PROVENANCE_DIR / "fred_mehoinusa672n.csv"),
+        ("M2SL", PROVENANCE_DIR / "fred_m2sl.csv"),
+        ("WALCL", PROVENANCE_DIR / "fred_walcl.csv"),
+        ("BOGMBASE", PROVENANCE_DIR / "fred_bogmbase.csv"),
+    ]
+    for s_id, csv_path in fred_series:
+        try:
+            url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={s_id}"
+            proc = subprocess.run(
+                ["curl", "-sL", "--max-time", "12", url],
+                capture_output=True,
+                check=True,
+            )
+            raw_bytes = proc.stdout
+            df_new = pd.read_csv(io.BytesIO(raw_bytes))
+            if "observation_date" in df_new.columns and len(df_new) > 10:
+                old_len = len(pd.read_csv(csv_path)) if csv_path.exists() else 0
+                if len(df_new) >= old_len:
+                    csv_path.write_bytes(raw_bytes)
+                    print(f"  [FRED] Refreshed {csv_path.name}: {len(df_new)} rows (latest: {df_new['observation_date'].iloc[-1]})")
+        except Exception as err:
+            print(f"  [FRED] Retained existing {csv_path.name} ({err})")
+
+    # 2. Refresh FINRA Margin Debt workbook safely
+    finra_xlsx = PROVENANCE_DIR / "margin_statistics.xlsx"
+    try:
+        req = urllib.request.Request(FINRA_URL, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            raw_bytes = resp.read()
+        df_new = pd.read_excel(io.BytesIO(raw_bytes))
+        old_len = len(pd.read_excel(finra_xlsx)) if finra_xlsx.exists() else 0
+        if len(df_new) >= old_len and "Year-Month" in df_new.columns:
+            finra_xlsx.write_bytes(raw_bytes)
+            print(f"  [FINRA] Refreshed {finra_xlsx.name}: {len(df_new)} rows")
+    except Exception as err:
+        print(f"  [FINRA] Retained existing {finra_xlsx.name} ({err})")
+
+    # 3. Refresh Shiller workbook safely
+    shiller_xls = PROVENANCE_DIR / "ie_data.xls"
+    try:
+        req = urllib.request.Request(SHILLER_URL, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            raw_bytes = resp.read()
+        xl_new = pd.ExcelFile(io.BytesIO(raw_bytes))
+        if "Data" in xl_new.sheet_names or len(xl_new.sheet_names) > 0:
+            df_test = xl_new.parse("Data" if "Data" in xl_new.sheet_names else xl_new.sheet_names[0], skiprows=7)
+            if len(df_test) >= 1800:
+                shiller_xls.write_bytes(raw_bytes)
+                print(f"  [Shiller] Refreshed {shiller_xls.name}: {len(df_test)} rows")
+    except Exception as err:
+        print(f"  [Shiller] Retained existing {shiller_xls.name} ({err})")
+
+    # 4. Refresh gspc_raw.parquet (1970-01-02 -> yf_end)
+    try:
+        gspc_dl = yf.download("^GSPC", start="1970-01-01", end=yf_end, progress=False)
+        if not gspc_dl.empty and "Close" in gspc_dl:
+            c_gspc = gspc_dl["Close"].iloc[:, 0] if isinstance(gspc_dl["Close"], pd.DataFrame) else gspc_dl["Close"]
+            c_gspc = c_gspc.dropna()
+            df_gspc = pd.DataFrame({
+                "Date": pd.to_datetime(c_gspc.index).tz_localize(None),
+                "GSPC": c_gspc.values.astype("float32"),
+            }).sort_values("Date").reset_index(drop=True)
+            if len(df_gspc) > 14000:
+                df_gspc.to_parquet(PROVENANCE_DIR / "gspc_raw.parquet", index=False)
+                print(f"  [GSPC] Refreshed gspc_raw.parquet: {len(df_gspc)} rows ({df_gspc['Date'].iloc[0].date()} -> {df_gspc['Date'].iloc[-1].date()})")
+    except Exception as err:
+        print(f"  [GSPC] Retained existing gspc_raw.parquet ({err})")
+
+    # 5. Stage unified multi-ticker `yf_quotes_raw.parquet` (1975-01-01 -> yf_end) for deterministic CI parity
+    # Include continuous primary exchange-traded series (SPY, ^GSPC, sector ETFs, ^VIX) while allowing
+    # partial-inception volatility indices (^VIX1D, ^VIX3M, ^SKEW, ^VXN, ^OVX) to maintain continuous
+    # 50-year seam-free term-structure invariance across horizons.
+    tickers = [SP500_TICKER, "^GSPC"] + list(SECTOR_TICKERS.values()) + ["^VIX"]
+    try:
+        yf_dl = yf.download(tickers, start="1975-01-01", end=yf_end, progress=False)
+        if not yf_dl.empty and "Close" in yf_dl:
+            close_df = yf_dl["Close"].copy()
+            close_df.index = pd.to_datetime(close_df.index).tz_localize(None)
+            close_df = close_df.sort_index().reset_index().rename(columns={"index": "Date"})
+            if "Date" in close_df.columns and len(close_df) > 12000:
+                close_df.to_parquet(PROVENANCE_DIR / "yf_quotes_raw.parquet", index=False)
+                print(f"  [YFinance] Staged yf_quotes_raw.parquet: {close_df.shape} ({close_df['Date'].iloc[0].date()} -> {close_df['Date'].iloc[-1].date()})")
+    except Exception as err:
+        print(f"  [YFinance] Could not stage yf_quotes_raw.parquet ({err})")
+
+
 def stage_all(force_refresh: bool = False):
+    if force_refresh:
+        print("Refreshing upstream raw provenance feeds...")
+        refresh_upstream_raw_provenance()
+
     print("Staging Shiller monthly dataset...")
     s_etl = ShillerETL(PROVENANCE_DIR)
     s_etl.fetch_and_stage(force_refresh=force_refresh)
@@ -227,4 +340,6 @@ def stage_all(force_refresh: bool = False):
     print("All provenance and WASM Parquet datasets successfully staged!")
 
 if __name__ == "__main__":
-    stage_all()
+    import sys
+    do_refresh = ("--refresh" in sys.argv) or ("-r" in sys.argv)
+    stage_all(force_refresh=do_refresh)

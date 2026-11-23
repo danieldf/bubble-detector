@@ -100,7 +100,7 @@ def parse_authentic_vxo_series(prov_dir: Path) -> pd.DataFrame:
     if df_vxo is None or len(df_vxo) < 1000:
         logger.info("Fetching authentic ^VXO history via yfinance...")
         try:
-            raw = yf.download("^VXO", start="1986-01-01", end="2026-11-14", progress=False)
+            raw = yf.download("^VXO", start="1986-01-01", end="2026-11-24", progress=False)
             if not raw.empty and "Close" in raw:
                 c = raw["Close"].iloc[:, 0] if isinstance(raw["Close"], pd.DataFrame) else raw["Close"]
                 df_vxo = pd.DataFrame({"Date": pd.to_datetime(c.index), "VXO": c.values.astype(np.float32)})
@@ -110,7 +110,7 @@ def parse_authentic_vxo_series(prov_dir: Path) -> pd.DataFrame:
 
     # Fallback if yfinance / raw file completely unavailable
     if df_vxo is None or len(df_vxo) == 0:
-        dates = pd.date_range(start="1986-01-01", end="2026-11-13", freq="B")
+        dates = pd.date_range(start="1986-01-01", end="2026-11-23", freq="B")
         df_vxo = pd.DataFrame({"Date": dates, "VXO": np.full(len(dates), 18.5, dtype=np.float32)})
 
     # Ensure pre-1986 history (1976-1985) is backfilled via S&P 500 realized volatility
@@ -150,10 +150,10 @@ def parse_authentic_vxo_series(prov_dir: Path) -> pd.DataFrame:
 
     # Extend post-2021 forward to 2026 using modern VIX if available
     latest_vxo = combined["Date"].max()
-    target_end = pd.Timestamp("2026-11-13")
+    target_end = pd.Timestamp("2026-11-23")
     if latest_vxo < target_end:
         try:
-            vix_fwd = yf.download("^VIX", start=str(latest_vxo)[:10], end="2026-11-14", progress=False)
+            vix_fwd = yf.download("^VIX", start=str(latest_vxo)[:10], end="2026-11-24", progress=False)
             if not vix_fwd.empty and "Close" in vix_fwd:
                 c_vix = vix_fwd["Close"].iloc[:, 0] if isinstance(vix_fwd["Close"], pd.DataFrame) else vix_fwd["Close"]
                 df_vix_ext = pd.DataFrame({"Date": pd.to_datetime(c_vix.index), "VXO": c_vix.values.astype(np.float32)})

@@ -52,7 +52,7 @@ TYPST_PREAMBLE = r"""// Institutional Executive Report Typst Stylesheet (CC-BY-N
       #set text(size: 8pt, fill: rgb("#475569"))
       #grid(
         columns: (2fr, 1fr),
-        align(left)[Market Bubble Detector & Structural Break System • Horizon Through Nov 13, 2026 • v1.2.0 (Engine v3.7.0)],
+        align(left)[Market Bubble Detector & Structural Break System • Horizon Through Nov 23, 2026 • v1.2.0 (Engine v3.9.0)],
         align(right)[*Page #pg of #total*],
       )
     ]

@@ -74,7 +74,7 @@ In a conventional risk model, indicators are combined without regard to whether 
 ### A.6 License & Confidentiality Attestation
 
 - **Document Title:** *High-Fidelity 20-Year Dislocation Event Study & Composite Regime Synthesis (2006–2026)*
-- **Version:** `v1.2.0` (SemVer, Engine `v3.7.0`) — Data Horizon Updated Through **November 13, 2026**
+- **Version:** `v1.2.0` (SemVer, Engine `v3.9.0`) — Data Horizon Updated Through **November 23, 2026**
 - **Security Classification:** **CONFIDENTIAL — PROPRIETARY INTELLECTUAL PROPERTY**
 - **License Terms:** Licensed under **Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (`CC-BY-NC-ND 4.0`)**.
   - **Attribution (`BY`):** Any permitted internal reference must credit the *Market Bubble Detector & Structural Break System Research Team*.

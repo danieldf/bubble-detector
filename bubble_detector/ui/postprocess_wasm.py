@@ -322,6 +322,12 @@ if (document.readyState === 'loading') {
 
     # 5. Inject MEMFS Dataset Pre-Loader and Robust Error Boundary (idempotently)
     if "Pre-loaded MEMFS dataset:" not in content:
+        try:
+            from bubble_detector.data.date_horizons import _STAGED_TERMINAL_TRADING_DATE
+            data_stamp = _STAGED_TERMINAL_TRADING_DATE.isoformat()
+        except Exception:
+            data_stamp = "2026-11-23"
+
         # Check if full Panel convert main() signature is present
         if re.search(r'async function main\(\)\s*\{.*?await pyodide\.loadPackage\(', content, flags=re.DOTALL):
             main_header = f"""async function main() {{
@@ -343,7 +349,7 @@ if (document.readyState === 'loading') {
         }}
         for (const ds of ['market_data_50yr.json', 'market_data_modern.json', 'market_data_20yr.json']) {{
           try {{
-            let r = await fetch(ds);
+            let r = await fetch(ds + '?d={data_stamp}');
             if (r.ok) {{
               let t = await r.text();
               pyodide.FS.writeFile(ds, t);
@@ -388,26 +394,26 @@ if (document.readyState === 'loading') {
             )
         else:
             # Fallback for minimal sample scripts in test harnesses
-            minimal_block = """
-      for (const ds of ['market_data_50yr.json', 'market_data_modern.json', 'market_data_20yr.json']) {
-        try {
-          let r = await fetch(ds);
-          if (r.ok) {
+            minimal_block = f"""
+      for (const ds of ['market_data_50yr.json', 'market_data_modern.json', 'market_data_20yr.json']) {{
+        try {{
+          let r = await fetch(ds + '?d={data_stamp}');
+          if (r.ok) {{
             let t = await r.text();
             pyodide.FS.writeFile(ds, t);
             console.log('Pre-loaded MEMFS dataset: ' + ds);
-          }
-        } catch(e) { console.warn('Could not pre-load ' + ds, e); }
-      }
-      try {
+          }}
+        }} catch(e) {{ console.warn('Could not pre-load ' + ds, e); }}
+      }}
+      try {{
         await pyodide.runPythonAsync(code);
-      } catch (err) {
+      }} catch (err) {{
         document.body.classList.remove('pn-loading');
         let el = document.createElement('div');
         el.style.cssText = 'margin: 2rem; padding: 1.5rem; background: #2A1515; border: 1px solid #FF5252; color: #FFF; border-radius: 8px; font-family: monospace; white-space: pre-wrap;';
         el.innerHTML = '<h3>⚠️ WebAssembly Initialization Error</h3><p>' + err + '</p>';
         document.body.prepend(el);
-      }"""
+      }}"""
             content = re.sub(r'await\s+pyodide\.runPythonAsync\(code\);?', minimal_block, content)
 
     # 6. Idempotent AST docstring & comment minification of embedded Python code literal (<120KB ceiling)
